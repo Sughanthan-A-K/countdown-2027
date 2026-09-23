@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Calendar Body -->
+  <rect x="15" y="25" width="70" height="65" fill="none" stroke="#171717" stroke-width="8" rx="10" />
+  <!-- Header Line -->
+  <path d="M15 45 H85" stroke="#171717" stroke-width="8" />
+  <!-- Binder Rings -->
+  <rect x="31" y="10" width="8" height="20" fill="#171717" rx="4" />
+  <rect x="61" y="10" width="8" height="20" fill="#171717" rx="4" />
+  <!-- Playful Graphic (Gradient Sparkle/Star) -->
+  <path d="M50 52 L54 62 L64 62 L56 68 L59 78 L50 72 L41 78 L44 68 L36 62 L46 62 Z" fill="#06b6d4" stroke="#171717" stroke-width="4" stroke-linejoin="round" />
+</svg>
