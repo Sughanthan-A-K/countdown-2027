@@ -164,10 +164,14 @@ function App() {
   // Hint SB for Double Tap Translation
   useEffect(() => {
     let hintTimeout;
+    const hasSeenHint = localStorage.getItem('hasSeenTranslateHint');
     const hasDiscovered = localStorage.getItem('hasDiscoveredTranslate');
-    if (showInfo && infoLang === 'tanglish' && !hasDiscovered) {
+    
+    // Only show if they haven't seen the hint AND haven't discovered it themselves
+    if (showInfo && infoLang === 'tanglish' && !hasSeenHint && !hasDiscovered) {
       hintTimeout = setTimeout(() => {
         showMsg(<>Title mela <span className="text-cyan-400">Double Tap</span> panni paathiya? English-la maarum!</>, 0);
+        localStorage.setItem('hasSeenTranslateHint', 'true'); // Never show this hint again
       }, 5000);
     }
     return () => {
