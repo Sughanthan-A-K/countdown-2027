@@ -27,6 +27,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [infoLang, setInfoLang] = useState('tanglish');
 
   const handleCopyLink = async () => {
     try {
@@ -477,15 +478,28 @@ function App() {
                     <X size={20} />
                   </button>
                   
-                  <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-4">Countdown 2027</h2>
+                  <h2 
+                    onDoubleClick={() => setInfoLang(prev => prev === 'tanglish' ? 'english' : 'tanglish')}
+                    className="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-4 select-none cursor-pointer"
+                  >
+                    Countdown 2027
+                  </h2>
                   
                   <div className="space-y-6">
-                    <p className={`text-sm sm:text-base font-medium leading-relaxed ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
-                      Daily kalaila oru notification vanthu, it won't just keep informing you New Year is coming... it will give you a good positive feel to start your day until 2027! ✨
+                    <p className={`text-sm sm:text-base font-medium leading-relaxed select-none ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
+                      {infoLang === 'tanglish' ? (
+                        <>Intha app-oda mukkiyamaana nokkam, 2027 varaikkum ungalai engage-a vachiruppathu thaan. Neenga notifications allow panniyiruntha, daily kalaila "New Year varappoguthu" nu verum update mattum illama, unga naala nalla vithamaa start panna oru positive-aana feel kudukkum! ✨</>
+                      ) : (
+                        <>The main purpose of this app is to keep you engaged until 2027. If you've allowed notifications, it won't just remind you that New Year is coming—it will give you a positive vibe to start your day off right! ✨</>
+                      )}
                     </p>
                     
-                    <div className={`p-4 rounded-2xl border-2 ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
-                      <p className="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">If you want to keep in touch, just click my name!</p>
+                    <div className={`p-4 rounded-2xl border-2 select-none ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
+                      <p className="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">
+                        {infoLang === 'tanglish' 
+                          ? 'Ennoda connect aagiyirukka, keela ulla en peyarai click pannunga!' 
+                          : 'If you want to keep in touch, just click my name below!'}
+                      </p>
                       <a 
                         href="https://www.linkedin.com/in/sughanthan-a-k" 
                         target="_blank" 
@@ -502,9 +516,11 @@ function App() {
                       </a>
                     </div>
 
-                    <div className="pt-2">
+                    <div className="pt-2 select-none">
                       <p className={`text-xs font-medium mb-3 ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
-                        If you like this, ungalukku therinjawangalaiyum engage ah vachikka just copy and share the link!
+                        {infoLang === 'tanglish'
+                          ? 'Intha app ungalukku pudichiruntha, unga nanbargalaiyum engage-a vachikka intha link-a copy panni share pannunga!'
+                          : 'If you love this experience, copy the link below and share it to keep your friends engaged too!'}
                       </p>
                       <button 
                         onClick={handleCopyLink}
@@ -515,7 +531,9 @@ function App() {
                         }`}
                       >
                         {copied ? <Check size={18} /> : <Copy size={18} />}
-                        {copied ? 'Link Copied!' : 'Copy App Link'}
+                        {copied 
+                          ? (infoLang === 'tanglish' ? 'Link Copied!' : 'Link Copied!') 
+                          : (infoLang === 'tanglish' ? 'App Link Copy Pannu' : 'Copy App Link')}
                       </button>
                     </div>
                   </div>
