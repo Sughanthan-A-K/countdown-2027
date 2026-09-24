@@ -4,7 +4,7 @@ import Onboarding from './components/Onboarding';
 import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Info, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
 
@@ -25,6 +25,7 @@ function App() {
   const [touchStartPos, setTouchStartPos] = useState(null);
   const [resetCount, setResetCount] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [showInfo, setShowInfo] = useState(false);
 
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
   const [tutorialState, setTutorialState] = useState(() => {
@@ -154,7 +155,9 @@ function App() {
       }
     } else if (tutorialState === -1) {
       const missedDays = getDiffDays(actualToday, calendarDate);
-      if (missedDays > 0 && !hasNaggedThisSession && !nagSequence) {
+      // Only nag if they missed MORE than 1 day. 
+      // 1 day missed is normal (it means they are opening the app to tear yesterday's page).
+      if (missedDays > 1 && !hasNaggedThisSession && !nagSequence) {
         const seq = missedDaysNags[Math.floor(Math.random() * missedDaysNags.length)];
         setNagSequence(seq);
         setNagStep(0);
@@ -385,17 +388,70 @@ function App() {
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           </button>
 
-          {/* LinkedIn Footer */}
-          <a 
-            href="https://www.linkedin.com/in/sughanthan-a-k" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className={`absolute bottom-8 z-[50] text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold transition-all duration-300 opacity-40 hover:opacity-100 ${
-              isDarkMode ? 'text-neutral-300 hover:text-cyan-400' : 'text-neutral-600 hover:text-blue-600'
+          <button 
+            onClick={() => setShowInfo(true)}
+            className={`absolute top-8 left-8 z-[50] p-3 rounded-full border-2 shadow-md ${
+              isDarkMode 
+                ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
+                : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
             }`}
           >
-            Built by Sughanthan
-          </a>
+            <Info size={20} />
+          </button>
+
+          <AnimatePresence>
+            {showInfo && (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }} 
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-6 touch-auto"
+                onClick={() => setShowInfo(false)}
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.9, y: 20 }}
+                  onClick={e => e.stopPropagation()}
+                  className={`relative w-full max-w-sm rounded-3xl p-8 border-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${
+                    isDarkMode ? 'bg-neutral-900 border-neutral-700 text-white shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)]' : 'bg-white border-neutral-900 text-black'
+                  }`}
+                >
+                  <button 
+                    onClick={() => setShowInfo(false)}
+                    className="absolute top-4 right-4 p-2 rounded-full hover:bg-neutral-500/20 transition-colors"
+                  >
+                    <X size={20} />
+                  </button>
+                  
+                  <h2 className="text-2xl font-black uppercase tracking-tight mb-2">Countdown 2027</h2>
+                  <p className={`text-sm font-medium mb-6 ${isDarkMode ? 'text-neutral-400' : 'text-neutral-600'}`}>
+                    A physical tear-off calendar experience for the digital world.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-xs font-bold uppercase tracking-widest opacity-50 mb-1">Built By</div>
+                      <div className="font-black text-xl bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                        Sughanthan A K
+                      </div>
+                    </div>
+                    
+                    <a 
+                      href="https://www.linkedin.com/in/sughanthan-a-k" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={`block w-full text-center py-3 rounded-xl font-bold uppercase tracking-widest text-sm transition-transform active:scale-95 ${
+                        isDarkMode ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+                      }`}
+                    >
+                      Connect on LinkedIn
+                    </a>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <SpeechBubble 
             text={bubbleText} 
