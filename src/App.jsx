@@ -115,15 +115,28 @@ function App() {
     if ('serviceWorker' in navigator && 'PushManager' in window && Notification.permission === 'granted' && tutorialState === -1) {
       const subscribePush = async () => {
         try {
+          const urlBase64ToUint8Array = (base64String) => {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) { outputArray[i] = rawData.charCodeAt(i); }
+            return outputArray;
+          };
+
           const reg = await navigator.serviceWorker.register('/sw.js');
-          // Check if already subscribed
           let sub = await reg.pushManager.getSubscription();
+          
+          // If a subscription exists but we didn't save it to Supabase (e.g. they refreshed), 
+          // we should ideally just resend it to Supabase to be safe.
           if (!sub) {
             sub = await reg.pushManager.subscribe({
               userVisibleOnly: true,
-              applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY
+              applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY)
             });
-            // Send to our new Supabase backend
+          }
+          
+          if (sub) {
             await fetch('/api/subscribe', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
