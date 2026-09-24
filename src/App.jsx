@@ -112,33 +112,29 @@ function App() {
 
   useEffect(() => {
     // Send daily local notification when they open the site (if permission granted)
-    if ('Notification' in window && Notification.permission === 'granted' && tutorialState === -1) {
-      const todayStr = actualToday.getTime().toString();
-      const lastNotified = localStorage.getItem('lastNotificationDate');
-      
-      if (lastNotified !== todayStr) {
-        const missedDays = getDiffDays(actualToday, calendarDate);
-        const daysLeft = getDaysRemaining(actualToday);
-        
-        let title = "Countdown 2027";
-        let bodyMsg = "";
-        
-        if (missedDays > 0) {
-          bodyMsg = "Enna bro, innum innaiku date-a kizhikkala? Ulla vanthu kizhichi vidu!";
-        } else {
-          bodyMsg = `Innum ${daysLeft} days thaan bro irukku... Enjoy your day!`;
-        }
-        
+    if ('serviceWorker' in navigator && 'PushManager' in window && Notification.permission === 'granted' && tutorialState === -1) {
+      const subscribePush = async () => {
         try {
-          new Notification(title, {
-            body: bodyMsg,
-            icon: '/favicon.svg'
-          });
-          localStorage.setItem('lastNotificationDate', todayStr);
-        } catch (error) {
-          console.error("Notification failed", error);
+          const reg = await navigator.serviceWorker.register('/sw.js');
+          // Check if already subscribed
+          let sub = await reg.pushManager.getSubscription();
+          if (!sub) {
+            sub = await reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY
+            });
+            // Send to our new Supabase backend
+            await fetch('/api/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(sub)
+            });
+          }
+        } catch (e) {
+          console.error("Push registration failed:", e);
         }
-      }
+      };
+      subscribePush();
     }
   }, [tutorialState, actualToday, calendarDate]);
 
