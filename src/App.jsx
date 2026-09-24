@@ -46,8 +46,12 @@ function App() {
   
   const [bubbleText, setBubbleText] = useState("");
   const [showBubble, setShowBubble] = useState(false);
+  const [bubbleAction, setBubbleAction] = useState(null);
+  const [bubbleBtnText, setBubbleBtnText] = useState(null);
+  const [bubblePosition, setBubblePosition] = useState('bottom');
   const [epilogueStep, setEpilogueStep] = useState(0);
   const [isRevealing, setIsRevealing] = useState(false);
+  const [hasDiscovered, setHasDiscovered] = useState(() => localStorage.getItem('hasDiscoveredTranslate') === 'true');
 
   // Nag State for returning users
   const [nagSequence, setNagSequence] = useState(null);
@@ -66,11 +70,19 @@ function App() {
     document.title = `${getDaysRemaining(actualToday)} Days to go...`;
   }, [actualToday]);
 
-  const showMsg = (msg, duration) => {
+  const showMsg = (msg, duration, action = null, btnText = null, position = 'bottom') => {
     setBubbleText(msg);
+    setBubbleAction(() => action);
+    setBubbleBtnText(btnText);
+    setBubblePosition(position);
     setShowBubble(true);
     if (duration > 0) {
-      return setTimeout(() => setShowBubble(false), duration);
+      return setTimeout(() => {
+        setShowBubble(false);
+        setBubbleAction(null);
+        setBubbleBtnText(null);
+        setBubblePosition('bottom');
+      }, duration);
     }
   };
 
@@ -165,13 +177,25 @@ function App() {
   useEffect(() => {
     let hintTimeout;
     const hasSeenHint = localStorage.getItem('hasSeenTranslateHint');
-    const hasDiscovered = localStorage.getItem('hasDiscoveredTranslate');
     
-    // Only show if they haven't seen the hint AND haven't discovered it themselves
+    // Show if they haven't seen the hint (clicked OK) AND haven't discovered it themselves
     if (showInfo && infoLang === 'tanglish' && !hasSeenHint && !hasDiscovered) {
       hintTimeout = setTimeout(() => {
-        showMsg(<>Title mela <span className="text-cyan-400">Double Tap</span> panni paathiya? English-la maarum!</>, 0);
-        localStorage.setItem('hasSeenTranslateHint', 'true'); // Never show this hint again
+        showMsg(
+          <>Title mela <span className="text-cyan-400">Double Tap</span> panni paathiya? English-la maarum!</>, 
+          0,
+          () => {
+            localStorage.setItem('hasSeenTranslateHint', 'true'); // Only ignore next time if they click OK
+            localStorage.setItem('hasDiscoveredTranslate', 'true');
+            setHasDiscovered(true);
+            setShowBubble(false);
+            setBubbleAction(null);
+            setBubbleBtnText(null);
+            setBubblePosition('bottom');
+          },
+          "OK 👍",
+          "top"
+        );
       }, 5000);
     }
     return () => {
@@ -179,10 +203,34 @@ function App() {
     };
   }, [showInfo, infoLang]);
 
+  // Hide bubble instantly if Info modal is closed
+  useEffect(() => {
+    if (!showInfo) {
+      setShowBubble(false);
+      setBubbleAction(null);
+      setBubbleBtnText(null);
+      setBubblePosition('bottom');
+    }
+  }, [showInfo]);
+
+  const [lastTapTime, setLastTapTime] = useState(0);
+
   const handleTitleDoubleTap = () => {
     setInfoLang(prev => prev === 'tanglish' ? 'english' : 'tanglish');
     localStorage.setItem('hasDiscoveredTranslate', 'true');
+    setHasDiscovered(true);
     setShowBubble(false); // Hide the hint if they double tap
+    setBubbleAction(null);
+    setBubbleBtnText(null);
+  };
+
+  const handleTitleClick = (e) => {
+    e.stopPropagation();
+    const now = Date.now();
+    if (now - lastTapTime < 400) { // 400ms threshold for double tap
+      handleTitleDoubleTap();
+    }
+    setLastTapTime(now);
   };
 
   useEffect(() => {
@@ -202,7 +250,7 @@ function App() {
               ];
               const randomNag = nags[Math.floor(Math.random() * nags.length)];
               showMsg(randomNag, 0); 
-            }, 5000); 
+            }, 8000); 
           }, 8000); // Wait 8 seconds before starting to nag them
         }, 4500); // 4.5 seconds delay to let the confetti and reveal animation finish completely
       } else if (tutorialTears === 1) {
@@ -500,65 +548,95 @@ function App() {
                     <X size={20} />
                   </button>
                   
-                  <h2 
-                    onDoubleClick={handleTitleDoubleTap}
-                    className="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-4 select-none cursor-pointer"
+                  <motion.h2 
+                    onClick={handleTitleClick}
+                    animate={showBubble && bubblePosition === 'top' && !hasDiscovered ? {
+                      y: [0, -8, 0],
+                      color: ["#22d3ee", "#a855f7", "#ec4899", "#22d3ee"],
+                      textShadow: [
+                        "0px 0px 15px rgba(34,211,238,0.8)", 
+                        "0px 0px 15px rgba(168,85,247,0.8)", 
+                        "0px 0px 15px rgba(236,72,153,0.8)",
+                        "0px 0px 15px rgba(34,211,238,0.8)"
+                      ]
+                    } : {
+                      y: 0,
+                      color: isDarkMode ? "#ffffff" : "#000000",
+                      textShadow: "0px 0px 0px rgba(0,0,0,0)"
+                    }}
+                    transition={showBubble && bubblePosition === 'top' && !hasDiscovered ? {
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    } : {
+                      duration: 0.3
+                    }}
+                    className="relative z-[500] text-2xl sm:text-3xl font-black uppercase tracking-tight mb-4 select-none cursor-pointer"
                   >
                     Countdown 2027
-                  </h2>
+                  </motion.h2>
                   
-                  <div className="space-y-6">
-                    <p className={`text-sm sm:text-base font-medium leading-relaxed select-none ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
-                      {infoLang === 'tanglish' ? (
-                        <>Intha site-oda mukkiyamaana purpose enna na... 2027 kitta namma nerungittu irukkom. So, neenga notification allow panniyiruntha, daily morning unga day-a positive-a start panna ithu oru reminder-a irukkum. Unga time-a proper-a use panna oru chinna indication thaan intha site-oda purpose!</>
-                      ) : (
-                        <>The main purpose of this site is to remind you that we are getting closer to 2027. If you allow notifications, it will serve as a daily morning reminder to start your day positively. Ultimately, it's just a small indication to help you use your time properly!</>
-                      )}
-                    </p>
-                    
-                    <div className={`p-4 rounded-2xl border-2 select-none ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
-                      <p className="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">
-                        {infoLang === 'tanglish' 
-                          ? 'Ennoda contact panna, just click my name and text me! :)' 
-                          : 'To get in touch with me, just click my name and drop a text! :)'}
+                  <AnimatePresence mode="wait">
+                    <motion.div 
+                      key={infoLang}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-6"
+                    >
+                      <p className={`text-sm sm:text-base font-medium leading-relaxed select-none ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
+                        {infoLang === 'tanglish' ? (
+                          <>Intha site-oda mukkiyamaana purpose enna na... 2027 kitta namma nerungittu irukkom. So, neenga notification allow panniyiruntha, daily morning unga day-a positive-a start panna ithu oru reminder-a irukkum. Unga time-a proper-a use panna oru chinna indication thaan intha site-oda purpose!</>
+                        ) : (
+                          <>The main purpose of this site is to remind you that we are getting closer to 2027. If you allow notifications, it will serve as a daily morning reminder to start your day positively. Ultimately, it's just a small indication to help you use your time properly!</>
+                        )}
                       </p>
-                      <a 
-                        href="https://www.linkedin.com/in/sughanthan-a-k" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="block w-fit"
-                      >
-                        <motion.span 
-                          animate={{ opacity: [1, 0.3, 1] }}
-                          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                          className="text-xl sm:text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent hover:opacity-80"
+                      
+                      <div className={`p-4 rounded-2xl border-2 select-none ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
+                        <p className="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">
+                          {infoLang === 'tanglish' 
+                            ? 'Ennoda contact panna, just click my name and text me! :)' 
+                            : 'To get in touch with me, just click my name and drop a text! :)'}
+                        </p>
+                        <a 
+                          href="https://www.linkedin.com/in/sughanthan-a-k" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="block w-fit"
                         >
-                          Sughanthan A K
-                        </motion.span>
-                      </a>
-                    </div>
+                          <motion.span 
+                            animate={{ opacity: [1, 0.3, 1] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            className="text-xl sm:text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent hover:opacity-80"
+                          >
+                            Sughanthan A K
+                          </motion.span>
+                        </a>
+                      </div>
 
-                    <div className="pt-2 select-none">
-                      <p className={`text-xs font-medium mb-3 ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
-                        {infoLang === 'tanglish'
-                          ? 'Ungalukku intha site pudichiruntha, just unga friends-kku share pannunga...'
-                          : 'If you like this site, just share it with your friends...'}
-                      </p>
-                      <button 
-                        onClick={handleCopyLink}
-                        className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold uppercase tracking-widest text-sm transition-all active:scale-95 ${
-                          copied 
-                            ? 'bg-green-500 text-white border-green-600' 
-                            : isDarkMode ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
-                        }`}
-                      >
-                        {copied ? <Check size={18} /> : <Copy size={18} />}
-                        {copied 
-                          ? (infoLang === 'tanglish' ? 'Link Copied!' : 'Link Copied!') 
-                          : (infoLang === 'tanglish' ? 'App Link Copy Pannu' : 'Copy App Link')}
-                      </button>
-                    </div>
-                  </div>
+                      <div className="pt-2 select-none">
+                        <p className={`text-xs font-medium mb-3 ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                          {infoLang === 'tanglish'
+                            ? 'Ungalukku intha site pudichiruntha, just unga friends-kku share pannunga...'
+                            : 'If you like this site, just share it with your friends...'}
+                        </p>
+                        <button 
+                          onClick={handleCopyLink}
+                          className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold uppercase tracking-widest text-sm transition-all active:scale-95 ${
+                            copied 
+                              ? 'bg-green-500 text-white border-green-600' 
+                              : isDarkMode ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+                          }`}
+                        >
+                          {copied ? <Check size={18} /> : <Copy size={18} />}
+                          {copied 
+                            ? (infoLang === 'tanglish' ? 'Link Copied!' : 'Link Copied!') 
+                            : (infoLang === 'tanglish' ? 'App Link Copy Pannu' : 'Copy App Link')}
+                        </button>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
                 </motion.div>
               </motion.div>
             )}
@@ -568,7 +646,9 @@ function App() {
             text={bubbleText} 
             show={showBubble} 
             isDarkMode={isDarkMode} 
-            onNext={getNextHandler()}
+            onNext={bubbleAction || getNextHandler()}
+            btnText={bubbleBtnText}
+            position={bubblePosition}
           />
 
           <motion.div 
