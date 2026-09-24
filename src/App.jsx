@@ -111,6 +111,38 @@ function App() {
   };
 
   useEffect(() => {
+    // Send daily local notification when they open the site (if permission granted)
+    if ('Notification' in window && Notification.permission === 'granted' && tutorialState === -1) {
+      const todayStr = actualToday.getTime().toString();
+      const lastNotified = localStorage.getItem('lastNotificationDate');
+      
+      if (lastNotified !== todayStr) {
+        const missedDays = getDiffDays(actualToday, calendarDate);
+        const daysLeft = getDaysRemaining(actualToday);
+        
+        let title = "Countdown 2027";
+        let bodyMsg = "";
+        
+        if (missedDays > 0) {
+          bodyMsg = "Enna bro, innum innaiku date-a kizhikkala? Ulla vanthu kizhichi vidu!";
+        } else {
+          bodyMsg = `Innum ${daysLeft} days thaan bro irukku... Enjoy your day!`;
+        }
+        
+        try {
+          new Notification(title, {
+            body: bodyMsg,
+            icon: '/favicon.svg'
+          });
+          localStorage.setItem('lastNotificationDate', todayStr);
+        } catch (error) {
+          console.error("Notification failed", error);
+        }
+      }
+    }
+  }, [tutorialState, actualToday, calendarDate]);
+
+  useEffect(() => {
     let timeout1, timeout2, interval;
     
     if (tutorialState === 1) { 
