@@ -81,26 +81,26 @@ function App() {
   ];
 
   const missedDaysNags = [
-    [<>Innaiku Date enna aaguthu! Innum nee date-a kizhikkaama irukka {highlight('Mental')}, Date-a kizhi da dai!</>],
+    [<>Enna {highlight('Boss')}, ipdi pazhaya date-laye ukkanthutu irukkinga! Innaiku date-kku vaanga!</>],
     [
-      <>Vanthutaanda yeppa! Naan unakkaagha oru calendar {highlight('ready panni kudutha')}... Nee use pannama ippa thaan vanthu paakura...</>,
-      <>{highlight('Ennada')} naa sonnatha kettutu irukka, kizhichi podu da date-a dai!</>
+      <>Vanthutingala {highlight('Ji')}! Naan ungalukkaaga calendar ready panni kudutha... Neenga ippa thaan vanthu paakkuringa...</>,
+      <>{highlight('Epaa')} evlo neram thaan yosippinga, kizhichi up-to-date aakkunga boss!</>
     ],
     [
-      <>Enna baasu... calendar kizhikkave {highlight('maranthuttiya?')}</>, 
-      <>Unakku nallathu panna nenaicha enna sollanum... First-a antha date-a {highlight('kizhi!')}</>
+      <>Enna {highlight('Chief')}... calendar kizhikkave maranthutingala?</>, 
+      <>Unga date-a correct panna antha paper-a muthalla {highlight('kizhinga!')}</>
     ],
     [
       <>Oru vela naama thaan app create panni {highlight('thappu pannittomo...')}</>, 
-      <>Nee innum pazhaya date-laye ukanthutu irukka! Update aagu nanba, {highlight('kizhi antha paper-a!')}</>
+      <>Neenga innum pazhaya date-laye irukkinga! Update aagunga boss, {highlight('kizhinga antha paper-a!')}</>
     ],
     [
-      <>Nee kizhikkira vegatha paatha, 2027 vanthalum calendar {highlight('2026-laye thaan')} irukkum pola!</>, 
-      <>Sathiyama un kitta intha calendar-a kuduthen paaru... {highlight('Enna thappu.')} Kizhi da first-u!</>
+      <>Neenga kizhikkira vegatha paatha, 2027 vanthalum calendar {highlight('2026-laye thaan')} irukkum pola!</>, 
+      <>Sikiram antha missed dates ellam kizhichi {highlight('catch up')} pannunga!</>
     ],
     [
-      <>Nethu enga da pona? Calendar kizhikka kooda time illatha alavukku appadi {highlight('enna da busy nee?')}</>, 
-      <>Sari sari, inaikavathu vanthiye. Nethiya date-a {highlight('kizhichi thola!')}</>
+      <>Enga {highlight('Boss')} poreenga? Calendar kizhikka kooda time illatha alavukku busy aagitingala?</>, 
+      <>Sari sari, inaikavathu vanthingale. Antha palaya dates-a {highlight('kizhichi thallunga!')}</>
     ]
   ];
 
@@ -152,9 +152,10 @@ function App() {
           timeout2 = setTimeout(() => {
             interval = setInterval(() => {
               const nags = [
-                <>Come on man! {highlight('Kizhichi podu')} nu solrenla!</>, 
-                <>Enna yosikkira, {highlight('kizhi da!')}</>, 
-                <>{highlight('Soldrenla')} kizhi da!</>
+                <>Enna {highlight('Boss')}, Calendar munnadi ninnutu yosikkiringa? Kizhichi thallunga!</>, 
+                <>{highlight('Ji')}, antha paper-a kizhicha thaan namakku adutha naal start aagum... try panni paarungalen!</>, 
+                <>Oru paper-a kizhikka ivlo thayakkama {highlight('Chief')}? Kandippa nalla feel aagum, kizhichi vidunga!</>,
+                <>Epaa, evalo neram thaan yosippinga? {highlight('Dhairiyama')} kizhinga boss!</>
               ];
               const randomNag = nags[Math.floor(Math.random() * nags.length)];
               showMsg(randomNag, 0); 
