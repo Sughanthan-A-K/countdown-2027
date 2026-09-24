@@ -4,7 +4,7 @@ import Onboarding from './components/Onboarding';
 import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
-import { Moon, Sun, Info, X } from 'lucide-react';
+import { Moon, Sun, Info, X, Copy, Check } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
 
@@ -26,6 +26,17 @@ function App() {
   const [resetCount, setResetCount] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
   const [tutorialState, setTutorialState] = useState(() => {
@@ -466,29 +477,47 @@ function App() {
                     <X size={20} />
                   </button>
                   
-                  <h2 className="text-2xl font-black uppercase tracking-tight mb-2">Countdown 2027</h2>
-                  <p className={`text-sm font-medium mb-6 ${isDarkMode ? 'text-neutral-400' : 'text-neutral-600'}`}>
-                    A physical tear-off calendar experience for the digital world.
-                  </p>
+                  <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-4">Countdown 2027</h2>
                   
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-xs font-bold uppercase tracking-widest opacity-50 mb-1">Built By</div>
-                      <div className="font-black text-xl bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                        Sughanthan A K
-                      </div>
-                    </div>
+                  <div className="space-y-6">
+                    <p className={`text-sm sm:text-base font-medium leading-relaxed ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
+                      Daily kalaila oru notification vanthu, it won't just keep informing you New Year is coming... it will give you a good positive feel to start your day until 2027! ✨
+                    </p>
                     
-                    <a 
-                      href="https://www.linkedin.com/in/sughanthan-a-k" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className={`block w-full text-center py-3 rounded-xl font-bold uppercase tracking-widest text-sm transition-transform active:scale-95 ${
-                        isDarkMode ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
-                      }`}
-                    >
-                      Connect on LinkedIn
-                    </a>
+                    <div className={`p-4 rounded-2xl border-2 ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
+                      <p className="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">If you want to keep in touch, just click my name!</p>
+                      <a 
+                        href="https://www.linkedin.com/in/sughanthan-a-k" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="block w-fit"
+                      >
+                        <motion.span 
+                          animate={{ opacity: [1, 0.3, 1] }}
+                          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                          className="text-xl sm:text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent hover:opacity-80"
+                        >
+                          Sughanthan A K
+                        </motion.span>
+                      </a>
+                    </div>
+
+                    <div className="pt-2">
+                      <p className={`text-xs font-medium mb-3 ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                        If you like this, ungalukku therinjawangalaiyum engage ah vachikka just copy and share the link!
+                      </p>
+                      <button 
+                        onClick={handleCopyLink}
+                        className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold uppercase tracking-widest text-sm transition-all active:scale-95 ${
+                          copied 
+                            ? 'bg-green-500 text-white border-green-600' 
+                            : isDarkMode ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+                        }`}
+                      >
+                        {copied ? <Check size={18} /> : <Copy size={18} />}
+                        {copied ? 'Link Copied!' : 'Copy App Link'}
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               </motion.div>
