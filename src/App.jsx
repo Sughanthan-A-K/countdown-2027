@@ -164,7 +164,8 @@ function App() {
   // Hint SB for Double Tap Translation
   useEffect(() => {
     let hintTimeout;
-    if (showInfo && infoLang === 'tanglish') {
+    const hasDiscovered = localStorage.getItem('hasDiscoveredTranslate');
+    if (showInfo && infoLang === 'tanglish' && !hasDiscovered) {
       hintTimeout = setTimeout(() => {
         showMsg(<>Title mela <span className="text-cyan-400">Double Tap</span> panni paathiya? English-la maarum!</>, 0);
       }, 5000);
@@ -173,6 +174,12 @@ function App() {
       clearTimeout(hintTimeout);
     };
   }, [showInfo, infoLang]);
+
+  const handleTitleDoubleTap = () => {
+    setInfoLang(prev => prev === 'tanglish' ? 'english' : 'tanglish');
+    localStorage.setItem('hasDiscoveredTranslate', 'true');
+    setShowBubble(false); // Hide the hint if they double tap
+  };
 
   useEffect(() => {
     let timeout1, timeout2, interval;
@@ -490,7 +497,7 @@ function App() {
                   </button>
                   
                   <h2 
-                    onDoubleClick={() => setInfoLang(prev => prev === 'tanglish' ? 'english' : 'tanglish')}
+                    onDoubleClick={handleTitleDoubleTap}
                     className="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-4 select-none cursor-pointer"
                   >
                     Countdown 2027
