@@ -10,7 +10,7 @@ export default function SpeechBubble({ text, show, isDarkMode, onNext }) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ type: 'spring', bounce: 0.5 }}
-          className={`absolute bottom-[10%] sm:bottom-[15%] left-1/2 -translate-x-1/2 z-[150] px-6 py-4 rounded-3xl shadow-2xl max-w-[300px] w-[85vw] text-center font-bold text-sm sm:text-base border-2 ${
+          className={`absolute bottom-[10%] sm:bottom-[15%] left-1/2 -translate-x-1/2 z-[400] px-6 py-4 rounded-3xl shadow-2xl max-w-[300px] w-[85vw] text-center font-bold text-sm sm:text-base border-2 ${
             isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'
           }`}
         >

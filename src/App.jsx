@@ -139,8 +139,6 @@ function App() {
           const reg = await navigator.serviceWorker.register('/sw.js');
           let sub = await reg.pushManager.getSubscription();
           
-          // If a subscription exists but we didn't save it to Supabase (e.g. they refreshed), 
-          // we should ideally just resend it to Supabase to be safe.
           if (!sub) {
             sub = await reg.pushManager.subscribe({
               userVisibleOnly: true,
@@ -162,6 +160,19 @@ function App() {
       subscribePush();
     }
   }, [tutorialState, actualToday, calendarDate]);
+
+  // Hint SB for Double Tap Translation
+  useEffect(() => {
+    let hintTimeout;
+    if (showInfo && infoLang === 'tanglish') {
+      hintTimeout = setTimeout(() => {
+        showMsg(<>Title mela <span className="text-cyan-400">Double Tap</span> panni paathiya? English-la maarum!</>, 0);
+      }, 5000);
+    }
+    return () => {
+      clearTimeout(hintTimeout);
+    };
+  }, [showInfo, infoLang]);
 
   useEffect(() => {
     let timeout1, timeout2, interval;
