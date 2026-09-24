@@ -488,17 +488,17 @@ function App() {
                   <div className="space-y-6">
                     <p className={`text-sm sm:text-base font-medium leading-relaxed select-none ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
                       {infoLang === 'tanglish' ? (
-                        <>Intha app-oda mukkiyamaana nokkam, 2027 varaikkum ungalai engage-a vachiruppathu thaan. Neenga notifications allow panniyiruntha, daily kalaila "New Year varappoguthu" nu verum update mattum illama, unga naala nalla vithamaa start panna oru positive-aana feel kudukkum! ✨</>
+                        <>Intha site-oda mukkiyamaana purpose enna na... 2027 kitta namma nerungittu irukkom. So, neenga notification allow panniyiruntha, daily morning unga day-a positive-a start panna ithu oru reminder-a irukkum. Unga time-a proper-a use panna oru chinna indication thaan intha site-oda purpose!</>
                       ) : (
-                        <>The main purpose of this app is to keep you engaged until 2027. If you've allowed notifications, it won't just remind you that New Year is coming—it will give you a positive vibe to start your day off right! ✨</>
+                        <>The main purpose of this site is to remind you that we are getting closer to 2027. If you allow notifications, it will serve as a daily morning reminder to start your day positively. Ultimately, it's just a small indication to help you use your time properly!</>
                       )}
                     </p>
                     
                     <div className={`p-4 rounded-2xl border-2 select-none ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
                       <p className="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">
                         {infoLang === 'tanglish' 
-                          ? 'Ennoda connect aagiyirukka, keela ulla en peyarai click pannunga!' 
-                          : 'If you want to keep in touch, just click my name below!'}
+                          ? 'Ennoda contact panna, just click my name and text me! :)' 
+                          : 'To get in touch with me, just click my name and drop a text! :)'}
                       </p>
                       <a 
                         href="https://www.linkedin.com/in/sughanthan-a-k" 
@@ -519,8 +519,8 @@ function App() {
                     <div className="pt-2 select-none">
                       <p className={`text-xs font-medium mb-3 ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
                         {infoLang === 'tanglish'
-                          ? 'Intha app ungalukku pudichiruntha, unga nanbargalaiyum engage-a vachikka intha link-a copy panni share pannunga!'
-                          : 'If you love this experience, copy the link below and share it to keep your friends engaged too!'}
+                          ? 'Ungalukku intha site pudichiruntha, just unga friends-kku share pannunga...'
+                          : 'If you like this site, just share it with your friends...'}
                       </p>
                       <button 
                         onClick={handleCopyLink}
