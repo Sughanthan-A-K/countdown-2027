@@ -5,9 +5,9 @@ export default function SpeechBubble({ text, show, isDarkMode, onNext, btnText, 
   const positionClasses = position === 'top' 
     ? 'top-[4%] sm:top-[8%]' 
     : position === 'relative-top'
-    ? 'bottom-full mb-2 sm:mb-4'
+    ? 'bottom-full mb-4 sm:mb-6'
     : position === 'relative-bottom'
-    ? 'top-full mt-2 sm:mt-4'
+    ? 'top-full mt-4 sm:mt-6'
     : 'bottom-[10%] sm:bottom-[15%]';
 
   const sizeClasses = (position === 'top' || position === 'relative-top' || position === 'relative-bottom')

@@ -591,17 +591,17 @@ function App() {
                   animate={{ scale: 1, y: 0 }}
                   exit={{ scale: 0.9, y: 20 }}
                   onClick={e => e.stopPropagation()}
-                  className={`relative flex flex-col w-full max-w-sm max-h-[85vh] rounded-2xl sm:rounded-3xl p-5 sm:p-8 border-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${
+                  className={`relative flex flex-col w-full max-w-sm max-h-[85vh] rounded-2xl sm:rounded-3xl p-6 sm:p-8 border-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${
                     isDarkMode ? 'bg-neutral-900 border-neutral-700 text-white shadow-[6px_6px_0px_0px_rgba(255,255,255,0.1)] sm:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)]' : 'bg-white border-neutral-900 text-black'
                   }`}
                 >
                   <button 
                     onClick={() => setShowInfo(false)}
-                    className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 rounded-full hover:bg-neutral-500/20 transition-colors z-[600]"
+                    className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-full hover:bg-neutral-500/20 transition-colors z-[600]"
                   >
-                    <X size={18} className="sm:w-5 sm:h-5" />
+                    <X size={20} className="sm:w-6 sm:h-6" />
                   </button>
-                  <div className="relative flex items-center justify-center mb-3 sm:mb-4 mt-2 sm:mt-0 shrink-0">
+                  <div className="relative flex items-center justify-center mb-4 sm:mb-5 mt-2 sm:mt-0 shrink-0">
                     <motion.h2 
                       onClick={handleTitleClick}
                       animate={showBubble && bubblePosition === 'top' && !hasDiscovered ? {
@@ -625,7 +625,7 @@ function App() {
                       } : {
                         duration: 0.3
                       }}
-                      className="relative z-[500] text-xl sm:text-3xl font-black uppercase tracking-tight select-none cursor-pointer"
+                      className="relative z-[500] text-2xl sm:text-3xl font-black uppercase tracking-tight select-none cursor-pointer"
                     >
                       Countdown 2027
                     </motion.h2>
@@ -648,9 +648,9 @@ function App() {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 10 }}
                         transition={{ duration: 0.2 }}
-                        className="space-y-4 sm:space-y-6"
+                        className="space-y-5 sm:space-y-6"
                       >
-                        <p className={`text-[13px] sm:text-base font-medium leading-snug sm:leading-relaxed select-none ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
+                        <p className={`text-sm sm:text-base font-medium leading-relaxed select-none ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
                           {infoLang === 'tanglish' ? (
                             <>Intha site-oda mukkiyamaana purpose enna na... 2027 kitta namma nerungittu irukkom. So, neenga notification allow panniyiruntha, daily morning unga day-a positive-a start panna ithu oru reminder-a irukkum. Unga time-a proper-a use panna oru chinna indication thaan intha site-oda purpose!</>
                           ) : (
@@ -658,8 +658,8 @@ function App() {
                           )}
                         </p>
                         
-                        <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 select-none ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
-                          <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest opacity-60 mb-1 sm:mb-2 leading-snug">
+                        <div className={`p-4 rounded-xl sm:rounded-2xl border-2 select-none ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
+                          <p className="text-xs sm:text-sm font-bold uppercase tracking-widest opacity-60 mb-2 leading-relaxed">
                             {infoLang === 'tanglish' 
                               ? 'Ennoda contact panna, just click my name and text me! :)' 
                               : 'To get in touch with me, just click my name and drop a text! :)'}
@@ -673,28 +673,28 @@ function App() {
                             <motion.span 
                               animate={{ opacity: [1, 0.3, 1] }}
                               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                              className="text-lg sm:text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent hover:opacity-80"
+                              className="text-xl sm:text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent hover:opacity-80"
                             >
                               Sughanthan A K
                             </motion.span>
                           </a>
                         </div>
 
-                        <div className="pt-1 sm:pt-2 select-none">
-                          <p className={`text-[10px] sm:text-xs font-medium mb-2 sm:mb-3 leading-snug ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                        <div className="pt-2 select-none">
+                          <p className={`text-xs sm:text-sm font-medium mb-3 leading-relaxed ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
                             {infoLang === 'tanglish'
                               ? 'Ungalukku intha site pudichiruntha, just unga friends-kku share pannunga...'
                               : 'If you like this site, just share it with your friends...'}
                           </p>
                           <button 
                             onClick={handleCopyLink}
-                            className={`w-full flex items-center justify-center gap-2 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl font-bold uppercase tracking-widest text-xs sm:text-sm transition-all active:scale-95 mb-2 ${
+                            className={`w-full flex items-center justify-center gap-2 py-3 sm:py-3.5 rounded-lg sm:rounded-xl font-bold uppercase tracking-widest text-sm transition-all active:scale-95 mb-2 ${
                               copied 
                                 ? 'bg-green-500 text-white border-green-600' 
                                 : isDarkMode ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
                             }`}
                           >
-                            {copied ? <Check size={16} /> : <Copy size={16} />}
+                            {copied ? <Check size={18} /> : <Copy size={18} />}
                             {copied 
                               ? (infoLang === 'tanglish' ? 'Link Copied!' : 'Link Copied!') 
                               : (infoLang === 'tanglish' ? 'App Link Copy Pannu' : 'Copy App Link')}
