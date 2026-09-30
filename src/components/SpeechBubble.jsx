@@ -4,19 +4,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function SpeechBubble({ text, show, isDarkMode, onNext, btnText, position = 'bottom' }) {
   const positionClasses = position === 'top' 
     ? 'top-[4%] sm:top-[8%]' 
+    : position === 'relative-top'
+    ? 'bottom-full mb-2 sm:mb-4'
+    : position === 'relative-bottom'
+    ? 'top-full mt-2 sm:mt-4'
     : 'bottom-[10%] sm:bottom-[15%]';
 
-  const sizeClasses = position === 'top'
-    ? 'px-4 py-3 max-w-[260px] w-[80vw] text-xs' // Smaller size
-    : 'px-6 py-4 max-w-[300px] w-[85vw] text-sm sm:text-base'; // Normal size
+  const sizeClasses = (position === 'top' || position === 'relative-top' || position === 'relative-bottom')
+    ? 'px-4 py-3 max-w-[260px] w-[80vw] sm:w-auto sm:whitespace-nowrap text-xs' 
+    : 'px-6 py-4 max-w-[300px] w-[85vw] text-sm sm:text-base'; 
 
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.8, y: position === 'top' ? -20 : 20 }}
+          initial={{ opacity: 0, scale: 0.8, y: (position === 'top' || position === 'relative-top') ? -20 : 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: position === 'top' ? -20 : 20 }}
+          exit={{ opacity: 0, scale: 0.8, y: (position === 'top' || position === 'relative-top') ? -20 : 20 }}
           transition={{ type: 'spring', bounce: 0.5 }}
           className={`absolute ${positionClasses} left-1/2 -translate-x-1/2 z-[400] pointer-events-none ${sizeClasses} rounded-3xl shadow-2xl text-center font-bold border-2 ${
             isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'
@@ -38,7 +42,7 @@ export default function SpeechBubble({ text, show, isDarkMode, onNext, btnText, 
             </button>
           )}
 
-          {position === 'top' ? (
+          {position === 'top' || position === 'relative-top' ? (
             <div className={`absolute -bottom-[12px] left-1/2 -translate-x-1/2 border-l-[10px] border-r-[10px] border-t-[14px] border-transparent ${
               isDarkMode ? 'border-t-white' : 'border-t-neutral-900'
             }`} />

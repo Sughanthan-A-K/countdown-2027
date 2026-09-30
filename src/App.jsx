@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CalendarPage from './components/CalendarPage';
 import Onboarding from './components/Onboarding';
 import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
+import SecretGame from './components/SecretGame';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -28,6 +29,13 @@ function App() {
   const [showInfo, setShowInfo] = useState(false);
   const [copied, setCopied] = useState(false);
   const [infoLang, setInfoLang] = useState('tanglish');
+  const [isShortScreen, setIsShortScreen] = useState(typeof window !== 'undefined' && window.innerHeight < 550);
+
+  useEffect(() => {
+    const handleResize = () => setIsShortScreen(window.innerHeight < 550);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleCopyLink = async () => {
     try {
@@ -37,6 +45,41 @@ function App() {
     } catch (err) {
       console.error('Failed to copy text: ', err);
     }
+  };
+
+  const handleGameToggle = () => {
+    setGameTransitioning(true);
+    setTimeout(() => {
+      setIsGameMode(prev => {
+        const nextState = !prev;
+        localStorage.setItem('secretGameMode', String(nextState));
+        return nextState;
+      });
+    }, 800);
+    setTimeout(() => {
+      setGameTransitioning(false);
+    }, 1600);
+  };
+
+  const handleInfoDown = () => {
+    holdTriggered.current = false;
+    infoHoldTimer.current = setTimeout(() => {
+      holdTriggered.current = true;
+      handleGameToggle();
+      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+    }, 3000); // 3 seconds is better for UX
+  };
+
+  const handleInfoUp = () => {
+    if (infoHoldTimer.current) clearTimeout(infoHoldTimer.current);
+  };
+
+  const handleInfoClick = (e) => {
+    if (holdTriggered.current) {
+      e.preventDefault();
+      return;
+    }
+    setShowInfo(true);
   };
 
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
@@ -52,6 +95,12 @@ function App() {
   const [epilogueStep, setEpilogueStep] = useState(0);
   const [isRevealing, setIsRevealing] = useState(false);
   const [hasDiscovered, setHasDiscovered] = useState(() => localStorage.getItem('hasDiscoveredTranslate') === 'true');
+
+  // Game Mode State
+  const [isGameMode, setIsGameMode] = useState(() => localStorage.getItem('secretGameMode') === 'true');
+  const [gameTransitioning, setGameTransitioning] = useState(false);
+  const infoHoldTimer = useRef(null);
+  const holdTriggered = useRef(false);
 
   // Nag State for returning users
   const [nagSequence, setNagSequence] = useState(null);
@@ -182,7 +231,7 @@ function App() {
     if (showInfo && infoLang === 'tanglish' && !hasSeenHint && !hasDiscovered) {
       hintTimeout = setTimeout(() => {
         showMsg(
-          <>Title mela <span className="text-cyan-400">Double Tap</span> panni paathiya? English-la maarum!</>, 
+          <><span className="text-cyan-400">Double Tap</span> to translate!</>, 
           0,
           () => {
             localStorage.setItem('hasSeenTranslateHint', 'true'); // Only ignore next time if they click OK
@@ -513,7 +562,12 @@ function App() {
           </button>
 
           <button 
-            onClick={() => setShowInfo(true)}
+            onMouseDown={handleInfoDown}
+            onMouseUp={handleInfoUp}
+            onMouseLeave={handleInfoUp}
+            onTouchStart={handleInfoDown}
+            onTouchEnd={handleInfoUp}
+            onClick={handleInfoClick}
             className={`absolute top-8 left-8 z-[50] p-3 rounded-full border-2 shadow-md ${
               isDarkMode 
                 ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
@@ -537,106 +591,118 @@ function App() {
                   animate={{ scale: 1, y: 0 }}
                   exit={{ scale: 0.9, y: 20 }}
                   onClick={e => e.stopPropagation()}
-                  className={`relative w-full max-w-sm rounded-3xl p-8 border-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${
-                    isDarkMode ? 'bg-neutral-900 border-neutral-700 text-white shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)]' : 'bg-white border-neutral-900 text-black'
+                  className={`relative flex flex-col w-full max-w-sm max-h-[85vh] rounded-2xl sm:rounded-3xl p-5 sm:p-8 border-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${
+                    isDarkMode ? 'bg-neutral-900 border-neutral-700 text-white shadow-[6px_6px_0px_0px_rgba(255,255,255,0.1)] sm:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)]' : 'bg-white border-neutral-900 text-black'
                   }`}
                 >
                   <button 
                     onClick={() => setShowInfo(false)}
-                    className="absolute top-4 right-4 p-2 rounded-full hover:bg-neutral-500/20 transition-colors"
+                    className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 rounded-full hover:bg-neutral-500/20 transition-colors z-[600]"
                   >
-                    <X size={20} />
+                    <X size={18} className="sm:w-5 sm:h-5" />
                   </button>
-                  
-                  <motion.h2 
-                    onClick={handleTitleClick}
-                    animate={showBubble && bubblePosition === 'top' && !hasDiscovered ? {
-                      y: [0, -8, 0],
-                      color: ["#22d3ee", "#a855f7", "#ec4899", "#22d3ee"],
-                      textShadow: [
-                        "0px 0px 15px rgba(34,211,238,0.8)", 
-                        "0px 0px 15px rgba(168,85,247,0.8)", 
-                        "0px 0px 15px rgba(236,72,153,0.8)",
-                        "0px 0px 15px rgba(34,211,238,0.8)"
-                      ]
-                    } : {
-                      y: 0,
-                      color: isDarkMode ? "#ffffff" : "#000000",
-                      textShadow: "0px 0px 0px rgba(0,0,0,0)"
-                    }}
-                    transition={showBubble && bubblePosition === 'top' && !hasDiscovered ? {
-                      duration: 1.5,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    } : {
-                      duration: 0.3
-                    }}
-                    className="relative z-[500] text-2xl sm:text-3xl font-black uppercase tracking-tight mb-4 select-none cursor-pointer"
-                  >
-                    Countdown 2027
-                  </motion.h2>
-                  
-                  <AnimatePresence mode="wait">
-                    <motion.div 
-                      key={infoLang}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 10 }}
-                      transition={{ duration: 0.2 }}
-                      className="space-y-6"
+                  <div className="relative flex items-center justify-center mb-3 sm:mb-4 mt-2 sm:mt-0 shrink-0">
+                    <motion.h2 
+                      onClick={handleTitleClick}
+                      animate={showBubble && bubblePosition === 'top' && !hasDiscovered ? {
+                        y: [0, -8, 0],
+                        color: ["#22d3ee", "#a855f7", "#ec4899", "#22d3ee"],
+                        textShadow: [
+                          "0px 0px 15px rgba(34,211,238,0.8)", 
+                          "0px 0px 15px rgba(168,85,247,0.8)", 
+                          "0px 0px 15px rgba(236,72,153,0.8)",
+                          "0px 0px 15px rgba(34,211,238,0.8)"
+                        ]
+                      } : {
+                        y: 0,
+                        color: isDarkMode ? "#ffffff" : "#000000",
+                        textShadow: "0px 0px 0px rgba(0,0,0,0)"
+                      }}
+                      transition={showBubble && bubblePosition === 'top' && !hasDiscovered ? {
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      } : {
+                        duration: 0.3
+                      }}
+                      className="relative z-[500] text-xl sm:text-3xl font-black uppercase tracking-tight select-none cursor-pointer"
                     >
-                      <p className={`text-sm sm:text-base font-medium leading-relaxed select-none ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
-                        {infoLang === 'tanglish' ? (
-                          <>Intha site-oda mukkiyamaana purpose enna na... 2027 kitta namma nerungittu irukkom. So, neenga notification allow panniyiruntha, daily morning unga day-a positive-a start panna ithu oru reminder-a irukkum. Unga time-a proper-a use panna oru chinna indication thaan intha site-oda purpose!</>
-                        ) : (
-                          <>The main purpose of this site is to remind you that we are getting closer to 2027. If you allow notifications, it will serve as a daily morning reminder to start your day positively. Ultimately, it's just a small indication to help you use your time properly!</>
-                        )}
-                      </p>
-                      
-                      <div className={`p-4 rounded-2xl border-2 select-none ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
-                        <p className="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">
-                          {infoLang === 'tanglish' 
-                            ? 'Ennoda contact panna, just click my name and text me! :)' 
-                            : 'To get in touch with me, just click my name and drop a text! :)'}
-                        </p>
-                        <a 
-                          href="https://www.linkedin.com/in/sughanthan-a-k" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="block w-fit"
-                        >
-                          <motion.span 
-                            animate={{ opacity: [1, 0.3, 1] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            className="text-xl sm:text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent hover:opacity-80"
-                          >
-                            Sughanthan A K
-                          </motion.span>
-                        </a>
-                      </div>
+                      Countdown 2027
+                    </motion.h2>
 
-                      <div className="pt-2 select-none">
-                        <p className={`text-xs font-medium mb-3 ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
-                          {infoLang === 'tanglish'
-                            ? 'Ungalukku intha site pudichiruntha, just unga friends-kku share pannunga...'
-                            : 'If you like this site, just share it with your friends...'}
+                    <SpeechBubble 
+                      text={bubbleText} 
+                      show={showBubble && bubblePosition === 'top'} 
+                      isDarkMode={isDarkMode} 
+                      onNext={bubbleAction}
+                      btnText={bubbleBtnText}
+                      position={isShortScreen ? "relative-bottom" : "relative-top"}
+                    />
+                  </div>
+                  
+                  <div className="overflow-y-auto custom-scrollbar flex-1 pr-1 -mr-1">
+                    <AnimatePresence mode="wait">
+                      <motion.div 
+                        key={infoLang}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="space-y-4 sm:space-y-6"
+                      >
+                        <p className={`text-[13px] sm:text-base font-medium leading-snug sm:leading-relaxed select-none ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
+                          {infoLang === 'tanglish' ? (
+                            <>Intha site-oda mukkiyamaana purpose enna na... 2027 kitta namma nerungittu irukkom. So, neenga notification allow panniyiruntha, daily morning unga day-a positive-a start panna ithu oru reminder-a irukkum. Unga time-a proper-a use panna oru chinna indication thaan intha site-oda purpose!</>
+                          ) : (
+                            <>The main purpose of this site is to remind you that we are getting closer to 2027. If you allow notifications, it will serve as a daily morning reminder to start your day positively. Ultimately, it's just a small indication to help you use your time properly!</>
+                          )}
                         </p>
-                        <button 
-                          onClick={handleCopyLink}
-                          className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold uppercase tracking-widest text-sm transition-all active:scale-95 ${
-                            copied 
-                              ? 'bg-green-500 text-white border-green-600' 
-                              : isDarkMode ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
-                          }`}
-                        >
-                          {copied ? <Check size={18} /> : <Copy size={18} />}
-                          {copied 
-                            ? (infoLang === 'tanglish' ? 'Link Copied!' : 'Link Copied!') 
-                            : (infoLang === 'tanglish' ? 'App Link Copy Pannu' : 'Copy App Link')}
-                        </button>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
+                        
+                        <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 select-none ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
+                          <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest opacity-60 mb-1 sm:mb-2 leading-snug">
+                            {infoLang === 'tanglish' 
+                              ? 'Ennoda contact panna, just click my name and text me! :)' 
+                              : 'To get in touch with me, just click my name and drop a text! :)'}
+                          </p>
+                          <a 
+                            href="https://www.linkedin.com/in/sughanthan-a-k" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="block w-fit"
+                          >
+                            <motion.span 
+                              animate={{ opacity: [1, 0.3, 1] }}
+                              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                              className="text-lg sm:text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent hover:opacity-80"
+                            >
+                              Sughanthan A K
+                            </motion.span>
+                          </a>
+                        </div>
+
+                        <div className="pt-1 sm:pt-2 select-none">
+                          <p className={`text-[10px] sm:text-xs font-medium mb-2 sm:mb-3 leading-snug ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                            {infoLang === 'tanglish'
+                              ? 'Ungalukku intha site pudichiruntha, just unga friends-kku share pannunga...'
+                              : 'If you like this site, just share it with your friends...'}
+                          </p>
+                          <button 
+                            onClick={handleCopyLink}
+                            className={`w-full flex items-center justify-center gap-2 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl font-bold uppercase tracking-widest text-xs sm:text-sm transition-all active:scale-95 mb-2 ${
+                              copied 
+                                ? 'bg-green-500 text-white border-green-600' 
+                                : isDarkMode ? 'bg-white text-black hover:bg-neutral-200' : 'bg-black text-white hover:bg-neutral-800'
+                            }`}
+                          >
+                            {copied ? <Check size={16} /> : <Copy size={16} />}
+                            {copied 
+                              ? (infoLang === 'tanglish' ? 'Link Copied!' : 'Link Copied!') 
+                              : (infoLang === 'tanglish' ? 'App Link Copy Pannu' : 'Copy App Link')}
+                          </button>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
                 </motion.div>
               </motion.div>
             )}
@@ -644,7 +710,7 @@ function App() {
 
           <SpeechBubble 
             text={bubbleText} 
-            show={showBubble} 
+            show={showBubble && bubblePosition !== 'top'} 
             isDarkMode={isDarkMode} 
             onNext={bubbleAction || getNextHandler()}
             btnText={bubbleBtnText}
@@ -658,20 +724,39 @@ function App() {
             className="relative w-full max-w-[400px] h-[60vh] min-h-[450px] flex items-center justify-center perspective-[1200px]"
           >
             <AnimatePresence>
-              {pages.slice().reverse().map((page) => (
-                <CalendarPage
-                  key={page.id}
-                  dateText={page.dateText}
-                  daysRemaining={page.daysRemaining}
-                  index={page.index}
-                  isTop={page.index === 0}
-                  onTear={handleTear}
-                  isDarkMode={isDarkMode}
-                  isTearLocked={isTearLocked}
-                />
-              ))}
+              {isGameMode ? (
+                <SecretGame key="secret-game" isDarkMode={isDarkMode} />
+              ) : (
+                pages.slice().reverse().map((page) => (
+                  <CalendarPage
+                    key={page.id}
+                    dateText={page.dateText}
+                    daysRemaining={page.daysRemaining}
+                    index={page.index}
+                    isTop={page.index === 0}
+                    onTear={handleTear}
+                    isDarkMode={isDarkMode}
+                    isTearLocked={isTearLocked}
+                  />
+                ))
+              )}
             </AnimatePresence>
           </motion.div>
+
+          {/* Cinematic Circular Transition Overlay */}
+          <AnimatePresence>
+            {gameTransitioning && (
+              <motion.div
+                initial={{ clipPath: "circle(0% at 20px 40px)" }} // Approx position of info button
+                animate={{ clipPath: "circle(150% at 20px 40px)" }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="fixed inset-0 z-[1000] bg-[#f7d13d] pointer-events-none flex items-center justify-center"
+              >
+                <span className="text-black font-black text-6xl tracking-widest opacity-20">2 0 2 7</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </>
