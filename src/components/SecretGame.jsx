@@ -414,25 +414,27 @@ export default function SecretGame({ isDarkMode, onExitGame }) {
 
   useEffect(() => {
     if (transitionStage === 'chat_climax') {
-        const sequence = async () => {
-            const delay = (ms) => new Promise(res => setTimeout(res, ms));
-            await delay(1000);
-            setChatStep(1); // User: "LET ME OUT"
-            await delay(1000);
-            setChatStep(2); // Double tick
-            await delay(500);
-            setChatStep(3); // Typing...
-            await delay(2500);
-            setChatStep(4); // "Ok Sure...."
-            await delay(1000);
-            setChatStep(5); // Typing...
-            await delay(2000);
-            setChatStep(6); // "You Played well"
-            await delay(1000);
-            setChatStep(7); // Typing...
-            await delay(1500);
-            setChatStep(8); // "🚪"
-        };
+                  const sequence = async () => {
+              const delay = (ms) => new Promise(res => setTimeout(res, ms));
+              await delay(1000);
+              setChatStep(1); // User: "LET ME OUT"
+              await delay(1000);
+              setChatStep(2); // Double tick
+              await delay(500);
+              setChatStep(3); // Typing...
+              await delay(2000);
+              setChatStep(4); // WARNING
+              await delay(1000);
+              setChatStep(5); // Typing...
+              await delay(3500);
+              setChatStep(6); // Avasara pattu
+              await delay(1500);
+              setChatStep(7); // Typing...
+              await delay(1500);
+              setChatStep(8); // Haa Haa Haa
+              await delay(1000);
+              setChatStep(9); // Door
+          };
         sequence();
     }
   }, [transitionStage]);
@@ -836,46 +838,8 @@ export default function SecretGame({ isDarkMode, onExitGame }) {
                     LEVEL {completedLevels} <br /> COMPLETED
                  </h1>
                  
-                                    <div className="flex flex-col items-center gap-0 scale-90 sm:scale-100">
-                      {LEVELS.map((target, lvlIndex) => {
-                         const isCompleted = lvlIndex < completedLevels;
-                         const isCurrent = lvlIndex === completedLevels;
-                         return (
-                            <React.Fragment key={lvlIndex}>
-                               {lvlIndex > 0 && (
-                                  <div className={`relative flex justify-center w-full my-1 ${isCurrent || isCompleted ? 'opacity-100' : 'opacity-30'}`}>
-                                     <svg width="100" height="80" viewBox="0 0 100 80" className="relative z-10">
-                                       <motion.path
-                                         d={lvlIndex % 2 === 1 ? "M50 0 C100 20, 0 60, 50 80" : "M50 0 C0 20, 100 60, 50 80"}
-                                         stroke="black"
-                                         strokeWidth="4"
-                                         strokeLinecap="round"
-                                         fill="transparent"
-                                         initial={{ pathLength: isCurrent ? 0 : 1 }}
-                                         animate={{ pathLength: 1 }}
-                                         transition={{ duration: 1.5, delay: isCurrent ? 1.5 : 0, ease: "easeInOut" }}
-                                       />
-                                     </svg>
-                                  </div>
-                               )}
-                               <motion.div
-                                 initial={isCurrent ? { y: 60, scale: 0.3, opacity: 0 } : { y: 0, scale: 1, opacity: 1 }}
-                                 animate={{ y: 0, scale: 1, opacity: 1 }}
-                                 transition={{ type: "spring", bounce: 0.7, duration: 1, delay: isCurrent ? 3.5 : 0 }}
-                                className={'flex flex-col items-center gap-2 relative ' + (!isCompleted && !isCurrent ? 'opacity-30' : '')}
-                               >
-                                  <span className="font-bold text-[11px] tracking-widest text-black uppercase">LEVEL {lvlIndex + 1}</span>
-                                  <div className="flex gap-1 relative z-10">
-                                     {target.map((char, charIdx) => (
-                                       <div key={charIdx} className={'w-10 h-12 sm:w-12 sm:h-14 flex items-center justify-center font-black text-2xl rounded-lg border-[2.5px] border-black ' + (isCompleted ? 'bg-black text-[#f7d13d]' : 'bg-transparent text-black')}>
-                                          {isCompleted ? char : ''}
-                                        </div>
-                                     ))}
-                                  </div>
-                               </motion.div>
-                            </React.Fragment>
-                         );
-                      })}
+                                                       <div className="flex flex-col items-center gap-0 scale-90 sm:scale-100">
+                      {/* EMPTY CARD FOR NOW */}
                    </div>
                 </motion.div>
              )}
@@ -911,16 +875,18 @@ export default function SecretGame({ isDarkMode, onExitGame }) {
                        )}
                     </AnimatePresence>
 
-                    <AnimatePresence mode="popLayout">
-                       {chatStep === 3 && <TypingIndicator key="typing-1" />}
-                       {chatStep >= 4 && <GameBubble key="msg-1">Ok Sure....</GameBubble>}
-                       
-                       {chatStep === 5 && <TypingIndicator key="typing-2" />}
-                       {chatStep >= 6 && <GameBubble key="msg-2">You Played well</GameBubble>}
-                       
-                       {chatStep === 7 && <TypingIndicator key="typing-3" />}
-                       {chatStep >= 8 && <AnimatedDoor key="door-btn" onClick={() => setTransitionStage('exit_flash')} globalDoubleTap={globalDoubleTap} />}
-                    </AnimatePresence>
+                                          <AnimatePresence mode="popLayout">
+                         {chatStep === 3 && <TypingIndicator key="typing-1" />}
+                         {chatStep >= 4 && <GameBubble key="msg-1"><span className="text-red-500 font-black tracking-widest text-lg">WARNING!</span></GameBubble>}
+                         
+                         {chatStep === 5 && <TypingIndicator key="typing-2" />}
+                         {chatStep >= 6 && <GameBubble key="msg-2">Avasara pattu ithu kulla vanthu maatikitingha ipa unghalaala ingha iruthu thappika ve mudiyaathu......</GameBubble>}
+                         
+                         {chatStep === 7 && <TypingIndicator key="typing-3" />}
+                         {chatStep >= 8 && <GameBubble key="msg-3">Haa Haa Haa ??</GameBubble>}
+                         
+                         {chatStep >= 9 && <AnimatedDoor key="door-btn" onClick={() => setTransitionStage('exit_flash')} globalDoubleTap={globalDoubleTap} />}
+                      </AnimatePresence>
                  </div>
               </motion.div>
            )}
