@@ -270,7 +270,7 @@ function App() {
       };
       subscribePush();
     }
-  }, [tutorialState, actualToday, calendarDate]);
+  }, [tutorialState, actualToday, calendarDate, globalLang]);
 
   // Hint SB for Double Tap Translation
   useEffect(() => {
