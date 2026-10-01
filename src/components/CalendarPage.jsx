@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Sparkles, PartyPopper, Star } from 'lucide-react';
+import GandhiPic from './GandhiPic';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, isTop, isDarkMode, isTearLocked }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, hasGandhiKey }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -31,6 +32,9 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, i
     const velocity = Math.sqrt(info.velocity.x ** 2 + info.velocity.y ** 2);
     
     if (distance > 100 || velocity > 200) {
+      const canTear = onTear(); 
+      if (canTear === false) return; // Prevent tearing visually if blocked
+
       if (navigator.vibrate) navigator.vibrate([40, 30, 40]); // Tear feedback
       setIsTorn(true);
       const throwRight = info.offset.x > 0;
@@ -38,8 +42,6 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, i
       setExitX(info.offset.x + (throwRight ? 300 : -300));
       setExitY(info.offset.y + 1500); 
       setExitRotate(info.offset.x * 0.05 + (throwRight ? 60 : -60));
-      
-      onTear(); 
     }
   };
 
@@ -163,39 +165,75 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, i
             </motion.div>
           ) : (
             // COUNTDOWN UI
-            <>
-              <div className="pt-8 sm:pt-10 px-8 flex flex-col items-center w-full z-10 relative">
-                <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
-                  {dateText}
-                </h2>
-              </div>
+            isGandhiJayanti ? (
+              <>
+                <div className="pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative">
+                  <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
+                    {dateText}
+                  </h2>
+                  <motion.h3 
+                     initial={{ opacity: 0.5 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 1.5, repeatType: 'reverse' }}
+                     className="text-[#f7d13d] font-black text-xs sm:text-sm tracking-widest uppercase mt-2 drop-shadow-sm text-center"
+                  >
+                    Happy Gandhi Jayanti
+                  </motion.h3>
+                </div>
 
-              <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-2">
-                <div className="w-full flex justify-start pl-8 z-20 mb-[-1rem]">
-                  <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase ${textSecondary}`}>
-                    Today
-                  </span>
+                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-[-10px]">
+                  <GandhiPic isDarkMode={isDarkMode} onEyeClick={onEyeClick} hasKey={hasGandhiKey} />
                 </div>
                 
-                <h1 className={`text-[7.5rem] sm:text-[9.5rem] font-black leading-none tracking-tighter text-center ${textPrimary}`}>
-                  {daysRemaining}
-                </h1>
+                <div className="pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0">
+                  <div className="flex items-baseline gap-1">
+                    <h1 className={`text-5xl sm:text-6xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                      {daysRemaining}
+                    </h1>
+                    <span className={`font-bold text-sm sm:text-base italic ${textSecondary}`}>
+                      th day
+                    </span>
+                  </div>
+                  <div className={`px-5 py-1.5 rounded-full border-2 mt-3 ${pillBgOutline}`}>
+                    <span className={`text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
+                      To reach 2027
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="pt-8 sm:pt-10 px-8 flex flex-col items-center w-full z-10 relative">
+                  <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
+                    {dateText}
+                  </h2>
+                </div>
+
+                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-2">
+                  <div className="w-full flex justify-start pl-8 z-20 mb-[-1rem]">
+                    <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase ${textSecondary}`}>
+                      Today
+                    </span>
+                  </div>
+                  
+                  <h1 className={`text-[7.5rem] sm:text-[9.5rem] font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                    {daysRemaining}
+                  </h1>
+                  
+                  <div className="w-full flex justify-end pr-8 z-20 mt-[-1rem]">
+                    <span className={`font-bold text-lg sm:text-xl italic ${textSecondary}`}>
+                      th day
+                    </span>
+                  </div>
+                </div>
                 
-                <div className="w-full flex justify-end pr-8 z-20 mt-[-1rem]">
-                  <span className={`font-bold text-lg sm:text-xl italic ${textSecondary}`}>
-                    th day
-                  </span>
+                <div className="pb-6 sm:pb-8 flex justify-center w-full z-10 relative">
+                  <div className={`px-6 py-2 rounded-full border-2 ${pillBgOutline}`}>
+                    <span className={`text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
+                      To reach 2027
+                    </span>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="pb-6 sm:pb-8 flex justify-center w-full z-10 relative">
-                <div className={`px-6 py-2 rounded-full border-2 ${pillBgOutline}`}>
-                  <span className={`text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
-                    To reach 2027
-                  </span>
-                </div>
-              </div>
-            </>
+              </>
+            )
           )}
         </motion.div>
       </div>

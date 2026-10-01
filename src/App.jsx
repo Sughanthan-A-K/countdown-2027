@@ -4,6 +4,7 @@ import Onboarding from './components/Onboarding';
 import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
 import SecretGame from './components/SecretGame';
+import KeyModal from './components/KeyModal';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -20,6 +21,9 @@ function App() {
     }
     return today;
   });
+
+  const [hasGandhiKey, setHasGandhiKey] = useState(() => localStorage.getItem('hasGandhiKey') === 'true');
+  const [showKeyModal, setShowKeyModal] = useState(false);
 
   const [tutorialTears, setTutorialTears] = useState(0);
   const [lastTap, setLastTap] = useState(0);
@@ -62,6 +66,9 @@ function App() {
   };
 
   const handleInfoDown = () => {
+    // Only allow secret game if the key is collected
+    if (localStorage.getItem('hasGandhiKey') !== 'true') return;
+
     holdTriggered.current = false;
     infoHoldTimer.current = setTimeout(() => {
       holdTriggered.current = true;
@@ -364,10 +371,27 @@ function App() {
 
   const missedDays = getDiffDays(actualToday, calendarDate);
 
+  const handleEyeClick = () => {
+    if (!hasGandhiKey) {
+       setShowKeyModal(true);
+       setHasGandhiKey(true);
+       localStorage.setItem('hasGandhiKey', 'true');
+       setShowBubble(false);
+    }
+  };
+
   const handleTear = () => {
-    if (tutorialState === 0 || tutorialState === 3 || tutorialState === 4) return;
-    if (tutorialState === 2 && tutorialTears >= 10) return;
-    if (tutorialState === -1 && missedDays <= 0) return; // Cannot tear today's date!
+    if (tutorialState === 0 || tutorialState === 3 || tutorialState === 4) return false;
+    if (tutorialState === 2 && tutorialTears >= 10) return false;
+    // if (tutorialState === -1 && missedDays <= 0) return false; // DEV OVERRIDE
+
+    const isTopGandhi = calendarDate.getMonth() === 9 && calendarDate.getDate() === 2;
+    if (isTopGandhi && !hasGandhiKey) {
+       setBubbleText("Ingha Etho jolikithu... athu enna nu Tap panni paarugha");
+       setBubblePosition('bottom');
+       setShowBubble(true);
+       return false;
+    }
 
     if (tutorialState !== -1) {
       setTutorialTears(prev => prev + 1);
@@ -393,6 +417,15 @@ function App() {
       setCalendarDate(normalizeDate(new Date()));
       setResetCount(c => c + 1); 
       setTutorialState(4);
+    } else if (tutorialState === -1) {
+      // DEV SHORTCUT: Double tap anywhere to reset back to "Today" for testing
+      if (navigator.vibrate) navigator.vibrate([30, 30]);
+      setCalendarDate(normalizeDate(new Date()));
+      setResetCount(c => c + 1);
+      localStorage.removeItem('lastTornDate');
+      localStorage.removeItem('hasGandhiKey');
+      setHasGandhiKey(false);
+      setShowBubble(false);
     }
   };
 
@@ -482,15 +515,16 @@ function App() {
     tutorialState === 3 || 
     tutorialState === 4 || 
     (tutorialState === 2 && tutorialTears >= 10) || 
-    (tutorialState === -1 && missedDays <= 0);
+    false; // (tutorialState === -1 && missedDays <= 0); DEV OVERRIDE
 
-  const pages = [0, 1, 2].map((i) => {
+    const pages = [0, 1, 2].map((i) => {
     const pageDate = addDays(calendarDate, i);
     return {
       id: `${pageDate.getTime()}-${resetCount}`, 
       dateText: formatDate(pageDate),
       daysRemaining: getDaysRemaining(pageDate),
-      index: i
+      index: i,
+      isGandhiJayanti: pageDate.getMonth() === 9 && pageDate.getDate() === 2 // Oct is 9 in JS Date
     };
   });
 
@@ -725,7 +759,7 @@ function App() {
           >
             <AnimatePresence>
               {isGameMode ? (
-                <SecretGame key="secret-game" isDarkMode={isDarkMode} />
+                <SecretGame key="secret-game" isDarkMode={isDarkMode} onExitGame={() => setIsGameMode(false)} />
               ) : (
                 pages.slice().reverse().map((page) => (
                   <CalendarPage
@@ -735,7 +769,10 @@ function App() {
                     index={page.index}
                     isTop={page.index === 0}
                     onTear={handleTear}
+                    onEyeClick={handleEyeClick}
                     isDarkMode={isDarkMode}
+                    isGandhiJayanti={page.isGandhiJayanti}
+                    hasGandhiKey={hasGandhiKey}
                     isTearLocked={isTearLocked}
                   />
                 ))
@@ -759,6 +796,7 @@ function App() {
           </AnimatePresence>
         </div>
       </div>
+      <KeyModal isOpen={showKeyModal} onClose={() => setShowKeyModal(false)} />
     </>
   );
 }
