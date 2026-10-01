@@ -3,7 +3,7 @@ import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Sparkles, PartyPopper, Star } from 'lucide-react';
 import GandhiPic from './GandhiPic';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, hasGandhiKey }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -63,7 +63,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     <motion.div
       style={{
         zIndex: isTop ? 100 : 100 - index,
-        pointerEvents: isTop && !isTorn && !isFinished && !isTearLocked ? 'auto' : 'none',
+        pointerEvents: isTop && !isTorn && !isFinished ? 'auto' : 'none',
         position: 'absolute',
         top: 0,
         left: 0,
@@ -192,7 +192,13 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                       th day
                     </span>
                   </div>
-                  <div className={`px-5 py-1.5 rounded-full border-2 mt-3 ${pillBgOutline}`}>
+                  <div 
+                    className={`px-5 py-1.5 rounded-full border-2 mt-3 cursor-pointer select-none ${pillBgOutline}`}
+                    onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
+                    onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
+                    onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                    onPointerLeave={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                  >
                     <span className={`text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
                       To reach 2027
                     </span>
@@ -226,7 +232,13 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 </div>
                 
                 <div className="pb-6 sm:pb-8 flex justify-center w-full z-10 relative">
-                  <div className={`px-6 py-2 rounded-full border-2 ${pillBgOutline}`}>
+                  <div 
+                    className={`px-6 py-2 rounded-full border-2 cursor-pointer select-none ${pillBgOutline}`}
+                    onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
+                    onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
+                    onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                    onPointerLeave={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                  >
                     <span className={`text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
                       To reach 2027
                     </span>

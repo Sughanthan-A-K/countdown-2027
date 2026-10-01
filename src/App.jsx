@@ -3,7 +3,6 @@ import CalendarPage from './components/CalendarPage';
 import Onboarding from './components/Onboarding';
 import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
-import SecretGame from './components/SecretGame';
 import KeyModal from './components/KeyModal';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check } from 'lucide-react';
@@ -51,41 +50,7 @@ function App() {
     }
   };
 
-  const handleGameToggle = () => {
-    setGameTransitioning(true);
-    setTimeout(() => {
-      setIsGameMode(prev => {
-        const nextState = !prev;
-        localStorage.setItem('secretGameMode', String(nextState));
-        return nextState;
-      });
-    }, 800);
-    setTimeout(() => {
-      setGameTransitioning(false);
-    }, 1600);
-  };
-
-  const handleInfoDown = () => {
-    // Only allow secret game if the key is collected
-    if (localStorage.getItem('hasGandhiKey') !== 'true') return;
-
-    holdTriggered.current = false;
-    infoHoldTimer.current = setTimeout(() => {
-      holdTriggered.current = true;
-      handleGameToggle();
-      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-    }, 3000); // 3 seconds is better for UX
-  };
-
-  const handleInfoUp = () => {
-    if (infoHoldTimer.current) clearTimeout(infoHoldTimer.current);
-  };
-
   const handleInfoClick = (e) => {
-    if (holdTriggered.current) {
-      e.preventDefault();
-      return;
-    }
     setShowInfo(true);
   };
 
@@ -103,11 +68,59 @@ function App() {
   const [isRevealing, setIsRevealing] = useState(false);
   const [hasDiscovered, setHasDiscovered] = useState(() => localStorage.getItem('hasDiscoveredTranslate') === 'true');
 
-  // Game Mode State
-  const [isGameMode, setIsGameMode] = useState(() => localStorage.getItem('secretGameMode') === 'true');
-  const [gameTransitioning, setGameTransitioning] = useState(false);
-  const infoHoldTimer = useRef(null);
-  const holdTriggered = useRef(false);
+  const [isDevMode, setIsDevMode] = useState(() => localStorage.getItem('isDevMode') === 'true');
+  const devClickCountRef = useRef(0);
+  const devHoldTimerRef = useRef(null);
+  
+  const handleDevPillTap = () => {
+    if (isDevMode) return;
+    devClickCountRef.current += 1;
+    if (devClickCountRef.current >= 10) {
+      setIsDevMode(true);
+      localStorage.setItem('isDevMode', 'true');
+      devClickCountRef.current = 0;
+      if (navigator.vibrate) navigator.vibrate([100, 100, 100]);
+      setBubbleText("Developer Mode Activated!");
+      setBubblePosition('bottom');
+      setShowBubble(true);
+      if (window.devBubbleTimer) clearTimeout(window.devBubbleTimer);
+      window.devBubbleTimer = setTimeout(() => setShowBubble(false), 2000);
+    }
+    
+    if (window.devTapResetTimer) clearTimeout(window.devTapResetTimer);
+    window.devTapResetTimer = setTimeout(() => {
+      devClickCountRef.current = 0;
+    }, 2000);
+  };
+
+  const handleDevPillHoldStart = () => {
+    if (!isDevMode) return;
+    if (devHoldTimerRef.current) clearTimeout(devHoldTimerRef.current);
+    devHoldTimerRef.current = setTimeout(() => {
+      setIsDevMode(false);
+      localStorage.setItem('isDevMode', 'false');
+      
+      const stored = localStorage.getItem('lastTornDate');
+      if (stored) {
+         setCalendarDate(new Date(parseInt(stored, 10)));
+      } else {
+         setCalendarDate(normalizeDate(new Date()));
+      }
+
+      if (navigator.vibrate) navigator.vibrate([200]);
+      setBubbleText("Developer Mode De-Activated!");
+      setBubblePosition('bottom');
+      setShowBubble(true);
+      if (window.devBubbleTimer) clearTimeout(window.devBubbleTimer);
+      window.devBubbleTimer = setTimeout(() => setShowBubble(false), 2000);
+    }, 5000);
+  };
+
+  const handleDevPillHoldEnd = () => {
+    if (devHoldTimerRef.current) {
+      clearTimeout(devHoldTimerRef.current);
+    }
+  };
 
   // Nag State for returning users
   const [nagSequence, setNagSequence] = useState(null);
@@ -383,11 +396,13 @@ function App() {
   const handleTear = () => {
     if (tutorialState === 0 || tutorialState === 3 || tutorialState === 4) return false;
     if (tutorialState === 2 && tutorialTears >= 10) return false;
-    // if (tutorialState === -1 && missedDays <= 0) return false; // DEV OVERRIDE
+    if (tutorialState === -1 && !isDevMode && missedDays <= 0) {
+       return false;
+    }
 
     const isTopGandhi = calendarDate.getMonth() === 9 && calendarDate.getDate() === 2;
     if (isTopGandhi && !hasGandhiKey) {
-       setBubbleText("Ingha Etho jolikithu... athu enna nu Tap panni paarugha");
+       setBubbleText("Kannula etho minuminukkuthe... enna nu Tap panni paarunga");
        setBubblePosition('bottom');
        setShowBubble(true);
        return false;
@@ -400,7 +415,9 @@ function App() {
       // Normal Mode
       const nextDate = addDays(calendarDate, 1);
       setCalendarDate(nextDate);
-      localStorage.setItem('lastTornDate', nextDate.getTime().toString());
+      if (!isDevMode) {
+        localStorage.setItem('lastTornDate', nextDate.getTime().toString());
+      }
       
       // Hide the nagging SB instantly when they tear
       if (nagSequence) {
@@ -418,13 +435,11 @@ function App() {
       setResetCount(c => c + 1); 
       setTutorialState(4);
     } else if (tutorialState === -1) {
+      if (!isDevMode) return; // Only allow reset in developer mode
       // DEV SHORTCUT: Double tap anywhere to reset back to "Today" for testing
       if (navigator.vibrate) navigator.vibrate([30, 30]);
       setCalendarDate(normalizeDate(new Date()));
       setResetCount(c => c + 1);
-      localStorage.removeItem('lastTornDate');
-      localStorage.removeItem('hasGandhiKey');
-      setHasGandhiKey(false);
       setShowBubble(false);
     }
   };
@@ -515,7 +530,7 @@ function App() {
     tutorialState === 3 || 
     tutorialState === 4 || 
     (tutorialState === 2 && tutorialTears >= 10) || 
-    false; // (tutorialState === -1 && missedDays <= 0); DEV OVERRIDE
+    (tutorialState === -1 && !isDevMode && missedDays <= 0);
 
     const pages = [0, 1, 2].map((i) => {
     const pageDate = addDays(calendarDate, i);
@@ -596,11 +611,6 @@ function App() {
           </button>
 
           <button 
-            onMouseDown={handleInfoDown}
-            onMouseUp={handleInfoUp}
-            onMouseLeave={handleInfoUp}
-            onTouchStart={handleInfoDown}
-            onTouchEnd={handleInfoUp}
             onClick={handleInfoClick}
             className={`absolute top-8 left-8 z-[50] p-3 rounded-full border-2 shadow-md ${
               isDarkMode 
@@ -758,10 +768,7 @@ function App() {
             className="relative w-full max-w-[400px] h-[60vh] min-h-[450px] flex items-center justify-center perspective-[1200px]"
           >
             <AnimatePresence>
-              {isGameMode ? (
-                <SecretGame key="secret-game" isDarkMode={isDarkMode} onExitGame={() => setIsGameMode(false)} />
-              ) : (
-                pages.slice().reverse().map((page) => (
+                {pages.slice().reverse().map((page) => (
                   <CalendarPage
                     key={page.id}
                     dateText={page.dateText}
@@ -774,26 +781,13 @@ function App() {
                     isGandhiJayanti={page.isGandhiJayanti}
                     hasGandhiKey={hasGandhiKey}
                     isTearLocked={isTearLocked}
+                    onDevTap={handleDevPillTap}
+                    onDevHoldStart={handleDevPillHoldStart}
+                    onDevHoldEnd={handleDevPillHoldEnd}
                   />
-                ))
-              )}
+                ))}
             </AnimatePresence>
           </motion.div>
-
-          {/* Cinematic Circular Transition Overlay */}
-          <AnimatePresence>
-            {gameTransitioning && (
-              <motion.div
-                initial={{ clipPath: "circle(0% at 20px 40px)" }} // Approx position of info button
-                animate={{ clipPath: "circle(150% at 20px 40px)" }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="fixed inset-0 z-[1000] bg-[#f7d13d] pointer-events-none flex items-center justify-center"
-              >
-                <span className="text-black font-black text-6xl tracking-widest opacity-20">2 0 2 7</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </div>
       <KeyModal isOpen={showKeyModal} onClose={() => setShowKeyModal(false)} />
