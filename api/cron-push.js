@@ -29,6 +29,17 @@ const positiveMessages = [
   "Naalaiki enna aagum nu yosikkama, innaiku kedaicha naala enjoy pannunga. Just {days} days remaining!"
 ];
 
+const englishMessages = [
+  "Let it go man, we'll see... {days} days left... good things will happen chill dude!",
+  "It's OK Bro, {days} days left, let's chill and do it!",
+  "Every day is a fresh start da! Just {days} days to go... rock it!",
+  "What you wish for will definitely happen... Only {days} days left, keep pushing!",
+  "Don't worry man, you are doing great! {days} days remaining for 2027!",
+  "Take a deep breath. Take the rest you need today. {days} days to 2027, you have time.",
+  "Hey boss, we woke up this morning right? That itself is a big success! {days} days to go, rock on!",
+  "Don't think about what will happen tomorrow, enjoy the day you got today. Just {days} days remaining!"
+];
+
 export default async function handler(req, res) {
   // Check Vercel Cron Secret (if configured)
   if (process.env.CRON_SECRET && req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -42,15 +53,17 @@ export default async function handler(req, res) {
   if (!subs || subs.length === 0) return res.status(200).json({ success: true, message: 'No subs' });
   
   const days = getDaysRemaining();
-  const randomMsg = positiveMessages[Math.floor(Math.random() * positiveMessages.length)].replace('{days}', days);
-  
-  const payload = JSON.stringify({
-    title: 'Countdown 2027',
-    body: randomMsg,
-    icon: '/favicon.svg'
-  });
   
   const promises = subs.map(sub => {
+    const msgList = sub.language === 'english' ? englishMessages : positiveMessages;
+    const randomMsg = msgList[Math.floor(Math.random() * msgList.length)].replace('{days}', days);
+    
+    const payload = JSON.stringify({
+      title: 'Countdown 2027',
+      body: randomMsg,
+      icon: '/favicon.svg'
+    });
+    
     const pushSub = { endpoint: sub.endpoint, keys: sub.keys };
     return webpush.sendNotification(pushSub, payload).catch(async (e) => {
       if (e.statusCode === 410 || e.statusCode === 404) {

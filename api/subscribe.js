@@ -12,7 +12,8 @@ export default async function handler(req, res) {
     .from('push_subscriptions')
     .upsert({
       endpoint: subscription.endpoint,
-      keys: subscription.keys
+      keys: subscription.keys,
+      language: subscription.language || 'tanglish'
     }, { onConflict: 'endpoint' });
     
   if (error) {

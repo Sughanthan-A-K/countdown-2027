@@ -256,10 +256,12 @@ function App() {
           }
           
           if (sub) {
+            const subData = JSON.parse(JSON.stringify(sub));
+            subData.language = globalLang; // Include user language
             await fetch('/api/subscribe', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(sub)
+              body: JSON.stringify(subData)
             });
           }
         } catch (e) {
