@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import GoldenKey from './GoldenKey';
 
-export default function KeyModal({ isOpen, onClose }) {
+export default function KeyModal({ isOpen, onClose, globalLang }) {
   const [isCollecting, setIsCollecting] = useState(false);
 
   const handleCollect = () => {
@@ -106,13 +106,16 @@ export default function KeyModal({ isOpen, onClose }) {
                   transition={{ duration: 1.0, ease: "easeInOut" }}
                   className="relative z-10 px-8 pb-8 flex flex-col items-center w-full overflow-hidden"
                 >
-                  <h2 className="text-3xl font-black text-black tracking-widest uppercase mb-2">
+                  <h2 className="text-3xl font-black text-black tracking-widest uppercase mb-2 text-center">
                     You got One Key!
                   </h2>
                   
                   <div className="bg-black/10 p-4 rounded-lg mt-4 border border-black/20 w-full text-center">
                      <p className="text-sm font-bold text-black/80 italic">
-                       "Ingha vera etho Secret iruku... Ungalukku eppo Key thevai-padutho apo just double-tap pannunga...."
+                       {globalLang === 'english' 
+                         ? '"There is another Secret here... Whenever you need the Key, just double-tap...."'
+                         : '"Ingha vera etho Secret iruku... Ungalukku eppo Key thevai-padutho apo just double-tap pannunga...."'
+                       }
                      </p>
                   </div>
                   

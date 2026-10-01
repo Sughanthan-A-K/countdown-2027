@@ -31,7 +31,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [infoLang, setInfoLang] = useState('tanglish');
+  const [globalLang, setGlobalLang] = useState(() => localStorage.getItem('globalLang') || 'tanglish');
   const [isShortScreen, setIsShortScreen] = useState(typeof window !== 'undefined' && window.innerHeight < 550);
 
   useEffect(() => {
@@ -165,7 +165,13 @@ function App() {
     </span>
   );
 
-  const epilogueMessages = [
+  const epilogueMessages = globalLang === 'english' ? [
+    <>Ok, after this you won't be able to tear calendar pages this fast...<br/>You can only tear {highlight('one date')} per day.</>,
+    <>You'll get a notification every morning at {highlight('6 AM')}....</>,
+    <>So hereafter it'll serve as a daily reminder and alert that there are only {highlight(`${getDaysRemaining(actualToday)} days`)} left until this year ends...</>,
+    <>So use this and do something {highlight('productive')} man!</>,
+    <>So now, I hand over this calendar to you. {highlight('Make it count!')}</>
+  ] : [
     <>Ok, ithukku apparam unnala calendar pages-a ivlo fast-a kizhikkave mudiyathu...<br/>Daily {highlight('oru date')} thaan kizhikka mudiyum.</>,
     <>Daily morning {highlight('6 AM')}-ku unakku notification um vanthudum....</>,
     <>So hereafter daily unakku oru reminder and alert ah irukkum like innum intha year mudiya {highlight(`${getDaysRemaining(actualToday)} days`)} thaan irukku nu...</>,
@@ -173,7 +179,29 @@ function App() {
     <>So now, I hand over this calendar to you. {highlight('Make it count!')}</>
   ];
 
-  const missedDaysNags = [
+  const missedDaysNags = globalLang === 'english' ? [
+    [<>Hey {highlight('Boss')}, why are you sitting on an old date! Come to today's date!</>],
+    [
+      <>You finally came {highlight('Bro')}! I prepared this calendar just for you... and you are checking it just now...</>,
+      <>{highlight('Bro')} how long are you going to think, tear it and get up-to-date!</>
+    ],
+    [
+      <>Hey {highlight('Chief')}... did you completely forget to tear the calendar?</>, 
+      <>To fix your date, first {highlight('tear')} that paper!</>
+    ],
+    [
+      <>Did I make a mistake by {highlight('creating this app...')}</>, 
+      <>You're still on an old date! Get updated boss, {highlight('tear that paper!')}</>
+    ],
+    [
+      <>Seeing the speed you tear, even when 2027 comes, your calendar will still be in {highlight('2026')}!</>, 
+      <>Quickly {highlight('catch up')} by tearing all those missed dates!</>
+    ],
+    [
+      <>Where are you going {highlight('Boss')}? Are you so busy you don't even have time to tear the calendar?</>, 
+      <>Alright, at least you came today. {highlight('Tear away')} those old dates!</>
+    ]
+  ] : [
     [<>Enna {highlight('Boss')}, ipdi pazhaya date-laye ukkanthutu irukkinga! Innaiku date-kku vaanga!</>],
     [
       <>Vanthutingala {highlight('Ji')}! Naan ungalukkaaga calendar ready panni kudutha... Neenga ippa thaan vanthu paakkuringa...</>,
@@ -248,10 +276,10 @@ function App() {
     const hasSeenHint = localStorage.getItem('hasSeenTranslateHint');
     
     // Show if they haven't seen the hint (clicked OK) AND haven't discovered it themselves
-    if (showInfo && infoLang === 'tanglish' && !hasSeenHint && !hasDiscovered) {
+    if (showInfo && !hasSeenHint && !hasDiscovered) {
       hintTimeout = setTimeout(() => {
         showMsg(
-          <><span className="text-cyan-400">Double Tap</span> to translate!</>, 
+          <><span className="text-cyan-400">Double Tap</span> COUNTDOWN 2027<br/>to change language!</>, 
           0,
           () => {
             localStorage.setItem('hasSeenTranslateHint', 'true'); // Only ignore next time if they click OK
@@ -262,7 +290,7 @@ function App() {
             setBubbleBtnText(null);
             setBubblePosition('bottom');
           },
-          "OK 👍",
+          "Got it!",
           "top"
         );
       }, 5000);
@@ -270,7 +298,7 @@ function App() {
     return () => {
       clearTimeout(hintTimeout);
     };
-  }, [showInfo, infoLang]);
+  }, [showInfo, globalLang]);
 
   // Hide bubble instantly if Info modal is closed
   useEffect(() => {
@@ -285,7 +313,9 @@ function App() {
   const [lastTapTime, setLastTapTime] = useState(0);
 
   const handleTitleDoubleTap = () => {
-    setInfoLang(prev => prev === 'tanglish' ? 'english' : 'tanglish');
+    const newLang = globalLang === 'tanglish' ? 'english' : 'tanglish';
+    setGlobalLang(newLang);
+    localStorage.setItem('globalLang', newLang);
     localStorage.setItem('hasDiscoveredTranslate', 'true');
     setHasDiscovered(true);
     setShowBubble(false); // Hide the hint if they double tap
@@ -308,10 +338,15 @@ function App() {
     if (tutorialState === 1) { 
       if (tutorialTears === 0) {
         timeout1 = setTimeout(() => {
-          showMsg(<>Nee evlo venalum...<br/>intha calendar-a kizhichi podalam...<br/>{highlight('Swipe panni')} tear pannu...</>, 0);
+          showMsg(globalLang === 'english' ? <>You can tear this calendar...<br/>as much as you want...<br/>{highlight('Swipe')} to tear...</> : <>Nee evlo venalum...<br/>intha calendar-a kizhichi podalam...<br/>{highlight('Swipe panni')} tear pannu...</>, 0);
           timeout2 = setTimeout(() => {
             interval = setInterval(() => {
-              const nags = [
+              const nags = globalLang === 'english' ? [
+                <>Hey {highlight('Boss')}, standing in front of the calendar and thinking? Tear it away!</>, 
+                <>{highlight('Bro')}, only if you tear that paper our next day will start... try it out!</>, 
+                <>So much hesitation to tear a paper {highlight('Chief')}? It'll definitely feel great, tear it off!</>,
+                <>Man, how long are you going to think? {highlight('Boldly')} tear it boss!</>
+              ] : [
                 <>Enna {highlight('Boss')}, Calendar munnadi ninnutu yosikkiringa? Kizhichi thallunga!</>, 
                 <>{highlight('Ji')}, antha paper-a kizhicha thaan namakku adutha naal start aagum... try panni paarungalen!</>, 
                 <>Oru paper-a kizhikka ivlo thayakkama {highlight('Chief')}? Kandippa nalla feel aagum, kizhichi vidunga!</>,
@@ -323,18 +358,18 @@ function App() {
           }, 8000); // Wait 8 seconds before starting to nag them
         }, 4500); // 4.5 seconds delay to let the confetti and reveal animation finish completely
       } else if (tutorialTears === 1) {
-        timeout1 = showMsg(<>Yes apdithaan!<br/>Unnala {highlight('evlo kizhichi poda mudiyumo')} kizhichi podu</>, 0);
+        timeout1 = showMsg(globalLang === 'english' ? <>Yes exactly!<br/>Tear off {highlight('as many as you can')}</> : <>Yes apdithaan!<br/>Unnala {highlight('evlo kizhichi poda mudiyumo')} kizhichi podu</>, 0);
         setTutorialState(2);
       }
     } else if (tutorialState === 2) {
       if (tutorialTears >= 10) {
-        timeout1 = showMsg(<>Pothum da nee {highlight('kizhichathu!')}</>, 3000);
+        timeout1 = showMsg(globalLang === 'english' ? <>That's enough {highlight('tearing!')}</> : <>Pothum da nee {highlight('kizhichathu!')}</>, 3000);
         timeout2 = setTimeout(() => {
           setTutorialState(3);
         }, 3500);
       }
     } else if (tutorialState === 3) {
-      showMsg(<>Kizhikkumbothu semmaya irunthucha...<br/>Seri, ippo Calendar-a {highlight('Double Tap')} pannu....</>, 0); 
+      showMsg(globalLang === 'english' ? <>Did it feel great to tear it...<br/>Okay, now {highlight('Double Tap')} the Calendar....</> : <>Kizhikkumbothu semmaya irunthucha...<br/>Seri, ippo Calendar-a {highlight('Double Tap')} pannu....</>, 0); 
     } else if (tutorialState === 4) {
       if (epilogueStep < epilogueMessages.length) {
         showMsg(epilogueMessages[epilogueStep], 0); 
@@ -402,7 +437,7 @@ function App() {
 
     const isTopGandhi = calendarDate.getMonth() === 9 && calendarDate.getDate() === 2;
     if (isTopGandhi && !hasGandhiKey) {
-       setBubbleText("Kannula etho minuminukkuthe... enna nu Tap panni paarunga");
+       setBubbleText(globalLang === "english" ? "Something is sparkling in the eyes... Tap to see what it is" : "Kannula etho minuminukkuthe... enna nu Tap panni paarunga");
        setBubblePosition('bottom');
        setShowBubble(true);
        return false;
@@ -583,7 +618,7 @@ function App() {
       </svg>
 
       {tutorialState === 0 && (
-        <Onboarding onComplete={() => {
+        <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} onComplete={() => {
           setTutorialState(1);
           setIsRevealing(true);
           setTimeout(() => setIsRevealing(false), 4500); // 4.5 seconds
@@ -687,7 +722,7 @@ function App() {
                   <div className="overflow-y-auto custom-scrollbar flex-1 pr-1 -mr-1">
                     <AnimatePresence mode="wait">
                       <motion.div 
-                        key={infoLang}
+                        key={globalLang}
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 10 }}
@@ -695,7 +730,7 @@ function App() {
                         className="space-y-5 sm:space-y-6"
                       >
                         <p className={`text-sm sm:text-base font-medium leading-relaxed select-none ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
-                          {infoLang === 'tanglish' ? (
+                          {globalLang === 'tanglish' ? (
                             <>Intha site-oda mukkiyamaana purpose enna na... 2027 kitta namma nerungittu irukkom. So, neenga notification allow panniyiruntha, daily morning unga day-a positive-a start panna ithu oru reminder-a irukkum. Unga time-a proper-a use panna oru chinna indication thaan intha site-oda purpose!</>
                           ) : (
                             <>The main purpose of this site is to remind you that we are getting closer to 2027. If you allow notifications, it will serve as a daily morning reminder to start your day positively. Ultimately, it's just a small indication to help you use your time properly!</>
@@ -704,7 +739,7 @@ function App() {
                         
                         <div className={`p-4 rounded-xl sm:rounded-2xl border-2 select-none ${isDarkMode ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-neutral-100'}`}>
                           <p className="text-xs sm:text-sm font-bold uppercase tracking-widest opacity-60 mb-2 leading-relaxed">
-                            {infoLang === 'tanglish' 
+                            {globalLang === 'tanglish' 
                               ? 'Ennoda contact panna, just click my name and text me! :)' 
                               : 'To get in touch with me, just click my name and drop a text! :)'}
                           </p>
@@ -726,7 +761,7 @@ function App() {
 
                         <div className="pt-2 select-none">
                           <p className={`text-xs sm:text-sm font-medium mb-3 leading-relaxed ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
-                            {infoLang === 'tanglish'
+                            {globalLang === 'tanglish'
                               ? 'Ungalukku intha site pudichiruntha, just unga friends-kku share pannunga...'
                               : 'If you like this site, just share it with your friends...'}
                           </p>
@@ -740,8 +775,8 @@ function App() {
                           >
                             {copied ? <Check size={18} /> : <Copy size={18} />}
                             {copied 
-                              ? (infoLang === 'tanglish' ? 'Link Copied!' : 'Link Copied!') 
-                              : (infoLang === 'tanglish' ? 'App Link Copy Pannu' : 'Copy App Link')}
+                              ? (globalLang === 'tanglish' ? 'Link Copied!' : 'Link Copied!') 
+                              : (globalLang === 'tanglish' ? 'App Link Copy Pannu' : 'Copy App Link')}
                           </button>
                         </div>
                       </motion.div>
@@ -790,7 +825,7 @@ function App() {
           </motion.div>
         </div>
       </div>
-      <KeyModal isOpen={showKeyModal} onClose={() => setShowKeyModal(false)} />
+      <KeyModal isOpen={showKeyModal} onClose={() => setShowKeyModal(false)} globalLang={globalLang} />
     </>
   );
 }
