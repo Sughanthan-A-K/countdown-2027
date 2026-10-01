@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import GoldenKey from './GoldenKey';
 import { motion, useMotionValue, animate, useTransform, AnimatePresence } from 'framer-motion';
 
 const LEVELS = [
@@ -39,49 +40,196 @@ const GameBubble = ({ children }) => (
   </motion.div>
 );
 
-const AnimatedDoor = ({ onClick }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20, scale: 0.9, originX: 0, originY: 1 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    onClick={onClick}
-    className="self-start relative cursor-pointer mt-2 perspective-[1000px]"
-  >
-    <div className="w-20 h-28 sm:w-24 sm:h-32 border-4 border-[#f7d13d] bg-black relative flex items-end shadow-[0_0_15px_rgba(247,209,61,0.3)] hover:shadow-[0_0_30px_rgba(247,209,61,0.6)] transition-shadow">
-       {/* Inside room / glowing void */}
-       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7d13d]/60 to-transparent pointer-events-none" />
-       
-       {/* The Door Panel */}
-       <motion.div 
-         initial={{ rotateY: 0 }}
-         animate={{ rotateY: 95 }}
-         transition={{ delay: 0.5, duration: 1.2, type: "spring", bounce: 0.3 }}
-         style={{ transformOrigin: 'left' }}
-         className="absolute inset-y-0 left-0 w-full bg-[#f7d13d] border-r border-[#c2a222] flex items-center justify-end pr-2 sm:pr-3"
-       >
-          {/* Door Handle */}
-          <div className="w-1.5 h-4 sm:w-2 sm:h-5 rounded-full bg-black shadow-sm" />
-       </motion.div>
-    </div>
-  </motion.div>
-);
+const AnimatedDoor = ({ onClick, globalDoubleTap }) => {
+  const [doorState, setDoorState] = useState('locked'); // 'locked' | 'key_flying' | 'key_inserted' | 'unlocked'
+  const [shake, setShake] = useState(false);
+  const [hint, setHint] = useState("");
+  const [tapCount, setTapCount] = useState(0);
+  const keyholeRef = useRef(null);
+  const [targetPos, setTargetPos] = useState({ x: 0, y: 0 });
+  const [windowCenter, setWindowCenter] = useState({ x: 0, y: 0 });
+  const [lastDoorTap, setLastDoorTap] = useState(0);
 
-const PortalExitAnimation = () => (
+  const triggerKeySequence = () => {
+    if (doorState === 'locked') {
+      const hasKey = localStorage.getItem('hasGandhiKey') === 'true';
+      if (hasKey) {
+        if (navigator.vibrate) navigator.vibrate(50);
+        
+        if (keyholeRef.current) {
+           const rect = keyholeRef.current.getBoundingClientRect();
+           setTargetPos({
+              x: rect.left + rect.width / 2,
+              y: rect.top + rect.height / 2
+           });
+           setWindowCenter({
+              x: window.innerWidth / 2,
+              y: window.innerHeight / 2
+           });
+        }
+        
+        setHint("");
+        setDoorState('key_flying');
+      } else {
+        setShake(true);
+        setHint("YOU NEED A KEY...");
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (globalDoubleTap > 0) {
+      triggerKeySequence();
+    }
+  }, [globalDoubleTap]);
+
+  const handleTap = () => {
+    const now = Date.now();
+    if (now - lastDoorTap < 300) {
+       triggerKeySequence();
+       setLastDoorTap(0);
+       return;
+    }
+    setLastDoorTap(now);
+
+    if (doorState === 'locked') {
+      if (navigator.vibrate) navigator.vibrate(50);
+      setShake(true);
+      setHint(tapCount % 2 === 0 ? "DOOR LOCKED!" : "YOU NEED A KEY...");
+      setTapCount(prev => prev + 1);
+      setTimeout(() => setShake(false), 300);
+    } else if (doorState === 'key_inserted') {
+      setHint("SWIPE RIGHT TO UNLOCK");
+    }
+  };
+
+  const handleDragEnd = (event, info) => {
+    if (doorState !== 'key_inserted') return;
+    
+    // Allow dragging right to unlock
+    if (info.offset.x > 30) {
+      if (navigator.vibrate) navigator.vibrate([100]);
+      setDoorState('unlocked');
+      setHint("UNLOCKED!");
+      setTimeout(() => {
+        if (onClick) onClick();
+      }, 800);
+    }
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20, scale: 0.9, originX: 0.5, originY: 0.5 }}
+      animate={shake ? { x: [-5, 5, -5, 5, 0], opacity: 1, y: 0, scale: 1 } : { opacity: 1, y: 0, scale: 1, x: 0 }}
+      transition={shake ? { duration: 0.3 } : { duration: 0.8, type: 'spring', bounce: 0.3 }}
+      className="self-end relative mt-2 mr-2 sm:mr-4 flex flex-col items-end gap-2"
+    >
+      <div className="h-6 flex items-end">
+        <AnimatePresence mode="wait">
+          {hint && (
+            <motion.div 
+               key={hint} 
+               initial={{ opacity: 0, y: 5 }} 
+               animate={{ opacity: 1, y: 0 }} 
+               transition={{ duration: 0.8, ease: "easeOut" }} 
+               exit={{ opacity: 0, transition: { duration: 0.2 } }} 
+               className="text-[#f7d13d] text-[11px] sm:text-xs font-black uppercase tracking-widest bg-black/80 px-3 py-1.5 rounded text-right whitespace-pre-line shadow-[0_0_10px_rgba(247,209,61,0.2)]"
+            >
+              {hint}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <motion.div 
+        drag={doorState === 'key_inserted' ? "x" : false}
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.4}
+        onDragEnd={handleDragEnd}
+        onClick={(e) => { e.stopPropagation(); handleTap(); }}
+        className="w-28 h-40 sm:w-36 sm:h-48 border-4 border-[#f7d13d] bg-black relative flex items-end perspective-[1000px] shadow-[0_0_20px_rgba(247,209,61,0.4)] hover:shadow-[0_0_40px_rgba(247,209,61,0.7)] transition-shadow cursor-pointer"
+      >
+         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7d13d]/60 to-transparent pointer-events-none" />
+         <motion.div 
+           initial={{ rotateY: 0 }}
+           animate={{ rotateY: doorState === 'unlocked' ? 95 : 0 }}
+           transition={{ duration: 1.2, type: "spring", bounce: 0.3 }}
+           style={{ transformOrigin: 'right' }}
+           className="absolute inset-y-0 right-0 w-full bg-[#f7d13d] border-l border-[#c2a222] flex items-center justify-start pl-3 sm:pl-4"
+         >
+            <div className="relative flex flex-col items-center gap-2">
+              <div className="w-2 h-6 sm:w-2.5 sm:h-8 rounded-full bg-black shadow-[inset_1px_1px_2px_rgba(255,255,255,0.3)]" />
+              <div ref={keyholeRef} className="w-1.5 h-2.5 sm:w-2 sm:h-3 bg-black rounded-full relative perspective-[1000px]">
+                {(doorState === 'key_inserted' || doorState === 'unlocked') && (
+                   <motion.div 
+                     className="absolute top-1/2 left-1/2 z-10 drop-shadow-[0_0_10px_rgba(247,209,61,0.6)]"
+                     style={{ transform: 'translate(-48px, -48px) scale(0.2)' }}
+                   >
+                      <GoldenKey size={96} isInserted={true} />
+                   </motion.div>
+                )}
+              </div>
+            </div>
+         </motion.div>
+      </motion.div>
+
+      {doorState === 'key_flying' && typeof document !== 'undefined' && createPortal(
+         <div className="fixed inset-0 z-[100000] pointer-events-none">
+            <motion.div
+               initial={{ x: windowCenter.x, y: -200, scale: 0.5, rotateZ: 90, rotateY: 180 }}
+               animate={{ 
+                  x: [ windowCenter.x, windowCenter.x, windowCenter.x, targetPos.x ],
+                  y: [ -200, windowCenter.y, windowCenter.y, targetPos.y ],
+                  scale: [0.5, 1.5, 1.5, 0.2],
+                  rotateZ: [90, 0, 0, 0],
+                  rotateY: [180, 0, 1080, 1080]
+               }}
+               transition={{ 
+                  duration: 2.5, 
+                  times:   [0, 0.25, 0.75, 1], 
+                  ease: "easeInOut" 
+               }}
+               onAnimationComplete={() => {
+                  setDoorState('key_inserted');
+                  if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+                  setTimeout(() => {
+                     setHint("SWIPE RIGHT TO UNLOCK");
+                  }, 400);
+               }}
+               className="absolute drop-shadow-[0_0_30px_rgba(247,209,61,0.8)]"
+               style={{ 
+                  left: 0, top: 0,
+                  marginLeft: '-48px', 
+                  marginTop: '-48px',
+                  transformOrigin: 'center' 
+               }}
+            >
+               <GoldenKey size={96} />
+            </motion.div>
+         </div>,
+         document.body
+      )}
+
+    </motion.div>
+  );
+};
+
+const PortalExitAnimation = ({ onComplete }) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.3 }}
     className="fixed inset-0 z-[1000000] bg-black overflow-hidden flex items-center justify-center pointer-events-none"
   >
-    {/* Screen Shake Wrapper */}
     <motion.div
       animate={{ x: [-8, 8, -8, 8, -5, 5, 0], y: [-8, 8, 8, -8, 5, -5, 0] }}
       transition={{ duration: 0.3, repeat: 5, repeatType: "mirror" }}
       className="absolute inset-0 flex items-center justify-center perspective-[1000px]"
     >
-      {/* Flying Doorway / Portal Frames */}
       {[...Array(6)].map((_, i) => (
          <motion.div
-            key={`frame-${i}`}
+            key={"frame-" + i}
+            onAnimationComplete={i === 5 ? onComplete : undefined}
             initial={{ scale: 0.1, opacity: 0, z: -1000 }}
             animate={{ scale: 20, opacity: [0, 1, 0.5, 0], z: 500 }}
             transition={{ duration: 1.2, delay: i * 0.25, ease: "easeIn" }}
@@ -89,53 +237,30 @@ const PortalExitAnimation = () => (
          />
       ))}
 
-      {/* Yellow Wind / Speed Lines */}
       <div className="absolute inset-0 flex items-center justify-center">
         {Array.from({ length: 40 }).map((_, i) => {
           const angle = Math.random() * 360;
           return (
-            <motion.div
-              key={`wind-${i}`}
-              initial={{ width: 0, x: 100, opacity: 0 }}
-              animate={{ width: 400 + Math.random() * 600, x: 1500, opacity: [0, 1, 0] }}
-              transition={{
-                duration: 0.3 + Math.random() * 0.3,
-                repeat: Infinity,
-                delay: Math.random() * 0.5,
-                ease: "easeIn"
-              }}
-              className="absolute h-[3px] bg-[#f7d13d] origin-left shadow-[0_0_15px_rgba(247,209,61,0.9)]"
-              style={{ rotate: `${angle}deg` }}
-            />
+            <div key={"wind-" + i} className="absolute inset-0 flex items-center justify-center" style={{ transform: 
+otate(deg) }}>
+              <motion.div
+                initial={{ width: 0, x: 100, opacity: 0 }}
+                animate={{ width: 400 + Math.random() * 600, x: 1500, opacity: [0, 1, 0] }}
+                transition={{ duration: 0.3 + Math.random() * 0.3, repeat: Infinity, delay: Math.random() * 0.5, ease: "easeIn" }}
+                className="absolute h-[3px] bg-[#f7d13d] origin-left shadow-[0_0_15px_rgba(247,209,61,0.9)]"
+              />
+            </div>
           );
         })}
       </div>
     </motion.div>
-
-    {/* Final Jump Flash */}
-    <motion.div
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: [0, 2.5] }}
-      transition={{ delay: 1.5, duration: 0.5, ease: "easeIn" }}
-      className="absolute inset-0 flex items-center justify-center"
-    >
-       <div className="w-full h-full bg-[#f7d13d] rounded-full scale-[2] shadow-[0_0_200px_rgba(247,209,61,1)]" />
-    </motion.div>
-    
-    {/* Final Text */}
-    <motion.span
-       initial={{ opacity: 0, scale: 0.5 }}
-       animate={{ opacity: 1, scale: 1 }}
-       transition={{ delay: 1.7, duration: 0.3 }}
-       className="absolute z-10 text-black font-black text-6xl tracking-widest drop-shadow-md"
-    >
-       2 0 2 7
-    </motion.span>
   </motion.div>
 );
 
-export default function SecretGame({ isDarkMode }) {
-  const [gameState, setGameState] = useState('intro');
+export default function SecretGame({ isDarkMode, onExitGame }) {
+  const [globalDoubleTap, setGlobalDoubleTap] = useState(0);
+  const [lastGameTouch, setLastGameTouch] = useState(0);
+      const [gameState, setGameState] = useState('intro');
   const [showCinematic, setShowCinematic] = useState(true);
   
   const [swipeCount, setSwipeCount] = useState(0);
@@ -771,14 +896,14 @@ export default function SecretGame({ isDarkMode }) {
                        {chatStep >= 6 && <GameBubble key="msg-2">You Played well</GameBubble>}
                        
                        {chatStep === 7 && <TypingIndicator key="typing-3" />}
-                       {chatStep >= 8 && <AnimatedDoor key="door-btn" onClick={handleExitGame} />}
+                       {chatStep >= 8 && <AnimatedDoor key="door-btn" onClick={() => setTransitionStage('exit_flash')} globalDoubleTap={globalDoubleTap} />}
                     </AnimatePresence>
                  </div>
               </motion.div>
            )}
 
            {/* Final Escape Flash */}
-           {transitionStage === 'exit_flash' && <PortalExitAnimation key="exit-flash" />}
+           {transitionStage === 'exit_flash' && <PortalExitAnimation key="exit-flash" onComplete={() => { if (typeof onExitGame === 'function') onExitGame(); else window.location.reload(); }} />}
         </AnimatePresence>,
         document.body
       )}
