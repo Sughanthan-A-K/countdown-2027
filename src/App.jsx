@@ -23,6 +23,8 @@ function App() {
 
   const [hasGandhiKey, setHasGandhiKey] = useState(() => localStorage.getItem('hasGandhiKey') === 'true');
   const [showKeyModal, setShowKeyModal] = useState(false);
+  const [isWaitingForKey, setIsWaitingForKey] = useState(false);
+  const [finalHintStep, setFinalHintStep] = useState('none');
 
   const [tutorialTears, setTutorialTears] = useState(0);
   const [lastTap, setLastTap] = useState(0);
@@ -337,7 +339,7 @@ function App() {
   useEffect(() => {
     let timeout1, timeout2, interval;
     
-    if (tutorialState === 1) { 
+    if (tutorialState === 1 && !showKeyModal && !isWaitingForKey) { 
       if (tutorialTears === 0) {
         timeout1 = setTimeout(() => {
           showMsg(globalLang === 'english' ? <>You can tear this calendar...<br/>as much as you want...<br/>{highlight('Swipe')} to tear...</> : <>Nee evlo venalum...<br/>intha calendar-a kizhichi podalam...<br/>{highlight('Swipe panni')} tear pannu...</>, 0);
@@ -358,7 +360,7 @@ function App() {
               showMsg(randomNag, 0); 
             }, 8000); 
           }, 8000); // Wait 8 seconds before starting to nag them
-        }, 4500); // 4.5 seconds delay to let the confetti and reveal animation finish completely
+        }, 5500); // 5.5 seconds delay to let the confetti and reveal animation finish completely
       } else if (tutorialTears === 1) {
         timeout1 = showMsg(globalLang === 'english' ? <>Yes exactly!<br/>Tear off {highlight('as many as you can')}</> : <>Yes apdithaan!<br/>Unnala {highlight('evlo kizhichi poda mudiyumo')} kizhichi podu</>, 0);
         setTutorialState(2);
@@ -382,6 +384,17 @@ function App() {
         localStorage.setItem('lastTornDate', today.getTime().toString());
         localStorage.setItem('onboardingDone', 'true');
         setTutorialState(-1);
+        
+        // Show sequential hint bubbles (Info first, then Theme)
+        setTimeout(() => {
+          setFinalHintStep('info');
+          setTimeout(() => {
+            setFinalHintStep('theme');
+            setTimeout(() => {
+              setFinalHintStep('none');
+            }, 5000); // Theme bubble for 5 seconds
+          }, 5000); // Info bubble for 5 seconds
+        }, 1000);
       }
     } else if (tutorialState === -1) {
       const missedDays = getDiffDays(actualToday, calendarDate);
@@ -417,16 +430,17 @@ function App() {
       clearTimeout(timeout2);
       clearInterval(interval);
     };
-  }, [tutorialState, tutorialTears, actualToday, epilogueStep, nagSequence, nagStep, calendarDate]);
+  }, [tutorialState, tutorialTears, actualToday, epilogueStep, nagSequence, nagStep, calendarDate, showKeyModal, isWaitingForKey]);
 
   const missedDays = getDiffDays(actualToday, calendarDate);
 
   const handleEyeClick = () => {
     if (!hasGandhiKey) {
        setShowKeyModal(true);
+       setShowBubble(false);
+       setIsWaitingForKey(false);
        setHasGandhiKey(true);
        localStorage.setItem('hasGandhiKey', 'true');
-       setShowBubble(false);
     }
   };
 
@@ -442,6 +456,7 @@ function App() {
        setBubbleText(globalLang === "english" ? "Something is sparkling in the eyes... Tap to see what it is" : "Kannula etho minuminukkuthe... enna nu Tap panni paarunga");
        setBubblePosition('bottom');
        setShowBubble(true);
+       setIsWaitingForKey(true);
        return false;
     }
 
@@ -543,7 +558,7 @@ function App() {
       if (circle) circle.setAttribute('cx', x);
       if (circle) circle.setAttribute('cy', y);
 
-      const duration = 5000; 
+      const duration = 8000; // Increased duration to 8 seconds for slower transition
       const start = performance.now();
 
       document.documentElement.animate(
@@ -554,7 +569,8 @@ function App() {
       function animateMask(time) {
         const elapsed = time - start;
         const progress = Math.min(elapsed / duration, 1);
-        const ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
+        // Ultra-smooth cubic ease-in-out function for cinematic recording
+        const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
         if (circle) circle.setAttribute('r', ease * radius);
         if (progress < 1) requestAnimationFrame(animateMask);
       }
@@ -619,13 +635,18 @@ function App() {
         </defs>
       </svg>
 
-      {tutorialState === 0 && (
-        <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} onComplete={() => {
-          setTutorialState(1);
-          setIsRevealing(true);
-          setTimeout(() => setIsRevealing(false), 4500); // 4.5 seconds
-        }} />
-      )}
+      <AnimatePresence>
+        {tutorialState === 0 && (
+          <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} onComplete={() => {
+            setTutorialState(1);
+            // Delay confetti until the physical drop animation is mostly complete (0.7 seconds)
+            setTimeout(() => {
+              setIsRevealing(true);
+              setTimeout(() => setIsRevealing(false), 4500); // Stop confetti after 4.5 seconds
+            }, 700);
+          }} />
+        )}
+      </AnimatePresence>
 
       <div>
         <div 
@@ -646,6 +667,20 @@ function App() {
           >
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           </button>
+          
+          <AnimatePresence>
+            {finalHintStep === 'theme' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.8 }}
+                className={`absolute top-[85px] right-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 max-w-[150px] pointer-events-none text-right ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
+              >
+                {globalLang === 'english' ? 'Tap for Dark/Light mode' : 'Dark/Light mode maathikka itha tap pannunga'}
+                <div className={`absolute -top-[8px] right-3 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <button 
             onClick={handleInfoClick}
@@ -657,6 +692,20 @@ function App() {
           >
             <Info size={20} />
           </button>
+          
+          <AnimatePresence>
+            {finalHintStep === 'info' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.8 }}
+                className={`absolute top-[85px] left-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 max-w-[150px] pointer-events-none ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
+              >
+                {globalLang === 'english' ? 'Tap here for Info & Language' : 'Info & Language paakka itha tap pannunga'}
+                <div className={`absolute -top-[8px] left-3 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <AnimatePresence>
             {showInfo && (

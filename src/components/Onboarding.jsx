@@ -47,7 +47,13 @@ export default function Onboarding({ onComplete, globalLang, setGlobalLang }) {
     <motion.div 
       initial={{ opacity: 1 }} 
       animate={{ opacity: 1 }} 
-      exit={{ opacity: 0, transition: { duration: 1.5, ease: "easeInOut" } }}
+      exit={{ 
+        x: "-150vw",
+        y: "50vh", 
+        rotateZ: -25, 
+        opacity: 0, 
+        transition: { duration: 0.7, ease: [0.4, 0, 1, 1] } // Fast swipe-tear to the left
+      }}
       className="fixed inset-0 bg-black flex flex-col items-center justify-center p-8 z-[200] touch-none"
     >
       <AnimatePresence mode="wait">
