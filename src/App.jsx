@@ -55,6 +55,9 @@ function App() {
 
   const handleInfoClick = (e) => {
     setShowInfo(true);
+    if (finalHintStep === 'info') {
+      setFinalHintStep('theme');
+    }
   };
 
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
@@ -553,6 +556,11 @@ function App() {
 
   const toggleTheme = (e) => {
     e.stopPropagation();
+    
+    if (finalHintStep === 'theme') {
+      setFinalHintStep('none');
+    }
+
     if (!document.startViewTransition) {
       setIsDarkMode(!isDarkMode);
       return;
@@ -571,13 +579,13 @@ function App() {
       const radius = Math.hypot(
         Math.max(x, window.innerWidth - x),
         Math.max(y, window.innerHeight - y)
-      ) + 400; 
+      ) + 400; // Large buffer required to push the SVG noise displacement completely off-screen
 
       const circle = document.getElementById('mask-circle');
       if (circle) circle.setAttribute('cx', x);
       if (circle) circle.setAttribute('cy', y);
 
-      const duration = 8000; // Increased duration to 8 seconds for slower transition
+      const duration = 3000; 
       const start = performance.now();
 
       document.documentElement.animate(
@@ -588,8 +596,8 @@ function App() {
       function animateMask(time) {
         const elapsed = time - start;
         const progress = Math.min(elapsed / duration, 1);
-        // Ultra-smooth cubic ease-in-out function for cinematic recording
-        const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        // Ease-in-out quad: smoother cinematic feel but doesn't grind to a halt like cubic
+        const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
         if (circle) circle.setAttribute('r', ease * radius);
         if (progress < 1) requestAnimationFrame(animateMask);
       }
@@ -628,10 +636,15 @@ function App() {
   return (
     <>
       <style>{`
+        ::view-transition {
+          pointer-events: none;
+        }
+        ::view-transition-group(root),
         ::view-transition-old(root),
         ::view-transition-new(root) {
           animation: none;
           mix-blend-mode: normal;
+          pointer-events: none;
         }
         ::view-transition-old(root) { z-index: 1; }
         ::view-transition-new(root) {
@@ -688,7 +701,7 @@ function App() {
           </button>
           
           <AnimatePresence>
-            {finalHintStep === 'theme' && (
+            {finalHintStep === 'theme' && !showInfo && (
               <motion.div
                 initial={{ opacity: 0, y: -10, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
