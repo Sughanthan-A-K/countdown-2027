@@ -25,6 +25,7 @@ function App() {
   const [showKeyModal, setShowKeyModal] = useState(false);
   const [isWaitingForKey, setIsWaitingForKey] = useState(false);
   const [finalHintStep, setFinalHintStep] = useState('none');
+  const [refillingPages, setRefillingPages] = useState([]);
 
   const [tutorialTears, setTutorialTears] = useState(0);
   const [lastTap, setLastTap] = useState(0);
@@ -474,19 +475,43 @@ function App() {
   };
 
   const handleReset = () => {
-    if (tutorialState === 3) {
-      if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
-      // Reset calendar date back to normal for epilogue
-      setCalendarDate(normalizeDate(new Date()));
-      setResetCount(c => c + 1); 
-      setTutorialState(4);
-    } else if (tutorialState === -1) {
-      if (!isDevMode) return; // Only allow reset in developer mode
-      // DEV SHORTCUT: Double tap anywhere to reset back to "Today" for testing
-      if (navigator.vibrate) navigator.vibrate([30, 30]);
-      setCalendarDate(normalizeDate(new Date()));
+    if (tutorialState !== 3 && !(tutorialState === -1 && isDevMode)) return;
+
+    if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
+    setShowBubble(false);
+
+    const today = normalizeDate(new Date());
+    // Since calendarDate goes to the future when tearing, calendarDate - today will be positive.
+    const diff = Math.abs(getDiffDays(calendarDate, today));
+
+    if (diff > 0) {
+      // Trigger cinematic refill animation with actual torn dates
+      const burstCount = diff; // No maximum cap, refill all torn pages
+      const missingPages = [];
+      for (let i = 1; i <= burstCount; i++) {
+        const d = addDays(today, diff - i);
+        missingPages.push({
+          id: `refill-${d.getTime()}`,
+          dateText: formatDate(d),
+          daysRemaining: getDaysRemaining(d),
+          isGandhiJayanti: d.getMonth() === 9 && d.getDate() === 2,
+        });
+      }
+      setRefillingPages(missingPages);
+      
+      const animationDelay = 600 + (burstCount * 40);
+      
+      // Delay the actual state reset so they watch the cards fly in
+      setTimeout(() => {
+        setCalendarDate(today);
+        setResetCount(c => c + 1);
+        setRefillingPages([]);
+        if (tutorialState === 3) setTutorialState(4);
+      }, animationDelay + 100); 
+    } else {
+      setCalendarDate(today);
       setResetCount(c => c + 1);
-      setShowBubble(false);
+      if (tutorialState === 3) setTutorialState(4);
     }
   };
 
@@ -668,7 +693,7 @@ function App() {
                 initial={{ opacity: 0, y: -10, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.8 }}
-                className={`absolute top-[85px] right-8 z-[500] p-4 rounded-2xl shadow-xl text-xs font-bold border-2 w-[180px] text-right flex flex-col items-end gap-3 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
+                className={`absolute top-[85px] right-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 w-max max-w-[220px] text-center flex flex-col items-center gap-2 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
               >
                 <span>{globalLang === 'english' ? 'Tap for Dark/Light mode' : 'Dark/Light mode maathikka itha tap pannunga'}</span>
                 <button 
@@ -679,7 +704,7 @@ function App() {
                 >
                   Done
                 </button>
-                <div className={`absolute -top-[8px] right-3 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
+                <div className={`absolute -top-[8px] right-5 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -701,9 +726,9 @@ function App() {
                 initial={{ opacity: 0, y: -10, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.8 }}
-                className={`absolute top-[85px] left-8 z-[500] p-4 rounded-2xl shadow-xl text-xs font-bold border-2 w-[180px] flex flex-col items-start gap-3 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
+                className={`absolute top-[85px] left-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 w-max max-w-[220px] text-center flex flex-col items-center gap-2 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
               >
-                <span>{globalLang === 'english' ? 'Tap here for Info & Language' : 'Info & Language paakka itha tap pannunga'}</span>
+                <span>{globalLang === 'english' ? 'Tap here for Calendar Info' : 'Calendar info theinjikka itha tap pannunga'}</span>
                 <button 
                   onClick={() => setFinalHintStep('theme')}
                   className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-transform active:scale-95 ${
@@ -712,7 +737,7 @@ function App() {
                 >
                   Next
                 </button>
-                <div className={`absolute -top-[8px] left-3 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
+                <div className={`absolute -top-[8px] left-5 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -881,6 +906,46 @@ function App() {
                     onDevHoldStart={handleDevPillHoldStart}
                     onDevHoldEnd={handleDevPillHoldEnd}
                   />
+                ))}
+
+                {/* Refill Animation Overlay */}
+                {refillingPages.length > 0 && refillingPages.map((page, i) => (
+                  <motion.div
+                    key={page.id}
+                    initial={{ 
+                      y: "120vh", 
+                      x: (Math.random() - 0.5) * 300, 
+                      rotateZ: (Math.random() - 0.5) * 60 + (Math.random() > 0.5 ? 20 : -20),
+                      scale: 1.1
+                    }}
+                    animate={{ 
+                      y: 0, 
+                      x: 0, 
+                      rotateZ: 0,
+                      scale: 1
+                    }}
+                    transition={{
+                      duration: 0.6,
+                      ease: [0.23, 1, 0.32, 1], // Cinematic deceleration
+                      delay: i * 0.04 // Rapid dealing effect
+                    }}
+                    className="absolute flex items-center justify-center inset-0 pointer-events-none"
+                    style={{ zIndex: 100 + i }}
+                  >
+                    <CalendarPage
+                      dateText={page.dateText}
+                      daysRemaining={page.daysRemaining}
+                      index={0}
+                      isTop={true}
+                      onTear={() => {}}
+                      onEyeClick={() => {}}
+                      isDarkMode={isDarkMode}
+                      isGandhiJayanti={page.isGandhiJayanti}
+                      hasGandhiKey={hasGandhiKey}
+                      globalLang={globalLang}
+                      isTearLocked={true}
+                    />
+                  </motion.div>
                 ))}
             </AnimatePresence>
           </motion.div>

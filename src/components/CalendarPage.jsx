@@ -193,7 +193,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     </span>
                   </div>
                   <div 
-                    className={`px-5 py-1.5 rounded-full border-2 mt-3 cursor-pointer select-none ${pillBgOutline}`}
+                    className={`px-5 py-1.5 rounded-full border-2 mt-3 cursor-default select-none ${pillBgOutline}`}
                     onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
                     onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
                     onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
@@ -233,7 +233,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 
                 <div className="pb-6 sm:pb-8 flex justify-center w-full z-10 relative">
                   <div 
-                    className={`px-6 py-2 rounded-full border-2 cursor-pointer select-none ${pillBgOutline}`}
+                    className={`px-6 py-2 rounded-full border-2 cursor-default select-none ${pillBgOutline}`}
                     onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
                     onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
                     onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
