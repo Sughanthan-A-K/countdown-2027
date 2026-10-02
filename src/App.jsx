@@ -31,11 +31,18 @@ function App() {
   const [lastTap, setLastTap] = useState(0);
   const [touchStartPos, setTouchStartPos] = useState(null);
   const [resetCount, setResetCount] = useState(0);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const stored = localStorage.getItem('isDarkMode');
+    return stored !== null ? stored === 'true' : true;
+  });
   const [showInfo, setShowInfo] = useState(false);
   const [copied, setCopied] = useState(false);
   const [globalLang, setGlobalLang] = useState(() => localStorage.getItem('globalLang') || 'tanglish');
   const [isShortScreen, setIsShortScreen] = useState(typeof window !== 'undefined' && window.innerHeight < 550);
+
+  useEffect(() => {
+    localStorage.setItem('isDarkMode', isDarkMode);
+  }, [isDarkMode]);
 
   useEffect(() => {
     const handleResize = () => setIsShortScreen(window.innerHeight < 550);
@@ -596,8 +603,8 @@ function App() {
       function animateMask(time) {
         const elapsed = time - start;
         const progress = Math.min(elapsed / duration, 1);
-        // Ease-in-out quad: smoother cinematic feel but doesn't grind to a halt like cubic
-        const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        // Linear easing for a perfectly constant, smooth expansion exactly over 3 seconds
+        const ease = progress;
         if (circle) circle.setAttribute('r', ease * radius);
         if (progress < 1) requestAnimationFrame(animateMask);
       }
