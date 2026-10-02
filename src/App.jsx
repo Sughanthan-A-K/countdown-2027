@@ -385,15 +385,9 @@ function App() {
         localStorage.setItem('onboardingDone', 'true');
         setTutorialState(-1);
         
-        // Show sequential hint bubbles (Info first, then Theme)
+        // Show the Info hint bubble (requires manual click to proceed)
         setTimeout(() => {
           setFinalHintStep('info');
-          setTimeout(() => {
-            setFinalHintStep('theme');
-            setTimeout(() => {
-              setFinalHintStep('none');
-            }, 5000); // Theme bubble for 5 seconds
-          }, 5000); // Info bubble for 5 seconds
         }, 1000);
       }
     } else if (tutorialState === -1) {
@@ -674,9 +668,17 @@ function App() {
                 initial={{ opacity: 0, y: -10, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.8 }}
-                className={`absolute top-[85px] right-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 max-w-[150px] pointer-events-none text-right ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
+                className={`absolute top-[85px] right-8 z-[500] p-4 rounded-2xl shadow-xl text-xs font-bold border-2 w-[180px] text-right flex flex-col items-end gap-3 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
               >
-                {globalLang === 'english' ? 'Tap for Dark/Light mode' : 'Dark/Light mode maathikka itha tap pannunga'}
+                <span>{globalLang === 'english' ? 'Tap for Dark/Light mode' : 'Dark/Light mode maathikka itha tap pannunga'}</span>
+                <button 
+                  onClick={() => setFinalHintStep('none')}
+                  className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-transform active:scale-95 ${
+                    isDarkMode ? 'bg-black text-white hover:bg-neutral-800' : 'bg-white text-black hover:bg-neutral-200'
+                  }`}
+                >
+                  Done
+                </button>
                 <div className={`absolute -top-[8px] right-3 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
               </motion.div>
             )}
@@ -699,9 +701,17 @@ function App() {
                 initial={{ opacity: 0, y: -10, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.8 }}
-                className={`absolute top-[85px] left-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 max-w-[150px] pointer-events-none ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
+                className={`absolute top-[85px] left-8 z-[500] p-4 rounded-2xl shadow-xl text-xs font-bold border-2 w-[180px] flex flex-col items-start gap-3 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
               >
-                {globalLang === 'english' ? 'Tap here for Info & Language' : 'Info & Language paakka itha tap pannunga'}
+                <span>{globalLang === 'english' ? 'Tap here for Info & Language' : 'Info & Language paakka itha tap pannunga'}</span>
+                <button 
+                  onClick={() => setFinalHintStep('theme')}
+                  className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-transform active:scale-95 ${
+                    isDarkMode ? 'bg-black text-white hover:bg-neutral-800' : 'bg-white text-black hover:bg-neutral-200'
+                  }`}
+                >
+                  Next
+                </button>
                 <div className={`absolute -top-[8px] left-3 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
               </motion.div>
             )}
