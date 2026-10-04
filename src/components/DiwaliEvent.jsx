@@ -26,9 +26,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       const clientY = isTouch ? e.touches[0].clientY : e.clientY;
       
       touchOrigin.current = { x: clientX, y: clientY };
-      // Move matchstick significantly higher (80px) and slightly left so the user's finger doesn't obscure the flame on mobile!
-      const flameX = clientX - 15;
-      const flameY = clientY - 80;
+      // Angle stick down-left so finger is above, stick points down to the fuse!
+      const flameX = clientX - 60;
+      const flameY = clientY + 50;
       setMatchPos({ x: flameX, y: flameY });
     }
   };
@@ -41,8 +41,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       const clientY = isTouch ? e.touches[0].clientY : e.clientY;
       
       touchOrigin.current = { x: clientX, y: clientY };
-      const flameX = clientX - 15;
-      const flameY = clientY - 80;
+      const flameX = clientX - 60;
+      const flameY = clientY + 50;
       setMatchPos({ x: flameX, y: flameY });
       setPhase('match');
       
@@ -273,9 +273,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
 
                 {/* Enormous Muzzle Flash at launch (Realistic POP) - Moved to -top-24 to align with top of cylinder */}
                 {phase === 'launching' && (
-                  <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 z-50 flex items-center justify-center">
-                     <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full blur-[12px] mix-blend-screen animate-[white-flash_0.4s_ease-out_forwards]" />
-                     <div className="w-16 h-16 bg-white rounded-full blur-md" />
+                  <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 z-50 flex items-center justify-center pointer-events-none">
+                     <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full blur-[12px] mix-blend-screen animate-[white-flash_1s_ease-out_forwards]" />
+                     <div className="w-16 h-16 bg-white rounded-full blur-md animate-[white-flash_1s_ease-out_forwards]" />
                      {/* Paper debris flying out! (Restored per user request) */}
                      <div className="absolute inset-0 pointer-events-none">
                         {[...Array(8)].map((_, i) => (
@@ -289,7 +289,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                                rotate: Math.random() * 720,
                                opacity: 0 
                              }}
-                             transition={{ duration: 0.6, ease: "easeOut" }}
+                             transition={{ duration: 1, ease: "easeOut" }}
                            />
                         ))}
                      </div>
