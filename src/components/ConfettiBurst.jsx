@@ -82,12 +82,13 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         const startX = launchOrigin ? rect.width * launchOrigin.x : rect.width * (0.3 + Math.random() * 0.4); 
         const startY = launchOrigin ? rect.height * launchOrigin.y : rect.height + 10;
         
-        // Apex is origin.y if forceRocket, otherwise random upper half
-        const targetY = (forceRocket || launchOrigin) ? rect.height * origin.y : rect.height * (0.1 + Math.random() * 0.4); 
+        // Force a massively high cinematic apex! (Explodes near or above the top of the screen)
+        const targetY = launchOrigin ? rect.height * 0.02 : rect.height * (0.1 + Math.random() * 0.4); 
         
         // Physics: v^2 = u^2 + 2as -> u = sqrt(-2as) (where v=0 at apex)
         const distanceY = startY - targetY;
-        const gravity = launchOrigin ? 0.04 : 0.15; // Lower gravity for 3s cinematic hangtime
+        // Extremely floaty cinematic gravity for a 4.0s flight time
+        const gravity = launchOrigin ? 0.018 : 0.15;
         const initialVy = -Math.sqrt(2 * gravity * Math.max(10, distanceY));
         
         particlesRef.current.push({

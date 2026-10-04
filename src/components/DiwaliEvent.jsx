@@ -69,10 +69,10 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
           setPhase('lit');
           
-          // Fuse burns for 2.0 seconds
-          setTimeout(() => setPhase('launching'), 2000);
+          // Slow, sputtering fuse burns for 3.5 seconds
+          setTimeout(() => setPhase('launching'), 3500);
           
-          // Rocket reaches apex natively via physics in ~2.6s
+          // Massive commercial rocket reaches apex slowly natively via physics in ~4.0s
           setTimeout(() => {
             setPhase('explode'); // Trigger flashes and background fade
             if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
@@ -89,7 +89,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
               onComplete();
             }, 6000);
 
-          }, 4600); // 2000 (fuse) + 2600 (flight)
+          }, 7500); // 3500 (fuse) + 4000 (flight)
         }
       }
       if (phase === 'match') {
@@ -220,8 +220,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
               {/* Cylinder Container (Pans down to naturally track the rocket) */}
               <motion.div 
                 className="relative w-8 h-28 z-20"
-                animate={(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg') ? { y: '100vh' } : { y: 0 }}
-                transition={{ duration: 2.6, ease: "easeIn" }}
+                animate={(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg') ? { y: 250 } : { y: 0 }}
+                transition={{ duration: 4.0, ease: "linear" }}
               >
                 
                 {/* Cylinder Visuals (overflow-hidden to contain patterns) */}
@@ -241,7 +241,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                     className="w-full h-full bg-[#8B4513] rounded-full relative origin-left"
                     initial={{ scaleX: 1 }}
                     animate={phase === 'lit' ? { scaleX: 0 } : {}}
-                    transition={{ duration: 2.0, ease: "linear" }}
+                    transition={{ duration: 3.5, ease: "easeOut" }}
                   >
                     {/* The Spark at the tip of the fuse - attached strictly to the end of the line! */}
                     {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
@@ -304,7 +304,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                  <ConfettiBurst 
                    active={true} 
                    origin={{ y: 0.25, x: 0.5 }} 
-                   launchOrigin={{ y: 0.85, x: 0.15 }} // Shoots from the bottom-left cylinder position!
+                   launchOrigin={{ y: 0.83, x: 0.15 }} // Shoots exactly from the top of the cylinder!
                    forceRocket={true} 
                    loop={false} 
                  />
