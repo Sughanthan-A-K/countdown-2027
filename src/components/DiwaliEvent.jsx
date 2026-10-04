@@ -26,9 +26,15 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       const clientY = isTouch ? e.touches[0].clientY : e.clientY;
       
       touchOrigin.current = { x: clientX, y: clientY };
-      // Angle stick down-left so finger is above, stick points down to the fuse!
-      const flameX = clientX - 60;
-      const flameY = clientY + 50;
+      
+      // Dynamic tilt: points UP when at top, smoothly tilts DOWN-LEFT when dragged to the bottom
+      const height = window.innerHeight || 800;
+      const ratio = clientY / height;
+      const tilt = Math.min(1, Math.max(0, (ratio - 0.3) / 0.5)); // 0 at 30% screen, 1 at 80% screen
+      
+      const flameX = clientX + (-15 - tilt * 45); // from -15 to -60
+      const flameY = clientY + (-80 + tilt * 130); // from -80 to +50
+      
       setMatchPos({ x: flameX, y: flameY });
     }
   };
@@ -41,8 +47,14 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       const clientY = isTouch ? e.touches[0].clientY : e.clientY;
       
       touchOrigin.current = { x: clientX, y: clientY };
-      const flameX = clientX - 60;
-      const flameY = clientY + 50;
+      
+      const height = window.innerHeight || 800;
+      const ratio = clientY / height;
+      const tilt = Math.min(1, Math.max(0, (ratio - 0.3) / 0.5));
+      
+      const flameX = clientX + (-15 - tilt * 45);
+      const flameY = clientY + (-80 + tilt * 130);
+      
       setMatchPos({ x: flameX, y: flameY });
       setPhase('match');
       
@@ -65,8 +77,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         
         // Use the ACTUAL finger position (touchOrigin) for collision, not the visually offset matchPos, 
         // ensuring they don't have to guess where the hitbox is. Decreased radius to 40 to require exact placement.
-        const dist = Math.hypot(touchOrigin.current.x - sparkX, touchOrigin.current.y - sparkY);
-        if (dist < 40) {
+        const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
+        if (dist < 60) {
           if (ignitionStartTime.current === 0) {
             ignitionStartTime.current = performance.now();
           } else if (performance.now() - ignitionStartTime.current > 1000) {
@@ -242,33 +254,48 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   <div className="w-full h-2 bg-yellow-400 border-y border-red-500 mb-4 z-10" />
                 </div>
                 
-                {/* The Physical Shrinking Fuse */}
-                <div className="absolute -bottom-1 -right-16 w-16 h-1.5 flex items-center origin-left rotate-[-20deg] z-30">
-                  {/* Thick textured fuse line that scales down to exactly the base of the cylinder */}
-                  <motion.div 
-                    className="w-full h-full bg-[#8B4513] rounded-full relative origin-left"
-                    initial={{ scaleX: 1 }}
-                    animate={phase === 'lit' ? { scaleX: 0 } : {}}
-                    transition={{ duration: 2.0, ease: "linear" }}
-                  >
-                    {/* The Spark at the tip of the fuse - attached strictly to the end of the line! */}
-                    {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
-                      <div 
-                        id="fuse-start"
-                        className="absolute top-1/2 right-0 w-8 h-8 flex items-center justify-center z-40 pointer-events-auto"
-                        style={{ transform: 'translate(50%, -50%) rotate(20deg)' }}
-                      >
-                         <div className={`w-2 h-2 rounded-full transition-colors duration-200 ${phase === 'lit' ? 'bg-white shadow-[0_0_12px_white]' : 'bg-transparent'}`} />
-                         {phase === 'lit' && (
-                           <>
-                             <div className="absolute w-5 h-5 bg-orange-500 rounded-full blur-[3px] animate-[fire-flicker_0.1s_infinite_alternate]" />
-                             <div className="absolute w-10 h-10 border-[2px] border-dashed border-yellow-400 rounded-full animate-[spin_0.3s_linear_infinite] opacity-90" />
-                             <div className="absolute w-7 h-7 border-[2px] border-dashed border-orange-500 rounded-full animate-[spin_0.2s_linear_infinite_reverse] opacity-80" />
-                           </>
-                         )}
-                      </div>
-                    )}
-                  </motion.div>
+                {/* The Curved Physical Fuse attached to the lower yellow band */}
+                <div className="absolute bottom-2 left-[calc(100%-8px)] w-20 h-20 z-30 pointer-events-none">
+                  {/* Curved SVG path */}
+                  <svg width="100%" height="100%" viewBox="0 0 80 80" className="overflow-visible">
+                    <motion.path 
+                      id="fuse-path"
+                      d="M 0 10 Q 30 15 50 40 T 70 70" 
+                      fill="none" 
+                      stroke="#8B4513" 
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
+                      initial={{ pathLength: 1 }}
+                      animate={phase === 'lit' ? { pathLength: 0 } : { pathLength: 1 }}
+                      transition={{ duration: 2.0, ease: "linear" }}
+                      style={{ pathLength: 1 }}
+                    />
+                  </svg>
+
+                  {/* The Spark that follows the shrinking fuse path */}
+                  {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
+                    <motion.div 
+                      id="fuse-start"
+                      className="absolute w-8 h-8 flex items-center justify-center z-40 pointer-events-auto origin-center"
+                      initial={{ offsetDistance: "100%" }}
+                      animate={phase === 'lit' ? { offsetDistance: "0%" } : { offsetDistance: "100%" }}
+                      transition={{ duration: 2.0, ease: "linear" }}
+                      style={{ 
+                        offsetPath: "path('M 0 10 Q 30 15 50 40 T 70 70')",
+                        top: -16, // offset to perfectly center the spark on the stroke
+                        left: -16
+                      }}
+                    >
+                       <div className={`w-2 h-2 rounded-full transition-colors duration-200 ${phase === 'lit' ? 'bg-white shadow-[0_0_12px_white]' : 'bg-transparent'}`} />
+                       {phase === 'lit' && (
+                         <>
+                           <div className="absolute w-5 h-5 bg-orange-500 rounded-full blur-[3px] animate-[fire-flicker_0.1s_infinite_alternate]" />
+                           <div className="absolute w-10 h-10 border-[2px] border-dashed border-yellow-400 rounded-full animate-[spin_0.3s_linear_infinite] opacity-90" />
+                           <div className="absolute w-7 h-7 border-[2px] border-dashed border-orange-500 rounded-full animate-[spin_0.2s_linear_infinite_reverse] opacity-80" />
+                         </>
+                       )}
+                    </motion.div>
+                  )}
                 </div>
 
                 {/* Enormous Muzzle Flash at launch (Realistic POP) - Moved to -top-24 to align with top of cylinder */}
