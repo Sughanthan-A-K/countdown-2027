@@ -64,12 +64,12 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         const sparkY = rect.top + rect.height / 2;
         
         // Use the ACTUAL finger position (touchOrigin) for collision, not the visually offset matchPos, 
-        // ensuring they don't have to guess where the hitbox is. Increased radius to 100 for easy lighting.
+        // ensuring they don't have to guess where the hitbox is. Decreased radius to 40 to require exact placement.
         const dist = Math.hypot(touchOrigin.current.x - sparkX, touchOrigin.current.y - sparkY);
-        if (dist < 100) {
+        if (dist < 40) {
           if (ignitionStartTime.current === 0) {
             ignitionStartTime.current = performance.now();
-          } else if (performance.now() - ignitionStartTime.current > 500) {
+          } else if (performance.now() - ignitionStartTime.current > 1000) {
             if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
             setPhase('lit');
             
@@ -276,6 +276,23 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 z-50 flex items-center justify-center">
                      <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full blur-[12px] mix-blend-screen animate-[white-flash_0.4s_ease-out_forwards]" />
                      <div className="w-16 h-16 bg-white rounded-full blur-md" />
+                     {/* Paper debris flying out! (Restored per user request) */}
+                     <div className="absolute inset-0 pointer-events-none">
+                        {[...Array(8)].map((_, i) => (
+                           <motion.div 
+                             key={i} 
+                             className="absolute top-1/2 left-1/2 w-3 h-2 bg-[#d2a679] border-[1px] border-[#a07050]"
+                             initial={{ x: 0, y: 0, rotate: 0, opacity: 1 }}
+                             animate={{ 
+                               x: (Math.random() - 0.5) * 160, 
+                               y: -40 - Math.random() * 100, 
+                               rotate: Math.random() * 720,
+                               opacity: 0 
+                             }}
+                             transition={{ duration: 0.6, ease: "easeOut" }}
+                           />
+                        ))}
+                     </div>
                   </div>
                 )}
               </motion.div>
