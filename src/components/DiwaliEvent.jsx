@@ -259,7 +259,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   <svg width="100%" height="100%" viewBox="0 0 80 80" className="overflow-visible">
                     <motion.path 
                       id="fuse-path"
-                      d="M 0 4 C 15 4, 15 -25, 35 -25 C 50 -25, 55 5, 65 5" 
+                      d="M 0 4 Q 25 15 45 40" 
                       fill="none" 
                       stroke="#8B4513" 
                       strokeWidth="3.5"
@@ -271,28 +271,27 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                     />
                   </svg>
 
-                  {/* Dedicated invisible hitbox exactly at the tip of the fuse (65, 5) for flawless collision detection */}
-                  <div id="fuse-hitbox" className="absolute w-16 h-16 rounded-full" style={{ left: '65px', top: '5px', transform: 'translate(-50%, -50%)' }} />
+                  {/* Dedicated invisible hitbox exactly at the tip of the fuse (45, 40) for flawless collision detection */}
+                  <div id="fuse-hitbox" className="absolute w-12 h-12 rounded-full" style={{ left: '45px', top: '40px', transform: 'translate(-50%, -50%)' }} />
 
-                  {/* The Spark that follows the shrinking fuse path */}
+                  {/* The Spark that follows the shrinking fuse path using highly reliable coordinate keyframes */}
                   {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
                     <motion.div 
-                      className="absolute w-8 h-8 flex items-center justify-center z-40 pointer-events-none origin-center"
-                      initial={{ offsetDistance: "100%" }}
-                      animate={phase === 'lit' ? { offsetDistance: "0%" } : { offsetDistance: "100%" }}
-                      transition={{ duration: 2.0, ease: "linear" }}
+                      className="absolute z-40 pointer-events-none origin-center"
+                      initial={{ x: 45, y: 40 }}
+                      animate={phase === 'lit' ? { 
+                        x: [45, 34.7, 23.8, 12.2, 0], 
+                        y: [40, 28.4, 17.5, 10.4, 4] 
+                      } : { x: 45, y: 40 }}
+                      transition={{ duration: 2.0, ease: "linear", times: [0, 0.25, 0.5, 0.75, 1] }}
                       style={{ 
-                        offsetPath: "path('M 0 4 C 15 4, 15 -25, 35 -25 C 50 -25, 55 5, 65 5')",
                         top: 0,
                         left: 0,
-                        marginLeft: '-16px',
-                        marginTop: '-16px'
+                        marginLeft: '-8px', // Center the w-4 element exactly on the X,Y coord
+                        marginTop: '-8px'
                       }}
                     >
-                       <div className={`w-2 h-2 rounded-full transition-colors duration-200 ${phase === 'lit' ? 'bg-white shadow-[0_0_12px_white]' : 'bg-transparent'}`} />
-                       {phase === 'lit' && (
-                         <div className="absolute w-4 h-4 bg-orange-400 rounded-full blur-[2px] animate-[fire-flicker_0.1s_infinite_alternate] shadow-[0_0_8px_#ff8800]" />
-                       )}
+                       <div className={`w-4 h-4 rounded-full transition-colors duration-200 blur-[1px] shadow-[0_0_8px_#ff8800] ${phase === 'lit' ? 'bg-orange-400' : 'bg-transparent'}`} />
                     </motion.div>
                   )}
                 </div>
