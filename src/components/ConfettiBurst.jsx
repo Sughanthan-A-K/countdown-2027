@@ -120,14 +120,17 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       hasFiredInitial.current = true;
     }
 
-    // Start interval only if loop is true
+    // Start random loop only if loop is true
     if (loop) {
-      intervalId = setInterval(() => {
-        // Prevent massive queued explosions when user switches tabs
-        if (document.visibilityState === 'visible') {
-          fire(false);
-        }
-      }, 2400); // Launch a new rocket every 2.4s
+      const scheduleNext = () => {
+        intervalId = setTimeout(() => {
+          if (document.visibilityState === 'visible') {
+            fire(false);
+          }
+          scheduleNext();
+        }, Math.random() * 1500 + 1200); // Random delay between 1.2s and 2.7s
+      };
+      scheduleNext();
     }
 
     const render = () => {
@@ -239,6 +242,14 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, currentAlpha)})`;
+            ctx.fill();
+          }
+          
+          // Crackle / Sparkle effect as they fall
+          if (p.vy > 1.0 && Math.random() < 0.15 && currentAlpha > 0.2) {
+            ctx.beginPath();
+            ctx.arc(p.x + (Math.random() - 0.5) * 5, p.y + (Math.random() - 0.5) * 5, Math.random() * 2 + 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFFFF';
             ctx.fill();
           }
         }
