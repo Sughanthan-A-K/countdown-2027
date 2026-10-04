@@ -209,7 +209,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             ) : isDiwaliActive ? (
               <>
                 {/* Background Fireworks spanning the entire card natively! */}
-                <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${isDarkMode ? 'opacity-100' : 'opacity-80'}`}>
+                <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${isDarkMode ? 'opacity-100' : 'opacity-80'}`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)', isolation: 'isolate' }}>
                   <ConfettiBurst active={true} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={true} onFirstBurst={onCalendarReveal} />
                 </div>
 

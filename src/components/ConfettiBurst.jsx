@@ -66,7 +66,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const height = rect.height || window.innerHeight;
       
       // If looping (inside Calendar), make the first explosion colorful! If grand finale (!loop), keep it Golden.
-      const pinkBlueColors = ['#FF1493', '#FF69B4', '#00FFFF', '#1E90FF', '#8A2BE2', '#FF00FF'];
+      const pinkBlueColors = ['#1E90FF', '#8A2BE2', '#00FFFF', '#9400D3', '#FF00FF', '#4169E1', '#00FA9A', '#FF1493']; // Vibrant Blues, Violets, Cyans, Magentas, Greens
       let selectedColors = loop ? pinkBlueColors : goldenColors;
 
       // Determine colors based on wave sequence if we are looping
