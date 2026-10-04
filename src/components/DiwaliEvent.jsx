@@ -69,10 +69,10 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
           setPhase('lit');
           
-          // Slow, sputtering fuse burns for 3.5 seconds
-          setTimeout(() => setPhase('launching'), 3500);
+          // Fuse burns for 2.0 seconds
+          setTimeout(() => setPhase('launching'), 2000);
           
-          // Massive commercial rocket reaches apex slowly natively via physics in ~4.0s
+          // Rocket reaches apex natively via physics in ~2.6s
           setTimeout(() => {
             setPhase('explode'); // Trigger flashes and background fade
             if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
@@ -89,7 +89,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
               onComplete();
             }, 6000);
 
-          }, 7500); // 3500 (fuse) + 4000 (flight)
+          }, 4600); // 2000 (fuse) + 2600 (flight)
         }
       }
       if (phase === 'match') {
@@ -161,16 +161,17 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         onTouchMove={handlePointerMove}
         onPointerDown={handleDarkTap}
       >
-        {/* Blackout overlay (Remains ON until explode to simulate dark night sky) */}
-        {(phase !== 'init' && phase !== 'done' && phase !== 'freeze' && phase !== 'explode' && phase !== 'fadeout_bg') && (
-          <div 
+        {/* Blackout overlay (Remains ON until fadeout_bg to simulate dark night sky) */}
+        {(phase !== 'init' && phase !== 'done' && phase !== 'freeze') && (
+          <motion.div 
             className={`absolute inset-0 bg-black pointer-events-none ${
               phase === 'dimming' ? 'dimming-layer' : ''
             }`}
+            animate={{ opacity: phase === 'fadeout_bg' ? 0 : 1 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             style={{
               WebkitMaskImage: torchMask,
               maskImage: torchMask,
-              opacity: phase === 'dark' || phase === 'match' || phase === 'lit' || phase === 'launching' ? 1 : undefined
             }}
           />
         )}
@@ -220,8 +221,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
               {/* Cylinder Container (Pans down to naturally track the rocket) */}
               <motion.div 
                 className="relative w-8 h-28 z-20"
-                animate={(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg') ? { y: 250 } : { y: 0 }}
-                transition={{ duration: 4.0, ease: "linear" }}
+                animate={(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg') ? { y: '100vh' } : { y: 0 }}
+                transition={{ duration: 2.6, ease: "easeIn" }}
               >
                 
                 {/* Cylinder Visuals (overflow-hidden to contain patterns) */}
@@ -241,7 +242,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                     className="w-full h-full bg-[#8B4513] rounded-full relative origin-left"
                     initial={{ scaleX: 1 }}
                     animate={phase === 'lit' ? { scaleX: 0 } : {}}
-                    transition={{ duration: 3.5, ease: "easeOut" }}
+                    transition={{ duration: 2.0, ease: "linear" }}
                   >
                     {/* The Spark at the tip of the fuse - attached strictly to the end of the line! */}
                     {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
@@ -280,14 +281,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         <AnimatePresence>
           {(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg') && (
             <motion.div className="fixed inset-0 z-[960] pointer-events-none">
-              {/* Black Sky - fades out so CalendarPage underneath shows through */}
-              <motion.div 
-                className="absolute inset-0 bg-black -z-20"
-                initial={{ opacity: 1 }}
-                animate={{ opacity: phase === 'fadeout_bg' ? 0 : 1 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
-              />
-
+              
               {/* Massive White Flash on Explosion (Timed exactly with explode phase) */}
               {(phase === 'explode' || phase === 'fadeout_bg') && <div className="absolute inset-0 bg-white z-[970] animate-[white-flash_0.8s_ease-out_forwards]" />}
               
@@ -304,7 +298,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                  <ConfettiBurst 
                    active={true} 
                    origin={{ y: 0.25, x: 0.5 }} 
-                   launchOrigin={{ y: 0.83, x: 0.15 }} // Shoots exactly from the top of the cylinder!
+                   launchOrigin={{ y: 0.85, x: 0.15 }} // Shoots from the bottom-left cylinder position!
                    forceRocket={true} 
                    loop={false} 
                  />

@@ -22,8 +22,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     
     const updateSize = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      const width = rect.width || window.innerWidth;
+      const height = rect.height || window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
       ctx.scale(dpr, dpr);
     };
     updateSize();
@@ -60,6 +62,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
     const fire = (directExplode = false) => {
       const rect = canvas.parentElement.getBoundingClientRect();
+      const width = rect.width || window.innerWidth;
+      const height = rect.height || window.innerHeight;
       
       let selectedColors = goldenColors; // Default to golden
 
@@ -74,28 +78,27 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       
       if (directExplode && !forceRocket) {
         // Explode directly at origin (used for the very first fullscreen golden shower)
-        const startX = rect.width * origin.x;
-        const startY = rect.height * origin.y;
+        const startX = width * origin.x;
+        const startY = height * origin.y;
         explode(startX, startY, selectedColors);
       } else {
         // Launch a rocket from the bottom of the container!
-        const startX = launchOrigin ? rect.width * launchOrigin.x : rect.width * (0.3 + Math.random() * 0.4); 
-        const startY = launchOrigin ? rect.height * launchOrigin.y : rect.height + 10;
+        const startX = launchOrigin ? width * launchOrigin.x : width * (0.3 + Math.random() * 0.4); 
+        const startY = launchOrigin ? height * launchOrigin.y : height + 10;
         
-        // Force a massively high cinematic apex! (Explodes near or above the top of the screen)
-        const targetY = launchOrigin ? rect.height * 0.02 : rect.height * (0.1 + Math.random() * 0.4); 
+        // Apex is origin.y if forceRocket, otherwise random upper half
+        const targetY = (forceRocket || launchOrigin) ? height * origin.y : height * (0.1 + Math.random() * 0.4); 
         
         // Physics: v^2 = u^2 + 2as -> u = sqrt(-2as) (where v=0 at apex)
         const distanceY = startY - targetY;
-        // Extremely floaty cinematic gravity for a 4.0s flight time
-        const gravity = launchOrigin ? 0.018 : 0.15;
+        const gravity = launchOrigin ? 0.04 : 0.15; // Lower gravity for 3s cinematic hangtime
         const initialVy = -Math.sqrt(2 * gravity * Math.max(10, distanceY));
         
         particlesRef.current.push({
           isRocket: true,
           x: startX,
           y: startY,
-          vx: launchOrigin ? (rect.width * origin.x - startX) / (-initialVy / gravity) + (Math.random()-0.5)*1 : (Math.random() - 0.5) * 3,
+          vx: launchOrigin ? (width * origin.x - startX) / (-initialVy / gravity) + (Math.random()-0.5)*1 : (Math.random() - 0.5) * 3,
           vy: initialVy,
           gravity: gravity,
           alpha: 1,
@@ -135,9 +138,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         if (p.isRocket) {
           if (p.initialY === undefined) p.initialY = p.y;
           
+          // CRITICAL FIX: Safeguard against initialY being 0 (which causes NaN and silent canvas failure)
+          const safeInitialY = Math.max(1, p.initialY);
+          
           // Calculate scale based on height to create 3D depth effect (shrinks as it goes up)
-          const progress = Math.max(0, Math.min(1, (p.initialY - p.y) / (p.initialY * 0.75)));
-          const scale = 1.0 - (progress * 0.7); // Shrinks down to 30% size!
+          const progress = Math.max(0, Math.min(1, (safeInitialY - p.y) / (safeInitialY * 0.75)));
+          const scale = Math.max(0.1, 1.0 - (progress * 0.7)); // Shrinks down to 30% size, never below 0.1!
 
           if (p.history.length > 12) p.history.shift(); // Tail length of 12 frames
           
@@ -151,6 +157,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
           // Draw the tapering rocket tail with beautiful flickering (minnu minnikira kodu)
           if (p.history.length > 1) {
+            // Add rapid flicker/sparkle effect specifically requested by user (Calculated ONCE per frame so it doesn't look like separated circles)
+            const tailFlicker = 0.6 + Math.random() * 0.4;
+            const widthFlicker = 0.8 + Math.random() * 0.4;
+            
             for (let i = 1; i < p.history.length; i++) {
               const segmentScale = (i / p.history.length); // 0 at tail end, 1 at head
               
@@ -158,12 +168,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               ctx.moveTo(p.history[i-1].x, p.history[i-1].y);
               ctx.lineTo(p.history[i].x, p.history[i].y);
               
-              // Add rapid flicker/sparkle effect specifically requested by user
-              const flicker = 0.6 + Math.random() * 0.4;
-              
               // Color gets hotter towards the head
-              ctx.strokeStyle = `rgba(255, ${100 + segmentScale * 155}, 0, ${segmentScale * scale * flicker})`;
-              ctx.lineWidth = tailWidth * segmentScale * (0.8 + Math.random() * 0.4);
+              ctx.strokeStyle = `rgba(255, ${100 + segmentScale * 155}, 0, ${segmentScale * scale * tailFlicker})`;
+              ctx.lineWidth = tailWidth * segmentScale * widthFlicker;
               ctx.lineCap = 'round';
               ctx.stroke();
             }
