@@ -120,7 +120,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
     // Start interval only if loop is true
     if (loop) {
-      intervalId = setInterval(() => fire(false), 2400); // Launch a new rocket every 2.4s
+      intervalId = setInterval(() => {
+        // Prevent massive queued explosions when user switches tabs
+        if (document.visibilityState === 'visible') {
+          fire(false);
+        }
+      }, 2400); // Launch a new rocket every 2.4s
     }
 
     const render = () => {

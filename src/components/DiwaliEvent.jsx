@@ -40,9 +40,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       const clientY = isTouch ? e.touches[0].clientY : e.clientY;
       
       touchOrigin.current = { x: clientX, y: clientY };
-      const flameX = clientX - 15;
-      const flameY = clientY - 80;
-      setMatchPos({ x: flameX, y: flameY });
+      setMatchPos({ x: clientX - 15, y: clientY - 25 });
       setPhase('match');
       
       // Trigger a rapid match-strike spark animation
@@ -161,17 +159,16 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         onTouchMove={handlePointerMove}
         onPointerDown={handleDarkTap}
       >
-        {/* Blackout overlay (Remains ON until fadeout_bg to simulate dark night sky) */}
-        {(phase !== 'init' && phase !== 'done' && phase !== 'freeze') && (
-          <motion.div 
+        {/* Blackout overlay (Remains ON until explode to simulate dark night sky) */}
+        {(phase !== 'init' && phase !== 'done' && phase !== 'freeze' && phase !== 'explode' && phase !== 'fadeout_bg') && (
+          <div 
             className={`absolute inset-0 bg-black pointer-events-none ${
               phase === 'dimming' ? 'dimming-layer' : ''
             }`}
-            animate={{ opacity: phase === 'fadeout_bg' ? 0 : 1 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
             style={{
               WebkitMaskImage: torchMask,
               maskImage: torchMask,
+              opacity: phase === 'dark' || phase === 'match' || phase === 'lit' || phase === 'launching' ? 1 : undefined
             }}
           />
         )}
@@ -264,11 +261,28 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   </motion.div>
                 </div>
 
-                {/* Enormous Muzzle Flash at launch (Realistic POP) */}
+                {/* Enormous Muzzle Flash at launch (Realistic POP) with paper debris */}
                 {phase === 'launching' && (
                   <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 z-50 flex items-center justify-center">
                      <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full blur-[12px] mix-blend-screen animate-[white-flash_0.4s_ease-out_forwards]" />
                      <div className="w-16 h-16 bg-white rounded-full blur-md" />
+                     {/* Paper debris flying out! */}
+                     <div className="absolute inset-0 pointer-events-none">
+                        {[...Array(8)].map((_, i) => (
+                           <motion.div 
+                             key={i} 
+                             className="absolute top-1/2 left-1/2 w-3 h-2 bg-[#d2a679] border-[1px] border-[#a07050]"
+                             initial={{ x: 0, y: 0, rotate: 0, opacity: 1 }}
+                             animate={{ 
+                               x: (Math.random() - 0.5) * 160, 
+                               y: -40 - Math.random() * 100, 
+                               rotate: Math.random() * 720,
+                               opacity: 0 
+                             }}
+                             transition={{ duration: 0.6, ease: "easeOut" }}
+                           />
+                        ))}
+                     </div>
                   </div>
                 )}
               </motion.div>
@@ -280,10 +294,20 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         {/* Explosion Phase & Golden Shower */}
         <AnimatePresence>
           {(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg') && (
-            <motion.div className="fixed inset-0 z-[960] pointer-events-none">
-              
-              {/* Massive White Flash on Explosion (Timed exactly with explode phase) */}
-              {(phase === 'explode' || phase === 'fadeout_bg') && <div className="absolute inset-0 bg-white z-[970] animate-[white-flash_0.8s_ease-out_forwards]" />}
+            <>
+              {/* Black Sky - fades out so CalendarPage underneath shows through. z-[940] puts it BEHIND the cylinder at z-[950]! */}
+              <motion.div className="fixed inset-0 z-[940] pointer-events-none">
+                <motion.div 
+                  className="absolute inset-0 bg-black"
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: phase === 'fadeout_bg' ? 0 : 1 }}
+                  transition={{ duration: 1.5, ease: "easeInOut" }}
+                />
+              </motion.div>
+
+              <motion.div className="fixed inset-0 z-[960] pointer-events-none">
+                {/* Massive White Flash on Explosion (Timed exactly with explode phase) */}
+                {(phase === 'explode' || phase === 'fadeout_bg') && <div className="absolute inset-0 bg-white z-[970] animate-[white-flash_0.8s_ease-out_forwards]" />}
               
               {/* Explosion Fireball (Timed exactly with explode phase) */}
               {(phase === 'explode' || phase === 'fadeout_bg') && (
@@ -298,14 +322,15 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                  <ConfettiBurst 
                    active={true} 
                    origin={{ y: 0.25, x: 0.5 }} 
-                   launchOrigin={{ y: 0.85, x: 0.15 }} // Shoots from the bottom-left cylinder position!
+                   launchOrigin={{ y: 0.82, x: 0.19 }} // Shoots exactly from the top center of the cylinder!
                    forceRocket={true} 
                    loop={false} 
                  />
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
+          </>
+        )}
+      </AnimatePresence>
 
 
       </div>
