@@ -200,7 +200,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           >
             {/* The Matchstick (Drawn from touch point to flame) */}
             {(phase === 'match' || phase === 'lit') && (
-              <div className={`transition-opacity duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-10' : 'opacity-100'}`}>
+              <div className={`transition-all duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-10 delay-500' : 'opacity-100'}`}>
                 <svg className="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-xl z-40">
                   {/* Stick */}
                   <line x1={touchOrigin.current.x} y1={touchOrigin.current.y} x2={matchPos.x} y2={matchPos.y} stroke="#d2b48c" strokeWidth="6" strokeLinecap="round" />
@@ -265,7 +265,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                       strokeWidth="3.5"
                       strokeLinecap="round"
                       initial={{ pathLength: 1 }}
-                      animate={phase === 'lit' ? { pathLength: 0 } : { pathLength: 1 }}
+                      animate={['lit', 'launching', 'explode', 'fadeout_bg'].includes(phase) ? { pathLength: 0 } : { pathLength: 1 }}
                       transition={{ duration: 2.0, ease: "linear" }}
                       style={{ pathLength: 1 }}
                     />
