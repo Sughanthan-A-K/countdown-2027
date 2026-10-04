@@ -76,9 +76,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         const sparkY = rect.top + rect.height / 2;
         
         // Use the VISUAL flame position (matchPos) vs the dedicated static hitbox.
-        // Extremely generous 80px radius so user never gets frustrated.
+        // Extremely generous 120px radius and fast 400ms hold so user never gets frustrated.
         const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
-        if (dist < 80) {
+        if (dist < 120) {
           if (ignitionStartTime.current === 0) {
             ignitionStartTime.current = performance.now();
           } else if (performance.now() - ignitionStartTime.current > 1000) {
@@ -205,8 +205,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
             }}
           >
             {/* The Matchstick (Drawn from touch point to flame) */}
-            {phase === 'match' && (
-              <>
+            {(phase === 'match' || phase === 'lit') && (
+              <div className={`transition-opacity duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-10' : 'opacity-100'}`}>
                 <svg className="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-xl z-40">
                   {/* Stick */}
                   <line x1={touchOrigin.current.x} y1={touchOrigin.current.y} x2={matchPos.x} y2={matchPos.y} stroke="#d2b48c" strokeWidth="6" strokeLinecap="round" />
@@ -228,10 +228,14 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                    </svg>
                    
                    {/* Continuous floating sparks */}
-                   <div className="absolute top-0 left-1 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-[float-up_0.6s_infinite]" />
-                   <div className="absolute top-2 right-1 w-1 h-1 bg-orange-300 rounded-full animate-[float-up_0.8s_infinite_0.2s]" />
+                   {phase === 'match' && (
+                     <>
+                       <div className="absolute top-0 left-1 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-[float-up_0.6s_infinite]" />
+                       <div className="absolute top-2 right-1 w-1 h-1 bg-orange-300 rounded-full animate-[float-up_0.8s_infinite_0.2s]" />
+                     </>
+                   )}
                 </div>
-              </>
+              </div>
             )}
 
             {/* The Firework on the Ground */}
@@ -261,7 +265,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   <svg width="100%" height="100%" viewBox="0 0 80 80" className="overflow-visible">
                     <motion.path 
                       id="fuse-path"
-                      d="M 0 4 Q 20 25 45 40" 
+                      d="M 0 4 C 15 4, 15 -25, 35 -25 C 50 -25, 55 5, 65 5" 
                       fill="none" 
                       stroke="#8B4513" 
                       strokeWidth="3.5"
@@ -273,8 +277,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                     />
                   </svg>
 
-                  {/* Dedicated invisible hitbox exactly at the tip of the fuse (45, 40) for flawless collision detection */}
-                  <div id="fuse-hitbox" className="absolute w-12 h-12 rounded-full" style={{ left: '45px', top: '40px', transform: 'translate(-50%, -50%)' }} />
+                  {/* Dedicated invisible hitbox exactly at the tip of the fuse (65, 5) for flawless collision detection */}
+                  <div id="fuse-hitbox" className="absolute w-16 h-16 rounded-full" style={{ left: '65px', top: '5px', transform: 'translate(-50%, -50%)' }} />
 
                   {/* The Spark that follows the shrinking fuse path */}
                   {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
@@ -284,7 +288,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                       animate={phase === 'lit' ? { offsetDistance: "0%" } : { offsetDistance: "100%" }}
                       transition={{ duration: 2.0, ease: "linear" }}
                       style={{ 
-                        offsetPath: "path('M 0 4 Q 20 25 45 40')",
+                        offsetPath: "path('M 0 4 C 15 4, 15 -25, 35 -25 C 50 -25, 55 5, 65 5')",
                         top: 0,
                         left: 0,
                         marginLeft: '-16px',
