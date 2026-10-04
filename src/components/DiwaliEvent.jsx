@@ -7,6 +7,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
   const [matchPos, setMatchPos] = useState({ x: -500, y: -500 }); // The FLAME position
   
   const touchOrigin = useRef({ x: -500, y: -500 }); // Where user is touching (bottom of stick)
+  const ignitionStartTime = useRef(0); // Track how long the match is held near the fuse
 
   useEffect(() => {
     // Sequence starts
@@ -40,7 +41,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       const clientY = isTouch ? e.touches[0].clientY : e.clientY;
       
       touchOrigin.current = { x: clientX, y: clientY };
-      setMatchPos({ x: clientX - 15, y: clientY - 25 });
+      const flameX = clientX - 15;
+      const flameY = clientY - 80;
+      setMatchPos({ x: flameX, y: flameY });
       setPhase('match');
       
       // Trigger a rapid match-strike spark animation
@@ -64,30 +67,37 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         // ensuring they don't have to guess where the hitbox is. Increased radius to 100 for easy lighting.
         const dist = Math.hypot(touchOrigin.current.x - sparkX, touchOrigin.current.y - sparkY);
         if (dist < 100) {
-          if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
-          setPhase('lit');
-          
-          // Fuse burns for 2.0 seconds
-          setTimeout(() => setPhase('launching'), 2000);
-          
-          // Rocket reaches apex natively via physics in ~2.6s
-          setTimeout(() => {
-            setPhase('explode'); // Trigger flashes and background fade
-            if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
+          if (ignitionStartTime.current === 0) {
+            ignitionStartTime.current = performance.now();
+          } else if (performance.now() - ignitionStartTime.current > 500) {
+            if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+            setPhase('lit');
             
-            if (onExplode) onExplode();
+            // Fuse burns for 2.0 seconds
+            setTimeout(() => setPhase('launching'), 2000);
             
+            // Rocket reaches apex natively via physics in ~2.6s
             setTimeout(() => {
-              setPhase('fadeout_bg');
-            }, 100);
-            
-            // Allow golden shower to fall
-            setTimeout(() => {
-              if (onReveal) onReveal();
-              onComplete();
-            }, 6000);
-
-          }, 4600); // 2000 (fuse) + 2600 (flight)
+              setPhase('explode'); // Trigger flashes and background fade
+              if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
+              
+              if (onExplode) onExplode();
+              
+              setTimeout(() => {
+                setPhase('fadeout_bg');
+              }, 100);
+              
+              // Allow golden shower to fall
+              setTimeout(() => {
+                if (onReveal) onReveal();
+                onComplete();
+              }, 6000);
+  
+            }, 4600); // 2000 (fuse) + 2600 (flight)
+            return; // Prevent multiple triggers
+          }
+        } else {
+          ignitionStartTime.current = 0;
         }
       }
       if (phase === 'match') {
@@ -261,28 +271,11 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   </motion.div>
                 </div>
 
-                {/* Enormous Muzzle Flash at launch (Realistic POP) with paper debris */}
+                {/* Enormous Muzzle Flash at launch (Realistic POP) - Moved to -top-24 to align with top of cylinder */}
                 {phase === 'launching' && (
-                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 z-50 flex items-center justify-center">
+                  <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 z-50 flex items-center justify-center">
                      <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full blur-[12px] mix-blend-screen animate-[white-flash_0.4s_ease-out_forwards]" />
                      <div className="w-16 h-16 bg-white rounded-full blur-md" />
-                     {/* Paper debris flying out! */}
-                     <div className="absolute inset-0 pointer-events-none">
-                        {[...Array(8)].map((_, i) => (
-                           <motion.div 
-                             key={i} 
-                             className="absolute top-1/2 left-1/2 w-3 h-2 bg-[#d2a679] border-[1px] border-[#a07050]"
-                             initial={{ x: 0, y: 0, rotate: 0, opacity: 1 }}
-                             animate={{ 
-                               x: (Math.random() - 0.5) * 160, 
-                               y: -40 - Math.random() * 100, 
-                               rotate: Math.random() * 720,
-                               opacity: 0 
-                             }}
-                             transition={{ duration: 0.6, ease: "easeOut" }}
-                           />
-                        ))}
-                     </div>
                   </div>
                 )}
               </motion.div>
