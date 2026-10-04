@@ -132,53 +132,30 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         p.history.push({ x: p.x, y: p.y });
         
         if (p.isRocket) {
-          if (p.initialY === undefined) p.initialY = p.y;
-          
-          // Calculate scale based on height to create 3D depth effect (shrinks as it goes up)
-          const progress = Math.max(0, Math.min(1, (p.initialY - p.y) / (p.initialY * 0.75)));
-          const scale = 1.0 - (progress * 0.7); // Shrinks down to 30% size!
-
-          if (p.history.length > 12) p.history.shift(); // Tail length of 12 frames
+          if (p.history.length > 5) p.history.shift(); // Short, elegant tail
           
           p.vy += p.gravity;
           p.x += p.vx;
           p.y += p.vy;
 
-          const cylinderWidth = 32; // Exact visual width of w-8 in Tailwind
-          const headRadius = (cylinderWidth / 2) * scale;
-          const tailWidth = cylinderWidth * scale;
-
-          // Draw the tapering rocket tail
+          // Draw the original elegant rocket trail
           if (p.history.length > 1) {
-            for (let i = 1; i < p.history.length; i++) {
-              const segmentScale = (i / p.history.length); // 0 at tail end, 1 at head
-              
-              ctx.beginPath();
-              ctx.moveTo(p.history[i-1].x, p.history[i-1].y);
-              ctx.lineTo(p.history[i].x, p.history[i].y);
-              
-              // Color gets hotter towards the head
-              ctx.strokeStyle = `rgba(255, ${100 + segmentScale * 155}, 0, ${segmentScale * scale})`;
-              ctx.lineWidth = tailWidth * segmentScale;
-              ctx.lineCap = 'round';
-              ctx.stroke();
-            }
+            ctx.beginPath();
+            ctx.moveTo(p.history[0].x, p.history[0].y);
+            ctx.lineTo(p.x, p.y);
+            ctx.strokeStyle = '#FFA500'; // Pure orange fire trail
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.stroke();
           }
 
-          // Draw bright core spark at the head matching the cylinder width
+          // Draw bright, natural spark at the head
           ctx.beginPath();
-          ctx.arc(p.x, p.y, headRadius, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
           ctx.fillStyle = '#FFFFFF';
-          ctx.shadowBlur = 20 * scale;
+          ctx.shadowBlur = 8;
           ctx.shadowColor = '#FFA500';
           ctx.fill();
-          
-          // Inner core for intense brightness
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, headRadius * 0.5, 0, Math.PI * 2);
-          ctx.fillStyle = '#FFFFDD';
-          ctx.fill();
-          
           ctx.shadowBlur = 0; // Reset
 
           // Explode when it reaches apex (velocity becomes positive/downward)
