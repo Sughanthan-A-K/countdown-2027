@@ -69,16 +69,16 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
     if (phase !== 'match') return;
 
     const checkCollision = () => {
-      const spark = document.getElementById('fuse-start');
-      if (spark) {
-        const rect = spark.getBoundingClientRect();
+      const hitbox = document.getElementById('fuse-hitbox');
+      if (hitbox) {
+        const rect = hitbox.getBoundingClientRect();
         const sparkX = rect.left + rect.width / 2;
         const sparkY = rect.top + rect.height / 2;
         
-        // Use the ACTUAL finger position (touchOrigin) for collision, not the visually offset matchPos, 
-        // ensuring they don't have to guess where the hitbox is. Decreased radius to 40 to require exact placement.
+        // Use the VISUAL flame position (matchPos) vs the dedicated static hitbox.
+        // Extremely generous 80px radius so user never gets frustrated.
         const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
-        if (dist < 60) {
+        if (dist < 80) {
           if (ignitionStartTime.current === 0) {
             ignitionStartTime.current = performance.now();
           } else if (performance.now() - ignitionStartTime.current > 1000) {
@@ -254,13 +254,14 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   <div className="w-full h-2 bg-yellow-400 border-y border-red-500 mb-4 z-10" />
                 </div>
                 
-                {/* The Curved Physical Fuse attached to the lower yellow band */}
-                <div className="absolute bottom-2 left-[calc(100%-8px)] w-20 h-20 z-30 pointer-events-none">
+                {/* The Curved Physical Fuse precisely attached to the lower yellow band */}
+                {/* Cylinder is h-28 (112px). Yellow band is 16px from bottom (height 8px). Top of band is 112-24=88px from top. */}
+                <div className="absolute w-20 h-20 z-30 pointer-events-none" style={{ top: '88px', left: '100%' }}>
                   {/* Curved SVG path */}
                   <svg width="100%" height="100%" viewBox="0 0 80 80" className="overflow-visible">
                     <motion.path 
                       id="fuse-path"
-                      d="M 0 10 Q 30 15 50 40 T 70 70" 
+                      d="M 0 4 Q 20 25 45 40" 
                       fill="none" 
                       stroke="#8B4513" 
                       strokeWidth="3.5"
@@ -272,18 +273,22 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                     />
                   </svg>
 
+                  {/* Dedicated invisible hitbox exactly at the tip of the fuse (45, 40) for flawless collision detection */}
+                  <div id="fuse-hitbox" className="absolute w-12 h-12 rounded-full" style={{ left: '45px', top: '40px', transform: 'translate(-50%, -50%)' }} />
+
                   {/* The Spark that follows the shrinking fuse path */}
                   {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
                     <motion.div 
-                      id="fuse-start"
-                      className="absolute w-8 h-8 flex items-center justify-center z-40 pointer-events-auto origin-center"
+                      className="absolute w-8 h-8 flex items-center justify-center z-40 pointer-events-none origin-center"
                       initial={{ offsetDistance: "100%" }}
                       animate={phase === 'lit' ? { offsetDistance: "0%" } : { offsetDistance: "100%" }}
                       transition={{ duration: 2.0, ease: "linear" }}
                       style={{ 
-                        offsetPath: "path('M 0 10 Q 30 15 50 40 T 70 70')",
-                        top: -16, // offset to perfectly center the spark on the stroke
-                        left: -16
+                        offsetPath: "path('M 0 4 Q 20 25 45 40')",
+                        top: 0,
+                        left: 0,
+                        marginLeft: '-16px',
+                        marginTop: '-16px'
                       }}
                     >
                        <div className={`w-2 h-2 rounded-full transition-colors duration-200 ${phase === 'lit' ? 'bg-white shadow-[0_0_12px_white]' : 'bg-transparent'}`} />
