@@ -40,7 +40,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       const clientY = isTouch ? e.touches[0].clientY : e.clientY;
       
       touchOrigin.current = { x: clientX, y: clientY };
-      setMatchPos({ x: clientX - 15, y: clientY - 25 });
+      const flameX = clientX - 15;
+      const flameY = clientY - 80;
+      setMatchPos({ x: flameX, y: flameY });
       setPhase('match');
       
       // Trigger a rapid match-strike spark animation
@@ -232,43 +234,40 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   <div className="w-full h-2 bg-yellow-400 border-y border-red-500 mb-4 z-10" />
                 </div>
                 
-                {/* The Natural Curved Fuse */}
-                <div className="absolute -bottom-1 -right-8 w-10 h-10 z-30">
-                  {/* Elegant curved fuse line */}
-                  <svg className="absolute w-full h-full text-neutral-400 overflow-visible" viewBox="0 0 10 10">
-                     <motion.path 
-                       d="M 0,8 Q 5,8 8,0" 
-                       fill="none" 
-                       stroke="currentColor" 
-                       strokeWidth="1.5" 
-                       strokeLinecap="round"
-                       initial={{ pathLength: 1 }}
-                       animate={phase === 'lit' ? { pathLength: 0 } : {}}
-                       transition={{ duration: 2.0, ease: "linear" }}
-                     />
-                  </svg>
-                  
-                  {/* Clean, beautiful glowing spark tracking the curve */}
-                  {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
-                    <motion.div 
-                      id="fuse-start"
-                      className="absolute top-0 right-0 w-8 h-8 flex items-center justify-center z-40 pointer-events-auto"
-                      initial={{ x: '50%', y: '-50%' }}
-                      animate={phase === 'lit' ? { x: '-150%', y: '150%' } : {}}
-                      transition={{ duration: 2.0, ease: "linear" }}
-                    >
-                       <div className={`w-2 h-2 rounded-full transition-colors duration-200 ${phase === 'lit' ? 'bg-white shadow-[0_0_10px_2px_rgba(255,255,255,0.8)]' : 'bg-transparent'}`} />
-                       {phase === 'lit' && (
-                         <div className="absolute w-4 h-4 bg-orange-500 rounded-full blur-[2px] animate-[fire-flicker_0.1s_infinite_alternate]" />
-                       )}
-                    </motion.div>
-                  )}
+                {/* The Physical Shrinking Fuse */}
+                <div className="absolute -bottom-1 -right-16 w-16 h-1.5 flex items-center origin-left rotate-[-20deg] z-30">
+                  {/* Thick textured fuse line that scales down to exactly the base of the cylinder */}
+                  <motion.div 
+                    className="w-full h-full bg-[#8B4513] rounded-full relative origin-left"
+                    initial={{ scaleX: 1 }}
+                    animate={phase === 'lit' ? { scaleX: 0 } : {}}
+                    transition={{ duration: 2.0, ease: "linear" }}
+                  >
+                    {/* The Spark at the tip of the fuse - attached strictly to the end of the line! */}
+                    {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
+                      <div 
+                        id="fuse-start"
+                        className="absolute top-1/2 right-0 w-8 h-8 flex items-center justify-center z-40 pointer-events-auto"
+                        style={{ transform: 'translate(50%, -50%) rotate(20deg)' }}
+                      >
+                         <div className={`w-2 h-2 rounded-full transition-colors duration-200 ${phase === 'lit' ? 'bg-white shadow-[0_0_12px_white]' : 'bg-transparent'}`} />
+                         {phase === 'lit' && (
+                           <>
+                             <div className="absolute w-5 h-5 bg-orange-500 rounded-full blur-[3px] animate-[fire-flicker_0.1s_infinite_alternate]" />
+                             <div className="absolute w-10 h-10 border-[2px] border-dashed border-yellow-400 rounded-full animate-[spin_0.3s_linear_infinite] opacity-90" />
+                             <div className="absolute w-7 h-7 border-[2px] border-dashed border-orange-500 rounded-full animate-[spin_0.2s_linear_infinite_reverse] opacity-80" />
+                           </>
+                         )}
+                      </div>
+                    )}
+                  </motion.div>
                 </div>
 
-                {/* Elegant Muzzle Flash at launch */}
+                {/* Enormous Muzzle Flash at launch (Realistic POP) */}
                 {phase === 'launching' && (
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-20 h-20 bg-gradient-to-t from-orange-400 to-yellow-100 rounded-full blur-[8px] mix-blend-screen animate-[white-flash_0.3s_ease-out_forwards] z-50 flex items-center justify-center">
-                     <div className="w-8 h-8 bg-white rounded-full blur-[4px]" />
+                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 z-50 flex items-center justify-center">
+                     <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full blur-[12px] mix-blend-screen animate-[white-flash_0.4s_ease-out_forwards]" />
+                     <div className="w-16 h-16 bg-white rounded-full blur-md" />
                   </div>
                 )}
               </motion.div>
