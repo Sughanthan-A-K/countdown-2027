@@ -200,8 +200,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           >
             {/* The Matchstick (Drawn from touch point to flame) */}
             {(phase === 'match' || phase === 'lit') && (
-              <div className={`transition-all duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-10 delay-500' : 'opacity-100'}`}>
-                <svg className="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-xl z-40">
+              <div>
+                <svg className={`absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-xl z-40 transition-all duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-32 delay-[800ms]' : 'opacity-100'}`}>
                   {/* Stick */}
                   <line x1={touchOrigin.current.x} y1={touchOrigin.current.y} x2={matchPos.x} y2={matchPos.y} stroke="#d2b48c" strokeWidth="6" strokeLinecap="round" />
                   {/* Burnt Head */}
@@ -209,7 +209,10 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                 </svg>
 
                 {/* Animated Flame at the tip of the match */}
-                <div className="absolute z-50 pointer-events-none" style={{ left: matchPos.x, top: matchPos.y - 12, transform: 'translate(-50%, -50%)' }}>
+                <div 
+                  className={`absolute z-50 pointer-events-none transition-all duration-[800ms] ${phase === 'lit' ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} 
+                  style={{ left: matchPos.x, top: matchPos.y - 12, transform: 'translate(-50%, -50%)', transformOrigin: 'center bottom' }}
+                >
                    {isStriking && (
                      <div className="absolute -inset-10 bg-yellow-100 rounded-full blur-xl animate-[match-strike_0.3s_ease-out]" />
                    )}
