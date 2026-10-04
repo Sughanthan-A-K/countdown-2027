@@ -259,7 +259,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   <svg width="100%" height="100%" viewBox="0 0 80 80" className="overflow-visible">
                     <motion.path 
                       id="fuse-path"
-                      d="M 0 4 Q 25 15 45 40" 
+                      d="M 0 4 C 15 4, 15 -25, 35 -25 C 50 -25, 55 5, 65 5" 
                       fill="none" 
                       stroke="#8B4513" 
                       strokeWidth="3.5"
@@ -271,19 +271,19 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                     />
                   </svg>
 
-                  {/* Dedicated invisible hitbox exactly at the tip of the fuse (45, 40) for flawless collision detection */}
-                  <div id="fuse-hitbox" className="absolute w-12 h-12 rounded-full" style={{ left: '45px', top: '40px', transform: 'translate(-50%, -50%)' }} />
+                  {/* Dedicated invisible hitbox exactly at the tip of the fuse (65, 5) for flawless collision detection */}
+                  <div id="fuse-hitbox" className="absolute w-12 h-12 rounded-full" style={{ left: '65px', top: '5px', transform: 'translate(-50%, -50%)' }} />
 
                   {/* The Spark that follows the shrinking fuse path using highly reliable coordinate keyframes */}
                   {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
                     <motion.div 
                       className="absolute z-40 pointer-events-none origin-center"
-                      initial={{ x: 45, y: 40 }}
+                      initial={{ x: 65, y: 5 }}
                       animate={phase === 'lit' ? { 
-                        x: [45, 34.7, 23.8, 12.2, 0], 
-                        y: [40, 28.4, 17.5, 10.4, 4] 
-                      } : { x: 45, y: 40 }}
-                      transition={{ duration: 2.0, ease: "linear", times: [0, 0.25, 0.5, 0.75, 1] }}
+                        x: [65.0, 58.2, 51.9, 44.6, 35.0, 23.2, 15.6, 9.0, 0.0], 
+                        y: [5.0, 0.3, -10.0, -20.3, -25.0, -20.5, -10.5, -0.5, 4.0] 
+                      } : { x: 65, y: 5 }}
+                      transition={{ duration: 2.0, ease: "linear", times: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1] }}
                       style={{ 
                         top: 0,
                         left: 0,
