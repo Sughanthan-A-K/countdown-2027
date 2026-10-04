@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion';
 import { Sparkles, PartyPopper, Star } from 'lucide-react';
 import GandhiPic from './GandhiPic';
+import ConfettiBurst from './ConfettiBurst';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isDiwali, forceDiwaliMode, diwaliPhase, onCalendarReveal, diwaliPhoto, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
   const [isTorn, setIsTorn] = useState(false);
   
-  const isFinished = daysRemaining <= 0; 
+  const isFinished = daysRemaining <= 0;
+  const isDiwaliActive = isDiwali || forceDiwaliMode; 
   
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -95,15 +97,16 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       transition={{ type: 'spring', stiffness: 300, damping: 25, mass: 0.5 }}
       className="absolute flex items-center justify-center inset-0 select-none touch-none"
     >
+      <AnimatePresence>{isDiwaliActive && diwaliPhase === 1 && (<motion.div className="fixed inset-0 bg-black z-[-1]" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.5, ease: "easeInOut" }} />)}</AnimatePresence>
       <div className="relative pt-4 w-full flex justify-center">
         {/* Removed transition-colors because View Transition handles the visual fade/wipe instantly */}
-        <div className={`absolute top-1 left-[15%] w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
-        <div className={`absolute top-1 right-[15%] w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
+        <div className={`absolute top-1 left-[15%] transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
+        <div className={`absolute top-1 right-[15%] transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
         
         <motion.div 
-          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${cardBg} ${cardBorder}`}
+          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 transition-all duration-1000 ${diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder}`}`}
           style={{
-            boxShadow: isTop ? dropShadow : '0 20px 40px -10px rgba(0,0,0,0.1)',
+            boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : dropShadow) : '0 20px 40px -10px rgba(0,0,0,0.1)',
             backfaceVisibility: 'hidden'
           }}
         >
@@ -163,11 +166,9 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 </span>
               </motion.div>
             </motion.div>
-          ) : (
-            // COUNTDOWN UI
-            isGandhiJayanti ? (
+          ) : isGandhiJayanti ? (
               <>
-                <div className="pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative">
+                <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>
                   <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
                     {dateText}
                   </h2>
@@ -179,11 +180,65 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   </motion.h3>
                 </div>
 
-                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-[-10px]">
+                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-4">
                   <GandhiPic isDarkMode={isDarkMode} onEyeClick={onEyeClick} hasKey={hasGandhiKey} />
                 </div>
                 
-                <div className="pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0">
+                <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>
+                  <div className="flex items-baseline gap-1">
+                    <h1 className={`text-5xl sm:text-6xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                      {daysRemaining}
+                    </h1>
+                    <span className={`font-bold text-sm sm:text-base italic ${textSecondary}`}>
+                      th day
+                    </span>
+                  </div>
+                  <div 
+                    className={`px-5 py-1.5 rounded-full border-2 mt-3 cursor-default select-none ${pillBgOutline}`}
+                    onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
+                    onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
+                    onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                    onPointerLeave={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                  >
+                    <span className={`text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
+                      To reach 2027
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : isDiwaliActive ? (
+              <>
+                {/* Background Fireworks spanning the entire card natively! */}
+                <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${isDarkMode ? 'opacity-100' : 'opacity-80'}`}>
+                  <ConfettiBurst active={true} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={true} onFirstBurst={onCalendarReveal} />
+                </div>
+
+                <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>
+                  <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
+                    {dateText}
+                  </h2>
+                </div>
+
+                <div className={`flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-[-20px] transition-opacity duration-1000 opacity-100`}>
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
+                    className="flex flex-col items-center"
+                  >
+                    <h3 
+                       className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-orange-500 font-black text-5xl sm:text-6xl tracking-widest uppercase drop-shadow-md text-center leading-tight"
+                       style={{ WebkitTextStroke: '1px rgba(184,115,51,0.5)' }}
+                    >
+                      Happy<br/>Diwali
+                    </h3>
+                    <span className={`mt-3 font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase text-yellow-500 drop-shadow-sm`}>
+                      To you & your family
+                    </span>
+                  </motion.div>
+                </div>
+                
+                <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>
                   <div className="flex items-baseline gap-1">
                     <h1 className={`text-5xl sm:text-6xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
                       {daysRemaining}
@@ -245,8 +300,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   </div>
                 </div>
               </>
-            )
-          )}
+            )}
         </motion.div>
       </div>
     </motion.div>

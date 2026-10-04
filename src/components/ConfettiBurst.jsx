@@ -1,31 +1,254 @@
-import React, { useEffect } from 'react';
-import confetti from 'canvas-confetti';
+import React, { useEffect, useRef } from 'react';
 
-export default function ConfettiBurst({ active }) {
+export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.5 }, launchOrigin = null, loop = false, skipInitial = false, forceRocket = false, onFirstBurst }) {
+  const canvasRef = useRef(null);
+  
+  // Persist physics state across re-renders (like when 'loop' prop toggles)
+  const particlesRef = useRef([]);
+  const waveRef = useRef(0);
+  const hasFiredInitial = useRef(false);
+  const hasFiredFirstBurstCallback = useRef(false);
+
   useEffect(() => {
-    if (active) {
-      const count = 250; // Huge burst
-      const defaults = { origin: { y: 0.6 }, zIndex: 300 }; // Shoots from lower center
+    if (!active) return;
+    const canvas = canvasRef.current;
+    if (!canvas || !canvas.parentElement) return;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let intervalId;
+
+    // Handle high DPI screens
+    const dpr = window.devicePixelRatio || 1;
+    
+    const updateSize = () => {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+
+    // Specific sequential colors
+    const goldenColors = ['#FFD700', '#FFA500', '#FFFFFF', '#FFF8DC', '#DAA520', '#F0E68C'];
+    const redColors = ['#FF1493', '#FF0000', '#FF4500', '#FF7F50', '#DC143C'];
+    const blueGreenColors = ['#00FFFF', '#00FF00', '#32CD32', '#00FA9A', '#1E90FF'];
+
+    const explode = (startX, startY, selectedColors) => {
+      const particleCount = loop ? 120 : 450; // High burst for initial fullscreen, smaller for loop frame
+      for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = (Math.random() * 20 + 5) * (Math.random() * 0.5 + 0.5);
+        
+        particlesRef.current.push({
+          isRocket: false,
+          x: startX,
+          y: startY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          friction: 0.94, 
+          gravity: 0.05, 
+          alpha: 1, 
+          decay: Math.random() * 0.006 + 0.003, 
+          color: selectedColors[Math.floor(Math.random() * selectedColors.length)],
+          size: Math.random() * 1.5 + 0.5,
+          history: [], 
+          flickerRate: Math.random() > 0.5 ? Math.random() * 0.1 : 0
+        });
+      }
+    };
+
+    const fire = (directExplode = false) => {
+      const rect = canvas.parentElement.getBoundingClientRect();
       
-      function fire(particleRatio, opts) {
-        confetti(Object.assign({}, defaults, opts, {
-          particleCount: Math.floor(count * particleRatio)
-        }));
+      let selectedColors = goldenColors; // Default to golden
+
+      // Determine colors based on wave sequence if we are looping
+      if (hasFiredInitial.current && loop) {
+        const waveType = waveRef.current % 3;
+        if (waveType === 0) selectedColors = goldenColors;
+        else if (waveType === 1) selectedColors = redColors;
+        else selectedColors = blueGreenColors;
+        waveRef.current++;
+      }
+      
+      if (directExplode && !forceRocket) {
+        // Explode directly at origin (used for the very first fullscreen golden shower)
+        const startX = rect.width * origin.x;
+        const startY = rect.height * origin.y;
+        explode(startX, startY, selectedColors);
+      } else {
+        // Launch a rocket from the bottom of the container!
+        const startX = launchOrigin ? rect.width * launchOrigin.x : rect.width * (0.3 + Math.random() * 0.4); 
+        const startY = launchOrigin ? rect.height * launchOrigin.y : rect.height + 10;
+        
+        // Apex is origin.y if forceRocket, otherwise random upper half
+        const targetY = (forceRocket || launchOrigin) ? rect.height * origin.y : rect.height * (0.1 + Math.random() * 0.4); 
+        
+        // Physics: v^2 = u^2 + 2as -> u = sqrt(-2as) (where v=0 at apex)
+        const distanceY = startY - targetY;
+        const gravity = launchOrigin ? 0.04 : 0.15; // Lower gravity for 3s cinematic hangtime
+        const initialVy = -Math.sqrt(2 * gravity * Math.max(10, distanceY));
+        
+        particlesRef.current.push({
+          isRocket: true,
+          x: startX,
+          y: startY,
+          vx: launchOrigin ? (rect.width * origin.x - startX) / (-initialVy / gravity) + (Math.random()-0.5)*1 : (Math.random() - 0.5) * 3,
+          vy: initialVy,
+          gravity: gravity,
+          alpha: 1,
+          colorTheme: selectedColors,
+          history: []
+        });
+      }
+    };
+
+    // Fire the initial logic
+    if (!hasFiredInitial.current) {
+      if (!skipInitial) {
+        // If it's the fullscreen event (!loop), the HTML matchstick already acted as the rocket, so direct explode.
+        // If it's the calendar frame (loop), start with a rocket!
+        fire(!loop);
+      }
+      hasFiredInitial.current = true;
+    }
+
+    // Start interval only if loop is true
+    if (loop) {
+      intervalId = setInterval(() => fire(false), 2400); // Launch a new rocket every 2.4s
+    }
+
+    const render = () => {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      let activeParticles = 0;
+
+      particlesRef.current.forEach((p) => {
+        if (p.alpha <= 0) return;
+        activeParticles++;
+
+        p.history.push({ x: p.x, y: p.y });
+        
+        if (p.isRocket) {
+          if (p.initialY === undefined) p.initialY = p.y;
+          
+          // Calculate scale based on height to create 3D depth effect (shrinks as it goes up)
+          const progress = Math.max(0, Math.min(1, (p.initialY - p.y) / (p.initialY * 0.75)));
+          const scale = 1.0 - (progress * 0.7); // Shrinks down to 30% size!
+
+          if (p.history.length > 60) p.history.shift(); // Longer history for richer tail
+          
+          p.vy += p.gravity;
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Draw the rocket trail
+          if (p.history.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(p.history[0].x, p.history[0].y);
+            for (let i = 1; i < p.history.length; i++) {
+              ctx.lineTo(p.history[i].x, p.history[i].y);
+            }
+            ctx.lineTo(p.x, p.y);
+            
+            const gradient = ctx.createLinearGradient(p.history[0].x, p.history[0].y, p.x, p.y);
+            gradient.addColorStop(0, 'rgba(255, 60, 0, 0)');
+            gradient.addColorStop(0.5, `rgba(255, 165, 0, ${0.8 * scale})`);
+            gradient.addColorStop(1, `rgba(255, 255, 200, ${scale})`);
+            
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 20 * scale;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+          }
+
+          // Draw bright spark at the head
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 8 * scale, 0, Math.PI * 2);
+          ctx.fillStyle = '#FFFFFF';
+          ctx.shadowBlur = 10 * scale;
+          ctx.shadowColor = '#FFA500';
+          ctx.fill();
+          ctx.shadowBlur = 0; // Reset
+
+          // Explode when it reaches apex (velocity becomes positive/downward)
+          if (p.vy >= -0.5) {
+            p.alpha = 0; // kill rocket
+            explode(p.x, p.y, p.colorTheme); // spawn the beautiful shower
+            
+            // Trigger the external callback if provided
+            if (onFirstBurst && !hasFiredFirstBurstCallback.current) {
+              onFirstBurst();
+              hasFiredFirstBurstCallback.current = true;
+            }
+          }
+        } else {
+          // Standard falling particle logic
+          if (p.history.length > 20) p.history.shift();
+
+          p.vx *= p.friction;
+          p.vy *= p.friction;
+          p.vy += p.gravity;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha -= p.decay;
+
+          let currentAlpha = p.alpha;
+          if (p.flickerRate > 0) {
+            currentAlpha = Math.max(0, p.alpha - Math.sin(Date.now() * p.flickerRate) * 0.3);
+          }
+
+          if (p.history.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(p.history[0].x, p.history[0].y);
+            ctx.lineTo(p.x, p.y);
+            ctx.strokeStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, currentAlpha)})`;
+            ctx.lineWidth = p.size;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, currentAlpha)})`;
+            ctx.fill();
+          }
+        }
+      });
+      
+      if (particlesRef.current.length > 1500) {
+        particlesRef.current = particlesRef.current.filter(p => p.alpha > 0);
       }
 
-      // Layered realistic explosion
-      fire(0.25, { spread: 26, startVelocity: 55 });
-      fire(0.2, { spread: 60 });
-      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-      fire(0.1, { spread: 120, startVelocity: 45 });
-      
-      // Add a secondary pop after 800ms
-      setTimeout(() => {
-        fire(0.2, { spread: 80, startVelocity: 40, origin: { y: 0.5 } });
-      }, 800);
-    }
-  }, [active]);
+      if (activeParticles > 0 || loop) {
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
 
-  return null;
+    render();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      if (intervalId) clearInterval(intervalId);
+      window.removeEventListener('resize', updateSize);
+    };
+  }, [active, origin.x, origin.y, loop]);
+
+  function hexToRgb(hex) {
+    const bigint = parseInt(hex.replace('#', ''), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `${r}, ${g}, ${b}`;
+  }
+
+  return (
+    <canvas 
+      id="firework-canvas"
+      ref={canvasRef} 
+      style={{ width: '100%', height: '100%', display: 'block' }}
+      className="absolute inset-0 pointer-events-none z-[1000]"
+    />
+  );
 }

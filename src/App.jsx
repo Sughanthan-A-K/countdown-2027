@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import CalendarPage from './components/CalendarPage';
+import DiwaliEvent from './components/DiwaliEvent';
 import Onboarding from './components/Onboarding';
 import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
 import KeyModal from './components/KeyModal';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
-import { Moon, Sun, Info, X, Copy, Check } from 'lucide-react';
+import { Moon, Sun, Info, X, Copy, Check, Calendar } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
 
@@ -13,9 +14,15 @@ function App() {
   const [actualToday, setActualToday] = useState(() => normalizeDate(new Date()));
   const [calendarDate, setCalendarDate] = useState(() => {
     const isDone = localStorage.getItem('onboardingDone');
+    const isDev = localStorage.getItem('isDevMode') === 'true';
+    const devStored = localStorage.getItem('devOverrideDate');
     const stored = localStorage.getItem('lastTornDate');
     const today = normalizeDate(new Date());
-    if (isDone && stored) {
+    
+    if (isDev && devStored) {
+      return normalizeDate(new Date(parseInt(devStored, 10)));
+    }
+    if (isDone && stored && !isDev) {
       return new Date(parseInt(stored, 10));
     }
     return today;
@@ -82,8 +89,29 @@ function App() {
   const [hasDiscovered, setHasDiscovered] = useState(() => localStorage.getItem('hasDiscoveredTranslate') === 'true');
 
   const [isDevMode, setIsDevMode] = useState(() => localStorage.getItem('isDevMode') === 'true');
+  const [showDiwaliEvent, setShowDiwaliEvent] = useState(false);
+  const [diwaliPhase, setDiwaliPhase] = useState(0);
+  
+  // Diwali Frame states
+  const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
+  
+
+  useEffect(() => {
+    // 10 = Nov, 8 = 8th
+    if (calendarDate.getMonth() === 10 && calendarDate.getDate() === 8) {
+      if (isDevMode || !localStorage.getItem('diwaliEventDone_2026')) {
+        setDiwaliRevealed(false);
+        
+        setShowDiwaliEvent(true);
+      } else {
+        setDiwaliRevealed(true);
+        
+      }
+    }
+  }, [calendarDate, isDevMode]);
   const devClickCountRef = useRef(0);
   const devHoldTimerRef = useRef(null);
+  const dateInputRef = useRef(null);
   
   const handleDevPillTap = () => {
     if (isDevMode) return;
@@ -487,6 +515,10 @@ function App() {
   const handleReset = () => {
     if (tutorialState !== 3 && !(tutorialState === -1 && isDevMode)) return;
 
+    if (isDevMode) {
+      localStorage.removeItem('devOverrideDate');
+    }
+
     if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
     setShowBubble(false);
 
@@ -504,7 +536,8 @@ function App() {
           id: `refill-${d.getTime()}`,
           dateText: formatDate(d),
           daysRemaining: getDaysRemaining(d),
-          isGandhiJayanti: d.getMonth() === 9 && d.getDate() === 2,
+          isGandhiJayanti: d.getMonth() === 9 && d.getDate() === 2, isDiwaliDay: d.getMonth() === 10 && d.getDate() === 8, isDiwali: (d.getMonth() === 10 && d.getDate() === 8) && diwaliRevealed,
+          
         });
       }
       setRefillingPages(missingPages);
@@ -626,7 +659,8 @@ function App() {
       dateText: formatDate(pageDate),
       daysRemaining: getDaysRemaining(pageDate),
       index: i,
-      isGandhiJayanti: pageDate.getMonth() === 9 && pageDate.getDate() === 2 // Oct is 9 in JS Date
+      isGandhiJayanti: pageDate.getMonth() === 9 && pageDate.getDate() === 2, isDiwaliDay: pageDate.getMonth() === 10 && pageDate.getDate() === 8, isDiwali: (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
+      
     };
   });
 
@@ -638,6 +672,13 @@ function App() {
       };
     }
     return null;
+  };
+  const handleDevDateChange = (e) => {
+    if (!e.target.value) return;
+    const selected = new Date(e.target.value);
+    selected.setHours(0, 0, 0, 0); // Ensure midnight
+    setCalendarDate(selected);
+    localStorage.setItem('devOverrideDate', selected.getTime().toString());
   };
 
   return (
@@ -740,6 +781,36 @@ function App() {
             <Info size={20} />
           </button>
           
+          {isDevMode && (
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                if (dateInputRef.current) {
+                  try {
+                    dateInputRef.current.showPicker();
+                  } catch (err) {
+                    dateInputRef.current.focus();
+                  }
+                }
+              }}
+              className={`absolute top-8 left-24 z-[50] p-3 rounded-full border-2 shadow-md flex items-center justify-center ${
+                isDarkMode 
+                  ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
+                  : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
+              }`}
+            >
+              <Calendar size={20} />
+              <input 
+                ref={dateInputRef}
+                type="date" 
+                className="absolute opacity-0 w-0 h-0 pointer-events-none"
+                min={`${actualToday.getFullYear()}-${String(actualToday.getMonth() + 1).padStart(2, '0')}-${String(actualToday.getDate()).padStart(2, '0')}`}
+                max="2027-01-01"
+                onChange={handleDevDateChange}
+              />
+            </button>
+          )}
+
           <AnimatePresence>
             {finalHintStep === 'info' && (
               <motion.div
@@ -910,7 +981,7 @@ function App() {
           >
             <AnimatePresence>
                 {pages.slice().reverse().map((page) => (
-                  <CalendarPage
+                  <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setDiwaliRevealed(true); }}  diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
                     key={page.id}
                     dateText={page.dateText}
                     daysRemaining={page.daysRemaining}
@@ -919,7 +990,8 @@ function App() {
                     onTear={handleTear}
                     onEyeClick={handleEyeClick}
                     isDarkMode={isDarkMode}
-                    isGandhiJayanti={page.isGandhiJayanti}
+                    isGandhiJayanti={page.isGandhiJayanti} isDiwali={page.isDiwali} 
+                    
                     hasGandhiKey={hasGandhiKey}
                     isTearLocked={isTearLocked}
                     onDevTap={handleDevPillTap}
@@ -952,7 +1024,7 @@ function App() {
                     className="absolute flex items-center justify-center inset-0 pointer-events-none"
                     style={{ zIndex: 100 + i }}
                   >
-                    <CalendarPage
+                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setDiwaliRevealed(true); }}  diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
                       dateText={page.dateText}
                       daysRemaining={page.daysRemaining}
                       index={0}
@@ -960,7 +1032,8 @@ function App() {
                       onTear={() => {}}
                       onEyeClick={() => {}}
                       isDarkMode={isDarkMode}
-                      isGandhiJayanti={page.isGandhiJayanti}
+                      isGandhiJayanti={page.isGandhiJayanti} isDiwali={page.isDiwali} 
+                      
                       hasGandhiKey={hasGandhiKey}
                       globalLang={globalLang}
                       isTearLocked={true}
@@ -972,6 +1045,13 @@ function App() {
         </div>
       </div>
       <KeyModal isOpen={showKeyModal} onClose={() => setShowKeyModal(false)} globalLang={globalLang} />
+      {showDiwaliEvent && (
+        <DiwaliEvent isDarkMode={isDarkMode} onExplode={() => setDiwaliPhase(1)} onComplete={() => {
+          setDiwaliRevealed(true);
+          setShowDiwaliEvent(false);
+          if (!isDevMode) localStorage.setItem('diwaliEventDone_2026', 'true');
+        }} />
+      )}
     </>
   );
 }
