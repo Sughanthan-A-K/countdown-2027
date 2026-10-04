@@ -210,7 +210,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
 
                 {/* Animated Flame at the tip of the match */}
                 <div 
-                  className={`absolute z-50 pointer-events-none transition-all duration-[800ms] ${phase === 'lit' ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} 
+                  className={`absolute z-50 pointer-events-none transition duration-[800ms] ${phase === 'lit' ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} 
                   style={{ left: matchPos.x, top: matchPos.y - 12, transform: 'translate(-50%, -50%)', transformOrigin: 'center bottom' }}
                 >
                    {isStriking && (
