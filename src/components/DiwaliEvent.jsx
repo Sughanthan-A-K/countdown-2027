@@ -78,7 +78,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         // Use the VISUAL flame position (matchPos) vs the dedicated static hitbox.
         // Extremely generous 120px radius and fast 400ms hold so user never gets frustrated.
         const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
-        if (dist < 120) {
+        if (dist < 40) {
           if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
           setPhase('lit');
           
@@ -291,11 +291,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                     >
                        <div className={`w-2 h-2 rounded-full transition-colors duration-200 ${phase === 'lit' ? 'bg-white shadow-[0_0_12px_white]' : 'bg-transparent'}`} />
                        {phase === 'lit' && (
-                         <>
-                           <div className="absolute w-5 h-5 bg-orange-500 rounded-full blur-[3px] animate-[fire-flicker_0.1s_infinite_alternate]" />
-                           <div className="absolute w-10 h-10 border-[2px] border-dashed border-yellow-400 rounded-full animate-[spin_0.3s_linear_infinite] opacity-90" />
-                           <div className="absolute w-7 h-7 border-[2px] border-dashed border-orange-500 rounded-full animate-[spin_0.2s_linear_infinite_reverse] opacity-80" />
-                         </>
+                         <div className="absolute w-4 h-4 bg-orange-400 rounded-full blur-[2px] animate-[fire-flicker_0.1s_infinite_alternate] shadow-[0_0_8px_#ff8800]" />
                        )}
                     </motion.div>
                   )}

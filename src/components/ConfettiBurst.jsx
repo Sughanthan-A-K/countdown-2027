@@ -72,8 +72,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       // Determine colors based on wave sequence if we are looping
       if (hasFiredInitial.current && loop) {
         const waveType = waveRef.current % 3;
-        if (waveType === 0) selectedColors = goldenColors;
-        else if (waveType === 1) selectedColors = redColors;
+        if (waveType === 0) selectedColors = pinkBlueColors;
+        else if (waveType === 1) selectedColors = goldenColors;
         else selectedColors = blueGreenColors;
         waveRef.current++;
       }
