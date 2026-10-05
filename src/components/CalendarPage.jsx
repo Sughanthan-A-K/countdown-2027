@@ -223,7 +223,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={diwaliPhase === 1 ? { opacity: [0, 0, 1], scale: [1, 1, 1.2] } : { opacity: 1, scale: 1 }}
-                    transition={diwaliPhase === 1 ? { duration: 3.5, times: [0, 0.7, 1], ease: "easeOut" } : { duration: 1.5, ease: "easeOut", delay: 0.5 }}
+                    transition={diwaliPhase === 1 ? { duration: 2.5, times: [0, 0.4, 1], ease: "easeOut" } : { duration: 1.5, ease: "easeOut", delay: 0.5 }}
                     className="flex flex-col items-center"
                   >
                     <h3 
