@@ -5,6 +5,7 @@ import Onboarding from './components/Onboarding';
 import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
 import KeyModal from './components/KeyModal';
+import confetti from 'canvas-confetti';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -725,7 +726,30 @@ function App() {
             // Delay confetti until the physical drop animation is mostly complete (0.7 seconds)
             setTimeout(() => {
               setIsRevealing(true);
-              setTimeout(() => setIsRevealing(false), 4500); // Stop confetti after 4.5 seconds
+              
+              // Restore original Popper Confetti logic
+              const count = 250;
+              const defaults = { origin: { y: 0.6 }, zIndex: 300 };
+              
+              function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                  particleCount: Math.floor(count * particleRatio)
+                }));
+              }
+        
+              // Layered realistic explosion
+              fire(0.25, { spread: 26, startVelocity: 55 });
+              fire(0.2, { spread: 60 });
+              fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+              fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+              fire(0.1, { spread: 120, startVelocity: 45 });
+              
+              // Add a secondary pop after 800ms
+              setTimeout(() => {
+                fire(0.2, { spread: 80, startVelocity: 40, origin: { y: 0.5 } });
+              }, 800);
+
+              setTimeout(() => setIsRevealing(false), 4500); // Stop confetti state after 4.5 seconds
             }, 700);
           }} />
         )}
@@ -738,7 +762,7 @@ function App() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          <ConfettiBurst active={isRevealing} />
+          {/* Confetti (Popper) is now triggered via canvas-confetti function call */}
 
           {isDevMode && (
             <button 
