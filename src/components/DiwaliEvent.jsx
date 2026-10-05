@@ -2,11 +2,29 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ConfettiBurst from './ConfettiBurst';
 
+const fuseVariants = {
+  idle: { pathLength: 1 },
+  burning: { 
+    pathLength: 0,
+    transition: { duration: 3.0, ease: "linear" }
+  }
+};
+
+const sparkVariants = {
+  idle: { x: 65, y: 5 },
+  burning: {
+    x: [65.0, 58.2, 51.9, 44.6, 35.0, 23.2, 15.6, 9.0, 0.0], 
+    y: [5.0, 0.3, -10.0, -20.3, -25.0, -20.5, -10.5, -0.5, 4.0],
+    transition: { duration: 3.0, ease: "linear", times: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1] }
+  }
+};
+
 export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMode }) {
   const [phase, setPhase] = useState('init'); // init, dimming, dark, match, lit, launching, done, freeze
   const [matchPos, setMatchPos] = useState({ x: -500, y: -500 }); // The FLAME position
   
-  const touchOrigin = useRef({ x: -500, y: -500 }); // Where user is touching (bottom of stick)
+  const touchOrigin = useRef({ x: -500, y: -500 });
+  const hasIgnited = useRef(false); // Where user is touching (bottom of stick)
   
 
   useEffect(() => {
@@ -80,7 +98,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         
         // Very forgiving 45px radius to account for visual offset and thumb sizes on mobile. Instant ignition!
         const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
-        if (dist < 45) {
+        if (dist < 45 && !hasIgnited.current) {
+          hasIgnited.current = true;
           if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
           setPhase('lit');
           
@@ -269,10 +288,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                       stroke="#8B4513" 
                       strokeWidth="3.5"
                       strokeLinecap="round"
-                      initial={{ pathLength: 1 }}
-                      animate={['lit', 'launching', 'explode', 'fadeout_bg'].includes(phase) ? { pathLength: 0 } : { pathLength: 1 }}
-                      transition={{ duration: 3.0, ease: "linear" }}
-                      style={{ pathLength: 1 }}
+                                            variants={fuseVariants}
+                      initial="idle"
+                      animate={['lit', 'launching', 'explode', 'fadeout_bg'].includes(phase) ? "burning" : "idle"}
                     />
                   </svg>
 
@@ -283,12 +301,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
                     <motion.div 
                       className="absolute z-40 pointer-events-none origin-center"
-                      initial={{ x: 65, y: 5 }}
-                      animate={phase === 'lit' ? { 
-                        x: [65.0, 58.2, 51.9, 44.6, 35.0, 23.2, 15.6, 9.0, 0.0], 
-                        y: [5.0, 0.3, -10.0, -20.3, -25.0, -20.5, -10.5, -0.5, 4.0] 
-                      } : { x: 65, y: 5 }}
-                      transition={{ duration: 3.0, ease: "linear", times: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1] }}
+                                            variants={sparkVariants}
+                      initial="idle"
+                      animate={phase === 'lit' ? "burning" : "idle"}
                       style={{ 
                         top: 0,
                         left: 0,
@@ -377,5 +392,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
     </>
   );
 }
+
+
+
 
 
