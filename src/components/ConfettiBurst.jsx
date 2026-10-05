@@ -31,53 +31,34 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     updateSize();
     window.addEventListener('resize', updateSize);
 
-    // Massive vibrant color palettes
+        // Specific sequential colors
     const goldenColors = ['#FFD700', '#FFA500', '#FFFFFF', '#FFF8DC', '#DAA520', '#F0E68C'];
-    const redColors = ['#FF1493', '#FF0000', '#FF4500', '#FF7F50', '#DC143C', '#B22222'];
-    const blueGreenColors = ['#00FFFF', '#00FF00', '#32CD32', '#00FA9A', '#1E90FF', '#7FFFD4'];
-    const violetColors = ['#8A2BE2', '#9400D3', '#FF00FF', '#BA55D3', '#4B0082', '#9932CC'];
-    const multiColors = [...redColors, ...blueGreenColors, ...violetColors, '#FFFF00', '#FF8C00'];
+    const vibrantPalettes = [
+      ['#1E90FF', '#8A2BE2', '#00FFFF', '#9400D3', '#FF00FF', '#4169E1', '#00FA9A', '#FF1493'],
+      ['#FF1493', '#FF0000', '#FF4500', '#FF7F50', '#DC143C', '#FF8C00'],
+      ['#00FFFF', '#00FF00', '#32CD32', '#00FA9A', '#1E90FF', '#7FFF00'],
+      ['#FF00FF', '#8A2BE2', '#9400D3', '#DA70D6', '#BA55D3', '#4B0082'],
+      ['#FF4500', '#FF8C00', '#FFA500', '#FFD700', '#FFFF00', '#FF6347']
+    ];
 
     const explode = (startX, startY, selectedColors) => {
-      const particleCount = loop ? 150 : 450; 
-      // Choose a random pattern for loop explosions (0: Sphere, 1: Ring, 2: Willow)
-      const pattern = (!loop) ? 0 : Math.floor(Math.random() * 3);
-      
+      const particleCount = loop ? 120 : 450;
       for (let i = 0; i < particleCount; i++) {
-        let angle = Math.random() * Math.PI * 2;
-        let speed = (Math.random() * 20 + 5) * (Math.random() * 0.5 + 0.5);
-        let decay = Math.random() * 0.006 + 0.003;
-        let gravity = 0.05;
-        let size = Math.random() * 1.5 + 0.5;
-        let friction = 0.94;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = (Math.random() * 20 + 5) * (Math.random() * 0.5 + 0.5);
         
-        if (pattern === 1) {
-          // Perfect Ring
-          angle = (Math.PI * 2 * i) / particleCount;
-          speed = 12 + Math.random() * 2; 
-          decay = 0.015; // fade faster
-          size = Math.random() * 2.5 + 1.0;
-          friction = 0.90; // slow down quickly
-        } else if (pattern === 2) {
-          // Willow (Heavy falling trails)
-          speed = Math.random() * 10 + 2;
-          gravity = 0.15; // heavy fall
-          decay = Math.random() * 0.003 + 0.001; // lasts long
-          size = 1.0;
-        }
-
         particlesRef.current.push({
           isRocket: false,
           x: startX,
           y: startY,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          friction, 
-          gravity, 
+          friction: 0.94, 
+          gravity: 0.05, 
           alpha: 1, 
-          decay, 
+          decay: Math.random() * 0.006 + 0.003, 
           color: selectedColors[Math.floor(Math.random() * selectedColors.length)],
-          size,
+          size: Math.random() * 1.5 + 0.5,
           history: [], 
           flickerRate: Math.random() > 0.5 ? Math.random() * 0.1 : 0
         });
@@ -89,16 +70,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
       
-      let selectedColors = loop ? multiColors : goldenColors;
-
-      // Determine colors based on wave sequence if we are looping
-      if (hasFiredInitial.current && loop) {
-        const waveType = waveRef.current % 5;
-        if (waveType === 0) selectedColors = multiColors;
-        else if (waveType === 1) selectedColors = redColors;
-        else if (waveType === 2) selectedColors = blueGreenColors;
-        else if (waveType === 3) selectedColors = violetColors;
-        else selectedColors = goldenColors;
+            // If looping, cycle through the vibrant palettes.
+      let selectedColors = goldenColors;
+      if (loop) {
+        selectedColors = vibrantPalettes[waveRef.current % vibrantPalettes.length];
         waveRef.current++;
       }
       
@@ -152,7 +127,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             fire(false);
           }
           scheduleNext();
-        }, Math.random() * 1000 + 800); // Random delay between 0.8s and 1.8s
+        }, Math.random() * 500 + 1000); // Random delay between 1.5s and 3.0s
       };
       scheduleNext();
     }
@@ -314,3 +289,4 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     />
   );
 }
+
