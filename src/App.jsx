@@ -102,11 +102,11 @@ function App() {
       if (isDevMode || !localStorage.getItem('diwaliEventDone_2026')) {
         setDiwaliRevealed(false);
         setShowDiwaliEvent(true);
-        // Force Dark Mode during the blackout flicker (1.8s after event starts) so user doesn't see a sudden UI jump
+        // Force Dark Mode exactly during the bright white flash blackout (1.6s after event starts)
         setTimeout(() => {
           setIsDarkMode(true);
           localStorage.setItem('isDarkMode', 'true');
-        }, 1800);
+        }, 1600);
       } else {
         setDiwaliRevealed(true);
       }

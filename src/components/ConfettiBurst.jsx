@@ -31,29 +31,53 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     updateSize();
     window.addEventListener('resize', updateSize);
 
-    // Specific sequential colors
+    // Massive vibrant color palettes
     const goldenColors = ['#FFD700', '#FFA500', '#FFFFFF', '#FFF8DC', '#DAA520', '#F0E68C'];
-    const redColors = ['#FF1493', '#FF0000', '#FF4500', '#FF7F50', '#DC143C'];
-    const blueGreenColors = ['#00FFFF', '#00FF00', '#32CD32', '#00FA9A', '#1E90FF'];
+    const redColors = ['#FF1493', '#FF0000', '#FF4500', '#FF7F50', '#DC143C', '#B22222'];
+    const blueGreenColors = ['#00FFFF', '#00FF00', '#32CD32', '#00FA9A', '#1E90FF', '#7FFFD4'];
+    const violetColors = ['#8A2BE2', '#9400D3', '#FF00FF', '#BA55D3', '#4B0082', '#9932CC'];
+    const multiColors = [...redColors, ...blueGreenColors, ...violetColors, '#FFFF00', '#FF8C00'];
 
     const explode = (startX, startY, selectedColors) => {
-      const particleCount = loop ? 120 : 450; // High burst for initial fullscreen, smaller for loop frame
+      const particleCount = loop ? 150 : 450; 
+      // Choose a random pattern for loop explosions (0: Sphere, 1: Ring, 2: Willow)
+      const pattern = (!loop) ? 0 : Math.floor(Math.random() * 3);
+      
       for (let i = 0; i < particleCount; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = (Math.random() * 20 + 5) * (Math.random() * 0.5 + 0.5);
+        let angle = Math.random() * Math.PI * 2;
+        let speed = (Math.random() * 20 + 5) * (Math.random() * 0.5 + 0.5);
+        let decay = Math.random() * 0.006 + 0.003;
+        let gravity = 0.05;
+        let size = Math.random() * 1.5 + 0.5;
+        let friction = 0.94;
         
+        if (pattern === 1) {
+          // Perfect Ring
+          angle = (Math.PI * 2 * i) / particleCount;
+          speed = 12 + Math.random() * 2; 
+          decay = 0.015; // fade faster
+          size = Math.random() * 2.5 + 1.0;
+          friction = 0.90; // slow down quickly
+        } else if (pattern === 2) {
+          // Willow (Heavy falling trails)
+          speed = Math.random() * 10 + 2;
+          gravity = 0.15; // heavy fall
+          decay = Math.random() * 0.003 + 0.001; // lasts long
+          size = 1.0;
+        }
+
         particlesRef.current.push({
           isRocket: false,
           x: startX,
           y: startY,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          friction: 0.94, 
-          gravity: 0.05, 
+          friction, 
+          gravity, 
           alpha: 1, 
-          decay: Math.random() * 0.006 + 0.003, 
+          decay, 
           color: selectedColors[Math.floor(Math.random() * selectedColors.length)],
-          size: Math.random() * 1.5 + 0.5,
+          size,
           history: [], 
           flickerRate: Math.random() > 0.5 ? Math.random() * 0.1 : 0
         });
@@ -65,16 +89,16 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
       
-      // If looping (inside Calendar), make the first explosion colorful! If grand finale (!loop), keep it Golden.
-      const pinkBlueColors = ['#1E90FF', '#8A2BE2', '#00FFFF', '#9400D3', '#FF00FF', '#4169E1', '#00FA9A', '#FF1493']; // Vibrant Blues, Violets, Cyans, Magentas, Greens
-      let selectedColors = loop ? pinkBlueColors : goldenColors;
+      let selectedColors = loop ? multiColors : goldenColors;
 
       // Determine colors based on wave sequence if we are looping
       if (hasFiredInitial.current && loop) {
-        const waveType = waveRef.current % 3;
-        if (waveType === 0) selectedColors = pinkBlueColors;
-        else if (waveType === 1) selectedColors = goldenColors;
-        else selectedColors = blueGreenColors;
+        const waveType = waveRef.current % 5;
+        if (waveType === 0) selectedColors = multiColors;
+        else if (waveType === 1) selectedColors = redColors;
+        else if (waveType === 2) selectedColors = blueGreenColors;
+        else if (waveType === 3) selectedColors = violetColors;
+        else selectedColors = goldenColors;
         waveRef.current++;
       }
       
@@ -128,7 +152,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             fire(false);
           }
           scheduleNext();
-        }, Math.random() * 1500 + 1500); // Random delay between 1.5s and 3.0s
+        }, Math.random() * 1000 + 800); // Random delay between 0.8s and 1.8s
       };
       scheduleNext();
     }
