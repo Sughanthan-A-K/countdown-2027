@@ -110,8 +110,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       <AnimatePresence>{isDiwaliActive && diwaliPhase === 1 && (<motion.div className="fixed inset-0 bg-black z-[-1]" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.5, ease: "easeInOut" }} />)}</AnimatePresence>
       <div className="relative pt-4 w-full flex justify-center">
         {/* Removed transition-colors because View Transition handles the visual fade/wipe instantly */}
-        <div className={`absolute top-1 left-[15%] transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
-        <div className={`absolute top-1 right-[15%] transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
+        <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
+        <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
         
         <motion.div 
           className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 transition-all duration-1000 ${diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder}`}`}
@@ -178,7 +178,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             </motion.div>
           ) : isGandhiJayanti ? (
               <>
-                <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>
+                <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
                   <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
                     {dateText}
                   </h2>
@@ -194,7 +194,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   <GandhiPic isDarkMode={effectiveDarkMode} onEyeClick={onEyeClick} hasKey={hasGandhiKey} />
                 </div>
                 
-                <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>
+                <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
                   <div className="flex items-baseline gap-1">
                     <h1 className={`text-5xl sm:text-6xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
                       {daysRemaining}
@@ -223,7 +223,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   <ConfettiBurst active={diwaliRevealed || startFinaleLoop} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={!startFinaleLoop} onFirstBurst={onCalendarReveal} />
                 </div>
 
-                <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>
+                <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
                   <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
                     {dateText}
                   </h2>
@@ -248,7 +248,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   </motion.div>
                 </div>
                 
-                <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>
+                <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
                   <div className="flex items-baseline gap-1">
                     <h1 className={`text-5xl sm:text-6xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
                       {daysRemaining}
