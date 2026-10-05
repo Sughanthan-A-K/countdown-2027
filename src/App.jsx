@@ -101,11 +101,12 @@ function App() {
     if (calendarDate.getMonth() === 10 && calendarDate.getDate() === 8) {
       if (isDevMode || !localStorage.getItem('diwaliEventDone_2026')) {
         setDiwaliRevealed(false);
-        
+        // Force Dark Mode for the best visual experience during and after the Diwali event
+        setIsDarkMode(true);
+        localStorage.setItem('isDarkMode', 'true');
         setShowDiwaliEvent(true);
       } else {
         setDiwaliRevealed(true);
-        
       }
     }
   }, [calendarDate, isDevMode]);

@@ -78,41 +78,34 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         const sparkX = rect.left + rect.width / 2;
         const sparkY = rect.top + rect.height / 2;
         
-        // Forgiving 35px radius so visual flame overlapping counts, with 500ms hold
+        // Very forgiving 45px radius to account for visual offset and thumb sizes on mobile. Instant ignition!
         const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
-        if (dist < 35) {
-          const now = Date.now();
-          if (ignitionStartTime.current === 0) {
-            ignitionStartTime.current = now;
-          } else if (now - ignitionStartTime.current > 500) { // 500ms hold
-            if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
-            setPhase('lit');
+        if (dist < 45) {
+          if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+          setPhase('lit');
+          
+          // Fuse burns for 3.0 seconds
+          setTimeout(() => setPhase('launching'), 3000);
+          
+          // Rocket reaches apex natively via physics in ~2.6s
+          setTimeout(() => {
+            setPhase('explode'); // Trigger flashes and background fade
+            if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
             
-            // Fuse burns for 3.0 seconds
-            setTimeout(() => setPhase('launching'), 3000);
+            if (onExplode) onExplode();
             
-            // Rocket reaches apex natively via physics in ~2.6s
             setTimeout(() => {
-              setPhase('explode'); // Trigger flashes and background fade
-              if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
-              
-              if (onExplode) onExplode();
-              
-              setTimeout(() => {
-                setPhase('fadeout_bg');
-              }, 100);
-              
-              // Allow golden shower to fall
-              setTimeout(() => {
+              setPhase('fadeout_bg');
+            }, 100);
+            
+            // Allow golden shower to fall
+            setTimeout(() => {
               if (onReveal) onReveal();
-              onComplete();
+              if (onComplete) onComplete();
             }, 6000);
 
           }, 5600); // 3000 (fuse) + 2600 (flight)
           return; // Prevent multiple triggers
-          }
-        } else {
-          ignitionStartTime.current = 0;
         }
       }
       if (phase === 'match') {
