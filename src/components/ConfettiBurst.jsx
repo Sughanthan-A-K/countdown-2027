@@ -42,9 +42,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     ];
 
     const explode = (startX, startY, selectedColors) => {
-      const isMobile = window.innerWidth < 768;
-      // Increased mobile density so it actually looks like a firework (out)
-      const particleCount = loop ? (isMobile ? 90 : 120) : (isMobile ? 350 : 450);
+      // Restored original cinematic density
+      const particleCount = loop ? 120 : 450;
       for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = (Math.random() * 20 + 5) * (Math.random() * 0.5 + 0.5);
@@ -240,18 +239,27 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             ctx.lineCap = 'round';
             ctx.stroke();
           } else {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, currentAlpha)})`;
-            ctx.fill();
+            if (window.innerWidth < 768) {
+              ctx.fillRect(p.x - p.size, p.y - p.size, p.size * 2, p.size * 2);
+            } else {
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+            }
           }
           
           // Crackle / Sparkle effect as they fall
           if (p.vy > 1.0 && Math.random() < 0.15 && currentAlpha > 0.2) {
-            ctx.beginPath();
-            ctx.arc(p.x + (Math.random() - 0.5) * 5, p.y + (Math.random() - 0.5) * 5, Math.random() * 2 + 0.5, 0, Math.PI * 2);
             ctx.fillStyle = '#FFFFFF';
-            ctx.fill();
+            if (window.innerWidth < 768) {
+              const sSize = Math.random() * 2 + 0.5;
+              ctx.fillRect(p.x + (Math.random() - 0.5) * 5 - sSize, p.y + (Math.random() - 0.5) * 5 - sSize, sSize * 2, sSize * 2);
+            } else {
+              ctx.beginPath();
+              ctx.arc(p.x + (Math.random() - 0.5) * 5, p.y + (Math.random() - 0.5) * 5, Math.random() * 2 + 0.5, 0, Math.PI * 2);
+              ctx.fill();
+            }
           }
         }
       });
