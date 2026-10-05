@@ -122,7 +122,10 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
     setPhase('explode'); // Trigger flashes and background fade
     if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
     
-    if (onExplode) onExplode();
+    // Delay the 'Happy Diwali' text by 300ms for dramatic effect
+    setTimeout(() => {
+      if (onExplode) onExplode();
+    }, 300);
     
     setTimeout(() => {
       setPhase('fadeout_bg');
@@ -148,6 +151,10 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
   return (
     <>
       <style>{`
+        @keyframes spark-emit {
+          0% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(var(--tw-translate-x), var(--tw-translate-y)) scale(0); opacity: 0; }
+        }
         @keyframes neon-die {
           0% { opacity: 0; }
           10% { opacity: 0.8; }
@@ -307,11 +314,35 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                       style={{ 
                         top: 0,
                         left: 0,
-                        marginLeft: '-8px', // Center the w-4 element exactly on the X,Y coord
-                        marginTop: '-8px'
                       }}
                     >
-                       <div className={`w-4 h-4 rounded-full transition-colors duration-200 blur-[1px] shadow-[0_0_8px_#ff8800] ${phase === 'lit' ? 'bg-orange-400' : 'bg-transparent'}`} />
+                      {phase === 'lit' && (
+                        <div className="absolute inset-0">
+                          {/* Core bright spark */}
+                          <div className="absolute inset-0 bg-yellow-100 rounded-full blur-[1px] w-3 h-3 -translate-x-1/2 -translate-y-1/2" />
+                          <div className="absolute inset-0 bg-orange-500 rounded-full blur-[4px] w-6 h-6 -translate-x-1/2 -translate-y-1/2 opacity-80" />
+                          
+                          {/* Crackling mathappu particles */}
+                          {[
+                            { tx: '25px', ty: '-25px', dur: '0.4s', del: '0s' },
+                            { tx: '-20px', ty: '-30px', dur: '0.3s', del: '0.1s' },
+                            { tx: '30px', ty: '15px', dur: '0.5s', del: '0.2s' },
+                            { tx: '-25px', ty: '25px', dur: '0.35s', del: '0.15s' },
+                            { tx: '0px', ty: '-35px', dur: '0.25s', del: '0.05s' },
+                            { tx: '15px', ty: '30px', dur: '0.45s', del: '0.1s' },
+                          ].map((s, i) => (
+                            <div 
+                              key={i}
+                              className="absolute w-[3px] h-[3px] bg-yellow-300 rounded-full -translate-x-1/2 -translate-y-1/2"
+                              style={{
+                                '--tw-translate-x': s.tx,
+                                '--tw-translate-y': s.ty,
+                                animation: `spark-emit ${s.dur} infinite linear ${s.del}`
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </motion.div>
                   )}
                 </div>
