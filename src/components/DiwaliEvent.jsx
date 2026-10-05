@@ -361,17 +361,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
               </motion.div>
 
               <motion.div className="fixed inset-0 z-[960] pointer-events-none">
-                {/* Massive White Flash on Explosion (Timed exactly with explode phase) */}
-                {(phase === 'explode' || phase === 'fadeout_bg') && <div className="absolute inset-0 bg-white z-[970] animate-[white-flash_0.8s_ease-out_forwards]" />}
-              
-              {/* Explosion Fireball (Timed exactly with explode phase) */}
-              {(phase === 'explode' || phase === 'fadeout_bg') && (
-                <div 
-                  className="absolute w-96 h-96 bg-gradient-to-r from-white via-yellow-400 to-orange-500 rounded-full blur-3xl animate-[match-strike_0.5s_ease-out_forwards] mix-blend-screen z-[980]"
-                  style={{ top: '25%', left: '50%', transform: 'translate(-50%, -50%)' }}
-                />
-              )}
-
               {/* Live Golden Shower & Launch Physics (Falls gracefully without looping) */}
               <div className="absolute inset-0 -z-10 transition-opacity duration-2000 opacity-100">
                  <ConfettiBurst 

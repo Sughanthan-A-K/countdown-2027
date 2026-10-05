@@ -101,6 +101,7 @@ function App() {
     // 10 = Nov, 8 = 8th
     if (calendarDate.getMonth() === 10 && calendarDate.getDate() === 8) {
       if (isDevMode || !localStorage.getItem('diwaliEventDone_2026')) {
+        setDiwaliPhase(0);
         setDiwaliRevealed(false);
         setShowDiwaliEvent(true);
         // Force Dark Mode during the blackout flicker (safely fully black at 3.3s)
@@ -110,6 +111,12 @@ function App() {
         }, 3300);
       } else {
         setDiwaliRevealed(true);
+      }
+    } else {
+      if (isDevMode) {
+        setDiwaliPhase(0);
+        setDiwaliRevealed(false);
+        setShowDiwaliEvent(false);
       }
     }
   }, [calendarDate, isDevMode]);
