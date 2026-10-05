@@ -222,7 +222,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
             {/* The Matchstick (Drawn from touch point to flame) */}
             {(phase === 'match' || phase === 'lit') && (
               <div>
-                <svg className={`absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-md md:drop-shadow-xl z-40 transition-all duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-32 delay-[800ms]' : 'opacity-100'}`}>
+                <svg className={`absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-xl z-40 transition-all duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-32 delay-[800ms]' : 'opacity-100'}`}>
                   {/* Stick */}
                   <line x1={touchOrigin.current.x} y1={touchOrigin.current.y} x2={matchPos.x} y2={matchPos.y} stroke="#d2b48c" strokeWidth="6" strokeLinecap="round" />
                   {/* Burnt Head */}
@@ -235,11 +235,11 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   style={{ left: matchPos.x, top: matchPos.y - 12, transform: 'translate(-50%, -50%)', transformOrigin: 'center bottom' }}
                 >
                    {isStriking && (
-                     <div className="absolute -inset-10 bg-yellow-100 rounded-full md:blur-xl blur-sm animate-[match-strike_0.3s_ease-out]" />
+                     <div className="absolute -inset-10 bg-yellow-100 rounded-full blur-xl animate-[match-strike_0.3s_ease-out]" />
                    )}
                    
                    {/* Crisp Sharp Fire SVG */}
-                   <svg viewBox="0 0 30 50" className="w-6 h-10 animate-[fire-flicker_0.15s_infinite_alternate] origin-bottom md:drop-shadow-[0_0_10px_rgba(255,165,0,0.8)] drop-shadow-[0_0_4px_rgba(255,165,0,0.5)]">
+                   <svg viewBox="0 0 30 50" className="w-6 h-10 animate-[fire-flicker_0.15s_infinite_alternate] origin-bottom drop-shadow-[0_0_10px_rgba(255,165,0,0.8)]">
                      <path d="M15 0 C 25 15, 30 25, 25 40 C 20 50, 10 50, 5 40 C 0 25, 5 15, 15 0 Z" fill="#ff4500" />
                      <path d="M15 15 C 22 25, 23 35, 15 45 C 7 35, 8 25, 15 15 Z" fill="#ffd700" />
                      <path d="M15 28 C 18 35, 17 40, 15 42 C 13 40, 12 35, 15 28 Z" fill="#ffffff" />
@@ -319,8 +319,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                 {/* Enormous Muzzle Flash at launch (Realistic POP) - Moved to -top-24 to align with top of cylinder */}
                 {phase === 'launching' && (
                   <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 z-50 flex items-center justify-center pointer-events-none">
-                     <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full md:blur-[12px] blur-[4px] mix-blend-screen animate-[white-flash_1s_ease-out_forwards]" />
-                     <div className="w-16 h-16 bg-white rounded-full md:blur-md blur-sm animate-[white-flash_1s_ease-out_forwards]" />
+                     <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full blur-[12px] mix-blend-screen animate-[white-flash_1s_ease-out_forwards]" />
+                     <div className="w-16 h-16 bg-white rounded-full blur-md animate-[white-flash_1s_ease-out_forwards]" />
                      {/* Paper debris flying out! (Restored per user request) */}
                      <div className="absolute inset-0 pointer-events-none">
                         {[...Array(8)].map((_, i) => (
@@ -367,7 +367,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
               {/* Explosion Fireball (Timed exactly with explode phase) */}
               {(phase === 'explode' || phase === 'fadeout_bg') && (
                 <div 
-                  className="absolute w-96 h-96 bg-gradient-to-r from-white via-yellow-400 to-orange-500 rounded-full md:blur-3xl blur-xl animate-[match-strike_0.5s_ease-out_forwards] mix-blend-screen z-[980]"
+                  className="absolute w-96 h-96 bg-gradient-to-r from-white via-yellow-400 to-orange-500 rounded-full blur-3xl animate-[match-strike_0.5s_ease-out_forwards] mix-blend-screen z-[980]"
                   style={{ top: '25%', left: '50%', transform: 'translate(-50%, -50%)' }}
                 />
               )}
