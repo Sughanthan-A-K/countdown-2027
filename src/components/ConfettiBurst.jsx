@@ -42,7 +42,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     ];
 
     const explode = (startX, startY, selectedColors) => {
-      const particleCount = loop ? 120 : 450;
+      const isMobile = window.innerWidth < 768;
+      const particleCount = loop ? (isMobile ? 50 : 120) : (isMobile ? 150 : 450);
       for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = (Math.random() * 20 + 5) * (Math.random() * 0.5 + 0.5);
@@ -127,7 +128,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             fire(false);
           }
           scheduleNext();
-        }, 2000); // 2 second delay
+        }, 3000); // Exact 3 second delay
       };
       scheduleNext();
     }
