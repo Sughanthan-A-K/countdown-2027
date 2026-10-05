@@ -235,7 +235,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     className="flex flex-col items-center"
                   >
                     <h3 
-                       className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-orange-500 font-black text-5xl sm:text-6xl tracking-widest uppercase drop-shadow-md text-center leading-tight"
+                       className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-orange-500 font-black text-4xl sm:text-5xl tracking-widest uppercase drop-shadow-md text-center leading-tight"
                        style={{ WebkitTextStroke: '1px rgba(184,115,51,0.5)' }}
                     >
                       Happy<br/>Diwali

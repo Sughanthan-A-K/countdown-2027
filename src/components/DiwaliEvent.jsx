@@ -65,6 +65,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
   };
 
   // Check collision between match flame and the fuse spark in animation frame
+  // Ref for ignition delay
+  const ignitionStartTime = React.useRef(0);
+
   useEffect(() => {
     if (phase !== 'match') return;
 
@@ -75,35 +78,41 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         const sparkX = rect.left + rect.width / 2;
         const sparkY = rect.top + rect.height / 2;
         
-        // Use the VISUAL flame position (matchPos) vs the dedicated static hitbox.
-        // Extremely generous 120px radius and fast 400ms hold so user never gets frustrated.
+        // Exact physical touch required (dist < 20) with a snappy 300ms ignition delay
         const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
-        if (dist < 40) {
-          if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
-          setPhase('lit');
-          
-          // Fuse burns for 2.0 seconds
-          setTimeout(() => setPhase('launching'), 3000);
-          
-          // Rocket reaches apex natively via physics in ~2.6s
-          setTimeout(() => {
-            setPhase('explode'); // Trigger flashes and background fade
-            if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
+        if (dist < 20) {
+          const now = Date.now();
+          if (ignitionStartTime.current === 0) {
+            ignitionStartTime.current = now;
+          } else if (now - ignitionStartTime.current > 300) { // 300ms hold
+            if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+            setPhase('lit');
             
-            if (onExplode) onExplode();
+            // Fuse burns for 3.0 seconds
+            setTimeout(() => setPhase('launching'), 3000);
             
+            // Rocket reaches apex natively via physics in ~2.6s
             setTimeout(() => {
-              setPhase('fadeout_bg');
-            }, 100);
-            
-            // Allow golden shower to fall
-            setTimeout(() => {
+              setPhase('explode'); // Trigger flashes and background fade
+              if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
+              
+              if (onExplode) onExplode();
+              
+              setTimeout(() => {
+                setPhase('fadeout_bg');
+              }, 100);
+              
+              // Allow golden shower to fall
+              setTimeout(() => {
               if (onReveal) onReveal();
               onComplete();
             }, 6000);
 
           }, 5600); // 3000 (fuse) + 2600 (flight)
           return; // Prevent multiple triggers
+          }
+        } else {
+          ignitionStartTime.current = 0;
         }
       }
       if (phase === 'match') {
