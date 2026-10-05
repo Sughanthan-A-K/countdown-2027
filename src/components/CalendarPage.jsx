@@ -4,7 +4,7 @@ import { Sparkles, PartyPopper, Star } from 'lucide-react';
 import GandhiPic from './GandhiPic';
 import ConfettiBurst from './ConfettiBurst';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isDiwali, forceDiwaliMode, diwaliPhase, onCalendarReveal, diwaliPhoto, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -210,7 +210,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               <>
                 {/* Background Fireworks spanning the entire card natively! */}
                 <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${isDarkMode ? 'opacity-100' : 'opacity-80'}`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)', isolation: 'isolate' }}>
-                  <ConfettiBurst active={true} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={true} onFirstBurst={onCalendarReveal} />
+                  <ConfettiBurst active={diwaliRevealed} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={true} onFirstBurst={onCalendarReveal} />
                 </div>
 
                 <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>

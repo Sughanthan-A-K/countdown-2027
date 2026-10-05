@@ -83,7 +83,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           setPhase('lit');
           
           // Fuse burns for 2.0 seconds
-          setTimeout(() => setPhase('launching'), 2000);
+          setTimeout(() => setPhase('launching'), 3000);
           
           // Rocket reaches apex natively via physics in ~2.6s
           setTimeout(() => {
@@ -102,7 +102,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
               onComplete();
             }, 6000);
 
-          }, 4600); // 2000 (fuse) + 2600 (flight)
+          }, 5600); // 3000 (fuse) + 2600 (flight)
           return; // Prevent multiple triggers
         }
       }
@@ -269,7 +269,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                       strokeLinecap="round"
                       initial={{ pathLength: 1 }}
                       animate={['lit', 'launching', 'explode', 'fadeout_bg'].includes(phase) ? { pathLength: 0 } : { pathLength: 1 }}
-                      transition={{ duration: 2.0, ease: "linear" }}
+                      transition={{ duration: 3.0, ease: "linear" }}
                       style={{ pathLength: 1 }}
                     />
                   </svg>
@@ -286,7 +286,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                         x: [65.0, 58.2, 51.9, 44.6, 35.0, 23.2, 15.6, 9.0, 0.0], 
                         y: [5.0, 0.3, -10.0, -20.3, -25.0, -20.5, -10.5, -0.5, 4.0] 
                       } : { x: 65, y: 5 }}
-                      transition={{ duration: 2.0, ease: "linear", times: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1] }}
+                      transition={{ duration: 3.0, ease: "linear", times: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1] }}
                       style={{ 
                         top: 0,
                         left: 0,
@@ -375,3 +375,5 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
     </>
   );
 }
+
+

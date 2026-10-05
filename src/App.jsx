@@ -981,7 +981,7 @@ function App() {
           >
             <AnimatePresence>
                 {pages.slice().reverse().map((page) => (
-                  <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setDiwaliRevealed(true); }}  diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
+                  <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setDiwaliRevealed(true); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
                     key={page.id}
                     dateText={page.dateText}
                     daysRemaining={page.daysRemaining}
@@ -1024,7 +1024,7 @@ function App() {
                     className="absolute flex items-center justify-center inset-0 pointer-events-none"
                     style={{ zIndex: 100 + i }}
                   >
-                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setDiwaliRevealed(true); }}  diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
+                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setDiwaliRevealed(true); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
                       dateText={page.dateText}
                       daysRemaining={page.daysRemaining}
                       index={0}
@@ -1057,3 +1057,4 @@ function App() {
 }
 
 export default App;
+
