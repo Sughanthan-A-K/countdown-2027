@@ -122,10 +122,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
     setPhase('explode'); // Trigger flashes and background fade
     if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
     
-    // Delay the 'Happy Diwali' text by 300ms for dramatic effect
-    setTimeout(() => {
-      if (onExplode) onExplode();
-    }, 300);
+    if (onExplode) onExplode();
     
     setTimeout(() => {
       setPhase('fadeout_bg');
@@ -151,10 +148,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
   return (
     <>
       <style>{`
-        @keyframes spark-emit {
-          0% { transform: translate(0, 0) scale(1); opacity: 1; }
-          100% { transform: translate(var(--tw-translate-x), var(--tw-translate-y)) scale(0); opacity: 0; }
-        }
         @keyframes neon-die {
           0% { opacity: 0; }
           10% { opacity: 0.8; }
@@ -167,6 +160,18 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           80% { opacity: 0; background: white; } /* Bulb burst */
           90% { opacity: 1; background: black; }
           100% { opacity: 1; background: black; }
+        }
+        @keyframes fuse-spark-1 {
+          0% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(-15px, -20px) scale(0); opacity: 0; }
+        }
+        @keyframes fuse-spark-2 {
+          0% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(15px, -15px) scale(0); opacity: 0; }
+        }
+        @keyframes fuse-spark-3 {
+          0% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(-10px, 15px) scale(0); opacity: 0; }
         }
         @keyframes white-flash {
           0% { opacity: 1; }
@@ -314,35 +319,21 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                       style={{ 
                         top: 0,
                         left: 0,
+                        marginLeft: '-8px', // Center the w-4 element exactly on the X,Y coord
+                        marginTop: '-8px'
                       }}
                     >
-                      {phase === 'lit' && (
-                        <div className="absolute inset-0">
-                          {/* Core bright spark */}
-                          <div className="absolute inset-0 bg-yellow-100 rounded-full blur-[1px] w-3 h-3 -translate-x-1/2 -translate-y-1/2" />
-                          <div className="absolute inset-0 bg-orange-500 rounded-full blur-[4px] w-6 h-6 -translate-x-1/2 -translate-y-1/2 opacity-80" />
-                          
-                          {/* Crackling mathappu particles */}
-                          {[
-                            { tx: '25px', ty: '-25px', dur: '0.4s', del: '0s' },
-                            { tx: '-20px', ty: '-30px', dur: '0.3s', del: '0.1s' },
-                            { tx: '30px', ty: '15px', dur: '0.5s', del: '0.2s' },
-                            { tx: '-25px', ty: '25px', dur: '0.35s', del: '0.15s' },
-                            { tx: '0px', ty: '-35px', dur: '0.25s', del: '0.05s' },
-                            { tx: '15px', ty: '30px', dur: '0.45s', del: '0.1s' },
-                          ].map((s, i) => (
-                            <div 
-                              key={i}
-                              className="absolute w-[3px] h-[3px] bg-yellow-300 rounded-full -translate-x-1/2 -translate-y-1/2"
-                              style={{
-                                '--tw-translate-x': s.tx,
-                                '--tw-translate-y': s.ty,
-                                animation: `spark-emit ${s.dur} infinite linear ${s.del}`
-                              }}
-                            />
-                          ))}
-                        </div>
-                      )}
+                       <div className={`w-4 h-4 rounded-full transition-colors duration-200 blur-[1px] shadow-[0_0_8px_#ff8800] ${phase === 'lit' ? 'bg-orange-400' : 'bg-transparent'}`} />
+                       
+                       {/* Flying Pori Pori (Sparks) */}
+                       {phase === 'lit' && (
+                         <>
+                           <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-yellow-300 rounded-full animate-[fuse-spark-1_0.4s_linear_infinite]" />
+                           <div className="absolute top-1/2 left-1/2 w-[3px] h-[3px] bg-orange-300 rounded-full animate-[fuse-spark-2_0.5s_linear_infinite_0.1s]" />
+                           <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-white rounded-full animate-[fuse-spark-3_0.3s_linear_infinite_0.2s]" />
+                           <div className="absolute top-1/2 left-1/2 w-[2px] h-[2px] bg-yellow-400 rounded-full animate-[fuse-spark-1_0.5s_linear_infinite_0.3s]" style={{ transform: 'rotate(90deg)' }} />
+                         </>
+                       )}
                     </motion.div>
                   )}
                 </div>
