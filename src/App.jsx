@@ -101,10 +101,12 @@ function App() {
     if (calendarDate.getMonth() === 10 && calendarDate.getDate() === 8) {
       if (isDevMode || !localStorage.getItem('diwaliEventDone_2026')) {
         setDiwaliRevealed(false);
-        // Force Dark Mode for the best visual experience during and after the Diwali event
-        setIsDarkMode(true);
-        localStorage.setItem('isDarkMode', 'true');
         setShowDiwaliEvent(true);
+        // Force Dark Mode during the blackout flicker (1.8s after event starts) so user doesn't see a sudden UI jump
+        setTimeout(() => {
+          setIsDarkMode(true);
+          localStorage.setItem('isDarkMode', 'true');
+        }, 1800);
       } else {
         setDiwaliRevealed(true);
       }
