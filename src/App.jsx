@@ -6,7 +6,7 @@ import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
 import KeyModal from './components/KeyModal';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
-import { Moon, Sun, Info, X, Copy, Check, Calendar } from 'lucide-react';
+import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
 
@@ -739,6 +739,30 @@ function App() {
           onTouchEnd={handleTouchEnd}
         >
           <ConfettiBurst active={isRevealing} />
+
+          {isDevMode && (
+            <button 
+              onClick={() => {
+                const stored = localStorage.getItem('devOverrideDate');
+                if (stored) {
+                  const selected = new Date(parseInt(stored, 10));
+                  selected.setHours(0, 0, 0, 0);
+                  setCalendarDate(selected);
+                } else {
+                  const today = normalizeDate(new Date());
+                  setCalendarDate(today);
+                }
+                if (navigator.vibrate) navigator.vibrate([50]);
+              }}
+              className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
+                isDarkMode 
+                  ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
+                  : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
+              }`}
+            >
+              <RotateCcw size={20} />
+            </button>
+          )}
 
           <button 
             onClick={toggleTheme}
