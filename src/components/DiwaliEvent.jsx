@@ -78,9 +78,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         const sparkX = rect.left + rect.width / 2;
         const sparkY = rect.top + rect.height / 2;
         
-        // Exact physical touch required (dist < 20) with a snappy 300ms ignition delay
+        // Touch required (dist < 35 to account for visual flame offset and finger jitter) with a snappy 300ms ignition delay
         const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
-        if (dist < 20) {
+        if (dist < 35) {
           const now = Date.now();
           if (ignitionStartTime.current === 0) {
             ignitionStartTime.current = now;
