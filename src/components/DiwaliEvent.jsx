@@ -128,6 +128,10 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       setPhase('fadeout_bg');
     }, 100);
     
+    setTimeout(() => {
+      setPhase('fadeout_shower');
+    }, 4500);
+    
     // Allow golden shower to fall
     setTimeout(() => {
       if (onReveal) onReveal();
@@ -197,7 +201,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         onPointerDown={handleDarkTap}
       >
         {/* Blackout overlay (Remains ON until explode to simulate dark night sky) */}
-        {(phase !== 'init' && phase !== 'done' && phase !== 'freeze' && phase !== 'explode' && phase !== 'fadeout_bg') && (
+        {(phase !== 'init' && phase !== 'done' && phase !== 'freeze' && phase !== 'explode' && phase !== 'fadeout_bg' && phase !== 'fadeout_shower') && (
           <div 
             className={`absolute inset-0 bg-black pointer-events-none ${
               phase === 'dimming' ? 'dimming-layer' : ''
@@ -235,11 +239,11 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                   style={{ left: matchPos.x, top: matchPos.y - 12, transform: 'translate(-50%, -50%)', transformOrigin: 'center bottom' }}
                 >
                    {isStriking && (
-                     <div className="absolute -inset-10 bg-yellow-100 rounded-full blur-xl animate-[match-strike_0.3s_ease-out]" />
+                     <div className="absolute -inset-10 bg-yellow-100 rounded-full md:blur-xl blur-sm animate-[match-strike_0.3s_ease-out]" />
                    )}
                    
                    {/* Crisp Sharp Fire SVG */}
-                   <svg viewBox="0 0 30 50" className="w-6 h-10 animate-[fire-flicker_0.15s_infinite_alternate] origin-bottom drop-shadow-[0_0_10px_rgba(255,165,0,0.8)]">
+                   <svg viewBox="0 0 30 50" className="w-6 h-10 animate-[fire-flicker_0.15s_infinite_alternate] origin-bottom md:drop-shadow-[0_0_10px_rgba(255,165,0,0.8)] drop-shadow-[0_0_4px_rgba(255,165,0,0.5)]">
                      <path d="M15 0 C 25 15, 30 25, 25 40 C 20 50, 10 50, 5 40 C 0 25, 5 15, 15 0 Z" fill="#ff4500" />
                      <path d="M15 15 C 22 25, 23 35, 15 45 C 7 35, 8 25, 15 15 Z" fill="#ffd700" />
                      <path d="M15 28 C 18 35, 17 40, 15 42 C 13 40, 12 35, 15 28 Z" fill="#ffffff" />
@@ -262,7 +266,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
               {/* Cylinder Container (Pans down to naturally track the rocket) */}
               <motion.div 
                 className="relative w-8 h-28 z-20"
-                animate={(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg') ? { y: '100vh' } : { y: 0 }}
+                animate={(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg' || phase === 'fadeout_shower') ? { y: '100vh' } : { y: 0 }}
                 transition={{ duration: 2.6, ease: "easeIn" }}
               >
                 
@@ -290,7 +294,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                       strokeLinecap="round"
                                             variants={fuseVariants}
                       initial="idle"
-                      animate={['lit', 'launching', 'explode', 'fadeout_bg'].includes(phase) ? "burning" : "idle"}
+                      animate={['lit', 'launching', 'explode', 'fadeout_bg', 'fadeout_shower'].includes(phase) ? "burning" : "idle"}
                     />
                   </svg>
 
@@ -319,8 +323,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                 {/* Enormous Muzzle Flash at launch (Realistic POP) - Moved to -top-24 to align with top of cylinder */}
                 {phase === 'launching' && (
                   <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 z-50 flex items-center justify-center pointer-events-none">
-                     <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full blur-[12px] mix-blend-screen animate-[white-flash_1s_ease-out_forwards]" />
-                     <div className="w-16 h-16 bg-white rounded-full blur-md animate-[white-flash_1s_ease-out_forwards]" />
+                     <div className="absolute inset-0 bg-gradient-to-t from-orange-400 via-yellow-200 to-transparent rounded-full md:blur-[12px] blur-[4px] mix-blend-screen animate-[white-flash_1s_ease-out_forwards]" />
+                     <div className="w-16 h-16 bg-white rounded-full md:blur-md blur-sm animate-[white-flash_1s_ease-out_forwards]" />
                      {/* Paper debris flying out! (Restored per user request) */}
                      <div className="absolute inset-0 pointer-events-none">
                         {[...Array(8)].map((_, i) => (
@@ -348,21 +352,21 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
 
         {/* Explosion Phase & Golden Shower */}
         <AnimatePresence>
-          {(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg') && (
+          {(phase === 'launching' || phase === 'explode' || phase === 'fadeout_bg' || phase === 'fadeout_shower') && (
             <>
               {/* Black Sky - fades out so CalendarPage underneath shows through. z-[940] puts it BEHIND the cylinder at z-[950]! */}
               <motion.div className="fixed inset-0 z-[940] pointer-events-none">
                 <motion.div 
                   className="absolute inset-0 bg-black"
                   initial={{ opacity: 1 }}
-                  animate={{ opacity: phase === 'fadeout_bg' ? 0 : 1 }}
+                  animate={{ opacity: (phase === 'fadeout_bg' || phase === 'fadeout_shower') ? 0 : 1 }}
                   transition={{ duration: 1.5, ease: "easeInOut" }}
                 />
               </motion.div>
 
               <motion.div className="fixed inset-0 z-[960] pointer-events-none">
               {/* Live Golden Shower & Launch Physics (Falls gracefully without looping) */}
-              <div className="absolute inset-0 -z-10 transition-opacity duration-2000 opacity-100">
+              <div className={`absolute inset-0 -z-10 transition-opacity duration-1000 ${phase === 'fadeout_shower' ? 'opacity-0' : 'opacity-100'}`}>
                  <ConfettiBurst 
                    active={true} 
                    origin={{ y: 0.25, x: 0.5 }} 
