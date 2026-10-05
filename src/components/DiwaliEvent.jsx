@@ -106,7 +106,24 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           // Fuse burns for 3.0 seconds
           setTimeout(() => setPhase('launching'), 3000);
           
-          // Rocket reaches apex natively via physics in ~2.6s (Handled by ConfettiBurst physics engine now via handleRocketExplode!)
+          // Rocket reaches apex natively via physics in ~2.6s
+          setTimeout(() => {
+            setPhase('explode'); // Trigger flashes and background fade
+            if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
+            
+            if (onExplode) onExplode();
+            
+            setTimeout(() => {
+              setPhase('fadeout_bg');
+            }, 100);
+            
+            // Allow golden shower to fall
+            setTimeout(() => {
+              if (onReveal) onReveal();
+              if (onComplete) onComplete();
+            }, 6000);
+
+          }, 5600); // 3000 (fuse) + 2600 (flight)
           return; // Prevent multiple triggers
         }
       }
@@ -116,24 +133,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
     };
     const animId = requestAnimationFrame(checkCollision);
     return () => cancelAnimationFrame(animId);
-  }, [phase, matchPos, onReveal, onComplete, onExplode]);
-
-  const handleRocketExplode = () => {
-    setPhase('explode'); // Trigger flashes and background fade
-    if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
-    
-    if (onExplode) onExplode();
-    
-    setTimeout(() => {
-      setPhase('fadeout_bg');
-    }, 100);
-    
-    // Allow golden shower to fall
-    setTimeout(() => {
-      if (onReveal) onReveal();
-      if (onComplete) onComplete();
-    }, 6000);
-  };
+  }, [phase, matchPos, onReveal, onComplete]);
 
   // Mask styling for match light (hole is precisely at the flame)
   const torchMask = phase === 'match' 
@@ -368,8 +368,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                    origin={{ y: 0.25, x: 0.5 }} 
                    launchOrigin={{ y: 0.82, x: 0.19 }} // Shoots exactly from the top center of the cylinder!
                    forceRocket={true} 
-                   loop={false}
-                   onFirstBurst={handleRocketExplode}
+                   loop={false} 
                  />
               </div>
             </motion.div>
