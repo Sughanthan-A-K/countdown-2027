@@ -60,14 +60,16 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     if (window.hideBubble) window.hideBubble();
   };
 
-  const cardBg = isDarkMode ? 'bg-neutral-900' : 'bg-white';
-  const cardBorder = isDarkMode ? 'border-neutral-300' : 'border-neutral-800';
-  const textPrimary = isDarkMode ? 'text-neutral-100' : 'text-neutral-800';
-  const textSecondary = isDarkMode ? 'text-neutral-400' : 'text-neutral-500';
-  const pillBg = isDarkMode ? 'bg-neutral-100' : 'bg-neutral-800';
-  const pillText = isDarkMode ? 'text-neutral-900' : 'text-white';
-  const pillBgOutline = isDarkMode ? 'bg-neutral-900 border-neutral-300' : 'bg-white border-neutral-800';
-  const pillTextOutline = isDarkMode ? 'text-neutral-200' : 'text-neutral-800';
+  const effectiveDarkMode = isDarkMode || isDiwaliActive;
+  
+  const cardBg = effectiveDarkMode ? 'bg-neutral-900' : 'bg-white';
+  const cardBorder = effectiveDarkMode ? 'border-neutral-300' : 'border-neutral-800';
+  const textPrimary = effectiveDarkMode ? 'text-neutral-100' : 'text-neutral-800';
+  const textSecondary = effectiveDarkMode ? 'text-neutral-400' : 'text-neutral-500';
+  const pillBg = effectiveDarkMode ? 'bg-neutral-100' : 'bg-neutral-800';
+  const pillText = effectiveDarkMode ? 'text-neutral-900' : 'text-white';
+  const pillBgOutline = effectiveDarkMode ? 'bg-neutral-900 border-neutral-300' : 'bg-white border-neutral-800';
+  const pillTextOutline = effectiveDarkMode ? 'text-neutral-200' : 'text-neutral-800';
 
   return (
     <motion.div
@@ -120,7 +122,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         >
           {isTop && (
             <motion.div 
-              className={`absolute inset-0 pointer-events-none z-50 ${isDarkMode ? 'mix-blend-overlay' : 'mix-blend-multiply'}`}
+              className={`absolute inset-0 pointer-events-none z-50 ${effectiveDarkMode ? 'mix-blend-overlay' : 'mix-blend-multiply'}`}
               style={{
                 opacity: shadowOpacity,
                 background: `linear-gradient(${gradientAngle.get()}deg, rgba(0,0,0,0.1) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.05) 100%)`
@@ -168,7 +170,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               </motion.div>
               
               <motion.div className={`mb-2 px-6 py-3 rounded-full flex items-center gap-2 shadow-lg z-10 ${pillBg}`} animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
-                <PartyPopper size={16} className={isDarkMode ? 'text-neutral-900' : 'text-yellow-400'} />
+                <PartyPopper size={16} className={effectiveDarkMode ? 'text-neutral-900' : 'text-yellow-400'} />
                 <span className={`text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase ${pillText}`}>
                   Journey Complete
                 </span>
@@ -189,7 +191,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 </div>
 
                 <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-4">
-                  <GandhiPic isDarkMode={isDarkMode} onEyeClick={onEyeClick} hasKey={hasGandhiKey} />
+                  <GandhiPic isDarkMode={effectiveDarkMode} onEyeClick={onEyeClick} hasKey={hasGandhiKey} />
                 </div>
                 
                 <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 transition-opacity duration-1000 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100'}`}>
@@ -217,7 +219,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             ) : isDiwaliActive ? (
               <>
                 {/* Background Fireworks spanning the entire card natively! */}
-                <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${isDarkMode ? 'opacity-100' : 'opacity-80'}`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)', isolation: 'isolate' }}>
+                <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${effectiveDarkMode ? 'opacity-100' : 'opacity-80'}`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)', isolation: 'isolate' }}>
                   <ConfettiBurst active={diwaliRevealed || startFinaleLoop} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={!startFinaleLoop} onFirstBurst={onCalendarReveal} />
                 </div>
 
