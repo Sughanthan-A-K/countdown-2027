@@ -127,7 +127,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             fire(false);
           }
           scheduleNext();
-        }, Math.random() * 500 + 1000); // Random delay between 1.5s and 3.0s
+        }, 2000); // 2 second delay
       };
       scheduleNext();
     }
