@@ -78,13 +78,13 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
         const sparkX = rect.left + rect.width / 2;
         const sparkY = rect.top + rect.height / 2;
         
-        // Touch required (dist < 35 to account for visual flame offset and finger jitter) with a snappy 300ms ignition delay
+        // Forgiving 35px radius so visual flame overlapping counts, with 500ms hold
         const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
         if (dist < 35) {
           const now = Date.now();
           if (ignitionStartTime.current === 0) {
             ignitionStartTime.current = now;
-          } else if (now - ignitionStartTime.current > 300) { // 300ms hold
+          } else if (now - ignitionStartTime.current > 500) { // 500ms hold
             if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
             setPhase('lit');
             
