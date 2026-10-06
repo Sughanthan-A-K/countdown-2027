@@ -46,7 +46,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const particleCount = loop ? 120 : 450;
       for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = (Math.random() * 20 + 5) * (Math.random() * 0.5 + 0.5);
+        const speed = (Math.random() * 12 + 4) * (Math.random() * 0.8 + 0.5);
         
         particlesRef.current.push({
           isRocket: false,
@@ -54,14 +54,14 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           y: startY,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          friction: 0.94, 
-          gravity: 0.05, 
+          friction: 0.97, 
+          gravity: 0.06, 
           alpha: 1, 
-          decay: Math.random() * 0.006 + 0.003, 
+          decay: Math.random() * 0.005 + 0.002, 
           color: selectedColors[Math.floor(Math.random() * selectedColors.length)],
           size: Math.random() * 1.5 + 0.5,
           history: [], 
-          flickerRate: Math.random() > 0.5 ? Math.random() * 0.1 : 0
+          flickerRate: 0
         });
       }
     };
