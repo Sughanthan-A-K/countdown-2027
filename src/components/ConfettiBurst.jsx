@@ -128,7 +128,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             fire(false);
           }
           scheduleNext();
-        }, 2000); // 2 second delay
+        }, 2500 + Math.random() * 1000); // 2.5 to 3.5 second delay between rockets
       };
       scheduleNext();
     }

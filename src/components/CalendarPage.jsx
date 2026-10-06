@@ -13,7 +13,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
   useEffect(() => {
     if (diwaliPhase === 1) {
-      const timer = setTimeout(() => setStartFinaleLoop(true), 1500); // 1.5s after golden explosion
+      const timer = setTimeout(() => setStartFinaleLoop(true), 2300); // Launches at 2.3s, explodes around 4.8s just as golden shower fades at 5s
       return () => clearTimeout(timer);
     }
   }, [diwaliPhase]);
@@ -74,7 +74,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   return (
     <motion.div
       style={{
-        zIndex: isTop ? 100 : 100 - index,
+        zIndex: (isTop && diwaliPhase >= 1) ? 1000 : (isTop ? 100 : 100 - index),
         pointerEvents: isTop && !isTorn && !isFinished ? 'auto' : 'none',
         position: 'absolute',
         top: 0,
