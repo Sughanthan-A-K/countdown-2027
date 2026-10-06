@@ -135,14 +135,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
     const render = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
-      
-      // Magic for realistic continuous trails! Instead of clearing, we fade the existing canvas slightly.
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)'; // Lower = longer trails. 0.12 is a sweet spot for fireworks.
-      ctx.fillRect(0, 0, rect.width, rect.height);
-      
-      // Use additive blending for realistic, ultra-bright glowing explosions
-      ctx.globalCompositeOperation = 'lighter';
+      ctx.clearRect(0, 0, rect.width, rect.height);
 
       let activeParticles = 0;
 
@@ -222,8 +215,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             }
           }
         } else {
-          // Standard falling particle logic
-          if (p.history.length > 2) p.history.shift(); // Only need 1 previous frame for a continuous line segment
+          // Standard falling particle logic (Massive continuous trail like real fireworks)
+          if (p.history.length > 250) p.history.shift();
 
           p.vx *= p.friction;
           p.vy *= p.friction;
@@ -240,6 +233,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           if (p.history.length > 1) {
             ctx.beginPath();
             ctx.moveTo(p.history[0].x, p.history[0].y);
+            // Draw continuous curved path through history (skip some points for performance)
+            for (let i = 2; i < p.history.length; i += 3) {
+              ctx.lineTo(p.history[i].x, p.history[i].y);
+            }
             ctx.lineTo(p.x, p.y);
             ctx.strokeStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, currentAlpha)})`;
             ctx.lineWidth = p.size;
