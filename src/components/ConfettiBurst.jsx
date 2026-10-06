@@ -46,7 +46,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const particleCount = loop ? 120 : 450;
       for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = (Math.random() * 12 + 4) * (Math.random() * 0.8 + 0.5);
+        const speed = (Math.random() * 6 + 2) * (Math.random() * 0.5 + 0.5);
         
         particlesRef.current.push({
           isRocket: false,
@@ -54,8 +54,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           y: startY,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          friction: 0.97, 
-          gravity: 0.06, 
+          friction: 0.99, 
+          gravity: 0.04, 
           alpha: 1, 
           decay: Math.random() * 0.005 + 0.002, 
           color: selectedColors[Math.floor(Math.random() * selectedColors.length)],
@@ -216,7 +216,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           }
         } else {
           // Standard falling particle logic (Massive continuous trail like real fireworks)
-          if (p.history.length > 250) p.history.shift();
+          if (p.history.length > 50) p.history.shift();
 
           p.vx *= p.friction;
           p.vy *= p.friction;
