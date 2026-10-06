@@ -75,6 +75,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     <motion.div
       style={{
         zIndex: (isTop && diwaliPhase >= 1) ? 1000 : (isTop ? 100 : 100 - index),
+        opacity: (!isTop && diwaliPhase === 1) ? 0 : 1,
         pointerEvents: isTop && !isTorn && !isFinished ? 'auto' : 'none',
         position: 'absolute',
         top: 0,
