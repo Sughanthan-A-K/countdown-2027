@@ -128,16 +128,16 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       setPhase('fadeout_bg');
     }, 100);
     
-    // Let golden shower rain for 5 seconds before fading out smoothly
+    // Let golden shower rain for 7 seconds before fading out smoothly
     setTimeout(() => {
       setPhase('fadeout_shower');
-    }, 5000);
+    }, 7000);
     
     // Allow golden shower to fade out completely over 1-2s before unmounting
     setTimeout(() => {
       if (onReveal) onReveal();
       if (onComplete) onComplete();
-    }, 7000);
+    }, 9000);
   };
 
   // Mask styling for match light (hole is precisely at the flame)

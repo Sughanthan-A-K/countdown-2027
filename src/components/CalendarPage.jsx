@@ -13,7 +13,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
   useEffect(() => {
     if (diwaliPhase === 1) {
-      const timer = setTimeout(() => setStartFinaleLoop(true), 2300); // Launches at 2.3s, explodes around 4.8s just as golden shower fades at 5s
+      const timer = setTimeout(() => setStartFinaleLoop(true), 4300); // Launches at 4.3s, explodes around 6.8s just as golden shower starts fading at 7s
       return () => clearTimeout(timer);
     }
   }, [diwaliPhase]);
