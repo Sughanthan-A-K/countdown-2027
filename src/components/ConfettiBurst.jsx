@@ -135,7 +135,14 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
     const render = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
-      ctx.clearRect(0, 0, rect.width, rect.height);
+      
+      // Magic for realistic continuous trails! Instead of clearing, we fade the existing canvas slightly.
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)'; // Lower = longer trails. 0.12 is a sweet spot for fireworks.
+      ctx.fillRect(0, 0, rect.width, rect.height);
+      
+      // Use additive blending for realistic, ultra-bright glowing explosions
+      ctx.globalCompositeOperation = 'lighter';
 
       let activeParticles = 0;
 
@@ -216,7 +223,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           }
         } else {
           // Standard falling particle logic
-          if (p.history.length > 20) p.history.shift();
+          if (p.history.length > 2) p.history.shift(); // Only need 1 previous frame for a continuous line segment
 
           p.vx *= p.friction;
           p.vy *= p.friction;
