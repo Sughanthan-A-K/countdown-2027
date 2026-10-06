@@ -216,7 +216,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           }
         } else {
           // Standard falling particle logic (Fading spark trail like real willow fireworks)
-          if (p.history.length > 20) p.history.shift();
+          if (p.history.length > 80) p.history.shift();
 
           p.vx *= p.friction;
           p.vy *= p.friction;
@@ -231,11 +231,11 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           }
 
           if (p.history.length > 1) {
-            // Draw a perfectly fading, tapering tail
-            for (let i = 1; i < p.history.length; i++) {
+            // Draw a perfectly fading, tapering tail (Long continuous streak)
+            for (let i = 2; i < p.history.length; i += 2) {
               const segmentScale = (i / p.history.length); // 0 at tail end, 1 at head
               ctx.beginPath();
-              ctx.moveTo(p.history[i-1].x, p.history[i-1].y);
+              ctx.moveTo(p.history[i-2].x, p.history[i-2].y);
               ctx.lineTo(p.history[i].x, p.history[i].y);
               
               ctx.strokeStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, currentAlpha * segmentScale)})`;
