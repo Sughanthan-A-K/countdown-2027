@@ -107,14 +107,13 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       transition={{ type: 'spring', stiffness: 300, damping: 25, mass: 0.5 }}
       className="absolute flex items-center justify-center inset-0 select-none touch-none"
     >
-      <AnimatePresence>{isDiwaliActive && diwaliPhase === 1 && (<motion.div className="fixed inset-0 bg-black z-[-1]" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.5, ease: "easeInOut" }} />)}</AnimatePresence>
       <div className="relative pt-4 w-full flex justify-center">
         {/* Removed transition-colors because View Transition handles the visual fade/wipe instantly */}
         <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
         <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
         
         <motion.div 
-          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder} transition-all duration-1000`}`}
+          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${diwaliPhase === 1 ? 'border-transparent bg-black shadow-none' : `${cardBg} ${cardBorder} transition-all duration-1000`}`}
           style={{
             boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : dropShadow) : '0 20px 40px -10px rgba(0,0,0,0.1)',
             backfaceVisibility: 'hidden'
