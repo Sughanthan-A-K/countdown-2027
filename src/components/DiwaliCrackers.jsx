@@ -62,11 +62,6 @@ export default function DiwaliCrackers({ active, onFirstBurst }) {
         lastType = type;
       }
 
-      if (!hasFiredFirst && onFirstBurst) {
-        onFirstBurst();
-        hasFiredFirst = true;
-      }
-
       currentCracker = {
         type,
         ticks: 0,
@@ -113,6 +108,12 @@ export default function DiwaliCrackers({ active, onFirstBurst }) {
           
           if (state.vy >= 0) {
             state.phase = 'explode';
+            
+            if (!hasFiredFirst && onFirstBurst) {
+              onFirstBurst();
+              hasFiredFirst = true;
+            }
+
             const colors = ['#ff3333', '#33ff33', '#3333ff', '#ffff33', '#ff33ff', '#33ffff', '#ffa500'];
             const col = colors[Math.floor(Math.random() * colors.length)];
             const particleCount = isMobile ? 80 : 150;
