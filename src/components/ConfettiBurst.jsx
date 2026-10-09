@@ -46,7 +46,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const particleCount = loop ? 120 : 450;
       for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 7 + 3;
+        const speed = (Math.random() * 20 + 5) * (Math.random() * 0.5 + 0.5);
         
         particlesRef.current.push({
           isRocket: false,
@@ -54,14 +54,14 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           y: startY,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          friction: 0.98, 
-          gravity: 0.1, 
+          friction: 0.94, 
+          gravity: 0.05, 
           alpha: 1, 
-          decay: Math.random() * 0.005 + 0.002, 
+          decay: Math.random() * 0.006 + 0.003, 
           color: selectedColors[Math.floor(Math.random() * selectedColors.length)],
           size: Math.random() * 1.5 + 0.5,
           history: [], 
-          flickerRate: 0
+          flickerRate: Math.random() > 0.5 ? Math.random() * 0.1 : 0
         });
       }
     };
@@ -215,8 +215,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             }
           }
         } else {
-          // Standard falling particle logic (Fading spark trail like real willow fireworks)
-          if (p.history.length > 80) p.history.shift();
+          // Standard falling particle logic
+          if (p.history.length > 20) p.history.shift();
 
           p.vx *= p.friction;
           p.vy *= p.friction;
@@ -231,18 +231,13 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           }
 
           if (p.history.length > 1) {
-            // Draw a perfectly fading, tapering tail (Long continuous streak)
-            for (let i = 2; i < p.history.length; i += 2) {
-              const segmentScale = (i / p.history.length); // 0 at tail end, 1 at head
-              ctx.beginPath();
-              ctx.moveTo(p.history[i-2].x, p.history[i-2].y);
-              ctx.lineTo(p.history[i].x, p.history[i].y);
-              
-              ctx.strokeStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, currentAlpha * segmentScale)})`;
-              ctx.lineWidth = p.size * segmentScale;
-              ctx.lineCap = 'round';
-              ctx.stroke();
-            }
+            ctx.beginPath();
+            ctx.moveTo(p.history[0].x, p.history[0].y);
+            ctx.lineTo(p.x, p.y);
+            ctx.strokeStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, currentAlpha)})`;
+            ctx.lineWidth = p.size;
+            ctx.lineCap = 'round';
+            ctx.stroke();
           } else {
             ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, currentAlpha)})`;
             if (window.innerWidth < 768) {
