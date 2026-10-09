@@ -3,7 +3,7 @@ import { motion, useMotionValue, useTransform, animate, AnimatePresence } from '
 import { Sparkles, PartyPopper, Star } from 'lucide-react';
 import GandhiPic from './GandhiPic';
 import ConfettiBurst from './ConfettiBurst';
-import DiwaliCrackers from './DiwaliCrackers';
+import CrackerEngine from './CrackerEngine';
 
 export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
   const [exitX, setExitX] = useState(0);
@@ -221,7 +221,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               <>
                 {/* Background Fireworks spanning the entire card natively! */}
                 <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${effectiveDarkMode ? 'opacity-100' : 'opacity-80'}`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)', isolation: 'isolate' }}>
-                  <DiwaliCrackers active={diwaliRevealed || startFinaleLoop} onFirstBurst={onCalendarReveal} />
+                  { (diwaliRevealed || startFinaleLoop) && <CrackerEngine active={true} onFirstBurst={onCalendarReveal} /> }
                 </div>
 
                 <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
