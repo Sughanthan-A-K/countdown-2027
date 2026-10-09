@@ -46,7 +46,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const particleCount = loop ? 120 : 450;
       for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 12 + 6;
+        const speed = Math.random() * 7 + 3;
         
         particlesRef.current.push({
           isRocket: false,
