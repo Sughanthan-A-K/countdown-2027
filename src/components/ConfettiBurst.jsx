@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.5 }, launchOrigin = null, loop = false, skipInitial = false, forceRocket = false, onFirstBurst }) {
   const canvasRef = useRef(null);
+  const loopTimerRef = useRef(null);
   
   // Persist physics state across re-renders (like when 'loop' prop toggles)
   const particlesRef = useRef([]);
@@ -15,7 +16,6 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     if (!canvas || !canvas.parentElement) return;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
-    let intervalId;
 
     // Handle high DPI screens
     const dpr = window.devicePixelRatio || 1;
@@ -121,9 +121,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     }
 
     // Start random loop only if loop is true
-    if (loop) {
+    if (loop && !loopTimerRef.current) {
       const scheduleNext = () => {
-        intervalId = setTimeout(() => {
+        loopTimerRef.current = setTimeout(() => {
           if (document.visibilityState === 'visible') {
             fire(false);
           }
@@ -277,7 +277,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      if (intervalId) clearInterval(intervalId);
+      if (loopTimerRef.current) {
+        clearTimeout(loopTimerRef.current);
+        loopTimerRef.current = null;
+      }
       window.removeEventListener('resize', updateSize);
     };
   }, [active, origin.x, origin.y, loop]);
