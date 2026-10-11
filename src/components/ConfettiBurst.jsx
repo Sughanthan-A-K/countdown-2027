@@ -876,6 +876,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     // 6. Step 14: Saravedi (8.0s continuous + 2.0s peaceful gap = 10.0s)
     // 7. Step 15+: Remaining fireworks random in smooth, natural timing with 2.0s gap between every cracker!
     const triggerNextCracker = () => {
+      // STRICT REQUIREMENT: Only ONE cracker can ever exist at a time! Clean up any lingering cracker models
+      activeCrackersRef.current = [];
+
       // 1. First 10 crackers are strictly the usual OUTS!
       if (burstCountRef.current < 10) {
         burstCountRef.current++;
@@ -965,22 +968,32 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     }
 
     // Start sequential loop only if loop is true
+    let visibilityHandler = null;
+
     if (loop && !loopTimerRef.current) {
       const scheduleNext = () => {
-        const delay = triggerNextCracker();
-        
-        loopTimerRef.current = setTimeout(() => {
-          if (document.visibilityState === 'visible') {
-            scheduleNext();
-          } else {
-            const onVisible = () => {
-              if (document.visibilityState === 'visible') {
-                document.removeEventListener('visibilitychange', onVisible);
+        if (document.hidden) {
+          // Tab is backgrounded: wait until user returns, do NOT accumulate or stack crackers!
+          if (!visibilityHandler) {
+            visibilityHandler = () => {
+              if (!document.hidden) {
+                document.removeEventListener('visibilitychange', visibilityHandler);
+                visibilityHandler = null;
+                // Clear any leftover stacked particles or crackers while tab was idle
+                activeCrackersRef.current = [];
+                particlesRef.current = [];
                 scheduleNext();
               }
             };
-            document.addEventListener('visibilitychange', onVisible);
+            document.addEventListener('visibilitychange', visibilityHandler);
           }
+          return;
+        }
+
+        const delay = triggerNextCracker();
+        
+        loopTimerRef.current = setTimeout(() => {
+          scheduleNext();
         }, delay);
       };
       
@@ -1183,6 +1196,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       if (loopTimerRef.current) {
         clearTimeout(loopTimerRef.current);
         loopTimerRef.current = null;
+      }
+      if (visibilityHandler) {
+        document.removeEventListener('visibilitychange', visibilityHandler);
+        visibilityHandler = null;
       }
       window.removeEventListener('resize', updateSize);
     };

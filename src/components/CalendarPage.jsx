@@ -71,11 +71,13 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const pillBgOutline = effectiveDarkMode ? 'bg-neutral-900 border-neutral-300' : 'bg-white border-neutral-800';
   const pillTextOutline = effectiveDarkMode ? 'text-neutral-200' : 'text-neutral-800';
 
+  const isFirstOutExploded = diwaliRevealed;
+
   return (
     <motion.div
       style={{
         zIndex: (isTop && diwaliPhase >= 1) ? 1000 : (isTop ? 100 : 100 - index),
-        opacity: (!isTop && diwaliPhase === 1) ? 0 : 1,
+        opacity: !isTop ? 0 : 1,
         pointerEvents: isTop && !isTorn && !isFinished ? 'auto' : 'none',
         position: 'absolute',
         top: 0,
@@ -237,12 +239,18 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     className="flex flex-col items-center"
                   >
                     <h3 
-                       className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-orange-500 font-black text-4xl sm:text-5xl tracking-widest uppercase drop-shadow-md text-center leading-tight"
-                       style={{ WebkitTextStroke: '1px rgba(184,115,51,0.5)' }}
+                       className={`font-black text-4xl sm:text-5xl tracking-widest uppercase drop-shadow-md text-center leading-tight transition-all duration-700 ease-out ${
+                         isFirstOutExploded 
+                           ? 'text-white' 
+                           : 'text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-orange-500'
+                       }`}
+                       style={isFirstOutExploded ? { textShadow: '0 0 20px rgba(255,255,255,0.4)' } : { WebkitTextStroke: '1px rgba(184,115,51,0.5)' }}
                     >
                       Happy<br/>Diwali
                     </h3>
-                    <span className={`mt-3 font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase text-yellow-500 drop-shadow-sm`}>
+                    <span className={`mt-3 font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase drop-shadow-sm transition-all duration-700 ease-out ${
+                      isFirstOutExploded ? 'text-white/90' : 'text-yellow-500'
+                    }`}>
                       To you & your family
                     </span>
                   </motion.div>
