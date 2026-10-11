@@ -631,52 +631,48 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                 });
               }
 
-              // Shredded paper flakes (Red outer wrapper + White/newsprint inner layers) blasting in all directions
+              // Shredded paper flakes (Red outer wrapper + White/newsprint inner layers) hovering around burst area
               const redPaperColors = ['#D31515', '#E52B2B', '#B20D0D', '#C81010', '#E63946'];
               const whitePaperColors = ['#F5F5F0', '#EAE6DF', '#E0DDD5', '#D6D2C4', '#FAF8F5'];
               const shapeTypes = ['rect', 'triangle', 'ragged', 'flake'];
 
               for (let d = 0; d < 7; d++) {
-                // 360-degree blast: can explode in any direction!
+                // 360-degree blast angle radiating right around where the cracker exploded
                 const blastAngle = Math.random() * Math.PI * 2;
-                // Varied blast impulse: some blast near (20px), some medium (50px), some further (80px)
-                const blastSpeed = Math.random() * 5.6 + 1.8;
+                // Pop speed: quick burst that settles within 15-40px right around the cracker
+                const blastSpeed = Math.random() * 4.0 + 1.2;
                 const isRed = Math.random() < 0.55;
                 const color = isRed 
                   ? redPaperColors[Math.floor(Math.random() * redPaperColors.length)] 
                   : whitePaperColors[Math.floor(Math.random() * whitePaperColors.length)];
                 
                 const shape = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
-                let w = Math.random() * 4 + 3.5;
-                let h = Math.random() * 2.5 + 2.0;
+                let w = Math.random() * 3.5 + 3.0;
+                let h = Math.random() * 2.2 + 1.8;
                 if (shape === 'flake') {
-                  w = Math.random() * 2.5 + 2.0;
+                  w = Math.random() * 2.2 + 2.0;
                   h = w;
                 } else if (shape === 'rect') {
-                  w = Math.random() * 5 + 4.5;
-                  h = Math.random() * 1.5 + 1.8;
+                  w = Math.random() * 4.5 + 4.0;
+                  h = Math.random() * 1.5 + 1.6;
                 }
-
-                // Natural floor area where the debris settles and stays
-                const targetGroundY = Math.min(height - 15, stringBottomY + 15 + Math.random() * 35);
 
                 particlesRef.current.push({
                   type: 'paper',
                   isRocket: false,
-                  x: px + (Math.random() - 0.5) * 6,
-                  y: py + (Math.random() - 0.5) * 6,
+                  x: px + (Math.random() - 0.5) * 4,
+                  y: py + (Math.random() - 0.5) * 4,
                   vx: Math.cos(blastAngle) * blastSpeed,
-                  vy: Math.sin(blastAngle) * blastSpeed - (Math.random() * 1.8 + 0.5),
+                  vy: Math.sin(blastAngle) * blastSpeed,
                   rotation: Math.random() * Math.PI * 2,
-                  vRot: (Math.random() - 0.5) * 0.22,
+                  vRot: (Math.random() - 0.5) * 0.18,
                   width: w,
                   height: h,
                   shapeType: shape,
-                  friction: 0.945,
-                  gravity: 0.08,
+                  friction: 0.89, // Brakes in mid-air right around the cracker
+                  gravity: 0.008, // Very subtle, does NOT plummet to bottom
                   alpha: 1,
-                  targetGroundY,
-                  isGrounded: false,
+                  decay: 0.010, // Fades out smoothly in ~2.5 - 3s, disappearing with Saravedi
                   color,
                   history: []
                 });
@@ -1152,27 +1148,15 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           ctx.fillRect(-p.width / 2 - 2, -1, 2, 2);
           ctx.restore();
         } else if (p.type === 'paper') {
-          // Shredded paper flakes (red outer & newsprint inner)
-          if (p.isGrounded) {
-            // Settled on the ground: stays visible like real cracker debris!
-            p.alpha -= 0.0005;
-          } else {
-            p.vx *= p.friction;
-            p.vy *= p.friction;
-            p.vy += p.gravity;
-            p.x += p.vx;
-            p.y += p.vy;
-            p.rotation += (p.vRot || 0.08);
-            p.x += Math.sin(p.rotation * 2) * 0.4; // Natural air sway/flutter
-
-            // Hit floor area and land flat
-            if (p.targetGroundY && p.y >= p.targetGroundY) {
-              p.y = p.targetGroundY;
-              p.isGrounded = true;
-              p.vx = 0;
-              p.vy = 0;
-            }
-          }
+          // Shredded paper flakes hovering right around where the cracker exploded
+          p.vx *= p.friction;
+          p.vy *= p.friction;
+          p.vy += p.gravity;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rotation += (p.vRot || 0.05);
+          p.x += Math.sin(p.rotation * 2) * 0.2; // Subtle natural air flutter in place
+          p.alpha -= p.decay; // Fades out over ~2.5 - 3s, disappearing completely with Saravedi
 
           if (p.alpha > 0.01) {
             ctx.save();
