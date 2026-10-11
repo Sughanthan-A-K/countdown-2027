@@ -232,7 +232,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       });
     };
 
-    // 3. SANGU SAKKARAM (Ground Spinner) - Realistic golden/red-orange sparks like pusvanam/sparkler (no disco rainbow), disc with gold/maroon finish
+    // 3. SANGU SAKKARAM (Ground Spinner) - Circle movement and sparks 100% perfectly synced! Realistic golden/amber sparks & maroon-gold disc
     const fireSanguSakkaram = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
@@ -245,7 +245,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       let moveVy = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.7 + 0.5);
 
       if (typeof window !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate([150, 40, 100, 40, 200]);
+        // Mild rhythmic whirling vibration pattern for ground spinner
+        navigator.vibrate([40, 80, 40]);
       }
 
       // 7.5 seconds smooth roving spin as requested (7-8s)
@@ -266,7 +267,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           spinSpeed = progress < 0.2 ? 0.3 + progress * 2 : 0.7; // Fast spinning
           angle += spinSpeed;
 
-          // Sakkaram wanders smoothly around the entire card window so it's not hidden behind 54th day!
+          // 1. UPDATE POSITION FIRST so disc and spark origins are 100% frame-perfect in sync!
           posX += moveVx;
           posY += moveVy;
 
@@ -290,9 +291,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           const realisticColors = ['#FFD700', '#FFA500', '#FF8C00', '#FFFFFF', '#FFF8DC', '#FFE4B5'];
 
           for (let i = 0; i < sparksPerFrame; i++) {
-            // Eject sparks tangentially from 2 nozzle arms
+            // Eject sparks tangentially from exact updated disc center (posX, posY)
             const armAngle = angle + (i % 2 === 0 ? 0 : Math.PI);
-            const nozzleDistance = 14;
+            const nozzleDistance = 11; // Right at the disc edge
             const originX = posX + Math.cos(armAngle) * nozzleDistance;
             const originY = posY + Math.sin(armAngle) * nozzleDistance;
 
@@ -304,8 +305,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               isRocket: false,
               x: originX,
               y: originY,
-              vx: Math.cos(tangentAngle) * speed,
-              vy: Math.sin(tangentAngle) * speed,
+              vx: Math.cos(tangentAngle) * speed + moveVx * 0.4, // Inherits disc movement vector
+              vy: Math.sin(tangentAngle) * speed + moveVy * 0.4,
               friction: 0.92,
               gravity: 0.08,
               alpha: 1,
@@ -319,7 +320,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           return true;
         },
         draw: (ctx) => {
-          // Draw spinning wheel disc with dark maroon / reddish-orange & golden circular spiral pattern
+          // Draw spinning wheel disc directly at (posX, posY)
           ctx.save();
           ctx.translate(posX, posY);
           ctx.rotate(angle);
@@ -360,7 +361,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const baseY = height * 0.35;
       
       if (typeof window !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate([60, 40, 60]);
+        // Mild soft fizzing vibration for sparkler
+        navigator.vibrate([25, 60, 25]);
       }
 
       // Around 7.5 seconds slow, smooth burn
@@ -478,7 +480,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       });
     };
 
-    // 5. SARA VEDI (Garland Cracker) - Center intense blast zone, simultaneous left-right bursts, plus occasional rogue stray crackers shooting off left or right!
+    // 5. SARA VEDI (Garland Cracker) - Center intense blast zone, simultaneous left-right bursts, plus physical red cracker cylinder popping and landing away!
     const fireSaraVedi = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
@@ -512,10 +514,13 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             // Both LEFT and RIGHT explode SIMULTANEOUSLY from the central cord!
             const sides = [-18, 18]; // Left cracker and Right cracker
 
+            // Very mild subtle click vibration on periodic beats (not vibrating constantly on every frame)
             if (typeof window !== 'undefined' && navigator.vibrate) {
-              navigator.vibrate(30);
+              if (currentPairIdx % 4 === 0) {
+                navigator.vibrate(18); // Ultra mild pop
+              }
             }
-            screenShakeRef.current = (Math.random() - 0.5) * 5;
+            screenShakeRef.current = (Math.random() - 0.5) * 4;
 
             // Central blast zone: intense dub-dub-pada-pada center sparks so it's a unified roaring blast
             const centerColors = ['#FFFFFF', '#FFD700', '#FF4500'];
@@ -588,50 +593,38 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               }
             });
 
-            // OCCASIONAL ROGUE STRAY CRACKER (Therichu poi dhoorathula vizhuradhu!):
-            // Every few cycles (~25% chance), one individual live cracker pops off sideways and shoots out landing further away with an arc of sparks!
+            // OCCASIONAL ROGUE STRAY CRACKER (Left/Right-la irukkura oru RED pattaasu mattum therichu parandhu poi keezha vizhuradhu!):
+            // Exactly preserves the red cracker size/shape, flies with tumbling rotation, and lands with a satisfying pop & vibration!
             if (Math.random() < 0.28) {
-              const strayDirection = Math.random() > 0.5 ? 1 : -1;
-              const straySpeedX = strayDirection * (Math.random() * 7 + 5);
-              const straySpeedY = -(Math.random() * 5 + 3);
+              const isLeft = Math.random() > 0.5;
+              const strayDirection = isLeft ? -1 : 1;
+              const originCrackerX = stringTopX + (strayDirection * 16);
+              const straySpeedX = strayDirection * (Math.random() * 5 + 4);
+              const straySpeedY = -(Math.random() * 4 + 2); // Arches up into the air
 
-              // Stray glowing cracker projectile with trailing sparks
+              // Mild sharp tap vibration when the stray cracker pops off and lands
+              if (typeof window !== 'undefined' && navigator.vibrate) {
+                navigator.vibrate([20, 40, 20]);
+              }
+
+              // Physical red cracker roll object (type: 'strayCracker')
               particlesRef.current.push({
-                type: 'spark',
+                type: 'strayCracker',
                 isRocket: false,
-                x: stringTopX + (strayDirection * 15),
+                x: originCrackerX,
                 y: centerY,
                 vx: straySpeedX,
                 vy: straySpeedY,
-                friction: 0.96,
-                gravity: 0.20,
+                rotation: 0,
+                vRot: (Math.random() - 0.5) * 0.25,
+                width: 14,
+                height: 5.5,
+                friction: 0.97,
+                gravity: 0.18,
                 alpha: 1,
-                decay: 0.02, // Lives longer to fly a distance!
-                color: '#FFD700',
-                size: 3.5,
-                history: [],
-                flickerRate: 0.25
+                decay: 0.012, // Lasts for the full flight arc
+                history: []
               });
-
-              // Micro sparks showering from the flying stray cracker
-              for (let s = 0; s < 6; s++) {
-                particlesRef.current.push({
-                  type: 'spark',
-                  isRocket: false,
-                  x: stringTopX + (strayDirection * 15),
-                  y: centerY,
-                  vx: straySpeedX * 0.6 + (Math.random() - 0.5) * 2,
-                  vy: straySpeedY * 0.6 + (Math.random() - 0.5) * 2,
-                  friction: 0.92,
-                  gravity: 0.18,
-                  alpha: 1,
-                  decay: 0.035,
-                  color: '#FFA500',
-                  size: 2,
-                  history: [],
-                  flickerRate: 0.15
-                });
-              }
             }
 
             currentPairIdx++;
@@ -1027,6 +1020,26 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               hasFiredFirstBurstCallback.current = true;
             }
           }
+        } else if (p.type === 'strayCracker') {
+          // Physical Red Cracker Cylinder flying, tumbling in the air and landing!
+          p.vx *= p.friction;
+          p.vy *= p.friction;
+          p.vy += p.gravity;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rotation += (p.vRot || 0.1);
+          p.alpha -= p.decay;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
+          // Draw authentic red paper cylinder roll matching the garland crackers
+          ctx.fillStyle = `rgba(204, 17, 17, ${Math.max(0, p.alpha)})`;
+          ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height);
+          // Tiny white/grey fuse tip on the flying cracker
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, p.alpha)})`;
+          ctx.fillRect(-p.width / 2 - 2, -1, 2, 2);
+          ctx.restore();
         } else if (p.type === 'paper') {
           // Debris / Paper flakes fluttering down
           p.vx *= p.friction;
