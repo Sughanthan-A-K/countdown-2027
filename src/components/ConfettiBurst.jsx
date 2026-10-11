@@ -669,9 +669,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                   width: w,
                   height: h,
                   shapeType: shape,
-                  friction: 0.89, // Brakes in mid-air right around the cracker
-                  gravity: 0.008, // Very subtle, does NOT plummet to bottom
+                  friction: 0.84, // Quick burst that settles to rest in ~0.2s
                   alpha: 1,
+                  isResting: false,
                   burnEndTime: startTime + duration, // Remains 100% visible until full garland finishes!
                   color,
                   history: []
@@ -1148,13 +1148,23 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           ctx.fillRect(-p.width / 2 - 2, -1, 2, 2);
           ctx.restore();
         } else if (p.type === 'paper') {
-          // Shredded paper flakes hovering right around where the cracker exploded
-          p.vx *= p.friction;
-          p.vy *= p.friction;
-          p.vy += p.gravity;
-          p.x += p.vx;
-          p.y += p.vy;
-          p.rotation += (p.vRot || 0.05);
+          // Shredded paper flakes pop out and immediately settle completely still
+          if (!p.isResting) {
+            p.vx *= p.friction;
+            p.vy *= p.friction;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rotation += (p.vRot || 0.05);
+
+            // Once the brief pop deceleration completes, freeze DEAD STILL (zero movement, zero rotation!)
+            if (Math.abs(p.vx) < 0.15 && Math.abs(p.vy) < 0.15) {
+              p.isResting = true;
+              p.vx = 0;
+              p.vy = 0;
+              p.vRot = 0;
+            }
+          }
+
           // Remain 100% visible while Saravedi is bursting; only fade out after the whole garland finishes!
           if (p.burnEndTime) {
             if (Date.now() >= p.burnEndTime) {
