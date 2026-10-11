@@ -426,9 +426,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           const elapsed = Date.now() - startTime;
           if (elapsed > duration) return false;
 
-          // Graceful, natural hand sway (calm rhythm)
-          const swayX = Math.sin(elapsed * 0.0014) * (width * 0.12) + Math.cos(elapsed * 0.0022) * (width * 0.05);
-          const swayY = Math.cos(elapsed * 0.0018) * (height * 0.06);
+          // Original natural sway curves
+          const swayX = Math.sin(elapsed * 0.002) * (width * 0.18) + Math.cos(elapsed * 0.0035) * (width * 0.08);
+          const swayY = Math.cos(elapsed * 0.0025) * (height * 0.09);
           
           prevX = curX;
           curX = baseX + swayX;
@@ -439,31 +439,31 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           const fadeInAlpha = Math.min(1, elapsed / 600);
           curBurnY = stickStartY + progress * coatedLength;
 
-          // Hand velocity so sparks travel WITH the stick rather than getting left behind
+          // Subtle hand momentum so sparks travel with the stick naturally
           const handVx = curX - prevX;
 
-          // Crackling needle sparks strictly around the burning head
+          // Original rich crackling burst of needle sparks
           const sparkCount = 8;
           const sparklerColors = ['#FFFFFF', '#FFF8DC', '#FFFACD', '#FFFFE0', '#FFFAF0', '#FFD700'];
 
           for (let i = 0; i < sparkCount; i++) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 4.5 + 1.2;
+            const speed = Math.random() * 8 + 2;
 
             particlesRef.current.push({
               type: 'spark',
               isRocket: false,
-              x: curX + (Math.random() - 0.5) * 3,
-              y: curBurnY + (Math.random() - 0.5) * 3,
-              // Add hand velocity so sparks stay naturally attached to the flame
-              vx: Math.cos(angle) * speed + handVx * 0.65,
+              x: curX + (Math.random() - 0.5) * 4,
+              y: curBurnY,
+              // Keep sparks synchronized with hand movement
+              vx: Math.cos(angle) * speed + handVx * 0.35,
               vy: Math.sin(angle) * speed,
-              friction: 0.86,
-              gravity: 0.04,
+              friction: 0.88,
+              gravity: 0.05,
               alpha: fadeInAlpha,
-              decay: 0.055 + Math.random() * 0.03, // Crisp crackle that does not create a chasing tail
+              decay: 0.035 + Math.random() * 0.02,
               color: sparklerColors[Math.floor(Math.random() * sparklerColors.length)],
-              size: Math.random() * 1.5 + 0.6,
+              size: Math.random() * 1.6 + 0.6,
               history: [],
               flickerRate: 0.3
             });
@@ -546,8 +546,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const startTime = Date.now();
       let nextBurstTime = startTime;
 
-      // Stray cracker pops off rarely (around 4-5 times across all 40 pairs)
-      const strayIndices = new Set([7, 15, 23, 31, 38]);
+      // Stray cracker pops off very rarely (randomly 2 to 3 times across all 40 pairs)
+      const strayIndices = new Set();
+      const strayTargetCount = Math.random() < 0.5 ? 2 : 3;
+      while (strayIndices.size < strayTargetCount) {
+        strayIndices.add(Math.floor(Math.random() * 26) + 8);
+      }
 
       activeCrackersRef.current.push({
         type: 'saraVedi',
