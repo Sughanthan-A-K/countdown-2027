@@ -10,9 +10,11 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const [exitRotate, setExitRotate] = useState(0);
   const [isTorn, setIsTorn] = useState(false);
   const [startFinaleLoop, setStartFinaleLoop] = useState(false);
+  const [textHue, setTextHue] = useState(0);
 
   useEffect(() => {
     if (diwaliPhase === 1) {
+      setTextHue(200); // Set to deep blue/cyan complementary color during the Golden Shower
       const timer = setTimeout(() => setStartFinaleLoop(true), 2300); // Launches at 2.3s (original timing requested by user)
       return () => clearTimeout(timer);
     }
@@ -220,7 +222,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               <>
                 {/* Background Fireworks spanning the entire card natively! */}
                 <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${effectiveDarkMode ? 'opacity-100' : 'opacity-80'}`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)', isolation: 'isolate' }}>
-                  <ConfettiBurst active={diwaliRevealed || startFinaleLoop} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={!startFinaleLoop} onFirstBurst={onCalendarReveal} />
+                  <ConfettiBurst active={diwaliRevealed || startFinaleLoop} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={!startFinaleLoop} onFirstBurst={onCalendarReveal} onRocketLaunch={setTextHue} />
                 </div>
 
                 <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
@@ -238,11 +240,21 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   >
                     <h3 
                        className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-orange-500 font-black text-4xl sm:text-5xl tracking-widest uppercase drop-shadow-md text-center leading-tight"
-                       style={{ WebkitTextStroke: '1px rgba(184,115,51,0.5)' }}
+                       style={{ 
+                         WebkitTextStroke: '1px rgba(184,115,51,0.5)',
+                         filter: `hue-rotate(${textHue}deg)`,
+                         transition: 'filter 2.5s ease-in-out'
+                       }}
                     >
                       Happy<br/>Diwali
                     </h3>
-                    <span className={`mt-3 font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase text-yellow-500 drop-shadow-sm`}>
+                    <span 
+                      className={`mt-3 font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase text-yellow-500 drop-shadow-sm`}
+                      style={{
+                        filter: `hue-rotate(${textHue}deg)`,
+                        transition: 'filter 2.5s ease-in-out'
+                      }}
+                    >
                       To you & your family
                     </span>
                   </motion.div>
