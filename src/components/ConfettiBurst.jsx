@@ -131,14 +131,14 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       }
     };
 
-    // 2. PUSHWANAM / BISWAANAM (Flower Pot) - Placed just above the 54th day area (baseY: height * 0.58), shoots high up above Happy Diwali (9-10s duration)
+    // 2. PUSHWANAM / BISWAANAM (Flower Pot) - Lowered by ~12px to height * 0.61, Authentic dark maroon/reddish-orange pot with gold border lines
     const firePusvanam = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
       const baseX = width * 0.5; // Centered
-      // Positioned just above the 54th day number so the pot is clearly visible in the mid-lower window!
-      const baseY = height * 0.58; 
+      // Lowered by ~10-12px from 0.58 to 0.61 so it's not too center/high, looks grounded and perfectly proportioned
+      const baseY = height * 0.61; 
 
       if (typeof window !== 'undefined' && navigator.vibrate) {
         navigator.vibrate([100, 50, 150]);
@@ -171,7 +171,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           for (let i = 0; i < fountainParticles; i++) {
             // Shoots high up into the card, arching up above the Happy Diwali text
             const spreadAngle = -Math.PI / 2 + (Math.random() - 0.5) * 0.46; 
-            const speed = (Math.random() * 14 + 10) * intensity;
+            const speed = (Math.random() * 13 + 9) * intensity;
             const goldColors = ['#FFF8DC', '#FFE4B5', '#FFD700', '#FFA500', '#FF8C00', '#FFFFFF'];
             
             particlesRef.current.push({
@@ -194,17 +194,35 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           return true;
         },
         draw: (ctx) => {
-          // Draw clay flower pot base
+          // Draw authentic dark maroon / reddish-orange clay flower pot with golden border & base line
           ctx.save();
-          ctx.fillStyle = '#8B4513';
+          // Dark maroon / rich terracotta body
+          ctx.fillStyle = '#801818'; 
           ctx.beginPath();
-          ctx.moveTo(baseX - 13, baseY + 18);
-          ctx.lineTo(baseX + 13, baseY + 18);
+          ctx.moveTo(baseX - 14, baseY + 19);
+          ctx.lineTo(baseX + 14, baseY + 19);
           ctx.lineTo(baseX + 6, baseY);
           ctx.lineTo(baseX - 6, baseY);
           ctx.closePath();
           ctx.fill();
-          // Eruption rim glow
+
+          // Golden border line at the base
+          ctx.strokeStyle = '#FFD700';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(baseX - 14, baseY + 19);
+          ctx.lineTo(baseX + 14, baseY + 19);
+          ctx.stroke();
+
+          // Golden decorative neck band
+          ctx.strokeStyle = '#DAA520';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(baseX - 8, baseY + 8);
+          ctx.lineTo(baseX + 8, baseY + 8);
+          ctx.stroke();
+
+          // Reddish-orange & golden glowing eruption rim
           ctx.fillStyle = '#FFA500';
           ctx.shadowBlur = 15;
           ctx.shadowColor = '#FF4500';
@@ -214,7 +232,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       });
     };
 
-    // 3. SANGU SAKKARAM (Ground Spinner) - Original design restored, roving up & down, left & right smoothly across the screen (7.5s)
+    // 3. SANGU SAKKARAM (Ground Spinner) - Realistic golden/red-orange sparks like pusvanam/sparkler (no disco rainbow), disc with gold/maroon finish
     const fireSanguSakkaram = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
@@ -267,8 +285,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             moveVx += (Math.random() - 0.5) * 0.4;
           }
 
-          const sparksPerFrame = 7;
-          const colors = ['#00FFFF', '#FF1493', '#FFD700', '#FF4500', '#7CFC00', '#FFFFFF'];
+          const sparksPerFrame = 8;
+          // Realistic golden-yellow, warm white, and fire orange sparks - exactly like real Chakkara!
+          const realisticColors = ['#FFD700', '#FFA500', '#FF8C00', '#FFFFFF', '#FFF8DC', '#FFE4B5'];
 
           for (let i = 0; i < sparksPerFrame; i++) {
             // Eject sparks tangentially from 2 nozzle arms
@@ -278,7 +297,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             const originY = posY + Math.sin(armAngle) * nozzleDistance;
 
             const tangentAngle = armAngle + Math.PI / 2 + (Math.random() - 0.5) * 0.3;
-            const speed = Math.random() * 7 + 4;
+            const speed = Math.random() * 7.5 + 4;
 
             particlesRef.current.push({
               type: 'spark',
@@ -290,28 +309,37 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               friction: 0.92,
               gravity: 0.08,
               alpha: 1,
-              decay: 0.025,
-              color: colors[Math.floor(Math.random() * colors.length)],
+              decay: 0.024,
+              color: realisticColors[Math.floor(Math.random() * realisticColors.length)],
               size: Math.random() * 2 + 1,
               history: [],
-              flickerRate: 0.1
+              flickerRate: 0.12
             });
           }
           return true;
         },
         draw: (ctx) => {
-          // Draw spinning wheel disc
+          // Draw spinning wheel disc with dark maroon / reddish-orange & golden circular spiral pattern
           ctx.save();
           ctx.translate(posX, posY);
           ctx.rotate(angle);
           ctx.shadowBlur = 12;
-          ctx.shadowColor = '#FFD700';
-          ctx.fillStyle = '#222';
+          ctx.shadowColor = '#FFA500';
+          // Dark terracotta core disc
+          ctx.fillStyle = '#8B2500';
+          ctx.beginPath();
+          ctx.arc(0, 0, 11, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Golden border rim
+          ctx.strokeStyle = '#FFD700';
+          ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.arc(0, 0, 10, 0, Math.PI * 2);
-          ctx.fill();
-          // Red & Green spiral markings on chakkara
-          ctx.strokeStyle = '#FF3333';
+          ctx.stroke();
+
+          // Reddish-orange spiral arms
+          ctx.strokeStyle = '#FF4500';
           ctx.lineWidth = 3;
           ctx.beginPath();
           ctx.moveTo(-9, 0);
@@ -322,7 +350,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       });
     };
 
-    // 4. KAMBI MATHAAPU (Handheld Sparkler) - Original visual design, smoothly floating/swaying across screen like held by hand (7.5s)
+    // 4. KAMBI MATHAAPU (Handheld Sparkler) - Full wire persists! Chemical burns away, leaving glowing reddish-orange hot ember zone on wire
     const fireKambiMathaapu = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
@@ -355,8 +383,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           // Tip moves down as the sparkler chemical coating burns
           const progress = elapsed / duration;
           const stickStartY = (baseY + swayY);
-          const stickEndY = stickStartY + 160;
-          const currentBurnY = stickStartY + progress * 100;
+          const coatedLength = 110;
+          const currentBurnY = stickStartY + progress * coatedLength;
 
           // Crackling burst of needle sparks
           const sparkCount = 8;
@@ -393,27 +421,52 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           const swayY = Math.cos(elapsed * 0.0025) * (height * 0.09);
           const currentX = baseX + swayX;
           const stickStartY = (baseY + swayY);
-          const stickEndY = stickStartY + 160;
-          const currentBurnY = stickStartY + progress * 100;
+          const totalWireLength = 170;
+          const coatedLength = 110;
+          const stickEndY = stickStartY + totalWireLength;
+          const currentBurnY = stickStartY + progress * coatedLength;
 
           ctx.save();
-          // Steel wire
+          // 1. Full wire always stays intact! (Bare steel wire running from top to bottom)
           ctx.strokeStyle = '#B0C4DE';
-          ctx.lineWidth = 2.5;
+          ctx.lineWidth = 2.2;
           ctx.beginPath();
-          ctx.moveTo(currentX, currentBurnY);
+          ctx.moveTo(currentX, stickStartY);
           ctx.lineTo(currentX, stickEndY);
           ctx.stroke();
 
-          // Unburnt chemical coating below current burn point
-          ctx.strokeStyle = '#708090';
-          ctx.lineWidth = 5;
-          ctx.beginPath();
-          ctx.moveTo(currentX, currentBurnY);
-          ctx.lineTo(currentX, stickEndY - 20);
-          ctx.stroke();
+          // 2. Unburnt chemical coating below the burning flame (dark charcoal grey)
+          if (currentBurnY < stickStartY + coatedLength) {
+            ctx.strokeStyle = '#5A636A';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(currentX, currentBurnY);
+            ctx.lineTo(currentX, stickStartY + coatedLength);
+            ctx.stroke();
+          }
 
-          // Blazing white hot sparkler core
+          // 3. Just-burnt glowing REDDISH-ORANGE heat zone on the bare wire immediately above the flame!
+          const hotZoneLength = Math.min(22, currentBurnY - stickStartY);
+          if (hotZoneLength > 0) {
+            ctx.strokeStyle = '#FF4500';
+            ctx.lineWidth = 3.5;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#FF2200';
+            ctx.beginPath();
+            ctx.moveTo(currentX, currentBurnY - hotZoneLength);
+            ctx.lineTo(currentX, currentBurnY);
+            ctx.stroke();
+
+            // Inner hot yellow-orange heat gradient
+            ctx.strokeStyle = '#FFA500';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(currentX, currentBurnY - hotZoneLength * 0.5);
+            ctx.lineTo(currentX, currentBurnY);
+            ctx.stroke();
+          }
+
+          // 4. Blazing white-hot sparkler burning head
           ctx.fillStyle = '#FFFFFF';
           ctx.shadowBlur = 18;
           ctx.shadowColor = '#FFF';
@@ -425,7 +478,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       });
     };
 
-    // 5. SARA VEDI (Garland Cracker) - Center fuse burning down, simultaneous LEFT and RIGHT pair explosions (8.0s)
+    // 5. SARA VEDI (Garland Cracker) - Center intense blast zone, simultaneous left-right bursts, plus occasional rogue stray crackers shooting off left or right!
     const fireSaraVedi = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
@@ -463,6 +516,29 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               navigator.vibrate(30);
             }
             screenShakeRef.current = (Math.random() - 0.5) * 5;
+
+            // Central blast zone: intense dub-dub-pada-pada center sparks so it's a unified roaring blast
+            const centerColors = ['#FFFFFF', '#FFD700', '#FF4500'];
+            for (let c = 0; c < 12; c++) {
+              const angle = Math.random() * Math.PI * 2;
+              const speed = Math.random() * 8 + 3;
+              particlesRef.current.push({
+                type: 'spark',
+                isRocket: false,
+                x: stringTopX + (Math.random() - 0.5) * 6,
+                y: centerY + (Math.random() - 0.5) * 6,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                friction: 0.90,
+                gravity: 0.10,
+                alpha: 1,
+                decay: 0.045,
+                color: centerColors[Math.floor(Math.random() * centerColors.length)],
+                size: Math.random() * 2 + 1,
+                history: [],
+                flickerRate: 0.2
+              });
+            }
 
             sides.forEach((sideOffset) => {
               const px = stringTopX + sideOffset + (Math.random() - 0.5) * 4;
@@ -511,6 +587,52 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                 });
               }
             });
+
+            // OCCASIONAL ROGUE STRAY CRACKER (Therichu poi dhoorathula vizhuradhu!):
+            // Every few cycles (~25% chance), one individual live cracker pops off sideways and shoots out landing further away with an arc of sparks!
+            if (Math.random() < 0.28) {
+              const strayDirection = Math.random() > 0.5 ? 1 : -1;
+              const straySpeedX = strayDirection * (Math.random() * 7 + 5);
+              const straySpeedY = -(Math.random() * 5 + 3);
+
+              // Stray glowing cracker projectile with trailing sparks
+              particlesRef.current.push({
+                type: 'spark',
+                isRocket: false,
+                x: stringTopX + (strayDirection * 15),
+                y: centerY,
+                vx: straySpeedX,
+                vy: straySpeedY,
+                friction: 0.96,
+                gravity: 0.20,
+                alpha: 1,
+                decay: 0.02, // Lives longer to fly a distance!
+                color: '#FFD700',
+                size: 3.5,
+                history: [],
+                flickerRate: 0.25
+              });
+
+              // Micro sparks showering from the flying stray cracker
+              for (let s = 0; s < 6; s++) {
+                particlesRef.current.push({
+                  type: 'spark',
+                  isRocket: false,
+                  x: stringTopX + (strayDirection * 15),
+                  y: centerY,
+                  vx: straySpeedX * 0.6 + (Math.random() - 0.5) * 2,
+                  vy: straySpeedY * 0.6 + (Math.random() - 0.5) * 2,
+                  friction: 0.92,
+                  gravity: 0.18,
+                  alpha: 1,
+                  decay: 0.035,
+                  color: '#FFA500',
+                  size: 2,
+                  history: [],
+                  flickerRate: 0.15
+                });
+              }
+            }
 
             currentPairIdx++;
           }
