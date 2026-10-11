@@ -630,23 +630,26 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                 });
               }
 
-              // Red paper debris flying out from each side
-              for (let d = 0; d < 3; d++) {
+              // Shredded red paper flakes flying out from exploded crackers
+              const redPaperColors = ['#E52B2B', '#D31515', '#FF2A2A', '#C81010', '#B20D0D'];
+              for (let d = 0; d < 5; d++) {
                 particlesRef.current.push({
                   type: 'paper',
                   isRocket: false,
-                  x: px,
-                  y: py,
-                  vx: (sideOffset > 0 ? 1 : -1) * (Math.random() * 3 + 1) + (Math.random() - 0.5) * 2,
-                  vy: (Math.random() - 0.8) * 4,
+                  x: px + (Math.random() - 0.5) * 4,
+                  y: py + (Math.random() - 0.5) * 4,
+                  vx: (sideOffset > 0 ? 1 : -1) * (Math.random() * 4 + 1.5) + (Math.random() - 0.5) * 2,
+                  vy: -(Math.random() * 3 + 1.5), // Pops up and outwards
+                  rotation: Math.random() * Math.PI * 2,
+                  vRot: (Math.random() - 0.5) * 0.25,
+                  width: Math.random() * 4 + 4, // 4-8px authentic cracker strip width
+                  height: Math.random() * 2 + 2.5, // 2.5-4.5px strip height
                   friction: 0.94,
-                  gravity: 0.14,
+                  gravity: 0.08, // Floats and drifts gently
                   alpha: 1,
-                  decay: 0.015,
-                  color: '#FF2222',
-                  size: Math.random() * 3 + 2,
-                  history: [],
-                  flickerRate: 0
+                  decay: 0.007, // Lasts ~2.5 to 3s so shredded red paper accumulates in the air
+                  color: redPaperColors[Math.floor(Math.random() * redPaperColors.length)],
+                  history: []
                 });
               }
             });
@@ -1120,16 +1123,24 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           ctx.fillRect(-p.width / 2 - 2, -1, 2, 2);
           ctx.restore();
         } else if (p.type === 'paper') {
-          // Debris / Paper flakes fluttering down
+          // Shredded paper flakes fluttering down naturally like cracker wrapper debris
           p.vx *= p.friction;
           p.vy *= p.friction;
           p.vy += p.gravity;
           p.x += p.vx;
           p.y += p.vy;
+          p.rotation += (p.vRot || 0.1);
+          p.x += Math.sin(p.rotation * 2) * 0.5; // Natural air sway/flutter
           p.alpha -= p.decay;
 
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
           ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, p.alpha)})`;
-          ctx.fillRect(p.x, p.y, p.size, p.size * 0.8);
+          const w = p.width || p.size || 5;
+          const h = p.height || (p.size ? p.size * 0.7 : 3);
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+          ctx.restore();
         } else {
           // Standard sparks (from outs, flowerpot, chakkara, sparkler, bombs)
           if (p.history.length > 16) p.history.shift();
