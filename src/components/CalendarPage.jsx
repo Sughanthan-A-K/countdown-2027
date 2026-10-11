@@ -77,7 +77,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     <motion.div
       style={{
         zIndex: (isTop && diwaliPhase >= 1) ? 1000 : (isTop ? 100 : 100 - index),
-        opacity: !isTop ? 0 : 1,
+        opacity: 1,
         pointerEvents: isTop && !isTorn && !isFinished ? 'auto' : 'none',
         position: 'absolute',
         top: 0,
@@ -220,37 +220,43 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               </>
             ) : isDiwaliActive ? (
               <>
+                {/* 100% Solid Dark Backing so background cards never bleed through, yet swipe reveals card behind! */}
+                <div className="absolute inset-0 bg-neutral-950 rounded-3xl z-0" />
+
                 {/* Background Fireworks spanning the entire card natively! */}
-                <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${effectiveDarkMode ? 'opacity-100' : 'opacity-80'}`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)', isolation: 'isolate' }}>
+                <div className="absolute inset-0 z-10 overflow-hidden rounded-3xl" style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)', isolation: 'isolate' }}>
                   <ConfettiBurst active={diwaliRevealed || startFinaleLoop} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={!startFinaleLoop} onFirstBurst={onCalendarReveal} />
                 </div>
 
-                <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
+                <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-20 relative ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
                   <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
                     {dateText}
                   </h2>
                 </div>
 
-                <div className={`flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-[-20px] transition-opacity duration-1000 opacity-100`}>
+                <div className={`flex-1 flex flex-col items-center justify-center relative z-20 w-full mt-[-20px] transition-opacity duration-1000 opacity-100`}>
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={diwaliPhase === 1 ? { duration: 1.0, delay: 0.1, ease: "easeOut" } : { duration: 1.5, ease: "easeOut", delay: 0.5 }}
-                    className="flex flex-col items-center"
+                    className="flex flex-col items-center relative"
                   >
+                    {/* Subtle soft dark ambient backdrop directly behind text so text never gets lost against bright yellow fireworks! */}
+                    <div className="absolute inset-0 -m-6 bg-neutral-950/75 blur-xl rounded-full pointer-events-none -z-10" />
+
                     <h3 
-                       className={`font-black text-4xl sm:text-5xl tracking-widest uppercase drop-shadow-md text-center leading-tight transition-all duration-700 ease-out ${
-                         isFirstOutExploded 
-                           ? 'text-white' 
-                           : 'text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-orange-500'
-                       }`}
-                       style={isFirstOutExploded ? { textShadow: '0 0 20px rgba(255,255,255,0.4)' } : { WebkitTextStroke: '1px rgba(184,115,51,0.5)' }}
+                       className="font-black text-4xl sm:text-5xl tracking-widest uppercase text-center leading-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400"
+                       style={{ 
+                         filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.9)) drop-shadow(0 0 16px rgba(255,190,0,0.35))',
+                         WebkitTextStroke: '1px rgba(184,115,51,0.5)' 
+                       }}
                     >
                       Happy<br/>Diwali
                     </h3>
-                    <span className={`mt-3 font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase drop-shadow-sm transition-all duration-700 ease-out ${
-                      isFirstOutExploded ? 'text-white/90' : 'text-yellow-500'
-                    }`}>
+                    <span 
+                      className="mt-3 font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase text-yellow-300"
+                      style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.9))' }}
+                    >
                       To you & your family
                     </span>
                   </motion.div>

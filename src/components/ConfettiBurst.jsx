@@ -529,8 +529,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
 
-      // 36 pairs of crackers running down central fuse
-      const totalPairs = 36;
+      // 52 pairs of crackers closely packed down central fuse (gap reduced to almost nothing, continuous seamless layering)
+      const totalPairs = 52;
       const stringTopX = width * 0.5;
       const stringTopY = height * 0.18;
       const stringBottomY = height * 0.78;
@@ -694,15 +694,22 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             ctx.lineTo(stringTopX, stringBottomY);
             ctx.stroke();
 
-            // Draw unburnt pairs on BOTH Left and Right simultaneously
+            // Draw unburnt pairs closely packed on BOTH Left and Right simultaneously (tightly layered garland)
+            const rowStep = (stringBottomY - stringTopY) / totalPairs;
+            const rollHeight = Math.max(5.5, rowStep); // Seamlessly packed with no gaps
+
             for (let i = currentPairIdx; i < totalPairs; i++) {
-              const rowT = i / totalPairs;
-              const rowY = stringTopY + (stringBottomY - stringTopY) * rowT;
-              ctx.fillStyle = '#CC1111';
+              const rowY = stringTopY + i * rowStep;
+              ctx.fillStyle = '#C81010';
               // Left roll
-              ctx.fillRect(stringTopX - 16, rowY - 2.5, 13, 5);
+              ctx.fillRect(stringTopX - 16, rowY, 13, rollHeight);
               // Right roll
-              ctx.fillRect(stringTopX + 3, rowY - 2.5, 13, 5);
+              ctx.fillRect(stringTopX + 3, rowY, 13, rollHeight);
+
+              // Tiny gold jute binding line across each roll for authentic saravedi look
+              ctx.fillStyle = '#DAA520';
+              ctx.fillRect(stringTopX - 11, rowY + rollHeight * 0.45, 3, 1.2);
+              ctx.fillRect(stringTopX + 8, rowY + rollHeight * 0.45, 3, 1.2);
             }
             ctx.restore();
           }
