@@ -529,8 +529,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
 
-      // 52 pairs of crackers closely packed down central fuse (gap reduced to almost nothing, continuous seamless layering)
-      const totalPairs = 52;
+      // 40 pairs of crackers running down central fuse with a mild natural gap between rows
+      const totalPairs = 40;
       const stringTopX = width * 0.5;
       const stringTopY = height * 0.18;
       const stringBottomY = height * 0.78;
@@ -694,9 +694,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             ctx.lineTo(stringTopX, stringBottomY);
             ctx.stroke();
 
-            // Draw unburnt pairs closely packed on BOTH Left and Right simultaneously (tightly layered garland)
+            // Draw unburnt pairs with a pleasant mild dark gap between each row
             const rowStep = (stringBottomY - stringTopY) / totalPairs;
-            const rollHeight = Math.max(5.5, rowStep); // Seamlessly packed with no gaps
+            const rollHeight = 5.2; // Leaves a clean ~1.8px dark gap between rows
 
             for (let i = currentPairIdx; i < totalPairs; i++) {
               const rowY = stringTopY + i * rowStep;
