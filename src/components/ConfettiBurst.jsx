@@ -442,13 +442,14 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           // Subtle hand momentum so sparks travel with the stick naturally
           const handVx = curX - prevX;
 
-          // Original rich crackling burst of needle sparks
-          const sparkCount = 8;
+          // Rich crackling burst of longer needle sparks
+          const sparkCount = 10;
           const sparklerColors = ['#FFFFFF', '#FFF8DC', '#FFFACD', '#FFFFE0', '#FFFAF0', '#FFD700'];
 
           for (let i = 0; i < sparkCount; i++) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 8 + 2;
+            // Longer reach for sparkling fire needles
+            const speed = Math.random() * 12 + 4.5;
 
             particlesRef.current.push({
               type: 'spark',
@@ -458,12 +459,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               // Keep sparks synchronized with hand movement
               vx: Math.cos(angle) * speed + handVx * 0.35,
               vy: Math.sin(angle) * speed,
-              friction: 0.88,
-              gravity: 0.05,
+              friction: 0.905, // Retains speed longer to reach a longer visible length
+              gravity: 0.045,
               alpha: fadeInAlpha,
-              decay: 0.035 + Math.random() * 0.02,
+              decay: 0.026 + Math.random() * 0.016, // Longer flight time for longer needle streaks
               color: sparklerColors[Math.floor(Math.random() * sparklerColors.length)],
-              size: Math.random() * 1.6 + 0.6,
+              size: Math.random() * 1.6 + 0.7,
               history: [],
               flickerRate: 0.3
             });
@@ -630,24 +631,29 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                 });
               }
 
-              // Shredded red paper flakes flying out from exploded crackers
+              // Shredded red paper flakes bursting out at varied natural distances
               const redPaperColors = ['#E52B2B', '#D31515', '#FF2A2A', '#C81010', '#B20D0D'];
-              for (let d = 0; d < 5; d++) {
+              const isRight = sideOffset > 0;
+              const baseDir = isRight ? 1 : -1;
+              for (let d = 0; d < 6; d++) {
+                // Varied outward burst: each flake lands at its own distance (not too far, not too close)
+                const scatterSpeed = Math.random() * 6.5 + 3.2; 
+                const scatterAngle = (Math.random() - 0.4) * 0.9; // Dynamic fan arc outwards
                 particlesRef.current.push({
                   type: 'paper',
                   isRocket: false,
-                  x: px + (Math.random() - 0.5) * 4,
-                  y: py + (Math.random() - 0.5) * 4,
-                  vx: (sideOffset > 0 ? 1 : -1) * (Math.random() * 4 + 1.5) + (Math.random() - 0.5) * 2,
-                  vy: -(Math.random() * 3 + 1.5), // Pops up and outwards
+                  x: px + (Math.random() - 0.5) * 6,
+                  y: py + (Math.random() - 0.5) * 6,
+                  vx: baseDir * Math.cos(scatterAngle) * scatterSpeed + (Math.random() - 0.5) * 1.5,
+                  vy: -Math.abs(Math.sin(scatterAngle) * scatterSpeed) - (Math.random() * 3 + 1.2),
                   rotation: Math.random() * Math.PI * 2,
-                  vRot: (Math.random() - 0.5) * 0.25,
+                  vRot: (Math.random() - 0.5) * 0.28,
                   width: Math.random() * 4 + 4, // 4-8px authentic cracker strip width
                   height: Math.random() * 2 + 2.5, // 2.5-4.5px strip height
-                  friction: 0.94,
+                  friction: 0.952, // Smooth deceleration to each flake's unique distance
                   gravity: 0.08, // Floats and drifts gently
                   alpha: 1,
-                  decay: 0.007, // Lasts ~2.5 to 3s so shredded red paper accumulates in the air
+                  decay: 0.006, // Lasts ~3s so red paper flutter stays visible
                   color: redPaperColors[Math.floor(Math.random() * redPaperColors.length)],
                   history: []
                 });
