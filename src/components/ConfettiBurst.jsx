@@ -409,6 +409,15 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const duration = 7500;
       const startTime = Date.now();
 
+      // Shared coordinates between update and draw to eliminate any frame lag
+      let curX = baseX;
+      let prevX = baseX;
+      let stickStartY = baseY;
+      let stickEndY = baseY + 170;
+      let curBurnY = baseY;
+      const totalWireLength = 170;
+      const coatedLength = 110;
+
       activeCrackersRef.current.push({
         type: 'kambiMathaapu',
         startTime,
@@ -417,58 +426,53 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           const elapsed = Date.now() - startTime;
           if (elapsed > duration) return false;
 
-          // Gentle natural sway around the screen like hand movement (smooth sine curves)
-          const swayX = Math.sin(elapsed * 0.002) * (width * 0.18) + Math.cos(elapsed * 0.0035) * (width * 0.08);
-          const swayY = Math.cos(elapsed * 0.0025) * (height * 0.09);
-          const currentX = baseX + swayX;
+          // Graceful, natural hand sway (calm rhythm)
+          const swayX = Math.sin(elapsed * 0.0014) * (width * 0.12) + Math.cos(elapsed * 0.0022) * (width * 0.05);
+          const swayY = Math.cos(elapsed * 0.0018) * (height * 0.06);
+          
+          prevX = curX;
+          curX = baseX + swayX;
+          stickStartY = baseY + swayY;
+          stickEndY = stickStartY + totalWireLength;
 
-          // Tip moves down as the sparkler chemical coating burns
-          const progress = elapsed / duration;
+          const progress = Math.min(1, elapsed / duration);
           const fadeInAlpha = Math.min(1, elapsed / 600);
-          const stickStartY = (baseY + swayY);
-          const coatedLength = 110;
-          const currentBurnY = stickStartY + progress * coatedLength;
+          curBurnY = stickStartY + progress * coatedLength;
 
-          // Crackling burst of needle sparks
+          // Hand velocity so sparks travel WITH the stick rather than getting left behind
+          const handVx = curX - prevX;
+
+          // Crackling needle sparks strictly around the burning head
           const sparkCount = 8;
           const sparklerColors = ['#FFFFFF', '#FFF8DC', '#FFFACD', '#FFFFE0', '#FFFAF0', '#FFD700'];
 
           for (let i = 0; i < sparkCount; i++) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 8 + 2;
+            const speed = Math.random() * 4.5 + 1.2;
 
             particlesRef.current.push({
               type: 'spark',
               isRocket: false,
-              x: currentX + (Math.random() - 0.5) * 4,
-              y: currentBurnY,
-              vx: Math.cos(angle) * speed,
+              x: curX + (Math.random() - 0.5) * 3,
+              y: curBurnY + (Math.random() - 0.5) * 3,
+              // Add hand velocity so sparks stay naturally attached to the flame
+              vx: Math.cos(angle) * speed + handVx * 0.65,
               vy: Math.sin(angle) * speed,
-              friction: 0.88, // Quick deceleration into crackle
-              gravity: 0.05,
+              friction: 0.86,
+              gravity: 0.04,
               alpha: fadeInAlpha,
-              decay: 0.035 + Math.random() * 0.02,
+              decay: 0.055 + Math.random() * 0.03, // Crisp crackle that does not create a chasing tail
               color: sparklerColors[Math.floor(Math.random() * sparklerColors.length)],
-              size: Math.random() * 1.6 + 0.6,
+              size: Math.random() * 1.5 + 0.6,
               history: [],
-              flickerRate: 0.3 // High sparkle
+              flickerRate: 0.3
             });
           }
           return true;
         },
         draw: (ctx) => {
           const elapsed = Date.now() - startTime;
-          const progress = Math.min(1, elapsed / duration);
           const fadeInAlpha = Math.min(1, elapsed / 600);
-          
-          const swayX = Math.sin(elapsed * 0.002) * (width * 0.18) + Math.cos(elapsed * 0.0035) * (width * 0.08);
-          const swayY = Math.cos(elapsed * 0.0025) * (height * 0.09);
-          const currentX = baseX + swayX;
-          const stickStartY = (baseY + swayY);
-          const totalWireLength = 170;
-          const coatedLength = 110;
-          const stickEndY = stickStartY + totalWireLength;
-          const currentBurnY = stickStartY + progress * coatedLength;
 
           ctx.save();
           ctx.globalAlpha = fadeInAlpha;
@@ -476,47 +480,47 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           ctx.strokeStyle = '#B0C4DE';
           ctx.lineWidth = 2.2;
           ctx.beginPath();
-          ctx.moveTo(currentX, stickStartY);
-          ctx.lineTo(currentX, stickEndY);
+          ctx.moveTo(curX, stickStartY);
+          ctx.lineTo(curX, stickEndY);
           ctx.stroke();
 
           // 2. Unburnt chemical coating below the burning flame (dark charcoal grey)
-          if (currentBurnY < stickStartY + coatedLength) {
+          if (curBurnY < stickStartY + coatedLength) {
             ctx.strokeStyle = '#5A636A';
             ctx.lineWidth = 5;
             ctx.beginPath();
-            ctx.moveTo(currentX, currentBurnY);
-            ctx.lineTo(currentX, stickStartY + coatedLength);
+            ctx.moveTo(curX, curBurnY);
+            ctx.lineTo(curX, stickStartY + coatedLength);
             ctx.stroke();
           }
 
           // 3. Just-burnt glowing REDDISH-ORANGE heat zone on the bare wire immediately above the flame!
-          const hotZoneLength = Math.min(22, currentBurnY - stickStartY);
+          const hotZoneLength = Math.min(22, curBurnY - stickStartY);
           if (hotZoneLength > 0) {
             ctx.strokeStyle = '#FF4500';
             ctx.lineWidth = 3.5;
             ctx.shadowBlur = 10;
             ctx.shadowColor = '#FF2200';
             ctx.beginPath();
-            ctx.moveTo(currentX, currentBurnY - hotZoneLength);
-            ctx.lineTo(currentX, currentBurnY);
+            ctx.moveTo(curX, curBurnY - hotZoneLength);
+            ctx.lineTo(curX, curBurnY);
             ctx.stroke();
 
             // Inner hot yellow-orange heat gradient
             ctx.strokeStyle = '#FFA500';
             ctx.lineWidth = 2.5;
             ctx.beginPath();
-            ctx.moveTo(currentX, currentBurnY - hotZoneLength * 0.5);
-            ctx.lineTo(currentX, currentBurnY);
+            ctx.moveTo(curX, curBurnY - hotZoneLength * 0.5);
+            ctx.lineTo(curX, curBurnY);
             ctx.stroke();
           }
 
-          // 4. Blazing white-hot sparkler burning head
+          // 4. Blazing white-hot sparkler burning head - perfectly locked on curX & curBurnY
           ctx.fillStyle = '#FFFFFF';
           ctx.shadowBlur = 18;
           ctx.shadowColor = '#FFF';
           ctx.beginPath();
-          ctx.arc(currentX, currentBurnY, 4, 0, Math.PI * 2);
+          ctx.arc(curX, curBurnY, 4, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         }
@@ -542,6 +546,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const startTime = Date.now();
       let nextBurstTime = startTime;
 
+      // Stray cracker pops off rarely (around 4-5 times across all 40 pairs)
+      const strayIndices = new Set([7, 15, 23, 31, 38]);
+
       activeCrackersRef.current.push({
         type: 'saraVedi',
         startTime,
@@ -559,10 +566,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             // Both LEFT and RIGHT explode SIMULTANEOUSLY from the central cord!
             const sides = [-18, 18]; // Left cracker and Right cracker
 
-            // Very mild subtle click vibration on periodic beats (not vibrating constantly on every frame)
+            // Saravedi tactile haptic vibration (rhythmic crisp micro-clicks)
             if (typeof window !== 'undefined' && navigator.vibrate) {
-              if (currentPairIdx % 4 === 0) {
-                navigator.vibrate(18); // Ultra mild pop
+              if (currentPairIdx === totalPairs - 1) {
+                navigator.vibrate([20, 35, 25]);
+              } else if (currentPairIdx % 2 === 0) {
+                navigator.vibrate(10);
               }
             }
             screenShakeRef.current = (Math.random() - 0.5) * 4;
@@ -638,18 +647,18 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               }
             });
 
-            // OCCASIONAL ROGUE STRAY CRACKER (Left/Right-la irukkura oru RED pattaasu mattum therichu parandhu poi keezha vizhuradhu!):
-            // Exactly preserves the red cracker size/shape, flies with tumbling rotation, and lands with a satisfying pop & vibration!
-            if (Math.random() < 0.28) {
+            // OCCASIONAL ROGUE STRAY CRACKER (Rare: pops off only 4-5 times across the whole garland!):
+            // Exactly preserves the red cracker size/shape, flies with tumbling rotation, and lands with a satisfying pop!
+            if (strayIndices.has(currentPairIdx)) {
               const isLeft = Math.random() > 0.5;
               const strayDirection = isLeft ? -1 : 1;
               const originCrackerX = stringTopX + (strayDirection * 16);
               const straySpeedX = strayDirection * (Math.random() * 5 + 4);
               const straySpeedY = -(Math.random() * 4 + 2); // Arches up into the air
 
-              // Mild sharp tap vibration when the stray cracker pops off and lands
+              // Distinct sharp tap vibration when the stray cracker pops off and lands
               if (typeof window !== 'undefined' && navigator.vibrate) {
-                navigator.vibrate([20, 40, 20]);
+                navigator.vibrate([15, 25, 15]);
               }
 
               // Physical red cracker roll object (type: 'strayCracker')
