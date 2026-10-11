@@ -159,6 +159,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           if (elapsed > duration) return false;
           
           const progress = elapsed / duration;
+          // Smooth fade-in entry factor (0 to 1 over first 600ms)
+          const fadeInAlpha = Math.min(1, elapsed / 600);
+
           // Smooth bell curve: starts gentle, builds up tall, stays peak, settles down
           let intensity = progress < 0.20 
             ? (progress / 0.20) 
@@ -183,7 +186,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               vy: Math.sin(spreadAngle) * speed,
               friction: 0.965,
               gravity: 0.22, // Arching gracefully down
-              alpha: 1,
+              alpha: fadeInAlpha,
               decay: Math.random() * 0.016 + 0.010,
               color: goldColors[Math.floor(Math.random() * goldColors.length)],
               size: Math.random() * 2 + 1,
@@ -195,7 +198,11 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         },
         draw: (ctx) => {
           // Draw authentic dark maroon / reddish-orange clay flower pot with golden border & base line
+          const elapsed = Date.now() - startTime;
+          const fadeInAlpha = Math.min(1, elapsed / 600);
+
           ctx.save();
+          ctx.globalAlpha = fadeInAlpha;
           // Dark maroon / rich terracotta body
           ctx.fillStyle = '#801818'; 
           ctx.beginPath();
@@ -286,7 +293,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             moveVx += (Math.random() - 0.5) * 0.4;
           }
 
-          const sparksPerFrame = 8;
+          // Smooth fade-in entry factor (0 to 1 over first 600ms)
+          const fadeInAlpha = Math.min(1, elapsed / 600);
+
+          const sparksPerFrame = 9;
           // Realistic golden-yellow, warm white, and fire orange sparks - exactly like real Chakkara!
           const realisticColors = ['#FFD700', '#FFA500', '#FF8C00', '#FFFFFF', '#FFF8DC', '#FFE4B5'];
 
@@ -297,8 +307,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             const originX = posX + Math.cos(armAngle) * nozzleDistance;
             const originY = posY + Math.sin(armAngle) * nozzleDistance;
 
-            const tangentAngle = armAngle + Math.PI / 2 + (Math.random() - 0.5) * 0.3;
-            const speed = Math.random() * 7.5 + 4;
+            const tangentAngle = armAngle + Math.PI / 2 + (Math.random() - 0.5) * 0.35;
+            // Expanded speed & spread so the fiery radial umbrella is visibly wider and fuller
+            const speed = Math.random() * 11 + 6;
 
             particlesRef.current.push({
               type: 'spark',
@@ -307,12 +318,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               y: originY,
               vx: Math.cos(tangentAngle) * speed + moveVx * 0.4, // Inherits disc movement vector
               vy: Math.sin(tangentAngle) * speed + moveVy * 0.4,
-              friction: 0.92,
-              gravity: 0.08,
-              alpha: 1,
-              decay: 0.024,
+              friction: 0.94,
+              gravity: 0.07,
+              alpha: fadeInAlpha,
+              decay: 0.020,
               color: realisticColors[Math.floor(Math.random() * realisticColors.length)],
-              size: Math.random() * 2 + 1,
+              size: Math.random() * 2.2 + 1.2,
               history: [],
               flickerRate: 0.12
             });
@@ -321,7 +332,11 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         },
         draw: (ctx) => {
           // Draw bold, prominent spinning wheel disc directly at (posX, posY)
+          const elapsed = Date.now() - startTime;
+          const fadeInAlpha = Math.min(1, elapsed / 600);
+
           ctx.save();
+          ctx.globalAlpha = fadeInAlpha;
           ctx.translate(posX, posY);
           ctx.rotate(angle);
           
@@ -409,6 +424,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
           // Tip moves down as the sparkler chemical coating burns
           const progress = elapsed / duration;
+          const fadeInAlpha = Math.min(1, elapsed / 600);
           const stickStartY = (baseY + swayY);
           const coatedLength = 110;
           const currentBurnY = stickStartY + progress * coatedLength;
@@ -430,7 +446,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               vy: Math.sin(angle) * speed,
               friction: 0.88, // Quick deceleration into crackle
               gravity: 0.05,
-              alpha: 1,
+              alpha: fadeInAlpha,
               decay: 0.035 + Math.random() * 0.02,
               color: sparklerColors[Math.floor(Math.random() * sparklerColors.length)],
               size: Math.random() * 1.6 + 0.6,
@@ -443,6 +459,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         draw: (ctx) => {
           const elapsed = Date.now() - startTime;
           const progress = Math.min(1, elapsed / duration);
+          const fadeInAlpha = Math.min(1, elapsed / 600);
           
           const swayX = Math.sin(elapsed * 0.002) * (width * 0.18) + Math.cos(elapsed * 0.0035) * (width * 0.08);
           const swayY = Math.cos(elapsed * 0.0025) * (height * 0.09);
@@ -454,6 +471,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           const currentBurnY = stickStartY + progress * coatedLength;
 
           ctx.save();
+          ctx.globalAlpha = fadeInAlpha;
           // 1. Full wire always stays intact! (Bare steel wire running from top to bottom)
           ctx.strokeStyle = '#B0C4DE';
           ctx.lineWidth = 2.2;
@@ -521,10 +539,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       // 8.0 seconds total rhythmic explosion as requested
       const duration = 8000;
       const intervalDelay = duration / totalPairs;
-      let nextBurstTime = Date.now();
+      const startTime = Date.now();
+      let nextBurstTime = startTime;
 
       activeCrackersRef.current.push({
         type: 'saraVedi',
+        startTime,
         update: () => {
           if (currentPairIdx >= totalPairs) return false;
 
@@ -658,7 +678,11 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         },
         draw: (ctx) => {
           if (currentPairIdx < totalPairs) {
+            const elapsed = Date.now() - startTime;
+            const fadeInAlpha = Math.min(1, elapsed / 600);
+
             ctx.save();
+            ctx.globalAlpha = fadeInAlpha;
             // Draw central cord
             const t = currentPairIdx / totalPairs;
             const currentY = stringTopY + (stringBottomY - stringTopY) * t;
@@ -700,8 +724,11 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
       activeCrackersRef.current.push({
         type: 'lakshmiVedi',
+        startTime,
         update: () => {
           const elapsed = Date.now() - startTime;
+          const fadeInAlpha = Math.min(1, elapsed / 500);
+
           if (elapsed < 2000) {
             // Fuse wire physical shortening: top of fuse starts at (bombY - 28) and burns down to bomb top (bombY - 14)
             const burnProgress = elapsed / 2000;
@@ -716,7 +743,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               vy: (Math.random() - 0.5) * 2,
               friction: 0.9,
               gravity: 0.05,
-              alpha: 1,
+              alpha: fadeInAlpha,
               decay: 0.06,
               color: '#FFA500',
               size: 2,
@@ -786,9 +813,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         },
         draw: (ctx) => {
           const elapsed = Date.now() - startTime;
+          const fadeInAlpha = Math.min(1, elapsed / 500);
+
           if (elapsed < 2000) {
             // Draw authentic Green Atom Bomb with rounded corners and wrapped jute thread (nool)
             ctx.save();
+            ctx.globalAlpha = fadeInAlpha;
             const w = 22;
             const h = 26;
             const r = 5; // Rounded corner radius
