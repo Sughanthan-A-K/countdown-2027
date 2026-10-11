@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.5 }, launchOrigin = null, loop = false, skipInitial = false, forceRocket = false, onFirstBurst, onRocketLaunch }) {
+export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.5 }, launchOrigin = null, loop = false, skipInitial = false, forceRocket = false, onFirstBurst }) {
   const canvasRef = useRef(null);
   const loopTimerRef = useRef(null);
   
@@ -79,22 +79,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       
             // If looping, cycle through the vibrant palettes.
       let selectedColors = goldenColors;
-      let targetHue = 200; // Blue/Cyan complement for Golden Shower (Base Yellow)
-
       if (loop) {
-        const paletteIndex = waveRef.current % vibrantPalettes.length;
-        selectedColors = vibrantPalettes[paletteIndex];
-        
-        // Hue map complementary to the selected palette, relative to the yellow/orange base text gradient
-        // Palettes: 0: Blue (Target: 0), 1: Pink/Red (Target: 140), 2: Cyan/Green (Target: 320), 3: Magenta/Purple (Target: 90), 4: Orange (Target: 200)
-        const hueMap = [0, 140, 320, 90, 200];
-        targetHue = hueMap[paletteIndex];
-        
+        selectedColors = vibrantPalettes[waveRef.current % vibrantPalettes.length];
         waveRef.current++;
-      }
-      
-      if (onRocketLaunch) {
-        onRocketLaunch(targetHue);
       }
       
       if (directExplode && !forceRocket) {
