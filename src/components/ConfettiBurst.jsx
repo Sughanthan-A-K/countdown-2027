@@ -291,9 +291,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           const realisticColors = ['#FFD700', '#FFA500', '#FF8C00', '#FFFFFF', '#FFF8DC', '#FFE4B5'];
 
           for (let i = 0; i < sparksPerFrame; i++) {
-            // Eject sparks tangentially from exact updated disc center (posX, posY)
+            // Eject sparks tangentially from exact updated disc rim (radius 18px)
             const armAngle = angle + (i % 2 === 0 ? 0 : Math.PI);
-            const nozzleDistance = 11; // Right at the disc edge
+            const nozzleDistance = 18; // Right at the outer edge of enlarged visible disc
             const originX = posX + Math.cos(armAngle) * nozzleDistance;
             const originY = posY + Math.sin(armAngle) * nozzleDistance;
 
@@ -320,32 +320,57 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           return true;
         },
         draw: (ctx) => {
-          // Draw spinning wheel disc directly at (posX, posY)
+          // Draw bold, prominent spinning wheel disc directly at (posX, posY)
           ctx.save();
           ctx.translate(posX, posY);
           ctx.rotate(angle);
-          ctx.shadowBlur = 12;
-          ctx.shadowColor = '#FFA500';
-          // Dark terracotta core disc
-          ctx.fillStyle = '#8B2500';
+          
+          // Outer warm fiery glow
+          ctx.shadowBlur = 16;
+          ctx.shadowColor = '#FF8C00';
+
+          // 1. Dark terracotta/maroon base disc (enlarged to 18px radius so it's vividly visible!)
+          ctx.fillStyle = '#8B1E0F';
           ctx.beginPath();
-          ctx.arc(0, 0, 11, 0, Math.PI * 2);
+          ctx.arc(0, 0, 18, 0, Math.PI * 2);
           ctx.fill();
 
-          // Golden border rim
+          // 2. Thick bright Golden border rim
           ctx.strokeStyle = '#FFD700';
+          ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          ctx.arc(0, 0, 17, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // 3. Inner concentric gold ring
+          ctx.strokeStyle = '#FFA500';
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.arc(0, 0, 10, 0, Math.PI * 2);
           ctx.stroke();
 
-          // Reddish-orange spiral arms
-          ctx.strokeStyle = '#FF4500';
+          // 4. Vivid swirling curved spiral blades (2 S-arms)
+          ctx.strokeStyle = '#FFFFFF';
           ctx.lineWidth = 3;
+          ctx.lineCap = 'round';
           ctx.beginPath();
-          ctx.moveTo(-9, 0);
-          ctx.lineTo(9, 0);
+          ctx.arc(0, -6, 8, Math.PI * 0.5, Math.PI * 1.5);
           ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(0, 6, 8, -Math.PI * 0.5, Math.PI * 0.5);
+          ctx.stroke();
+
+          // 5. Bright center brass pivot eyelet / nail head
+          ctx.fillStyle = '#FFD700';
+          ctx.beginPath();
+          ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#8B0000';
+          ctx.beginPath();
+          ctx.arc(0, 0, 2, 0, Math.PI * 2);
+          ctx.fill();
+
           ctx.restore();
         }
       });
@@ -946,13 +971,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         screenShakeRef.current *= 0.88; // Damping
       }
 
-      // 1. Update and draw active grounded cracker models (Pusvanam base, Chakkara disc, Sparkler wire)
+      // 1. Update active grounded cracker physics state (Pusvanam base, Chakkara disc, Sparkler wire)
       activeCrackersRef.current = activeCrackersRef.current.filter((cracker) => {
-        const isStillActive = cracker.update();
-        if (isStillActive && cracker.draw) {
-          cracker.draw(ctx);
-        }
-        return isStillActive;
+        return cracker.update();
       });
 
       let activeParticles = 0;
@@ -1100,7 +1121,14 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         }
       });
 
-      // 3. Blinding Screen Flash (for Lakshmi vedi)
+      // 3. Draw active cracker physical models (Pusvanam base, Sangu Sakkaram disc, Sparkler wire) in FOREGROUND so center circles are never hidden under sparks!
+      activeCrackersRef.current.forEach((cracker) => {
+        if (cracker.draw) {
+          cracker.draw(ctx);
+        }
+      });
+
+      // 4. Blinding Screen Flash (for Lakshmi vedi)
       if (flashAlphaRef.current > 0.01) {
         ctx.fillStyle = `rgba(255, 255, 255, ${flashAlphaRef.current})`;
         ctx.fillRect(0, 0, rect.width, rect.height);
