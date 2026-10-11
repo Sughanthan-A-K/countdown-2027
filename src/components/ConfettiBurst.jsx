@@ -442,14 +442,14 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           // Subtle hand momentum so sparks travel with the stick naturally
           const handVx = curX - prevX;
 
-          // Rich crackling burst of longer needle sparks
-          const sparkCount = 10;
+          // Balanced natural burst of needle sparks
+          const sparkCount = 9;
           const sparklerColors = ['#FFFFFF', '#FFF8DC', '#FFFACD', '#FFFFE0', '#FFFAF0', '#FFD700'];
 
           for (let i = 0; i < sparkCount; i++) {
             const angle = Math.random() * Math.PI * 2;
-            // Longer reach for sparkling fire needles
-            const speed = Math.random() * 12 + 4.5;
+            // Balanced natural reach for sparkling fire needles
+            const speed = Math.random() * 9.5 + 3.2;
 
             particlesRef.current.push({
               type: 'spark',
@@ -459,12 +459,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               // Keep sparks synchronized with hand movement
               vx: Math.cos(angle) * speed + handVx * 0.35,
               vy: Math.sin(angle) * speed,
-              friction: 0.905, // Retains speed longer to reach a longer visible length
-              gravity: 0.045,
+              friction: 0.895,
+              gravity: 0.048,
               alpha: fadeInAlpha,
-              decay: 0.026 + Math.random() * 0.016, // Longer flight time for longer needle streaks
+              decay: 0.030 + Math.random() * 0.016,
               color: sparklerColors[Math.floor(Math.random() * sparklerColors.length)],
-              size: Math.random() * 1.6 + 0.7,
+              size: Math.random() * 1.6 + 0.65,
               history: [],
               flickerRate: 0.3
             });
@@ -631,30 +631,53 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                 });
               }
 
-              // Shredded red paper flakes bursting out at varied natural distances
-              const redPaperColors = ['#E52B2B', '#D31515', '#FF2A2A', '#C81010', '#B20D0D'];
-              const isRight = sideOffset > 0;
-              const baseDir = isRight ? 1 : -1;
-              for (let d = 0; d < 6; d++) {
-                // Varied outward burst: each flake lands at its own distance (not too far, not too close)
-                const scatterSpeed = Math.random() * 6.5 + 3.2; 
-                const scatterAngle = (Math.random() - 0.4) * 0.9; // Dynamic fan arc outwards
+              // Shredded paper flakes (Red outer wrapper + White/newsprint inner layers) blasting in all directions
+              const redPaperColors = ['#D31515', '#E52B2B', '#B20D0D', '#C81010', '#E63946'];
+              const whitePaperColors = ['#F5F5F0', '#EAE6DF', '#E0DDD5', '#D6D2C4', '#FAF8F5'];
+              const shapeTypes = ['rect', 'triangle', 'ragged', 'flake'];
+
+              for (let d = 0; d < 7; d++) {
+                // 360-degree blast: can explode in any direction!
+                const blastAngle = Math.random() * Math.PI * 2;
+                // Varied blast impulse: some blast near (20px), some medium (50px), some further (80px)
+                const blastSpeed = Math.random() * 5.6 + 1.8;
+                const isRed = Math.random() < 0.55;
+                const color = isRed 
+                  ? redPaperColors[Math.floor(Math.random() * redPaperColors.length)] 
+                  : whitePaperColors[Math.floor(Math.random() * whitePaperColors.length)];
+                
+                const shape = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+                let w = Math.random() * 4 + 3.5;
+                let h = Math.random() * 2.5 + 2.0;
+                if (shape === 'flake') {
+                  w = Math.random() * 2.5 + 2.0;
+                  h = w;
+                } else if (shape === 'rect') {
+                  w = Math.random() * 5 + 4.5;
+                  h = Math.random() * 1.5 + 1.8;
+                }
+
+                // Natural floor area where the debris settles and stays
+                const targetGroundY = Math.min(height - 15, stringBottomY + 15 + Math.random() * 35);
+
                 particlesRef.current.push({
                   type: 'paper',
                   isRocket: false,
                   x: px + (Math.random() - 0.5) * 6,
                   y: py + (Math.random() - 0.5) * 6,
-                  vx: baseDir * Math.cos(scatterAngle) * scatterSpeed + (Math.random() - 0.5) * 1.5,
-                  vy: -Math.abs(Math.sin(scatterAngle) * scatterSpeed) - (Math.random() * 3 + 1.2),
+                  vx: Math.cos(blastAngle) * blastSpeed,
+                  vy: Math.sin(blastAngle) * blastSpeed - (Math.random() * 1.8 + 0.5),
                   rotation: Math.random() * Math.PI * 2,
-                  vRot: (Math.random() - 0.5) * 0.28,
-                  width: Math.random() * 4 + 4, // 4-8px authentic cracker strip width
-                  height: Math.random() * 2 + 2.5, // 2.5-4.5px strip height
-                  friction: 0.952, // Smooth deceleration to each flake's unique distance
-                  gravity: 0.08, // Floats and drifts gently
+                  vRot: (Math.random() - 0.5) * 0.22,
+                  width: w,
+                  height: h,
+                  shapeType: shape,
+                  friction: 0.945,
+                  gravity: 0.08,
                   alpha: 1,
-                  decay: 0.006, // Lasts ~3s so red paper flutter stays visible
-                  color: redPaperColors[Math.floor(Math.random() * redPaperColors.length)],
+                  targetGroundY,
+                  isGrounded: false,
+                  color,
                   history: []
                 });
               }
@@ -1129,24 +1152,55 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           ctx.fillRect(-p.width / 2 - 2, -1, 2, 2);
           ctx.restore();
         } else if (p.type === 'paper') {
-          // Shredded paper flakes fluttering down naturally like cracker wrapper debris
-          p.vx *= p.friction;
-          p.vy *= p.friction;
-          p.vy += p.gravity;
-          p.x += p.vx;
-          p.y += p.vy;
-          p.rotation += (p.vRot || 0.1);
-          p.x += Math.sin(p.rotation * 2) * 0.5; // Natural air sway/flutter
-          p.alpha -= p.decay;
+          // Shredded paper flakes (red outer & newsprint inner)
+          if (p.isGrounded) {
+            // Settled on the ground: stays visible like real cracker debris!
+            p.alpha -= 0.0005;
+          } else {
+            p.vx *= p.friction;
+            p.vy *= p.friction;
+            p.vy += p.gravity;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rotation += (p.vRot || 0.08);
+            p.x += Math.sin(p.rotation * 2) * 0.4; // Natural air sway/flutter
 
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.rotation);
-          ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, p.alpha)})`;
-          const w = p.width || p.size || 5;
-          const h = p.height || (p.size ? p.size * 0.7 : 3);
-          ctx.fillRect(-w / 2, -h / 2, w, h);
-          ctx.restore();
+            // Hit floor area and land flat
+            if (p.targetGroundY && p.y >= p.targetGroundY) {
+              p.y = p.targetGroundY;
+              p.isGrounded = true;
+              p.vx = 0;
+              p.vy = 0;
+            }
+          }
+
+          if (p.alpha > 0.01) {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${Math.max(0, p.alpha)})`;
+            const w = p.width || 5;
+            const h = p.height || 3;
+            if (p.shapeType === 'triangle') {
+              ctx.beginPath();
+              ctx.moveTo(-w / 2, h / 2);
+              ctx.lineTo(w / 2, h / 2);
+              ctx.lineTo(0, -h / 2);
+              ctx.closePath();
+              ctx.fill();
+            } else if (p.shapeType === 'ragged') {
+              ctx.beginPath();
+              ctx.moveTo(-w / 2, h / 2);
+              ctx.lineTo(w / 2, h / 2);
+              ctx.lineTo(w / 2 - 1.2, -h / 2);
+              ctx.lineTo(-w / 2 + 1.2, -h / 2);
+              ctx.closePath();
+              ctx.fill();
+            } else {
+              ctx.fillRect(-w / 2, -h / 2, w, h);
+            }
+            ctx.restore();
+          }
         } else {
           // Standard sparks (from outs, flowerpot, chakkara, sparkler, bombs)
           if (p.history.length > 16) p.history.shift();
