@@ -42,6 +42,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
     ];
 
     const explode = (startX, startY, selectedColors) => {
+      // Trigger a satisfying haptic feedback when any rocket explodes
+      if (typeof window !== 'undefined' && navigator.vibrate) {
+        // Stronger vibration for the grand golden shower (!loop), quick double-tap for calendar outs
+        navigator.vibrate(loop ? [80, 50, 80] : [200, 100, 300, 100, 400]);
+      }
+
       // Restored original cinematic density
       const particleCount = loop ? 120 : 450;
       for (let i = 0; i < particleCount; i++) {

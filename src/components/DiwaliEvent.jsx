@@ -120,7 +120,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
 
   const handleRocketExplode = () => {
     setPhase('explode'); // Trigger flashes and background fade
-    if (navigator.vibrate) navigator.vibrate([200, 100, 300, 100, 400]); 
     
     if (onExplode) onExplode();
     
