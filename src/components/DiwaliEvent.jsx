@@ -104,7 +104,13 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           setPhase('lit');
           
           // Fuse burns for 3.0 seconds
-          setTimeout(() => setPhase('launching'), 3000);
+          setTimeout(() => {
+            setPhase('launching');
+            // Sharp pop vibration when the cylinder launches from the ground
+            if (typeof window !== 'undefined' && navigator.vibrate) {
+              navigator.vibrate([150]); 
+            }
+          }, 3000);
           
           // Rocket reaches apex natively via physics in ~2.6s (Handled by ConfettiBurst physics engine now via handleRocketExplode!)
           return; // Prevent multiple triggers
