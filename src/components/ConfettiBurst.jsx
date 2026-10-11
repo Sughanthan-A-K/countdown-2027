@@ -705,11 +705,6 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               ctx.fillRect(stringTopX - 16, rowY, 13, rollHeight);
               // Right roll
               ctx.fillRect(stringTopX + 3, rowY, 13, rollHeight);
-
-              // Tiny gold jute binding line across each roll for authentic saravedi look
-              ctx.fillStyle = '#DAA520';
-              ctx.fillRect(stringTopX - 11, rowY + rollHeight * 0.45, 3, 1.2);
-              ctx.fillRect(stringTopX + 8, rowY + rollHeight * 0.45, 3, 1.2);
             }
             ctx.restore();
           }
