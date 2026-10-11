@@ -672,7 +672,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                   friction: 0.89, // Brakes in mid-air right around the cracker
                   gravity: 0.008, // Very subtle, does NOT plummet to bottom
                   alpha: 1,
-                  decay: 0.010, // Fades out smoothly in ~2.5 - 3s, disappearing with Saravedi
+                  burnEndTime: startTime + duration, // Remains 100% visible until full garland finishes!
                   color,
                   history: []
                 });
@@ -1155,8 +1155,16 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           p.x += p.vx;
           p.y += p.vy;
           p.rotation += (p.vRot || 0.05);
-          p.x += Math.sin(p.rotation * 2) * 0.2; // Subtle natural air flutter in place
-          p.alpha -= p.decay; // Fades out over ~2.5 - 3s, disappearing completely with Saravedi
+          // Remain 100% visible while Saravedi is bursting; only fade out after the whole garland finishes!
+          if (p.burnEndTime) {
+            if (Date.now() >= p.burnEndTime) {
+              p.alpha -= 0.018; // Smooth fade out after all crackers finish
+            } else {
+              p.alpha = 1; // Stay 100% visible while bursting
+            }
+          } else {
+            p.alpha -= 0.01;
+          }
 
           if (p.alpha > 0.01) {
             ctx.save();
