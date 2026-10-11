@@ -131,20 +131,20 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       }
     };
 
-    // 2. BISWAANAM / PUSVANAM (Flower Pot / Fountain)
+    // 2. PUSHWANAM / BISWAANAM (Flower Pot / Fountain) - Majestic 6.0s smooth burn with rising height
     const firePusvanam = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
       const baseX = width * 0.5; // Centered
-      const baseY = height * 0.90;
+      const baseY = height * 0.88; // Standing upright near bottom
 
       if (typeof window !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate([120, 60, 200]);
+        navigator.vibrate([100, 50, 150]);
       }
 
-      // Runs for 5.5s with majestic rising height
-      const duration = 5500;
+      // 5.5 - 6 seconds of erupting fountain as requested
+      const duration = 5800;
       const startTime = Date.now();
       
       activeCrackersRef.current.push({
@@ -157,81 +157,78 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           const elapsed = Date.now() - startTime;
           if (elapsed > duration) return false;
           
+          // Eruption intensity curve: builds up slowly, stays high, then gracefully simmers down
           const progress = elapsed / duration;
-          // Smooth bell curve: starts gentle, soars high, holds, then settles
-          let heightMult = progress < 0.25 
+          let intensity = progress < 0.25 
             ? (progress / 0.25) 
             : progress < 0.75 
             ? 1.0 
             : Math.max(0.2, (1 - (progress - 0.75) / 0.25));
 
-          const particleBatch = Math.floor(12 * heightMult);
+          const fountainParticles = Math.floor(11 * intensity);
 
-          for (let i = 0; i < particleBatch; i++) {
-            // Shoots high up into the card (height scaling up to top half)
-            const spreadAngle = -Math.PI / 2 + (Math.random() - 0.5) * 0.42; 
-            const speed = (Math.random() * 14 + 11) * heightMult; // Higher velocity for tall eruption
-            const goldColors = ['#FFFFFF', '#FFF8DC', '#FFE4B5', '#FFD700', '#FFA500', '#FF8C00', '#FFFFE0'];
+          for (let i = 0; i < fountainParticles; i++) {
+            // Erupts high up into the card, arching like a golden tree
+            const spreadAngle = -Math.PI / 2 + (Math.random() - 0.5) * 0.48; 
+            const speed = (Math.random() * 13 + 9) * intensity;
+            const goldColors = ['#FFF8DC', '#FFE4B5', '#FFD700', '#FFA500', '#FF8C00', '#FFFFFF'];
             
             particlesRef.current.push({
               type: 'spark',
               isRocket: false,
-              x: baseX + (Math.random() - 0.5) * 6,
-              y: baseY - 4,
+              x: baseX + (Math.random() - 0.5) * 8,
+              y: baseY,
               vx: Math.cos(spreadAngle) * speed,
               vy: Math.sin(spreadAngle) * speed,
-              friction: 0.97, // Lower friction so it climbs very high
-              gravity: 0.28,  // Gravity pulls it down in magnificent arching umbrella
+              friction: 0.965,
+              gravity: 0.24, // Arching gracefully down
               alpha: 1,
               decay: Math.random() * 0.016 + 0.010,
               color: goldColors[Math.floor(Math.random() * goldColors.length)],
-              size: Math.random() * 2.2 + 0.8,
+              size: Math.random() * 2 + 1,
               history: [],
-              flickerRate: 0.18
+              flickerRate: 0.15
             });
           }
           return true;
         },
         draw: (ctx) => {
-          // Clay pot base
+          // Draw clay flower pot base
           ctx.save();
           ctx.fillStyle = '#8B4513';
           ctx.beginPath();
-          ctx.moveTo(baseX - 14, baseY + 18);
-          ctx.lineTo(baseX + 14, baseY + 18);
-          ctx.lineTo(baseX + 7, baseY);
-          ctx.lineTo(baseX - 7, baseY);
+          ctx.moveTo(baseX - 13, baseY + 18);
+          ctx.lineTo(baseX + 13, baseY + 18);
+          ctx.lineTo(baseX + 6, baseY);
+          ctx.lineTo(baseX - 6, baseY);
           ctx.closePath();
           ctx.fill();
-          // Sparkling rim
+          // Eruption rim glow
           ctx.fillStyle = '#FFA500';
-          ctx.shadowBlur = 18;
-          ctx.shadowColor = '#FF8C00';
-          ctx.fillRect(baseX - 6, baseY - 3, 12, 5);
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = '#FF4500';
+          ctx.fillRect(baseX - 5, baseY - 2, 10, 4);
           ctx.restore();
         }
       });
     };
 
-    // 3. SANGU SAKKARAM (Ground Spinner - Roving naturally around the card)
+    // 3. SANGU SAKKARAM (Ground Spinner) - Exact 94a4c5e design restored! Smooth ~5.0s spin
     const fireSanguSakkaram = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
-      let posX = width * 0.5;
-      let posY = height * 0.78;
+      let posX = width * (0.35 + Math.random() * 0.3);
+      let posY = height * (0.7 + Math.random() * 0.12);
       
-      // Velocity vector for roving motion across screen
-      let moveVx = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 1.5 + 1.2);
-      let moveVy = (Math.random() - 0.5) * 0.8;
-
       if (typeof window !== 'undefined' && navigator.vibrate) {
         navigator.vibrate([150, 40, 100, 40, 200]);
       }
 
-      const duration = 5200;
+      const duration = 5000;
       const startTime = Date.now();
       let angle = 0;
+      let spinSpeed = 0.5;
 
       activeCrackersRef.current.push({
         type: 'sanguSakkaram',
@@ -242,45 +239,25 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           if (elapsed > duration) return false;
 
           const progress = elapsed / duration;
-          const spinSpeed = progress < 0.15 ? (0.3 + progress * 3) : progress > 0.85 ? 0.35 : 0.75;
+          spinSpeed = progress < 0.2 ? 0.3 + progress * 2 : 0.7; // Fast spinning
           angle += spinSpeed;
 
-          // Natural roving: wanders across screen, bounces gently off card margins
-          posX += moveVx;
-          posY += moveVy;
+          // Sakkaram wanders slightly on the floor (smooth natural drift)
+          posX += (Math.random() - 0.5) * 1.5;
+          posY += (Math.random() - 0.5) * 0.8;
 
-          // Wall bounce boundaries within card width & bottom zone
-          const minX = width * 0.15;
-          const maxX = width * 0.85;
-          const minY = height * 0.65;
-          const maxY = height * 0.88;
-
-          if (posX <= minX || posX >= maxX) {
-            moveVx = -moveVx * 0.95;
-            moveVy += (Math.random() - 0.5) * 0.6;
-          }
-          if (posY <= minY || posY >= maxY) {
-            moveVy = -moveVy * 0.95;
-            moveVx += (Math.random() - 0.5) * 0.6;
-          }
-
-          // Random slight redirection to feel unpredictable like real chakkara
-          if (Math.random() < 0.05) {
-            moveVx += (Math.random() - 0.5) * 0.8;
-            moveVy += (Math.random() - 0.5) * 0.5;
-          }
-
-          const sparksPerFrame = 8;
-          const colors = ['#00FFFF', '#FF1493', '#FFD700', '#FF4500', '#7CFC00', '#FFFFFF', '#00FA9A'];
+          const sparksPerFrame = 7;
+          const colors = ['#00FFFF', '#FF1493', '#FFD700', '#FF4500', '#7CFC00', '#FFFFFF'];
 
           for (let i = 0; i < sparksPerFrame; i++) {
+            // Eject sparks tangentially from 2 nozzle arms
             const armAngle = angle + (i % 2 === 0 ? 0 : Math.PI);
             const nozzleDistance = 14;
             const originX = posX + Math.cos(armAngle) * nozzleDistance;
             const originY = posY + Math.sin(armAngle) * nozzleDistance;
 
-            const tangentAngle = armAngle + Math.PI / 2 + (Math.random() - 0.5) * 0.35;
-            const speed = Math.random() * 8 + 5;
+            const tangentAngle = armAngle + Math.PI / 2 + (Math.random() - 0.5) * 0.3;
+            const speed = Math.random() * 7 + 4;
 
             particlesRef.current.push({
               type: 'spark',
@@ -290,9 +267,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               vx: Math.cos(tangentAngle) * speed,
               vy: Math.sin(tangentAngle) * speed,
               friction: 0.92,
-              gravity: 0.10,
+              gravity: 0.08,
               alpha: 1,
-              decay: 0.024,
+              decay: 0.025,
               color: colors[Math.floor(Math.random() * colors.length)],
               size: Math.random() * 2 + 1,
               history: [],
@@ -302,42 +279,45 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           return true;
         },
         draw: (ctx) => {
+          // Draw spinning wheel disc
           ctx.save();
           ctx.translate(posX, posY);
           ctx.rotate(angle);
-          ctx.shadowBlur = 14;
+          ctx.shadowBlur = 12;
           ctx.shadowColor = '#FFD700';
           ctx.fillStyle = '#222';
           ctx.beginPath();
-          ctx.arc(0, 0, 11, 0, Math.PI * 2);
+          ctx.arc(0, 0, 10, 0, Math.PI * 2);
           ctx.fill();
+          // Red & Green spiral markings on chakkara
           ctx.strokeStyle = '#FF3333';
-          ctx.lineWidth = 3.5;
+          ctx.lineWidth = 3;
           ctx.beginPath();
-          ctx.moveTo(-10, 0);
-          ctx.lineTo(10, 0);
+          ctx.moveTo(-9, 0);
+          ctx.lineTo(9, 0);
           ctx.stroke();
           ctx.restore();
         }
       });
     };
 
-    // 4. KAMBI MATHAAPU (Handheld Sparkler - Swirled in Playful Hand Circles!)
+    // 4. KAMBI MATHAAPU (Handheld Sparkler) - Exact 94a4c5e design restored! Smooth ~6.0s burn
     const fireKambiMathaapu = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
       
-      const centerX = width * 0.5;
-      const centerY = height * 0.55;
+      const stickX = width * (0.45 + Math.random() * 0.1);
+      const stickStartY = height * 0.28;
+      const stickEndY = height * 0.75;
       
       if (typeof window !== 'undefined' && navigator.vibrate) {
         navigator.vibrate([60, 40, 60]);
       }
 
-      const duration = 5800;
+      // Around 6 seconds slow, smooth burn
+      const duration = 6000;
       const startTime = Date.now();
-      let motionAngle = 0;
 
       activeCrackersRef.current.push({
         type: 'kambiMathaapu',
@@ -347,88 +327,86 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           const elapsed = Date.now() - startTime;
           if (elapsed > duration) return false;
 
-          // Hand swirling circular / figure-8 motion!
-          motionAngle += 0.06;
-          const radiusX = width * 0.22;
-          const radiusY = height * 0.14;
-          const tipX = centerX + Math.cos(motionAngle) * radiusX;
-          const tipY = centerY + Math.sin(motionAngle * 1.5) * radiusY;
+          // Tip moves down as the sparkler chemical coating burns
+          const progress = elapsed / duration;
+          const currentBurnY = stickStartY + progress * (stickEndY - stickStartY * 1.3);
 
-          // Spark emission from the moving burning tip
-          const sparkCount = 9;
-          const sparklerColors = ['#FFFFFF', '#FFF8DC', '#FFFACD', '#FFFFE0', '#FFFAF0', '#FFD700', '#F0E68C'];
+          // Crackling burst of needle sparks
+          const sparkCount = 8;
+          const sparklerColors = ['#FFFFFF', '#FFF8DC', '#FFFACD', '#FFFFE0', '#FFFAF0', '#FFD700'];
 
           for (let i = 0; i < sparkCount; i++) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 9 + 2;
+            const speed = Math.random() * 8 + 2;
 
             particlesRef.current.push({
               type: 'spark',
               isRocket: false,
-              x: tipX + (Math.random() - 0.5) * 4,
-              y: tipY + (Math.random() - 0.5) * 4,
+              x: stickX + (Math.random() - 0.5) * 4,
+              y: currentBurnY,
               vx: Math.cos(angle) * speed,
               vy: Math.sin(angle) * speed,
-              friction: 0.88,
+              friction: 0.88, // Quick deceleration into crackle
               gravity: 0.05,
               alpha: 1,
-              decay: 0.032 + Math.random() * 0.02,
+              decay: 0.035 + Math.random() * 0.02,
               color: sparklerColors[Math.floor(Math.random() * sparklerColors.length)],
-              size: Math.random() * 1.8 + 0.6,
+              size: Math.random() * 1.6 + 0.6,
               history: [],
-              flickerRate: 0.35
+              flickerRate: 0.3 // High sparkle
             });
           }
           return true;
         },
         draw: (ctx) => {
-          // Calculate current moving tip position
           const elapsed = Date.now() - startTime;
-          const currentMotionAngle = (elapsed / duration) * (0.06 * (duration / 16.6));
-          const radiusX = width * 0.22;
-          const radiusY = height * 0.14;
-          const tipX = centerX + Math.cos(currentMotionAngle) * radiusX;
-          const tipY = centerY + Math.sin(currentMotionAngle * 1.5) * radiusY;
-
-          // Handle angled stick pointing from hand towards moving tip
-          const handleX = tipX - 35;
-          const handleY = tipY + 65;
+          const progress = Math.min(1, elapsed / duration);
+          const currentBurnY = stickStartY + progress * (stickEndY - stickStartY * 1.3);
 
           ctx.save();
-          // Metal wire
-          ctx.strokeStyle = '#C0C0C0';
+          // Steel wire
+          ctx.strokeStyle = '#B0C4DE';
           ctx.lineWidth = 2.5;
           ctx.beginPath();
-          ctx.moveTo(handleX, handleY);
-          ctx.lineTo(tipX, tipY);
+          ctx.moveTo(stickX, currentBurnY);
+          ctx.lineTo(stickX, stickEndY);
           ctx.stroke();
 
-          // Blazing star core spark
+          // Unburnt chemical coating below current burn point
+          ctx.strokeStyle = '#708090';
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.moveTo(stickX, currentBurnY);
+          ctx.lineTo(stickX, stickEndY - 20);
+          ctx.stroke();
+
+          // Blazing white hot sparkler core
           ctx.fillStyle = '#FFFFFF';
-          ctx.shadowBlur = 20;
+          ctx.shadowBlur = 18;
           ctx.shadowColor = '#FFF';
           ctx.beginPath();
-          ctx.arc(tipX, tipY, 4.5, 0, Math.PI * 2);
+          ctx.arc(stickX, currentBurnY, 4, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         }
       });
     };
 
-    // 5. SARA VEDI (Garland Cracker - Left-Right-Left-Right Authentic Herringbone Braided String)
+    // 5. SARA VEDI (Garland Cracker / 1000-Wala) - Continuous Zigzag Braided Pattern, 7 seconds total
     const fireSaraVedi = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
 
-      // Garland hangs vertically down the center
-      const totalPattasus = 26;
+      // 40 pairs of crackers running down central fuse
+      const totalPattasus = 40;
       const stringTopX = width * 0.5;
-      const stringTopY = height * 0.22;
+      const stringTopY = height * 0.20;
       const stringBottomY = height * 0.82;
 
       let currentIdx = 0;
-      const duration = 4000;
+      // 7.0 seconds of rhythmic continuous popping as requested
+      const duration = 7000;
       const intervalDelay = duration / totalPattasus;
       let nextBurstTime = Date.now();
 
@@ -444,21 +422,22 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             // Progressive top-to-bottom fuse travel
             const t = currentIdx / totalPattasus;
             const centerY = stringTopY + (stringBottomY - stringTopY) * t;
-            // Alternates strictly LEFT then RIGHT off the central fuse cord!
+            
+            // Continuous zigzag: alternates left and right across the braided cord
             const isLeft = (currentIdx % 2 === 0);
-            const sideOffset = (isLeft ? -22 : 22);
-            const px = stringTopX + sideOffset + (Math.random() - 0.5) * 8;
-            const py = centerY + (Math.random() - 0.5) * 6;
+            const sideOffset = (isLeft ? -16 : 16);
+            const px = stringTopX + sideOffset + (Math.random() - 0.5) * 6;
+            const py = centerY + (Math.random() - 0.5) * 4;
 
-            // Sharp vibration on each pop
+            // Vibrate on each pop
             if (typeof window !== 'undefined' && navigator.vibrate) {
-              navigator.vibrate(35);
+              navigator.vibrate(25);
             }
-            screenShakeRef.current = (Math.random() - 0.5) * 6;
+            screenShakeRef.current = (Math.random() - 0.5) * 4;
 
-            // Crisp snappy pop spark blast
+            // Snappy red/gold sparks
             const colors = ['#FF4500', '#FFD700', '#FFFFFF', '#DC143C'];
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 18; i++) {
               const angle = Math.random() * Math.PI * 2;
               const speed = Math.random() * 7 + 3;
               particlesRef.current.push({
@@ -468,10 +447,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                 y: py,
                 vx: Math.cos(angle) * speed,
                 vy: Math.sin(angle) * speed,
-                friction: 0.89,
+                friction: 0.90,
                 gravity: 0.12,
                 alpha: 1,
-                decay: 0.045,
+                decay: 0.04,
                 color: colors[Math.floor(Math.random() * colors.length)],
                 size: Math.random() * 2 + 1,
                 history: [],
@@ -506,30 +485,26 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         draw: (ctx) => {
           if (currentIdx < totalPattasus) {
             ctx.save();
-            // Draw remaining unburnt central fuse cord
+            // Draw central cord
             const t = currentIdx / totalPattasus;
             const currentY = stringTopY + (stringBottomY - stringTopY) * t;
 
             ctx.strokeStyle = '#DDD';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.5;
             ctx.beginPath();
             ctx.moveTo(stringTopX, currentY);
             ctx.lineTo(stringTopX, stringBottomY);
             ctx.stroke();
 
-            // Draw unburnt red cracker rolls on LEFT and RIGHT branches
+            // Draw unburnt pairs on both Left and Right in continuous zigzag layout
             for (let i = currentIdx; i < totalPattasus; i++) {
               const rowT = i / totalPattasus;
               const rowY = stringTopY + (stringBottomY - stringTopY) * rowT;
-              const isL = (i % 2 === 0);
-
               ctx.fillStyle = '#CC1111';
-              // Cracker cylinder roll
-              if (isL) {
-                ctx.fillRect(stringTopX - 18, rowY - 3, 16, 6);
-              } else {
-                ctx.fillRect(stringTopX + 2, rowY - 3, 16, 6);
-              }
+              // Left roll
+              ctx.fillRect(stringTopX - 14, rowY - 2.5, 12, 5);
+              // Right roll
+              ctx.fillRect(stringTopX + 2, rowY - 2.5, 12, 5);
             }
             ctx.restore();
           }
@@ -537,15 +512,15 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       });
     };
 
-    // 6. LAKSHMI VEDI / ATOM BOMB (Heavy tight single blast, instant 'dub' boom)
+    // 6. ATOM BOMB / LAKSHMI VEDI - Green casing with wrapped thread, rounded corners, 2s fuse + 1s blast + 1s clear = 4s total
     const fireLakshmiVedi = () => {
       const rect = canvas.parentElement.getBoundingClientRect();
       const width = rect.width || window.innerWidth;
       const height = rect.height || window.innerHeight;
       const bombX = width * 0.5;
-      const bombY = height * 0.72;
+      const bombY = height * 0.70;
 
-      // Small fuse burning for 900ms, then localized heavy blast!
+      // Fuse burns for 2.0s, blast at 2s, total complete by 4.0s
       const startTime = Date.now();
       let hasDetonated = false;
 
@@ -553,9 +528,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         type: 'lakshmiVedi',
         update: () => {
           const elapsed = Date.now() - startTime;
-          if (elapsed < 900) {
-            // Fuse sparkling spark
-            const fuseY = bombY - 14 - (1 - elapsed / 900) * 12;
+          if (elapsed < 2000) {
+            // Burning fuse spark for 2 seconds
+            const fuseProgress = elapsed / 2000;
+            const fuseY = bombY - 14 - (1 - fuseProgress) * 16;
             particlesRef.current.push({
               type: 'spark',
               isRocket: false,
@@ -577,19 +553,19 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
           if (!hasDetonated) {
             hasDetonated = true;
-            // Massive screen flash and heavy screen shake
+            // Heavy single blast!
             flashAlphaRef.current = 0.95;
-            screenShakeRef.current = 16;
+            screenShakeRef.current = 15;
 
             if (typeof window !== 'undefined' && navigator.vibrate) {
               navigator.vibrate([400, 80, 200]);
             }
 
-            // Localized dense blast: tight radius, disappears fast like a real atom bomb 'dub'!
+            // Localized dense blast - tight radius, quick dissipation
             const colors = ['#FFFFFF', '#FFD700', '#FF4500'];
-            for (let i = 0; i < 70; i++) {
+            for (let i = 0; i < 80; i++) {
               const angle = Math.random() * Math.PI * 2;
-              const speed = (Math.random() * 10 + 3); // Tight radius, no aerial shower!
+              const speed = (Math.random() * 12 + 4);
               particlesRef.current.push({
                 type: 'spark',
                 isRocket: false,
@@ -597,10 +573,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                 y: bombY,
                 vx: Math.cos(angle) * speed,
                 vy: Math.sin(angle) * speed,
-                friction: 0.88, // Decelerates fast
+                friction: 0.89,
                 gravity: 0.12,
                 alpha: 1,
-                decay: 0.045, // Dissipates in a split second!
+                decay: 0.045,
                 color: colors[Math.floor(Math.random() * colors.length)],
                 size: Math.random() * 2.5 + 1.2,
                 history: [],
@@ -608,7 +584,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
               });
             }
 
-            // Green/Red triangular paper casing shreds exploding out
+            // Green paper shreds flying out
             for (let p = 0; p < 28; p++) {
               const angle = Math.random() * Math.PI * 2;
               const speed = Math.random() * 12 + 4;
@@ -623,7 +599,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
                 gravity: 0.20,
                 alpha: 1,
                 decay: 0.015,
-                color: p % 2 === 0 ? '#228B22' : '#B22222',
+                color: p % 2 === 0 ? '#1E792C' : '#2EA043',
                 size: Math.random() * 4 + 2,
                 history: [],
                 flickerRate: 0
@@ -631,61 +607,98 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             }
           }
 
-          return elapsed < 1600; // Fast finish
+          return elapsed < 3800; // Cleared by ~4s
         },
         draw: (ctx) => {
           const elapsed = Date.now() - startTime;
-          if (elapsed < 900) {
-            // Draw green & red atom bomb with golden band
+          if (elapsed < 2000) {
+            // Draw authentic Green Atom Bomb with rounded corners and wrapped jute thread (nool)
             ctx.save();
-            ctx.fillStyle = '#228B22';
-            ctx.fillRect(bombX - 10, bombY - 14, 20, 22);
+            const w = 22;
+            const h = 26;
+            const r = 5; // Rounded corner radius
+            const x = bombX - w / 2;
+            const y = bombY - 14;
+
+            // Green rounded body
+            ctx.fillStyle = '#1E792C';
+            ctx.beginPath();
+            ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h);
+            ctx.fill();
+
+            // Wrapped jute thread (nool) criss-crossing corners and center
+            ctx.strokeStyle = '#D2B48C';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            // Horizontal wrapping bands
+            ctx.moveTo(x, y + 8);
+            ctx.lineTo(x + w, y + 8);
+            ctx.moveTo(x, y + 17);
+            ctx.lineTo(x + w, y + 17);
+            // Vertical wrapping
+            ctx.moveTo(x + w / 2, y);
+            ctx.lineTo(x + w / 2, y + h);
+            ctx.stroke();
+
+            // Gold label in the middle
             ctx.fillStyle = '#FFD700';
-            ctx.fillRect(bombX - 10, bombY - 6, 20, 6);
+            ctx.fillRect(x + 3, y + 10, w - 6, 5);
+
+            // White fuse wire coming out top
             ctx.strokeStyle = '#FFF';
             ctx.lineWidth = 1.5;
             ctx.beginPath();
-            ctx.moveTo(bombX, bombY - 14);
-            ctx.lineTo(bombX + 3, bombY - 24);
+            ctx.moveTo(bombX, y);
+            ctx.lineTo(bombX + 2, y - 16);
             ctx.stroke();
+
             ctx.restore();
           }
         }
       });
     };
 
-    // Central cracker trigger function with Authentic Story Flow:
-    // Flow: 
-    // Step 0: 1st Calendar Out (already fired on reveal)
-    // Step 1: Biswaanam (Flower Pot)
-    // Step 2 & 3: Sangu Sakkaram & Kambi Mathaapu (or vice versa)
-    // Step 4: Lakshmi Vedi (Atom Bomb)
-    // Step 5: Sara Vedi (1000-Wala)
-    // Step 6+: Endless Random Variety (with calm 1.5s - 2.5s peaceful gaps)
+    // Central cracker trigger function:
+    // Flow strictly honored:
+    // 1. Initial 10 Outs run first (as requested: "Calendar: First namma usual-ah vachirundha pattaasu varanum. Adha remove panna koodaadhu.")
+    // 2. Step 10: Pushwanam (5-6s)
+    // 3. Step 11: Sangu Sakkaram (5s)
+    // 4. Step 12: Kambi Mathappu (6s)
+    // 5. Step 13: Atom Bomb (4s)
+    // 6. Step 14: Saravedi (7s)
+    // 7. Step 15+: Remaining fireworks random in smooth, natural, slow timing!
     const triggerNextCracker = () => {
+      // 1. First 10 crackers are strictly the usual OUTS!
+      if (burstCountRef.current < 10) {
+        burstCountRef.current++;
+        currentCrackerRef.current = 'out';
+        fireOut(false);
+        return 3200 + Math.random() * 600; // Smooth natural timing between outs
+      }
+
       const step = burstCountRef.current;
       burstCountRef.current++;
 
       let nextChoice = 'pusvanam';
-      let delayAfterThis = 7000; // Generous natural pacing so crackers finish cleanly
+      let delayAfterThis = 7000;
 
-      if (step === 1) {
-        // Step 1: Always Biswaanam first!
+      if (step === 10) {
+        // Position 2: Pushwanam
         nextChoice = 'pusvanam';
-      } else if (step === 2) {
-        // Step 2: Randomly either Sangu Sakkaram or Kambi Mathaapu
-        nextChoice = (Math.random() > 0.5 ? 'sanguSakkaram' : 'kambiMathaapu');
-      } else if (step === 3) {
-        // Step 3: The remaining one from Sangu Sakkaram / Kambi Mathaapu
-        nextChoice = (lastRandomCrackerRef.current === 'sanguSakkaram' ? 'kambiMathaapu' : 'sanguSakkaram');
-      } else if (step === 4) {
-        // Step 4: Atom Bomb
+      } else if (step === 11) {
+        // Position 3: Sangu Sakkaram
+        nextChoice = 'sanguSakkaram';
+      } else if (step === 12) {
+        // Position 4: Kambi Mathappu
+        nextChoice = 'kambiMathaapu';
+      } else if (step === 13) {
+        // Position 5: Atom Bomb
         nextChoice = 'lakshmiVedi';
-      } else if (step === 5) {
-        // Step 5: Sara Vedi
+      } else if (step === 14) {
+        // Position 6: Saravedi
         nextChoice = 'saraVedi';
       } else {
-        // Step 6+: Endless random mode (no consecutive duplicates)
+        // Position 7+: Random variety with smooth timing, no consecutive duplicates
         const choices = availableCrackers.filter(c => c !== lastRandomCrackerRef.current);
         nextChoice = choices[Math.floor(Math.random() * choices.length)];
       }
@@ -696,28 +709,28 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       switch (nextChoice) {
         case 'pusvanam':
           firePusvanam();
-          // Pusvanam burns for 5.5s + 2.0s peaceful gap
-          delayAfterThis = 7500;
+          // 5.8s burn + 1.8s peaceful gap = 7.6s
+          delayAfterThis = 7600;
           break;
         case 'sanguSakkaram':
           fireSanguSakkaram();
-          // Chakkara spins for 5.2s + 1.8s peaceful gap
-          delayAfterThis = 7000;
+          // 5.0s spin + 1.8s peaceful gap = 6.8s
+          delayAfterThis = 6800;
           break;
         case 'kambiMathaapu':
           fireKambiMathaapu();
-          // Sparkler circles for 5.8s + 1.8s peaceful gap
-          delayAfterThis = 7600;
+          // 6.0s burn + 1.8s peaceful gap = 7.8s
+          delayAfterThis = 7800;
           break;
         case 'lakshmiVedi':
           fireLakshmiVedi();
-          // Atom bomb explodes at 0.9s, clears by 1.6s + 2.4s peaceful quiet after the huge blast
-          delayAfterThis = 4200;
+          // 2s fuse + 1s blast + 1s clear + 1.5s quiet = 5.5s
+          delayAfterThis = 5500;
           break;
         case 'saraVedi':
           fireSaraVedi();
-          // Garland pops for 4.0s + 2.0s peaceful smoke clearing gap
-          delayAfterThis = 6200;
+          // 7.0s continuous zigzag + 1.8s smoke clear gap = 8.8s
+          delayAfterThis = 8800;
           break;
         case 'out':
         default:
@@ -736,7 +749,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         if (!loop) {
           fireOut(true);
         } else {
-          burstCountRef.current = 1;
+          burstCountRef.current++;
           fireOut(false); // 1st calendar Out
         }
       }
@@ -763,8 +776,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         }, delay);
       };
       
-      // Gentle 3.2s gap after the 1st calendar out reaches apex before Biswaanam lights up
-      loopTimerRef.current = setTimeout(scheduleNext, 3200);
+      // Delay before 2nd calendar out starts
+      loopTimerRef.current = setTimeout(scheduleNext, 2800);
     }
 
     const render = () => {
