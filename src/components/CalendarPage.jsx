@@ -46,6 +46,17 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       const canTear = onTear(); 
       if (canTear === false) return; // Prevent tearing visually if blocked
 
+      // If user tears the Birthday page without tapping, automatically count it as a wish
+      if (isBirthday) {
+        const alreadyWished = localStorage.getItem('sughanthan_bday_wished') === 'true';
+        if (!alreadyWished) {
+          localStorage.setItem('sughanthan_bday_wished', 'true');
+          const currentCount = parseInt(localStorage.getItem('sughanthan_bday_wishes_count') || '0', 10);
+          localStorage.setItem('sughanthan_bday_wishes_count', (currentCount + 1).toString());
+          window.dispatchEvent(new CustomEvent('tear_wished_sughanthan_bday'));
+        }
+      }
+
       if (navigator.vibrate) navigator.vibrate([40, 30, 40]); // Tear feedback
       setIsTorn(true);
       const throwRight = info.offset.x > 0;

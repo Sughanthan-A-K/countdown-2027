@@ -39,8 +39,19 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
       localStorage.removeItem('sughanthan_bday_wished');
       localStorage.setItem('sughanthan_bday_wishes_count', '0');
     };
+
+    const handleTearWishEvent = () => {
+      setHasWished(true);
+      const count = parseInt(localStorage.getItem('sughanthan_bday_wishes_count') || '1', 10);
+      setWishesCount(count);
+    };
+
     window.addEventListener('reset_sughanthan_bday', handleResetEvent);
-    return () => window.removeEventListener('reset_sughanthan_bday', handleResetEvent);
+    window.addEventListener('tear_wished_sughanthan_bday', handleTearWishEvent);
+    return () => {
+      window.removeEventListener('reset_sughanthan_bday', handleResetEvent);
+      window.removeEventListener('tear_wished_sughanthan_bday', handleTearWishEvent);
+    };
   }, []);
 
   // Friend Tap-to-Wish Handler
