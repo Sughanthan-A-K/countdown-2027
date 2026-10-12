@@ -155,9 +155,15 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
   const badgeBorder = isDarkMode ? 'border-neutral-700 bg-neutral-800 text-neutral-200' : 'border-neutral-300 bg-white text-neutral-800';
 
   return (
-    <div className="relative flex flex-col items-center justify-center w-full select-none my-1">
-      {/* Interactive Free-Floating Transparent Vector Logo (Always Centered) */}
-      <div
+    <motion.div 
+      layout 
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="relative flex flex-col items-center justify-center w-full select-none my-1"
+    >
+      {/* Interactive Free-Floating Transparent Vector Logo */}
+      <motion.div
+        layout
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative cursor-pointer touch-none flex items-center justify-center"
         onClick={handleTap}
         onPointerDown={startHold}
@@ -166,10 +172,10 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
         onPointerCancel={endHold}
         style={{ WebkitTapHighlightColor: 'transparent' }}
       >
-        {/* Wish Counter Badge (Stays exactly at its after-10s position from the start, never moves) */}
+        {/* Wish Counter Badge - Positioned slightly lower as requested */}
         <motion.div
           animate={hasWished ? { scale: [1, 1.25, 1] } : {}}
-          className={`absolute -top-1 -right-3 sm:-right-4 z-30 flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-black tracking-wider shadow-sm border ${badgeBorder}`}
+          className={`absolute top-5 -right-2 sm:-right-3 z-30 flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-black tracking-wider shadow-sm border ${badgeBorder}`}
         >
           <Heart size={12} className={hasWished ? 'fill-red-500 text-red-500' : 'text-neutral-400'} />
           <span className="font-mono text-xs">{wishesCount}</span>
@@ -270,44 +276,44 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
             }
           />
         </motion.div>
+      </motion.div>
 
-        {/* Minimal Status Button - Positioned absolutely below the logo so it NEVER shifts the logo or count badge! */}
-        <AnimatePresence>
-          {isButtonVisible && (
-            <motion.div
-              key="bday-wish-button"
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6, scale: 0.9 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="absolute -bottom-9 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center pointer-events-auto whitespace-nowrap"
+      {/* Minimal Status Button - Auto-hides after 10s of wishing with smooth layout collapse */}
+      <AnimatePresence>
+        {isButtonVisible && (
+          <motion.div
+            key="bday-wish-button"
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: 'auto', marginTop: 8 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0, scale: 0.9 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden flex flex-col items-center"
+          >
+            <motion.button
+              onClick={handleTap}
+              whileTap={{ scale: 0.95 }}
+              className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border transition-all shadow-sm flex items-center gap-1.5 ${
+                hasWished
+                  ? isDarkMode
+                    ? 'bg-neutral-800 border-neutral-700 text-neutral-300'
+                    : 'bg-neutral-100 border-neutral-300 text-neutral-700'
+                  : isDarkMode
+                  ? 'bg-white text-black border-white hover:bg-neutral-200'
+                  : 'bg-black text-white border-black hover:bg-neutral-800'
+              }`}
             >
-              <motion.button
-                onClick={handleTap}
-                whileTap={{ scale: 0.95 }}
-                className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border transition-all shadow-sm flex items-center gap-1.5 ${
-                  hasWished
-                    ? isDarkMode
-                      ? 'bg-neutral-800 border-neutral-700 text-neutral-300'
-                      : 'bg-neutral-100 border-neutral-300 text-neutral-700'
-                    : isDarkMode
-                    ? 'bg-white text-black border-white hover:bg-neutral-200'
-                    : 'bg-black text-white border-black hover:bg-neutral-800'
-                }`}
-              >
-                {hasWished ? (
-                  <>
-                    <Heart size={12} className="fill-red-500 text-red-500" />
-                    <span>Thank You ❤️</span>
-                  </>
-                ) : (
-                  <span>Tap to Wish</span>
-                )}
-              </motion.button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
+              {hasWished ? (
+                <>
+                  <Heart size={12} className="fill-red-500 text-red-500" />
+                  <span>Thank You ❤️</span>
+                </>
+              ) : (
+                <span>Tap to Wish</span>
+              )}
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
