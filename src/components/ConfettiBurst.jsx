@@ -180,6 +180,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             particlesRef.current.push({
               type: 'spark',
               isRocket: false,
+              isPusvanamSpark: true,
+              floorY: baseY + 19 + (Math.random() - 0.5) * 3,
               x: baseX + (Math.random() - 0.5) * 8,
               y: baseY,
               vx: Math.cos(spreadAngle) * speed,
@@ -571,12 +573,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             // Both LEFT and RIGHT explode SIMULTANEOUSLY from the central cord!
             const sides = [-18, 18]; // Left cracker and Right cracker
 
-            // Saravedi tactile haptic vibration (continuous realistic rhythmic micro-crackle)
+            // Saravedi tactile haptic vibration (strong continuous realistic crackle)
             if (typeof window !== 'undefined' && navigator.vibrate) {
               if (currentPairIdx === totalPairs - 1) {
-                navigator.vibrate([30, 40, 50]);
+                navigator.vibrate([45, 50, 75]);
               } else {
-                navigator.vibrate(12);
+                navigator.vibrate(28);
               }
             }
             screenShakeRef.current = (Math.random() - 0.5) * 4;
@@ -927,6 +929,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         burstCountRef.current++;
         currentCrackerRef.current = 'out';
         fireOut(false);
+        // After 10th out, wait an extra 2.0s peaceful quiet before first Pusvanam!
+        if (burstCountRef.current === 10) {
+          return 5200; // 3.2s out dissipation + 2.0s quiet gap
+        }
         return 3200 + Math.random() * 500; // Smooth timing between outs
       }
 
@@ -1212,6 +1218,15 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           p.vy += p.gravity;
           p.x += p.vx;
           p.y += p.vy;
+
+          if (p.isPusvanamSpark && p.floorY && p.y >= p.floorY) {
+            p.y = p.floorY;
+            p.vy = -Math.abs(p.vy) * 0.15; // Realistic subtle floor bounce
+            p.vx *= 0.82;                 // Skitter horizontally along the floor
+            p.gravity = 0;                // Stop gravity from pulling past the ground plane
+            p.decay *= 2.2;               // Dissipate quickly on the floor
+          }
+
           p.alpha -= p.decay;
 
           let currentAlpha = p.alpha;
