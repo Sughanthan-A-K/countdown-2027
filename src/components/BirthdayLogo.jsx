@@ -155,15 +155,9 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
   const badgeBorder = isDarkMode ? 'border-neutral-700 bg-neutral-800 text-neutral-200' : 'border-neutral-300 bg-white text-neutral-800';
 
   return (
-    <motion.div 
-      layout 
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className="relative flex flex-col items-center justify-center w-full select-none my-1"
-    >
+    <div className="relative flex flex-col items-center justify-center w-full select-none my-1">
       {/* Interactive Free-Floating Transparent Vector Logo */}
-      <motion.div
-        layout
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      <div
         className="relative cursor-pointer touch-none flex items-center justify-center"
         onClick={handleTap}
         onPointerDown={startHold}
@@ -276,44 +270,47 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
             }
           />
         </motion.div>
-      </motion.div>
+      </div>
 
-      {/* Minimal Status Button - Auto-hides after 10s of wishing with smooth layout collapse */}
-      <AnimatePresence>
-        {isButtonVisible && (
-          <motion.div
-            key="bday-wish-button"
-            initial={{ opacity: 0, height: 0, marginTop: 0 }}
-            animate={{ opacity: 1, height: 'auto', marginTop: 8 }}
-            exit={{ opacity: 0, height: 0, marginTop: 0, scale: 0.9 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden flex flex-col items-center"
-          >
-            <motion.button
-              onClick={handleTap}
-              whileTap={{ scale: 0.95 }}
-              className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border transition-all shadow-sm flex items-center gap-1.5 ${
-                hasWished
-                  ? isDarkMode
-                    ? 'bg-neutral-800 border-neutral-700 text-neutral-300'
-                    : 'bg-neutral-100 border-neutral-300 text-neutral-700'
-                  : isDarkMode
-                  ? 'bg-white text-black border-white hover:bg-neutral-200'
-                  : 'bg-black text-white border-black hover:bg-neutral-800'
-              }`}
+      {/* Minimal Status Button - Positioned absolutely below so the Logo & Count remain strictly centered permanently */}
+      <div className="absolute -bottom-8 sm:-bottom-9 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20">
+        <AnimatePresence>
+          {isButtonVisible && (
+            <motion.div
+              key="bday-wish-button"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.5 } }}
+              className="pointer-events-auto flex flex-col items-center"
             >
-              {hasWished ? (
-                <>
-                  <Heart size={12} className="fill-red-500 text-red-500" />
-                  <span>Thank You ❤️</span>
-                </>
-              ) : (
-                <span>Tap to Wish</span>
-              )}
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+              <motion.button
+                onClick={handleTap}
+                onPointerDown={(e) => e.stopPropagation()}
+                onPointerUp={(e) => e.stopPropagation()}
+                whileTap={{ scale: 0.95 }}
+                className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border transition-all shadow-sm flex items-center gap-1.5 whitespace-nowrap ${
+                  hasWished
+                    ? isDarkMode
+                      ? 'bg-neutral-800 border-neutral-700 text-neutral-300'
+                      : 'bg-neutral-100 border-neutral-300 text-neutral-700'
+                    : isDarkMode
+                    ? 'bg-white text-black border-white hover:bg-neutral-200'
+                    : 'bg-black text-white border-black hover:bg-neutral-800'
+                }`}
+              >
+                {hasWished ? (
+                  <>
+                    <Heart size={12} className="fill-red-500 text-red-500" />
+                    <span>Thank You ❤️</span>
+                  </>
+                ) : (
+                  <span>Tap to Wish</span>
+                )}
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 }
