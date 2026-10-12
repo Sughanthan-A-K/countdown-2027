@@ -571,12 +571,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
             // Both LEFT and RIGHT explode SIMULTANEOUSLY from the central cord!
             const sides = [-18, 18]; // Left cracker and Right cracker
 
-            // Saravedi tactile haptic vibration (rhythmic crisp micro-clicks)
+            // Saravedi tactile haptic vibration (continuous realistic rhythmic micro-crackle)
             if (typeof window !== 'undefined' && navigator.vibrate) {
               if (currentPairIdx === totalPairs - 1) {
-                navigator.vibrate([20, 35, 25]);
-              } else if (currentPairIdx % 2 === 0) {
-                navigator.vibrate(10);
+                navigator.vibrate([30, 40, 50]);
+              } else {
+                navigator.vibrate(12);
               }
             }
             screenShakeRef.current = (Math.random() - 0.5) * 4;
