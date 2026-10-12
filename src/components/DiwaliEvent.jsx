@@ -392,12 +392,12 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                 />
               </motion.div>
 
-              <motion.div className="fixed inset-0 z-[960] pointer-events-none">
+              <motion.div className="fixed inset-0 z-[1050] pointer-events-none">
               {/* Live Golden Shower & Launch Physics (Falls gracefully without looping) */}
-              <div className={`absolute inset-0 -z-10 transition-opacity duration-1000 ${phase === 'fadeout_shower' ? 'opacity-0' : 'opacity-100'}`}>
+              <div className={`absolute inset-0 z-10 transition-opacity duration-1000 ${phase === 'fadeout_shower' ? 'opacity-0' : 'opacity-100'}`}>
                  <ConfettiBurst 
                    active={true} 
-                   origin={{ y: 0.25, x: 0.5 }} 
+                   origin={{ y: 0.14, x: 0.5 }} 
                    launchOrigin={{ y: 0.82, x: 0.19 }} // Shoots exactly from the top center of the cylinder!
                    forceRocket={true} 
                    loop={false}
