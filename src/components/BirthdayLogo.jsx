@@ -156,7 +156,7 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
 
   return (
     <div className="relative flex flex-col items-center justify-center w-full select-none my-1">
-      {/* Interactive Free-Floating Transparent Vector Logo */}
+      {/* Interactive Free-Floating Transparent Vector Logo (Always Centered) */}
       <div
         className="relative cursor-pointer touch-none flex items-center justify-center"
         onClick={handleTap}
@@ -166,7 +166,7 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
         onPointerCancel={endHold}
         style={{ WebkitTapHighlightColor: 'transparent' }}
       >
-        {/* Wish Counter Badge (Moved further to the right side, clear of hair) */}
+        {/* Wish Counter Badge (Stays exactly at its after-10s position from the start, never moves) */}
         <motion.div
           animate={hasWished ? { scale: [1, 1.25, 1] } : {}}
           className={`absolute -top-1 -right-3 sm:-right-4 z-30 flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-black tracking-wider shadow-sm border ${badgeBorder}`}
@@ -270,25 +270,22 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
             }
           />
         </motion.div>
-      </div>
 
-      {/* Minimal Status Button - Positioned absolutely below so the Logo & Count remain strictly centered permanently */}
-      <div className="absolute -bottom-8 sm:-bottom-9 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20">
+        {/* Minimal Status Button - Positioned absolutely below the logo so it NEVER shifts the logo or count badge! */}
         <AnimatePresence>
           {isButtonVisible && (
             <motion.div
               key="bday-wish-button"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.5 } }}
-              className="pointer-events-auto flex flex-col items-center"
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6, scale: 0.9 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              className="absolute -bottom-9 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center pointer-events-auto whitespace-nowrap"
             >
               <motion.button
                 onClick={handleTap}
-                onPointerDown={(e) => e.stopPropagation()}
-                onPointerUp={(e) => e.stopPropagation()}
                 whileTap={{ scale: 0.95 }}
-                className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border transition-all shadow-sm flex items-center gap-1.5 whitespace-nowrap ${
+                className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border transition-all shadow-sm flex items-center gap-1.5 ${
                   hasWished
                     ? isDarkMode
                       ? 'bg-neutral-800 border-neutral-700 text-neutral-300'
