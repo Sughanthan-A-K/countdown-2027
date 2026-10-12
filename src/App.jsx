@@ -551,8 +551,10 @@ function App() {
           id: `refill-${d.getTime()}`,
           dateText: formatDate(d),
           daysRemaining: getDaysRemaining(d),
-          isGandhiJayanti: d.getMonth() === 9 && d.getDate() === 2, isDiwaliDay: d.getMonth() === 10 && d.getDate() === 8, isDiwali: (d.getMonth() === 10 && d.getDate() === 8) && diwaliRevealed,
-          
+          isGandhiJayanti: d.getMonth() === 9 && d.getDate() === 2, 
+          isDiwaliDay: d.getMonth() === 10 && d.getDate() === 8, 
+          isDiwali: (d.getMonth() === 10 && d.getDate() === 8) && diwaliRevealed,
+          isBirthday: d.getMonth() === 9 && d.getDate() === 14,
         });
       }
       setRefillingPages(missingPages);
@@ -565,17 +567,11 @@ function App() {
         setResetCount(c => c + 1);
         setRefillingPages([]);
         if (tutorialState === 3) setTutorialState(4);
-        localStorage.removeItem('sughanthan_bday_wished');
-        localStorage.setItem('sughanthan_bday_wishes_count', '0');
-        window.dispatchEvent(new Event('reset_sughanthan_bday'));
       }, animationDelay + 100); 
     } else {
+      // If already on today, do NOT animate refilling pages or break state
       setCalendarDate(today);
-      setResetCount(c => c + 1);
       if (tutorialState === 3) setTutorialState(4);
-      localStorage.removeItem('sughanthan_bday_wished');
-      localStorage.setItem('sughanthan_bday_wishes_count', '0');
-      window.dispatchEvent(new Event('reset_sughanthan_bday'));
     }
   };
 
@@ -796,11 +792,6 @@ function App() {
                   const today = normalizeDate(new Date());
                   setCalendarDate(today);
                 }
-
-                // Reset birthday wishes to 0 and unlock wishing
-                localStorage.removeItem('sughanthan_bday_wished');
-                localStorage.setItem('sughanthan_bday_wishes_count', '0');
-                window.dispatchEvent(new Event('reset_sughanthan_bday'));
 
                 if (navigator.vibrate) navigator.vibrate([50]);
               }}

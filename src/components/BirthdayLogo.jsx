@@ -51,16 +51,26 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
     };
   }, []);
 
-  // Listen for refresh / reset event to reset wish count to 0 and restore button
+  // Check if today is Oct 14 (or Oct 14 in dev mode):
+  const isWishAllowed = () => {
+    const now = new Date();
+    // System date is Oct 14 (Month 9 in 0-indexed JS)
+    if (now.getMonth() === 9 && now.getDate() === 14) return true;
+
+    // In dev mode, if user explicitly navigated to Oct 14, allow testing
+    const isDev = typeof window !== 'undefined' && localStorage.getItem('isDevMode') === 'true';
+    const devDateStr = typeof window !== 'undefined' ? localStorage.getItem('devOverrideDate') : null;
+    if (isDev && devDateStr) {
+      const devDate = new Date(parseInt(devDateStr, 10));
+      return devDate.getMonth() === 9 && devDate.getDate() === 14;
+    }
+    return false;
+  };
+
+  // Listen for refresh / reset event: restore button if needed, but NEVER reset database wishes count
   useEffect(() => {
     const handleResetEvent = () => {
-      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-      setWishesCount(0);
-      setHasWished(false);
-      setIsButtonVisible(true);
-      localStorage.removeItem('sughanthan_bday_wished');
-      localStorage.setItem('sughanthan_bday_wishes_count', '0');
-      resetGlobalWishes();
+      // Do not wipe global wishes count anymore - testing is over!
     };
 
     const handleTearWishEvent = () => {
@@ -69,10 +79,8 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
       setWishesCount(count);
     };
 
-    window.addEventListener('reset_sughanthan_bday', handleResetEvent);
     window.addEventListener('tear_wished_sughanthan_bday', handleTearWishEvent);
     return () => {
-      window.removeEventListener('reset_sughanthan_bday', handleResetEvent);
       window.removeEventListener('tear_wished_sughanthan_bday', handleTearWishEvent);
     };
   }, []);
@@ -80,6 +88,14 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
   // Friend Tap-to-Wish Handler
   const handleTap = (e) => {
     e.stopPropagation();
+
+    // STRICT: Only enabled on Oct 14!
+    if (!isWishAllowed()) {
+      if (typeof window !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate(20);
+      }
+      return;
+    }
 
     if (!hasWished) {
       setHasWished(true);
@@ -329,23 +345,33 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
             <motion.button
               onClick={handleTap}
               whileTap={{ scale: 0.95 }}
-              className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border transition-all shadow-sm flex items-center gap-1.5 ${
+              whileHover={{ scale: 1.03 }}
+              className={`relative group px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase border transition-all duration-300 shadow-sm flex items-center gap-1.5 ${
                 hasWished
                   ? isDarkMode
-                    ? 'bg-neutral-800 border-neutral-700 text-neutral-300'
-                    : 'bg-neutral-100 border-neutral-300 text-neutral-700'
+                    ? 'bg-neutral-800/90 border-neutral-700 text-neutral-200 shadow-[0_0_12px_rgba(239,68,68,0.2)]'
+                    : 'bg-neutral-100 border-neutral-300 text-neutral-800 shadow-[0_0_10px_rgba(239,68,68,0.15)]'
+                  : isWishAllowed()
+                  ? isDarkMode
+                    ? 'bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 text-neutral-950 border-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.35)] hover:shadow-[0_0_20px_rgba(251,191,36,0.5)]'
+                    : 'bg-gradient-to-r from-neutral-900 to-neutral-800 text-amber-300 border-neutral-800 shadow-[0_4px_12px_rgba(0,0,0,0.18)] hover:border-amber-500'
                   : isDarkMode
-                  ? 'bg-white text-black border-white hover:bg-neutral-200'
-                  : 'bg-black text-white border-black hover:bg-neutral-800'
+                  ? 'bg-neutral-900/80 border-neutral-800 text-neutral-400 cursor-not-allowed opacity-80'
+                  : 'bg-neutral-100 border-neutral-300 text-neutral-500 cursor-not-allowed opacity-80'
               }`}
             >
               {hasWished ? (
                 <>
-                  <Heart size={12} className="fill-red-500 text-red-500" />
-                  <span>Thank You ❤️</span>
+                  <Heart size={12} className="fill-red-500 text-red-500 animate-pulse" />
+                  <span className="font-bold tracking-wider">Thank You ❤️</span>
+                </>
+              ) : isWishAllowed() ? (
+                <>
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-neutral-950 animate-ping mr-0.5" />
+                  <span className="tracking-[0.18em]">Tap to Wish</span>
                 </>
               ) : (
-                <span>Tap to Wish</span>
+                <span className="tracking-[0.14em]">Unlocks Oct 14 🎂</span>
               )}
             </motion.button>
           </motion.div>
