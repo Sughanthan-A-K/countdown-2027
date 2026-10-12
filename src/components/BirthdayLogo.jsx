@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -11,17 +11,31 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
   const [hasWished, setHasWished] = useState(() => {
     return localStorage.getItem('sughanthan_bday_wished') === 'true';
   });
+  const [isButtonVisible, setIsButtonVisible] = useState(() => {
+    // If already wished previously, hide button so logo is centered; otherwise show "Tap to Wish"
+    return localStorage.getItem('sughanthan_bday_wished') !== 'true';
+  });
   const [holdProgress, setHoldProgress] = useState(0);
   const [isHolding, setIsHolding] = useState(false);
 
   const holdStartTimeRef = useRef(null);
   const holdAnimFrameRef = useRef(null);
+  const hideTimerRef = useRef(null);
 
-  // Listen for refresh / reset event to reset wish count to 0
+  // Clear timer on unmount
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, []);
+
+  // Listen for refresh / reset event to reset wish count to 0 and restore button
   useEffect(() => {
     const handleResetEvent = () => {
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
       setWishesCount(0);
       setHasWished(false);
+      setIsButtonVisible(true);
       localStorage.removeItem('sughanthan_bday_wished');
       localStorage.setItem('sughanthan_bday_wishes_count', '0');
     };
@@ -35,12 +49,19 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
 
     if (!hasWished) {
       setHasWished(true);
+      setIsButtonVisible(true);
       localStorage.setItem('sughanthan_bday_wished', 'true');
       setWishesCount((prev) => {
         const next = prev + 1;
         localStorage.setItem('sughanthan_bday_wishes_count', next.toString());
         return next;
       });
+
+      // Automatically hide "Thank You ❤️" button after 10 seconds smoothly
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = setTimeout(() => {
+        setIsButtonVisible(false);
+      }, 10000);
 
       // Tactile vibration on mobile
       if (typeof window !== 'undefined' && navigator.vibrate) {
@@ -134,9 +155,15 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
   const badgeBorder = isDarkMode ? 'border-neutral-700 bg-neutral-800 text-neutral-200' : 'border-neutral-300 bg-white text-neutral-800';
 
   return (
-    <div className="relative flex flex-col items-center justify-center w-full select-none my-1">
+    <motion.div 
+      layout 
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="relative flex flex-col items-center justify-center w-full select-none my-1"
+    >
       {/* Interactive Free-Floating Transparent Vector Logo */}
-      <div
+      <motion.div
+        layout
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative cursor-pointer touch-none flex items-center justify-center"
         onClick={handleTap}
         onPointerDown={startHold}
@@ -249,33 +276,44 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
             }
           />
         </motion.div>
-      </div>
+      </motion.div>
 
-      {/* Minimal Status Button - Spacious, No Clutter */}
-      <div className="mt-2 flex flex-col items-center">
-        <motion.button
-          onClick={handleTap}
-          whileTap={{ scale: 0.95 }}
-          className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border transition-all shadow-sm flex items-center gap-1.5 ${
-            hasWished
-              ? isDarkMode
-                ? 'bg-neutral-800 border-neutral-700 text-neutral-300'
-                : 'bg-neutral-100 border-neutral-300 text-neutral-700'
-              : isDarkMode
-              ? 'bg-white text-black border-white hover:bg-neutral-200'
-              : 'bg-black text-white border-black hover:bg-neutral-800'
-          }`}
-        >
-          {hasWished ? (
-            <>
-              <Heart size={12} className="fill-red-500 text-red-500" />
-              <span>Thank You ❤️</span>
-            </>
-          ) : (
-            <span>Tap to Wish</span>
-          )}
-        </motion.button>
-      </div>
-    </div>
+      {/* Minimal Status Button - Auto-hides after 10s of wishing with smooth layout collapse */}
+      <AnimatePresence>
+        {isButtonVisible && (
+          <motion.div
+            key="bday-wish-button"
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: 'auto', marginTop: 8 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0, scale: 0.9 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden flex flex-col items-center"
+          >
+            <motion.button
+              onClick={handleTap}
+              whileTap={{ scale: 0.95 }}
+              className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase border transition-all shadow-sm flex items-center gap-1.5 ${
+                hasWished
+                  ? isDarkMode
+                    ? 'bg-neutral-800 border-neutral-700 text-neutral-300'
+                    : 'bg-neutral-100 border-neutral-300 text-neutral-700'
+                  : isDarkMode
+                  ? 'bg-white text-black border-white hover:bg-neutral-200'
+                  : 'bg-black text-white border-black hover:bg-neutral-800'
+              }`}
+            >
+              {hasWished ? (
+                <>
+                  <Heart size={12} className="fill-red-500 text-red-500" />
+                  <span>Thank You ❤️</span>
+                </>
+              ) : (
+                <span>Tap to Wish</span>
+              )}
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
