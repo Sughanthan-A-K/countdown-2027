@@ -4,6 +4,7 @@ import DiwaliEvent from './components/DiwaliEvent';
 import Onboarding from './components/Onboarding';
 import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
+import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
 import confetti from 'canvas-confetti';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
@@ -96,6 +97,9 @@ function App() {
   // Diwali Frame states
   const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
   
+  // Birthday Secret Surprise states
+  const [showBirthdaySecret, setShowBirthdaySecret] = useState(false);
+  const [birthdaySecretWishes, setBirthdaySecretWishes] = useState(24);
 
   useEffect(() => {
     // 10 = Nov, 8 = 8th
@@ -561,11 +565,17 @@ function App() {
         setResetCount(c => c + 1);
         setRefillingPages([]);
         if (tutorialState === 3) setTutorialState(4);
+        localStorage.removeItem('sughanthan_bday_wished');
+        localStorage.setItem('sughanthan_bday_wishes_count', '0');
+        window.dispatchEvent(new Event('reset_sughanthan_bday'));
       }, animationDelay + 100); 
     } else {
       setCalendarDate(today);
       setResetCount(c => c + 1);
       if (tutorialState === 3) setTutorialState(4);
+      localStorage.removeItem('sughanthan_bday_wished');
+      localStorage.setItem('sughanthan_bday_wishes_count', '0');
+      window.dispatchEvent(new Event('reset_sughanthan_bday'));
     }
   };
 
@@ -670,7 +680,10 @@ function App() {
       dateText: formatDate(pageDate),
       daysRemaining: getDaysRemaining(pageDate),
       index: i,
-      isGandhiJayanti: pageDate.getMonth() === 9 && pageDate.getDate() === 2, isDiwaliDay: pageDate.getMonth() === 10 && pageDate.getDate() === 8, isDiwali: (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
+      isGandhiJayanti: pageDate.getMonth() === 9 && pageDate.getDate() === 2,
+      isBirthday: pageDate.getMonth() === 9 && pageDate.getDate() === 14,
+      isDiwaliDay: pageDate.getMonth() === 10 && pageDate.getDate() === 8,
+      isDiwali: (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
       
     };
   });
@@ -783,6 +796,12 @@ function App() {
                   const today = normalizeDate(new Date());
                   setCalendarDate(today);
                 }
+
+                // Reset birthday wishes to 0 and unlock wishing
+                localStorage.removeItem('sughanthan_bday_wished');
+                localStorage.setItem('sughanthan_bday_wishes_count', '0');
+                window.dispatchEvent(new Event('reset_sughanthan_bday'));
+
                 if (navigator.vibrate) navigator.vibrate([50]);
               }}
               className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
@@ -1048,8 +1067,13 @@ function App() {
                     onTear={handleTear}
                     onEyeClick={handleEyeClick}
                     isDarkMode={isDarkMode}
-                    isGandhiJayanti={page.isGandhiJayanti} isDiwali={page.isDiwali} 
-                    
+                    isGandhiJayanti={page.isGandhiJayanti}
+                    isBirthday={page.isBirthday}
+                    onBirthdaySecret={(count) => {
+                      setBirthdaySecretWishes(count);
+                      setShowBirthdaySecret(true);
+                    }}
+                    isDiwali={page.isDiwali} 
                     hasGandhiKey={hasGandhiKey}
                     isTearLocked={isTearLocked}
                     onDevTap={handleDevPillTap}
@@ -1071,7 +1095,7 @@ function App() {
                     animate={{ 
                       y: 0, 
                       x: 0, 
-                      rotateZ: 0,
+                      rotateZ: 0, 
                       scale: 1
                     }}
                     transition={{
@@ -1090,8 +1114,9 @@ function App() {
                       onTear={() => {}}
                       onEyeClick={() => {}}
                       isDarkMode={isDarkMode}
-                      isGandhiJayanti={page.isGandhiJayanti} isDiwali={page.isDiwali} 
-                      
+                      isGandhiJayanti={page.isGandhiJayanti}
+                      isBirthday={page.isBirthday}
+                      isDiwali={page.isDiwali} 
                       hasGandhiKey={hasGandhiKey}
                       globalLang={globalLang}
                       isTearLocked={true}
@@ -1103,6 +1128,12 @@ function App() {
         </div>
       </div>
       <KeyModal isOpen={showKeyModal} onClose={() => setShowKeyModal(false)} globalLang={globalLang} />
+      <BirthdaySecretSurprise 
+        isOpen={showBirthdaySecret} 
+        onClose={() => setShowBirthdaySecret(false)} 
+        wishesCount={birthdaySecretWishes} 
+        isDarkMode={isDarkMode} 
+      />
       {showDiwaliEvent && (
         <DiwaliEvent isDarkMode={isDarkMode} onExplode={() => setDiwaliPhase(1)} onComplete={() => {
           setDiwaliRevealed(true);

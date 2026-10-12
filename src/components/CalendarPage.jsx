@@ -3,8 +3,9 @@ import { motion, useMotionValue, useTransform, animate, AnimatePresence } from '
 import { Sparkles, PartyPopper, Star } from 'lucide-react';
 import GandhiPic from './GandhiPic';
 import ConfettiBurst from './ConfettiBurst';
+import BirthdayLogo from './BirthdayLogo';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -194,6 +195,46 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
                 <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-4">
                   <GandhiPic isDarkMode={effectiveDarkMode} onEyeClick={onEyeClick} hasKey={hasGandhiKey} />
+                </div>
+                
+                <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
+                  <div className="flex items-baseline gap-1">
+                    <h1 className={`text-5xl sm:text-6xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                      {daysRemaining}
+                    </h1>
+                    <span className={`font-bold text-sm sm:text-base italic ${textSecondary}`}>
+                      th day
+                    </span>
+                  </div>
+                  <div 
+                    className={`px-5 py-1.5 rounded-full border-2 mt-3 cursor-default select-none ${pillBgOutline}`}
+                    onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
+                    onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
+                    onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                    onPointerLeave={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                  >
+                    <span className={`text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
+                      To reach 2027
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : isBirthday ? (
+              <>
+                <div className={`pt-4 sm:pt-6 px-8 flex flex-col items-center w-full z-10 relative ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
+                  <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
+                    {dateText}
+                  </h2>
+                  <motion.h3 
+                     initial={{ opacity: 0.8 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 2, repeatType: 'reverse' }}
+                     className="text-amber-500 dark:text-amber-400 font-bold text-xs sm:text-sm tracking-wider mt-1 drop-shadow-sm text-center flex items-center gap-1.5"
+                  >
+                    <span>Hey, It's My Birthday! 🎂</span>
+                  </motion.h3>
+                </div>
+
+                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full">
+                  <BirthdayLogo isDarkMode={effectiveDarkMode} onSecretTrigger={onBirthdaySecret} />
                 </div>
                 
                 <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
