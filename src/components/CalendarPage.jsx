@@ -4,6 +4,7 @@ import { Sparkles, PartyPopper, Star } from 'lucide-react';
 import GandhiPic from './GandhiPic';
 import ConfettiBurst from './ConfettiBurst';
 import BirthdayLogo from './BirthdayLogo';
+import { incrementGlobalWish } from '../utils/wishesService';
 
 export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
   const [exitX, setExitX] = useState(0);
@@ -54,6 +55,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           const currentCount = parseInt(localStorage.getItem('sughanthan_bday_wishes_count') || '0', 10);
           localStorage.setItem('sughanthan_bday_wishes_count', (currentCount + 1).toString());
           window.dispatchEvent(new CustomEvent('tear_wished_sughanthan_bday'));
+          incrementGlobalWish();
         }
       }
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { getGlobalWishesCount, incrementGlobalWish, resetGlobalWishes, subscribeToGlobalWishes } from '../utils/wishesService';
 
 export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
   const [wishesCount, setWishesCount] = useState(() => {
@@ -29,6 +30,27 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
     };
   }, []);
 
+  // Sync with global Supabase count on mount & subscribe to Realtime cross-device updates!
+  useEffect(() => {
+    // 1. Initial fetch from cloud
+    getGlobalWishesCount().then((count) => {
+      if (typeof count === 'number') {
+        setWishesCount(count);
+        localStorage.setItem('sughanthan_bday_wishes_count', count.toString());
+      }
+    });
+
+    // 2. Realtime listener: when any other device wishes, update live instantly!
+    const unsubscribe = subscribeToGlobalWishes((newCount) => {
+      setWishesCount(newCount);
+      localStorage.setItem('sughanthan_bday_wishes_count', newCount.toString());
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
   // Listen for refresh / reset event to reset wish count to 0 and restore button
   useEffect(() => {
     const handleResetEvent = () => {
@@ -38,6 +60,7 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
       setIsButtonVisible(true);
       localStorage.removeItem('sughanthan_bday_wished');
       localStorage.setItem('sughanthan_bday_wishes_count', '0');
+      resetGlobalWishes();
     };
 
     const handleTearWishEvent = () => {
@@ -62,11 +85,14 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
       setHasWished(true);
       setIsButtonVisible(true);
       localStorage.setItem('sughanthan_bday_wished', 'true');
+      
+      // Optimistic local update + sync with Supabase cloud
       setWishesCount((prev) => {
         const next = prev + 1;
         localStorage.setItem('sughanthan_bday_wishes_count', next.toString());
         return next;
       });
+      incrementGlobalWish();
 
       // Automatically hide "Thank You ❤️" button after 10 seconds smoothly
       if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
