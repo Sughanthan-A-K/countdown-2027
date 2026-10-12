@@ -530,25 +530,29 @@ function App() {
   const handleReset = () => {
     if (tutorialState !== 3 && !(tutorialState === -1 && isDevMode)) return;
 
-    if (isDevMode) {
-      localStorage.removeItem('devOverrideDate');
-    }
-
     if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
     setShowBubble(false);
 
     const today = normalizeDate(new Date());
-    // Since calendarDate goes to the future when tearing, calendarDate - today will be positive.
+
+    if (isDevMode) {
+      localStorage.removeItem('devOverrideDate');
+      setCalendarDate(today);
+      setResetCount(c => c + 1);
+      setRefillingPages([]);
+      return;
+    }
+
     const diff = Math.abs(getDiffDays(calendarDate, today));
 
     if (diff > 0) {
-      // Trigger cinematic refill animation with actual torn dates
-      const burstCount = diff; // No maximum cap, refill all torn pages
+      // Trigger cinematic refill animation with capped cards so DOM doesn't freeze
+      const burstCount = Math.min(diff, 6);
       const missingPages = [];
       for (let i = 1; i <= burstCount; i++) {
-        const d = addDays(today, diff - i);
+        const d = addDays(today, burstCount - i);
         missingPages.push({
-          id: `refill-${d.getTime()}`,
+          id: `refill-${d.getTime()}-${i}`,
           dateText: formatDate(d),
           daysRemaining: getDaysRemaining(d),
           isGandhiJayanti: d.getMonth() === 9 && d.getDate() === 2, 
@@ -559,7 +563,7 @@ function App() {
       }
       setRefillingPages(missingPages);
       
-      const animationDelay = 600 + (burstCount * 40);
+      const animationDelay = 500 + (burstCount * 40);
       
       // Delay the actual state reset so they watch the cards fly in
       setTimeout(() => {
@@ -567,10 +571,12 @@ function App() {
         setResetCount(c => c + 1);
         setRefillingPages([]);
         if (tutorialState === 3) setTutorialState(4);
-      }, animationDelay + 100); 
+      }, animationDelay); 
     } else {
-      // If already on today, do NOT animate refilling pages or break state
+      // If already on today, ensure clean state reset
       setCalendarDate(today);
+      setResetCount(c => c + 1);
+      setRefillingPages([]);
       if (tutorialState === 3) setTutorialState(4);
     }
   };
