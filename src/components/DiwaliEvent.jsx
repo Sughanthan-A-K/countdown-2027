@@ -392,7 +392,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                 />
               </motion.div>
 
-              <motion.div className="fixed inset-0 z-[960] pointer-events-none flex items-center justify-center">
+              <motion.div className="fixed inset-0 z-[960] pointer-events-none">
               {/* Live Golden Shower & Launch Physics (Falls gracefully without looping) */}
               <div className={`absolute inset-0 -z-10 transition-opacity duration-1000 ${phase === 'fadeout_shower' ? 'opacity-0' : 'opacity-100'}`}>
                  <ConfettiBurst 
@@ -404,34 +404,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                    onFirstBurst={handleRocketExplode}
                  />
               </div>
-
-              {/* Happy Diwali Wish strictly in front of Golden Shower */}
-              {(phase === 'explode' || phase === 'fadeout_bg' || phase === 'fadeout_shower') && (
-                <div className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] flex flex-col items-center justify-center z-50 pointer-events-none select-none">
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1.0, delay: 0.1, ease: "easeOut" }}
-                    className="flex flex-col items-center mt-[-20px]"
-                  >
-                    <h3 
-                       className="font-black text-4xl sm:text-5xl tracking-widest uppercase text-center leading-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400"
-                       style={{ 
-                         filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.85)) drop-shadow(0 4px 10px rgba(0,0,0,0.7))',
-                         WebkitTextStroke: '1px rgba(184,115,51,0.5)' 
-                       }}
-                    >
-                      Happy<br/>Diwali
-                    </h3>
-                    <span 
-                      className="mt-3 font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase text-yellow-300"
-                      style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.85))' }}
-                    >
-                      To you & your family
-                    </span>
-                  </motion.div>
-                </div>
-              )}
             </motion.div>
           </>
         )}
