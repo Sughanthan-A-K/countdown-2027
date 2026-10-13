@@ -7,7 +7,7 @@ import ConfettiBurst from './components/ConfettiBurst';
 import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
 import confetti from 'canvas-confetti';
-import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays } from './utils/date';
+import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
@@ -396,7 +396,13 @@ function App() {
     if (tutorialState === 1 && !showKeyModal && !isWaitingForKey) { 
       if (tutorialTears === 0) {
         timeout1 = setTimeout(() => {
-          showMsg(globalLang === 'english' ? <>You can tear this calendar...<br/>as much as you want...<br/>{highlight('Swipe')} to tear...</> : <>Nee evlo venalum...<br/>intha calendar-a kizhichi podalam...<br/>{highlight('Swipe panni')} tear pannu...</>, 0);
+          const tier = getOnboardingTier(actualToday);
+          showMsg(
+            tier === 'mini'
+              ? (globalLang === 'english' ? <>Try tearing a page...<br/>{highlight('Swipe')} to tear...</> : <>Oru calendar page kizhichi paarunga...<br/>{highlight('Swipe panni')} tear pannu...</>)
+              : (globalLang === 'english' ? <>You can tear this calendar...<br/>as much as you want...<br/>{highlight('Swipe')} to tear...</> : <>Nee evlo venalum...<br/>intha calendar-a kizhichi podalam...<br/>{highlight('Swipe panni')} tear pannu...</>),
+            0
+          );
           timeout2 = setTimeout(() => {
             interval = setInterval(() => {
               const nags = globalLang === 'english' ? [
@@ -416,11 +422,18 @@ function App() {
           }, 8000); // Wait 8 seconds before starting to nag them
         }, 5500); // 5.5 seconds delay to let the confetti and reveal animation finish completely
       } else if (tutorialTears === 1) {
-        timeout1 = showMsg(globalLang === 'english' ? <>Yes exactly!<br/>Tear off {highlight('as many as you can')}</> : <>Yes apdithaan!<br/>Unnala {highlight('evlo kizhichi poda mudiyumo')} kizhichi podu</>, 0);
+        const tier = getOnboardingTier(actualToday);
+        if (tier === 'mini') {
+          timeout1 = showMsg(globalLang === 'english' ? <>Super! Now tear {highlight('one more page')}</> : <>Super! Ippo {highlight('innum oru sheet')} kizhichi paarunga</>, 0);
+        } else {
+          timeout1 = showMsg(globalLang === 'english' ? <>Yes exactly!<br/>Tear off {highlight('as many as you can')}</> : <>Yes apdithaan!<br/>Unnala {highlight('evlo kizhichi poda mudiyumo')} kizhichi podu</>, 0);
+        }
         setTutorialState(2);
       }
     } else if (tutorialState === 2) {
-      if (tutorialTears >= 10) {
+      const tier = getOnboardingTier(actualToday);
+      const targetTears = tier === 'mini' ? 2 : 10;
+      if (tutorialTears >= targetTears) {
         timeout1 = showMsg(globalLang === 'english' ? <>That's enough {highlight('tearing!')}</> : <>Pothum da nee {highlight('kizhichathu!')}</>, 3000);
         timeout2 = setTimeout(() => {
           setTutorialState(3);
@@ -494,7 +507,8 @@ function App() {
 
   const handleTear = () => {
     if (tutorialState === 0 || tutorialState === 3 || tutorialState === 4) return false;
-    if (tutorialState === 2 && tutorialTears >= 10) return false;
+    const maxTutorialTears = getOnboardingTier(actualToday) === 'mini' ? 2 : 10;
+    if (tutorialState === 2 && tutorialTears >= maxTutorialTears) return false;
     if (tutorialState === -1 && !isDevMode && missedDays <= 0) {
        return false;
     }
@@ -662,11 +676,12 @@ function App() {
     });
   };
 
+  const maxTutorialTears = getOnboardingTier(actualToday) === 'mini' ? 2 : 10;
   const isTearLocked = 
     tutorialState === 0 || 
     tutorialState === 3 || 
     tutorialState === 4 || 
-    (tutorialState === 2 && tutorialTears >= 10) || 
+    (tutorialState === 2 && tutorialTears >= maxTutorialTears) || 
     (tutorialState === -1 && !isDevMode && missedDays <= 0);
 
     const pages = [0, 1, 2].map((i) => {
@@ -738,7 +753,8 @@ function App() {
       <AnimatePresence>
         {tutorialState === 0 && (
           <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} onComplete={() => {
-            setTutorialState(1);
+            const tier = getOnboardingTier(actualToday);
+
             // Delay confetti until the physical drop animation is mostly complete (0.7 seconds)
             setTimeout(() => {
               setIsRevealing(true);
@@ -766,7 +782,30 @@ function App() {
               }, 800);
 
               setTimeout(() => setIsRevealing(false), 4500); // Stop confetti state after 4.5 seconds
+
+              if (tier === 'skip') {
+                // After Dec 25 (Final Week of 2026): Skip tearing tutorial, go straight to active countdown!
+                const today = normalizeDate(new Date());
+                setCalendarDate(today);
+                localStorage.setItem('lastTornDate', today.getTime().toString());
+                localStorage.setItem('onboardingDone', 'true');
+                setTutorialState(-1);
+
+                setTimeout(() => {
+                  showMsg(
+                    globalLang === 'english'
+                      ? <>Welcome to the {highlight('Final Countdown of 2026')}!<br/>Only {highlight(`${getDaysRemaining(today)} days`)} left until 2027!</>
+                      : <>Welcome to the {highlight('Final Countdown of 2026')}!<br/>2027-kku innum {highlight(`${getDaysRemaining(today)} days`)} thaan irukku!</>,
+                    5000
+                  );
+                  setFinalHintStep('info');
+                }, 1200);
+              }
             }, 700);
+
+            if (tier !== 'skip') {
+              setTutorialState(1);
+            }
           }} />
         )}
       </AnimatePresence>
