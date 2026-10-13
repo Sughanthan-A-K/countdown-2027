@@ -78,7 +78,9 @@ function App() {
 
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
   const [tutorialState, setTutorialState] = useState(() => {
-    return localStorage.getItem('onboardingDone') ? -1 : 0;
+    if (localStorage.getItem('onboardingDone')) return -1;
+    if (getOnboardingTier(new Date()) === 'skip') return -1;
+    return 0;
   });
   
   const [bubbleText, setBubbleText] = useState("");
@@ -176,6 +178,24 @@ function App() {
     if (devHoldTimerRef.current) {
       clearTimeout(devHoldTimerRef.current);
     }
+  };
+
+  // Temporary Dev Mode Onboarding Tester (tested by user across dates)
+  const handleTestOnboarding = () => {
+    const tier = getOnboardingTier(calendarDate);
+    if (tier === 'skip') {
+      showMsg(
+        globalLang === 'english'
+          ? <>After Dec 14: Onboarding is completely skipped!<br/>Directly active on {highlight(formatDate(calendarDate))}</>
+          : <>Dec 14-kku apparam: Onboarding skip aagidum!<br/>Direct-ah {highlight(formatDate(calendarDate))} date-la calendar ready-ah irukkum</>,
+        4000
+      );
+      return;
+    }
+
+    setTutorialTears(0);
+    setEpilogueStep(0);
+    setTutorialState(0);
   };
 
   // Nag State for returning users
@@ -396,7 +416,7 @@ function App() {
     if (tutorialState === 1 && !showKeyModal && !isWaitingForKey) { 
       if (tutorialTears === 0) {
         timeout1 = setTimeout(() => {
-          const tier = getOnboardingTier(actualToday);
+          const tier = getOnboardingTier(isDevMode ? calendarDate : actualToday);
           showMsg(
             tier === 'mini'
               ? (globalLang === 'english' ? <>Try tearing a page...<br/>{highlight('Swipe')} to tear...</> : <>Oru calendar page kizhichi paarunga...<br/>{highlight('Swipe panni')} tear pannu...</>)
@@ -422,7 +442,7 @@ function App() {
           }, 8000); // Wait 8 seconds before starting to nag them
         }, 5500); // 5.5 seconds delay to let the confetti and reveal animation finish completely
       } else if (tutorialTears === 1) {
-        const tier = getOnboardingTier(actualToday);
+        const tier = getOnboardingTier(isDevMode ? calendarDate : actualToday);
         if (tier === 'mini') {
           timeout1 = showMsg(globalLang === 'english' ? <>Super! Now tear {highlight('one more page')}</> : <>Super! Ippo {highlight('innum oru sheet')} kizhichi paarunga</>, 0);
         } else {
@@ -431,7 +451,7 @@ function App() {
         setTutorialState(2);
       }
     } else if (tutorialState === 2) {
-      const tier = getOnboardingTier(actualToday);
+      const tier = getOnboardingTier(isDevMode ? calendarDate : actualToday);
       const targetTears = tier === 'mini' ? 2 : 10;
       if (tutorialTears >= targetTears) {
         timeout1 = showMsg(globalLang === 'english' ? <>That's enough {highlight('tearing!')}</> : <>Pothum da nee {highlight('kizhichathu!')}</>, 3000);
@@ -447,7 +467,7 @@ function App() {
       } else {
         setShowBubble(false);
         const today = normalizeDate(new Date());
-        setCalendarDate(today);
+        setCalendarDate(isDevMode ? calendarDate : today);
         localStorage.setItem('lastTornDate', today.getTime().toString());
         localStorage.setItem('onboardingDone', 'true');
         setTutorialState(-1);
@@ -507,7 +527,7 @@ function App() {
 
   const handleTear = () => {
     if (tutorialState === 0 || tutorialState === 3 || tutorialState === 4) return false;
-    const maxTutorialTears = getOnboardingTier(actualToday) === 'mini' ? 2 : 10;
+    const maxTutorialTears = getOnboardingTier(isDevMode ? calendarDate : actualToday) === 'mini' ? 2 : 10;
     if (tutorialState === 2 && tutorialTears >= maxTutorialTears) return false;
     if (tutorialState === -1 && !isDevMode && missedDays <= 0) {
        return false;
@@ -676,7 +696,7 @@ function App() {
     });
   };
 
-  const maxTutorialTears = getOnboardingTier(actualToday) === 'mini' ? 2 : 10;
+  const maxTutorialTears = getOnboardingTier(isDevMode ? calendarDate : actualToday) === 'mini' ? 2 : 10;
   const isTearLocked = 
     tutorialState === 0 || 
     tutorialState === 3 || 
@@ -753,7 +773,7 @@ function App() {
       <AnimatePresence>
         {tutorialState === 0 && (
           <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} onComplete={() => {
-            const tier = getOnboardingTier(actualToday);
+            const tier = getOnboardingTier(isDevMode ? calendarDate : actualToday);
 
             // Delay confetti until the physical drop animation is mostly complete (0.7 seconds)
             setTimeout(() => {
@@ -915,6 +935,24 @@ function App() {
                 max="2027-01-01"
                 onChange={handleDevDateChange}
               />
+            </button>
+          )}
+
+          {/* TEMPORARY DEV MODE TEST BUTTON: Tests onboarding for the currently selected calendarDate */}
+          {isDevMode && (
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTestOnboarding();
+              }}
+              title="Test Onboarding for selected calendar date"
+              className={`absolute top-8 left-40 z-[50] px-3.5 py-2 rounded-full border-2 shadow-md flex items-center gap-1.5 text-xs font-black tracking-wider transition-all active:scale-95 ${
+                isDarkMode 
+                  ? 'bg-amber-500/20 border-amber-400 text-amber-300 hover:bg-amber-500/30' 
+                  : 'bg-amber-100 border-amber-600 text-amber-900 hover:bg-amber-200'
+              }`}
+            >
+              <span>Onboarding ({getOnboardingTier(calendarDate)})</span>
             </button>
           )}
 

@@ -55,9 +55,9 @@ export function getOnboardingTier(date = null) {
 
   // Before December (October, November)
   if (month < 11) return 'full';
-  // Dec 1 to Dec 25
-  if (month === 11 && day <= 25) return 'mini';
-  // After Dec 25 (Final Week of 2026)
+  // Dec 1 to Dec 14: Quick mini-tutorial
+  if (month === 11 && day <= 14) return 'mini';
+  // After Dec 14: Onboarding skipped completely
   return 'skip';
 }
 
