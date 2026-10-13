@@ -63,3 +63,40 @@ export function getOnboardingTier(date = null) {
   return 'skip';
 }
 
+/**
+ * Checks if a date corresponds to a special event / festival card
+ * where the star key must never appear (Rule 2).
+ */
+export function isSpecialCardDate(date) {
+  if (!date) return false;
+  const m = date.getMonth(); // 0-indexed: 9 = Oct, 10 = Nov, 11 = Dec, 0 = Jan
+  const d = date.getDate();
+  const y = date.getFullYear();
+
+  // Target Date / 2027 New Year
+  if (y >= 2027 || (m === 0 && d === 1)) return true;
+
+  // Gandhi Jayanti (Oct 2)
+  if (m === 9 && d === 2) return true;
+
+  // Birthday (Oct 14)
+  if (m === 9 && d === 14) return true;
+
+  // Ayutha Pooja (Oct 19)
+  if (m === 9 && d === 19) return true;
+
+  // Vijayadashami (Oct 20)
+  if (m === 9 && d === 20) return true;
+
+  // Diwali (Nov 8)
+  if (m === 10 && d === 8) return true;
+
+  // Avengers: Doomsday (Dec 18)
+  if (m === 11 && d === 18) return true;
+
+  // Christmas (Dec 25)
+  if (m === 11 && d === 25) return true;
+
+  return false;
+}
+

@@ -7,7 +7,7 @@ import ConfettiBurst from './components/ConfettiBurst';
 import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
 import confetti from 'canvas-confetti';
-import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier } from './utils/date';
+import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier, isSpecialCardDate } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
@@ -33,6 +33,16 @@ function App() {
   const [hasGandhiKey, setHasGandhiKey] = useState(() => localStorage.getItem('hasGandhiKey') === 'true');
   const [showKeyModal, setShowKeyModal] = useState(false);
   const [isWaitingForKey, setIsWaitingForKey] = useState(false);
+  const [hasFirstTearAfterOnboarding, setHasFirstTearAfterOnboarding] = useState(() => {
+    return localStorage.getItem('hasFirstTearAfterOnboarding') === 'true';
+  });
+  const [starVisible, setStarVisible] = useState(() => {
+    const isDone = localStorage.getItem('onboardingDone') === 'true';
+    const hasTorn = localStorage.getItem('hasFirstTearAfterOnboarding') === 'true';
+    const hasKey = localStorage.getItem('hasGandhiKey') === 'true';
+    return isDone && hasTorn && !hasKey;
+  });
+  const [shouldAnimateStarFlight, setShouldAnimateStarFlight] = useState(false);
   const [finalHintStep, setFinalHintStep] = useState('none');
   const [refillingPages, setRefillingPages] = useState([]);
 
@@ -499,9 +509,12 @@ function App() {
        setShowKeyModal(true);
        setShowBubble(false);
        setIsWaitingForKey(false);
-       setHasGandhiKey(true);
-       localStorage.setItem('hasGandhiKey', 'true');
     }
+  };
+
+  const handleStarClick = () => {
+    setShowKeyModal(true);
+    setShowBubble(false);
   };
 
   const handleTear = () => {
@@ -520,6 +533,15 @@ function App() {
        return false;
     }
 
+    const isStarCardBlocked = tutorialState === -1 && !hasGandhiKey && hasFirstTearAfterOnboarding && !isSpecialCardDate(calendarDate);
+    if (isStarCardBlocked) {
+       setBubbleText(globalLang === "english" ? "Something is sparkling in the corner... Tap to see what it is" : "Corner-la oru natchathiram minunguthe... enna nu Tap panni paarunga");
+       setBubblePosition('bottom');
+       setShowBubble(true);
+       setStarVisible(true);
+       return false;
+    }
+
     if (tutorialState !== -1) {
       setTutorialTears(prev => prev + 1);
       setCalendarDate(prev => addDays(prev, 1));
@@ -535,6 +557,22 @@ function App() {
       if (nagSequence) {
         setNagSequence(null);
         setShowBubble(false);
+      }
+
+      // Track first tear after onboarding
+      if (!hasFirstTearAfterOnboarding) {
+        setHasFirstTearAfterOnboarding(true);
+        localStorage.setItem('hasFirstTearAfterOnboarding', 'true');
+      }
+
+      // Spawn star on newly revealed card if it is a normal day (Rule 1 & 2)
+      if (!hasGandhiKey && !isSpecialCardDate(nextDate)) {
+        setTimeout(() => {
+          setShouldAnimateStarFlight(true);
+          setStarVisible(true);
+        }, 2000);
+      } else {
+        setStarVisible(false);
       }
     }
   };
@@ -1102,6 +1140,9 @@ function App() {
                     }}
                     isDiwali={page.isDiwali} 
                     hasGandhiKey={hasGandhiKey}
+                    hasCornerStar={page.index === 0 && starVisible && !isSpecialCardDate(calendarDate)}
+                    onStarClick={handleStarClick}
+                    shouldAnimateStarFlight={shouldAnimateStarFlight}
                     isTearLocked={isTearLocked}
                     onDevTap={handleDevPillTap}
                     onDevHoldStart={handleDevPillHoldStart}
@@ -1154,7 +1195,18 @@ function App() {
           </motion.div>
         </div>
       </div>
-      <KeyModal isOpen={showKeyModal} onClose={() => setShowKeyModal(false)} globalLang={globalLang} />
+      <KeyModal 
+        isOpen={showKeyModal} 
+        onClose={() => {
+          setShowKeyModal(false);
+          setHasGandhiKey(true);
+          localStorage.setItem('hasGandhiKey', 'true');
+          setStarVisible(false);
+          setShowBubble(false);
+          setIsWaitingForKey(false);
+        }} 
+        globalLang={globalLang} 
+      />
       <BirthdaySecretSurprise 
         isOpen={showBirthdaySecret} 
         onClose={() => setShowBirthdaySecret(false)} 
