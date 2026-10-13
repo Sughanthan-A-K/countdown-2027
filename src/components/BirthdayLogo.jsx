@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { getGlobalWishesCount, incrementGlobalWish, resetGlobalWishes, subscribeToGlobalWishes } from '../utils/wishesService';
+import { getGlobalWishesCount, incrementGlobalWish, resetGlobalWishes, subscribeToGlobalWishes, isWishAllowed } from '../utils/wishesService';
 
-export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
+export default function BirthdayLogo({ isDarkMode, onSecretTrigger, isTearLocked }) {
   const [wishesCount, setWishesCount] = useState(() => {
     const saved = localStorage.getItem('sughanthan_bday_wishes_count');
     return saved !== null ? parseInt(saved, 10) : 0;
@@ -30,8 +30,20 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
     };
   }, []);
 
-  // Sync with global Supabase count on mount & subscribe to Realtime cross-device updates!
+  // Before Oct 14, clean up any previous test wish flag so tomorrow's live birthday starts completely fresh!
   useEffect(() => {
+    if (!isWishAllowed() && localStorage.getItem('sughanthan_bday_wished')) {
+      localStorage.removeItem('sughanthan_bday_wished');
+      setHasWished(false);
+      setIsButtonVisible(true);
+    }
+  }, []);
+
+  // Sync with global Supabase count on mount & subscribe to Realtime cross-device updates!
+  // Skip background network subscription if card is purely an animation refill preview (isTearLocked)
+  useEffect(() => {
+    if (isTearLocked) return;
+
     // 1. Initial fetch from cloud
     getGlobalWishesCount().then((count) => {
       if (typeof count === 'number') {
@@ -49,23 +61,7 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, []);
-
-  // Check if today is Oct 14 (or Oct 14 in dev mode):
-  const isWishAllowed = () => {
-    const now = new Date();
-    // System date is Oct 14 (Month 9 in 0-indexed JS)
-    if (now.getMonth() === 9 && now.getDate() === 14) return true;
-
-    // In dev mode, if user explicitly navigated to Oct 14, allow testing
-    const isDev = typeof window !== 'undefined' && localStorage.getItem('isDevMode') === 'true';
-    const devDateStr = typeof window !== 'undefined' ? localStorage.getItem('devOverrideDate') : null;
-    if (isDev && devDateStr) {
-      const devDate = new Date(parseInt(devDateStr, 10));
-      return devDate.getMonth() === 9 && devDate.getDate() === 14;
-    }
-    return false;
-  };
+  }, [isTearLocked]);
 
   // Listen for refresh / reset event: restore button if needed, but NEVER reset database wishes count
   useEffect(() => {
@@ -346,7 +342,7 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger }) {
               onClick={handleTap}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.03 }}
-              className={`relative group px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase border transition-all duration-300 shadow-sm flex items-center gap-1.5 ${
+              className={`relative group px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase border transition-all duration-300 shadow-sm flex items-center justify-center min-w-[140px] gap-1.5 ${
                 hasWished
                   ? isDarkMode
                     ? 'bg-neutral-800/90 border-neutral-700 text-neutral-200 shadow-[0_0_12px_rgba(239,68,68,0.2)]'

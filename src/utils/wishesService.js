@@ -65,23 +65,54 @@ export async function resetGlobalWishes() {
 }
 
 /**
- * Subscribe to realtime updates for birthday wishes
+ * Check if today is Oct 14 (or Oct 14 in dev mode override)
+ */
+export function isWishAllowed() {
+  const now = new Date();
+  // System date is Oct 14 (Month 9 in 0-indexed JS)
+  if (now.getMonth() === 9 && now.getDate() === 14) return true;
+
+  // In dev mode, if user explicitly navigated to Oct 14, allow testing
+  if (typeof window !== 'undefined') {
+    const isDev = localStorage.getItem('isDevMode') === 'true';
+    const devDateStr = localStorage.getItem('devOverrideDate');
+    if (isDev && devDateStr) {
+      const devDate = new Date(parseInt(devDateStr, 10));
+      return devDate.getMonth() === 9 && devDate.getDate() === 14;
+    }
+  }
+  return false;
+}
+
+/**
+ * Subscribe to realtime updates for birthday wishes safely
  */
 export function subscribeToGlobalWishes(onUpdate) {
-  const channel = supabase
-    .channel('realtime_birthday_wishes')
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'birthday_wishes' },
-      (payload) => {
-        if (payload?.new && typeof payload.new.count === 'number') {
-          onUpdate(payload.new.count);
+  try {
+    const channelName = `realtime_bday_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    const channel = supabase
+      .channel(channelName)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'birthday_wishes' },
+        (payload) => {
+          if (payload?.new && typeof payload.new.count === 'number') {
+            onUpdate(payload.new.count);
+          }
         }
-      }
-    )
-    .subscribe();
+      )
+      .subscribe();
 
-  return () => {
-    supabase.removeChannel(channel);
-  };
+    return () => {
+      try {
+        supabase.removeChannel(channel);
+      } catch (e) {
+        console.warn('Error removing channel:', e);
+      }
+    };
+  } catch (err) {
+    console.warn('Error subscribing to global wishes:', err);
+    return () => {};
+  }
 }
+

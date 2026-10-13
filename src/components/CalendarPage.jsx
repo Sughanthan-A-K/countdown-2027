@@ -4,7 +4,7 @@ import { Sparkles, PartyPopper, Star } from 'lucide-react';
 import GandhiPic from './GandhiPic';
 import ConfettiBurst from './ConfettiBurst';
 import BirthdayLogo from './BirthdayLogo';
-import { incrementGlobalWish } from '../utils/wishesService';
+import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
 export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, onDevTap, onDevHoldStart, onDevHoldEnd }) {
   const [exitX, setExitX] = useState(0);
@@ -47,8 +47,9 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       const canTear = onTear(); 
       if (canTear === false) return; // Prevent tearing visually if blocked
 
-      // If user tears the Birthday page without tapping, automatically count it as a wish
-      if (isBirthday) {
+      // If user tears the Birthday page on Oct 14 without tapping, automatically count it as a wish
+      // Strictly disabled during onboarding tutorial and on any date before Oct 14!
+      if (isBirthday && !isTearLocked && isWishAllowed()) {
         const alreadyWished = localStorage.getItem('sughanthan_bday_wished') === 'true';
         if (!alreadyWished) {
           localStorage.setItem('sughanthan_bday_wished', 'true');
@@ -247,7 +248,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 </div>
 
                 <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full">
-                  <BirthdayLogo isDarkMode={effectiveDarkMode} onSecretTrigger={onBirthdaySecret} />
+                  <BirthdayLogo isDarkMode={effectiveDarkMode} onSecretTrigger={onBirthdaySecret} isTearLocked={isTearLocked} />
                 </div>
                 
                 <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
