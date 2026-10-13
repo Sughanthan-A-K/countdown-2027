@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getDaysRemaining, normalizeDate } from '../utils/date';
 
-export default function Onboarding({ onComplete, globalLang, setGlobalLang, targetDate }) {
+export default function Onboarding({ onComplete, globalLang, setGlobalLang }) {
   const [index, setIndex] = useState(0);
-  const daysLeft = getDaysRemaining(normalizeDate(targetDate || new Date()));
+  const daysLeft = getDaysRemaining(normalizeDate(new Date()));
 
   const pages = globalLang === 'english' ? [
     { isLangSelect: true },

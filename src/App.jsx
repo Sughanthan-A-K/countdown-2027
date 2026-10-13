@@ -8,7 +8,7 @@ import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
 import confetti from 'canvas-confetti';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier } from './utils/date';
-import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw, Compass } from 'lucide-react';
+import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
 
@@ -178,30 +178,6 @@ function App() {
     if (devHoldTimerRef.current) {
       clearTimeout(devHoldTimerRef.current);
     }
-  };
-
-  // Temporary Dev Mode Onboarding Tester (tested by user across dates)
-  const handleTestOnboarding = () => {
-    const tier = getOnboardingTier(calendarDate);
-    if (tier === 'skip') {
-      showMsg(
-        globalLang === 'english'
-          ? <>After Dec 14: Onboarding is completely skipped!<br/>Directly active on {highlight(formatDate(calendarDate))}</>
-          : <>Dec 14-kku apparam: Onboarding skip aagidum!<br/>Direct-ah {highlight(formatDate(calendarDate))} date-la calendar ready-ah irukkum</>,
-        4000
-      );
-      return;
-    }
-
-    if (isDevMode && localStorage.getItem('devOverrideDate')) {
-      setCalendarDate(normalizeDate(new Date(parseInt(localStorage.getItem('devOverrideDate'), 10))));
-    } else {
-      setCalendarDate(normalizeDate(new Date()));
-    }
-
-    setTutorialTears(0);
-    setEpilogueStep(0);
-    setTutorialState(0);
   };
 
   // Nag State for returning users
@@ -469,14 +445,10 @@ function App() {
         showMsg(epilogueMessages[epilogueStep], 0); 
       } else {
         setShowBubble(false);
-        const baseDate = (isDevMode && localStorage.getItem('devOverrideDate'))
-          ? normalizeDate(new Date(parseInt(localStorage.getItem('devOverrideDate'), 10)))
-          : normalizeDate(new Date());
-        setCalendarDate(baseDate);
-        if (!isDevMode) {
-          localStorage.setItem('lastTornDate', baseDate.getTime().toString());
-          localStorage.setItem('onboardingDone', 'true');
-        }
+        const today = normalizeDate(new Date());
+        setCalendarDate(today);
+        localStorage.setItem('lastTornDate', today.getTime().toString());
+        localStorage.setItem('onboardingDone', 'true');
         setTutorialState(-1);
         
         // Show the Info hint bubble (requires manual click to proceed)
@@ -570,22 +542,23 @@ function App() {
   const handleReset = () => {
     if (tutorialState !== 3 && !(tutorialState === -1 && isDevMode)) return;
 
+    if (isDevMode) {
+      localStorage.removeItem('devOverrideDate');
+    }
+
     if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
     setShowBubble(false);
 
-    const baseDate = (isDevMode && localStorage.getItem('devOverrideDate'))
-      ? normalizeDate(new Date(parseInt(localStorage.getItem('devOverrideDate'), 10)))
-      : normalizeDate(new Date());
-
-    // Since calendarDate goes to the future when tearing, calendarDate - baseDate will be positive.
-    const diff = Math.abs(getDiffDays(calendarDate, baseDate));
+    const today = normalizeDate(new Date());
+    // Since calendarDate goes to the future when tearing, calendarDate - today will be positive.
+    const diff = Math.abs(getDiffDays(calendarDate, today));
 
     if (diff > 0) {
       // Trigger cinematic refill animation with actual torn dates
       const burstCount = diff; // No maximum cap, refill all torn pages
       const missingPages = [];
       for (let i = 1; i <= burstCount; i++) {
-        const d = addDays(baseDate, diff - i);
+        const d = addDays(today, diff - i);
         missingPages.push({
           id: `refill-${d.getTime()}`,
           dateText: formatDate(d),
@@ -602,13 +575,13 @@ function App() {
       
       // Delay the actual state reset so they watch the cards fly in
       setTimeout(() => {
-        setCalendarDate(baseDate);
+        setCalendarDate(today);
         setResetCount(c => c + 1);
         setRefillingPages([]);
         if (tutorialState === 3) setTutorialState(4);
       }, animationDelay + 100); 
     } else {
-      setCalendarDate(baseDate);
+      setCalendarDate(today);
       setResetCount(c => c + 1);
       if (tutorialState === 3) setTutorialState(4);
     }
@@ -776,12 +749,8 @@ function App() {
 
       <AnimatePresence>
         {tutorialState === 0 && (
-          <Onboarding 
-            globalLang={globalLang} 
-            setGlobalLang={setGlobalLang} 
-            targetDate={isDevMode ? calendarDate : actualToday}
-            onComplete={() => {
-            const tier = getOnboardingTier(isDevMode ? calendarDate : actualToday);
+          <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} onComplete={() => {
+            const tier = getOnboardingTier(actualToday);
 
             // Delay confetti until the physical drop animation is mostly complete (0.7 seconds)
             setTimeout(() => {
@@ -943,24 +912,6 @@ function App() {
                 max="2027-01-01"
                 onChange={handleDevDateChange}
               />
-            </button>
-          )}
-
-          {/* TEMPORARY DEV MODE TEST BUTTON: Tests onboarding for the currently selected calendarDate */}
-          {isDevMode && (
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                handleTestOnboarding();
-              }}
-              title={`Test Onboarding (${getOnboardingTier(calendarDate) === 'full' ? 'Active: 10 tears' : 'Skipped'})`}
-              className={`absolute top-8 left-1/2 -translate-x-1/2 z-[50] p-3 rounded-full border-2 shadow-md flex items-center justify-center transition-transform active:scale-95 ${
-                isDarkMode 
-                  ? 'bg-amber-500/20 border-amber-400 text-amber-300 hover:bg-amber-500/30' 
-                  : 'bg-amber-100 border-amber-600 text-amber-900 hover:bg-amber-200'
-              }`}
-            >
-              <Compass size={20} />
             </button>
           )}
 
