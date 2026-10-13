@@ -554,7 +554,7 @@ function App() {
           isGandhiJayanti: d.getMonth() === 9 && d.getDate() === 2, 
           isDiwaliDay: d.getMonth() === 10 && d.getDate() === 8, 
           isDiwali: (d.getMonth() === 10 && d.getDate() === 8) && diwaliRevealed,
-          isBirthday: d.getMonth() === 9 && d.getDate() === 14,
+          isBirthday: tutorialState === -1 && d.getMonth() === 9 && d.getDate() === 14,
         });
       }
       setRefillingPages(missingPages);
@@ -677,7 +677,7 @@ function App() {
       daysRemaining: getDaysRemaining(pageDate),
       index: i,
       isGandhiJayanti: pageDate.getMonth() === 9 && pageDate.getDate() === 2,
-      isBirthday: pageDate.getMonth() === 9 && pageDate.getDate() === 14,
+      isBirthday: tutorialState === -1 && pageDate.getMonth() === 9 && pageDate.getDate() === 14,
       isDiwaliDay: pageDate.getMonth() === 10 && pageDate.getDate() === 8,
       isDiwali: (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
       
