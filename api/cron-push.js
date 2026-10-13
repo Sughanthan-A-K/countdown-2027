@@ -69,20 +69,38 @@ function getSpecialMessage(istDate, language, daysRemaining) {
       : "Ungalukkum unga kudumbathirkum Iniya Christmas Nalvazhthukkal! 🎄🎅";
   }
 
-  // 7. Dec 26 to Dec 31: Year-End Final Days
+  // 7. Dec 26 to Dec 31: Year-End Day-by-Day Countdown
   if (month === 11 && date >= 26) {
-    const yearEndEnglish = [
-      "Final days of 2026... Let's wrap up this year on a happy note! Relax & get ready for 2027! ⏳✨",
-      "The year is almost ending... Cherish the good memories and chill! Just {days} days to 2027! ⏳✨",
-      "Almost there! You've come a long way this year... Relax & look forward to 2027! ⏳✨"
-    ];
-    const yearEndTanglish = [
-      "2026-oda last days... Intha varushatha happy-ah mudipom! Relax & look forward to 2027! ⏳✨",
-      "Intha varusham mudiyapoguthu... Good memories ellam recall pannitu chill pannunga! Just {days} days to 2027! ⏳✨",
-      "Almost there! Intha year evalo learn pannom la... Relax & look forward to 2027! ⏳✨"
-    ];
-    const list = language === 'english' ? yearEndEnglish : yearEndTanglish;
-    return list[Math.floor(Math.random() * list.length)].replace('{days}', daysRemaining);
+    if (date === 26) {
+      return language === 'english'
+        ? "Only 6 days left... The final chapter of 2026 begins! ⏳✨"
+        : "Innum 6 days thaan... 2026-oda final chapter starts! ⏳✨";
+    }
+    if (date === 27) {
+      return language === 'english'
+        ? "Just 5 days to go... Take a moment to reflect on everything you learned this year! 🌟"
+        : "Innum 5 days... Intha varushathula neenga learn panna nalla vishayatha nenachu paarunga! 🌟";
+    }
+    if (date === 28) {
+      return language === 'english'
+        ? "Only 4 days remaining! Let's wrap up this year peacefully and happily! 🤍✨"
+        : "Innum 4 days thaan irukku! Peace-ah, happy-ah intha year-a mudipom! 🤍✨";
+    }
+    if (date === 29) {
+      return language === 'english'
+        ? "Just 3 days left! Cherish the best memories of 2026 and unwind! 📸🎉"
+        : "Innum 3 days thaan! 2026-oda best memories ellam recall pannitu chill pannunga! 📸🎉";
+    }
+    if (date === 30) {
+      return language === 'english'
+        ? "Only 2 days to 2027! The countdown is almost here... Be proud of how far you've come! ⏳🔥"
+        : "Only 2 days to 2027! The countdown is getting closer... Be proud of yourself! ⏳🔥";
+    }
+    if (date === 31) {
+      return language === 'english'
+        ? "The final day of 2026 is here! Tomorrow is 2027... Are you ready? 🎆🔥"
+        : "2026-oda last day innaiku! Naalaikku 2027... Are you ready? 🎆🔥";
+    }
   }
 
   // 8. Jan 1: New Year
