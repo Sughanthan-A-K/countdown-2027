@@ -35,9 +35,8 @@ export function getDiffDays(date1, date2) {
 
 /**
  * Determines the onboarding tutorial tier based on cut-off date:
- * - Till Nov 30: 'full' (10-sheet tearing tutorial + double tap reset)
- * - Dec 1 to Dec 25: 'mini' (2-sheet quick tearing tutorial + double tap reset)
- * - After Dec 25 (Final Week): 'skip' (Tutorial skipped, direct to today countdown)
+ * - Up to Dec 14: 'full' (10-sheet tearing tutorial + double tap reset)
+ * - Dec 15 onwards: 'skip' (Tutorial skipped, direct to today countdown)
  */
 export function getOnboardingTier(date = null) {
   let target = date;
@@ -50,14 +49,17 @@ export function getOnboardingTier(date = null) {
   }
   if (!target) target = new Date();
 
+  const year = target.getFullYear();
   const month = target.getMonth(); // 0 = Jan, 10 = Nov, 11 = Dec
   const day = target.getDate();
 
-  // Before December (October, November)
-  if (month < 11) return 'full';
-  // Dec 1 to Dec 14: Quick mini-tutorial
-  if (month === 11 && day <= 14) return 'mini';
-  // After Dec 14: Onboarding skipped completely
+  if (year > 2026) return 'skip';
+
+  // Up to Dec 14: Full Onboarding (10 dates tearing tutorial)
+  if (month < 11 || (month === 11 && day <= 14)) {
+    return 'full';
+  }
+  // After Dec 14 (Dec 15 onwards): Onboarding skipped completely
   return 'skip';
 }
 

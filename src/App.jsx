@@ -8,7 +8,7 @@ import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
 import confetti from 'canvas-confetti';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier } from './utils/date';
-import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
+import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw, Compass } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
 
@@ -191,6 +191,12 @@ function App() {
         4000
       );
       return;
+    }
+
+    if (isDevMode && localStorage.getItem('devOverrideDate')) {
+      setCalendarDate(normalizeDate(new Date(parseInt(localStorage.getItem('devOverrideDate'), 10))));
+    } else {
+      setCalendarDate(normalizeDate(new Date()));
     }
 
     setTutorialTears(0);
@@ -416,11 +422,10 @@ function App() {
     if (tutorialState === 1 && !showKeyModal && !isWaitingForKey) { 
       if (tutorialTears === 0) {
         timeout1 = setTimeout(() => {
-          const tier = getOnboardingTier(isDevMode ? calendarDate : actualToday);
           showMsg(
-            tier === 'mini'
-              ? (globalLang === 'english' ? <>Try tearing a page...<br/>{highlight('Swipe')} to tear...</> : <>Oru calendar page kizhichi paarunga...<br/>{highlight('Swipe panni')} tear pannu...</>)
-              : (globalLang === 'english' ? <>You can tear this calendar...<br/>as much as you want...<br/>{highlight('Swipe')} to tear...</> : <>Nee evlo venalum...<br/>intha calendar-a kizhichi podalam...<br/>{highlight('Swipe panni')} tear pannu...</>),
+            globalLang === 'english' 
+              ? <>You can tear this calendar...<br/>as much as you want...<br/>{highlight('Swipe')} to tear...</> 
+              : <>Nee evlo venalum...<br/>intha calendar-a kizhichi podalam...<br/>{highlight('Swipe panni')} tear pannu...</>,
             0
           );
           timeout2 = setTimeout(() => {
@@ -442,18 +447,16 @@ function App() {
           }, 8000); // Wait 8 seconds before starting to nag them
         }, 5500); // 5.5 seconds delay to let the confetti and reveal animation finish completely
       } else if (tutorialTears === 1) {
-        const tier = getOnboardingTier(isDevMode ? calendarDate : actualToday);
-        if (tier === 'mini') {
-          timeout1 = showMsg(globalLang === 'english' ? <>Super! Now tear {highlight('one more page')}</> : <>Super! Ippo {highlight('innum oru sheet')} kizhichi paarunga</>, 0);
-        } else {
-          timeout1 = showMsg(globalLang === 'english' ? <>Yes exactly!<br/>Tear off {highlight('as many as you can')}</> : <>Yes apdithaan!<br/>Unnala {highlight('evlo kizhichi poda mudiyumo')} kizhichi podu</>, 0);
-        }
+        timeout1 = showMsg(
+          globalLang === 'english' 
+            ? <>Yes exactly!<br/>Tear off {highlight('as many as you can')}</> 
+            : <>Yes apdithaan!<br/>Unnala {highlight('evlo kizhichi poda mudiyumo')} kizhichi podu</>, 
+          0
+        );
         setTutorialState(2);
       }
     } else if (tutorialState === 2) {
-      const tier = getOnboardingTier(isDevMode ? calendarDate : actualToday);
-      const targetTears = tier === 'mini' ? 2 : 10;
-      if (tutorialTears >= targetTears) {
+      if (tutorialTears >= 10) {
         timeout1 = showMsg(globalLang === 'english' ? <>That's enough {highlight('tearing!')}</> : <>Pothum da nee {highlight('kizhichathu!')}</>, 3000);
         timeout2 = setTimeout(() => {
           setTutorialState(3);
@@ -466,10 +469,14 @@ function App() {
         showMsg(epilogueMessages[epilogueStep], 0); 
       } else {
         setShowBubble(false);
-        const today = normalizeDate(new Date());
-        setCalendarDate(isDevMode ? calendarDate : today);
-        localStorage.setItem('lastTornDate', today.getTime().toString());
-        localStorage.setItem('onboardingDone', 'true');
+        const baseDate = (isDevMode && localStorage.getItem('devOverrideDate'))
+          ? normalizeDate(new Date(parseInt(localStorage.getItem('devOverrideDate'), 10)))
+          : normalizeDate(new Date());
+        setCalendarDate(baseDate);
+        if (!isDevMode) {
+          localStorage.setItem('lastTornDate', baseDate.getTime().toString());
+          localStorage.setItem('onboardingDone', 'true');
+        }
         setTutorialState(-1);
         
         // Show the Info hint bubble (requires manual click to proceed)
@@ -527,8 +534,7 @@ function App() {
 
   const handleTear = () => {
     if (tutorialState === 0 || tutorialState === 3 || tutorialState === 4) return false;
-    const maxTutorialTears = getOnboardingTier(isDevMode ? calendarDate : actualToday) === 'mini' ? 2 : 10;
-    if (tutorialState === 2 && tutorialTears >= maxTutorialTears) return false;
+    if (tutorialState === 2 && tutorialTears >= 10) return false;
     if (tutorialState === -1 && !isDevMode && missedDays <= 0) {
        return false;
     }
@@ -564,23 +570,22 @@ function App() {
   const handleReset = () => {
     if (tutorialState !== 3 && !(tutorialState === -1 && isDevMode)) return;
 
-    if (isDevMode) {
-      localStorage.removeItem('devOverrideDate');
-    }
-
     if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
     setShowBubble(false);
 
-    const today = normalizeDate(new Date());
-    // Since calendarDate goes to the future when tearing, calendarDate - today will be positive.
-    const diff = Math.abs(getDiffDays(calendarDate, today));
+    const baseDate = (isDevMode && localStorage.getItem('devOverrideDate'))
+      ? normalizeDate(new Date(parseInt(localStorage.getItem('devOverrideDate'), 10)))
+      : normalizeDate(new Date());
+
+    // Since calendarDate goes to the future when tearing, calendarDate - baseDate will be positive.
+    const diff = Math.abs(getDiffDays(calendarDate, baseDate));
 
     if (diff > 0) {
       // Trigger cinematic refill animation with actual torn dates
       const burstCount = diff; // No maximum cap, refill all torn pages
       const missingPages = [];
       for (let i = 1; i <= burstCount; i++) {
-        const d = addDays(today, diff - i);
+        const d = addDays(baseDate, diff - i);
         missingPages.push({
           id: `refill-${d.getTime()}`,
           dateText: formatDate(d),
@@ -597,13 +602,13 @@ function App() {
       
       // Delay the actual state reset so they watch the cards fly in
       setTimeout(() => {
-        setCalendarDate(today);
+        setCalendarDate(baseDate);
         setResetCount(c => c + 1);
         setRefillingPages([]);
         if (tutorialState === 3) setTutorialState(4);
       }, animationDelay + 100); 
     } else {
-      setCalendarDate(today);
+      setCalendarDate(baseDate);
       setResetCount(c => c + 1);
       if (tutorialState === 3) setTutorialState(4);
     }
@@ -696,12 +701,11 @@ function App() {
     });
   };
 
-  const maxTutorialTears = getOnboardingTier(isDevMode ? calendarDate : actualToday) === 'mini' ? 2 : 10;
   const isTearLocked = 
     tutorialState === 0 || 
     tutorialState === 3 || 
     tutorialState === 4 || 
-    (tutorialState === 2 && tutorialTears >= maxTutorialTears) || 
+    (tutorialState === 2 && tutorialTears >= 10) || 
     (tutorialState === -1 && !isDevMode && missedDays <= 0);
 
     const pages = [0, 1, 2].map((i) => {
@@ -772,7 +776,11 @@ function App() {
 
       <AnimatePresence>
         {tutorialState === 0 && (
-          <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} onComplete={() => {
+          <Onboarding 
+            globalLang={globalLang} 
+            setGlobalLang={setGlobalLang} 
+            targetDate={isDevMode ? calendarDate : actualToday}
+            onComplete={() => {
             const tier = getOnboardingTier(isDevMode ? calendarDate : actualToday);
 
             // Delay confetti until the physical drop animation is mostly complete (0.7 seconds)
@@ -945,14 +953,14 @@ function App() {
                 e.stopPropagation();
                 handleTestOnboarding();
               }}
-              title="Test Onboarding for selected calendar date"
-              className={`absolute top-8 left-40 z-[50] px-3.5 py-2 rounded-full border-2 shadow-md flex items-center gap-1.5 text-xs font-black tracking-wider transition-all active:scale-95 ${
+              title={`Test Onboarding (${getOnboardingTier(calendarDate) === 'full' ? 'Active: 10 tears' : 'Skipped'})`}
+              className={`absolute top-8 left-1/2 -translate-x-1/2 z-[50] p-3 rounded-full border-2 shadow-md flex items-center justify-center transition-transform active:scale-95 ${
                 isDarkMode 
                   ? 'bg-amber-500/20 border-amber-400 text-amber-300 hover:bg-amber-500/30' 
                   : 'bg-amber-100 border-amber-600 text-amber-900 hover:bg-amber-200'
               }`}
             >
-              <span>Onboarding ({getOnboardingTier(calendarDate)})</span>
+              <Compass size={20} />
             </button>
           )}
 
