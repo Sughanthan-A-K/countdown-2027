@@ -258,7 +258,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 </div>
 
                 <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full">
-                  <BirthdayLogo isDarkMode={effectiveDarkMode} onSecretTrigger={onBirthdaySecret} isTearLocked={isTearLocked} />
+                  <BirthdayLogo isDarkMode={effectiveDarkMode} onSecretTrigger={onBirthdaySecret} isTop={isTop} />
                 </div>
                 
                 <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>

@@ -4,7 +4,7 @@ import { Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { getGlobalWishesCount, incrementGlobalWish, resetGlobalWishes, subscribeToGlobalWishes, isWishAllowed } from '../utils/wishesService';
 
-export default function BirthdayLogo({ isDarkMode, onSecretTrigger, isTearLocked }) {
+export default function BirthdayLogo({ isDarkMode, onSecretTrigger, isTop = true }) {
   const [wishesCount, setWishesCount] = useState(() => {
     const saved = localStorage.getItem('sughanthan_bday_wishes_count');
     return saved !== null ? parseInt(saved, 10) : 0;
@@ -40,9 +40,9 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger, isTearLocked
   }, []);
 
   // Sync with global Supabase count on mount & subscribe to Realtime cross-device updates!
-  // Skip background network subscription if card is purely an animation refill preview (isTearLocked)
+  // Only connect from top active card (avoid duplicate connections from background cards)
   useEffect(() => {
-    if (isTearLocked) return;
+    if (!isTop) return;
 
     // 1. Initial fetch from cloud
     getGlobalWishesCount().then((count) => {
@@ -61,7 +61,7 @@ export default function BirthdayLogo({ isDarkMode, onSecretTrigger, isTearLocked
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [isTearLocked]);
+  }, [isTop]);
 
   // Listen for refresh / reset event: restore button if needed, but NEVER reset database wishes count
   useEffect(() => {
