@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion';
-import { Sparkles, PartyPopper, Star } from 'lucide-react';
+import { Sparkles, PartyPopper, Star, Share2 } from 'lucide-react';
 import GandhiPic from './GandhiPic';
 import ConfettiBurst from './ConfettiBurst';
 import BirthdayLogo from './BirthdayLogo';
 import MagicalCornerStar from './MagicalCornerStar';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -155,6 +155,26 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 background: `linear-gradient(${gradientAngle.get()}deg, rgba(0,0,0,0.1) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.05) 100%)`
               }}
             />
+          )}
+
+          {/* Share Button for Special Cards */}
+          {isTop && (isBirthday || isGandhiJayanti || isDiwaliActive) && onShareSpecialCard && (
+            <motion.button
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onShareSpecialCard();
+              }}
+              className={`absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-40 p-2 rounded-full border shadow-sm transition-all duration-200 flex items-center justify-center cursor-pointer select-none pointer-events-auto ${
+                effectiveDarkMode 
+                  ? 'bg-neutral-800/90 border-neutral-700 text-neutral-300 hover:text-white hover:bg-neutral-700' 
+                  : 'bg-white/90 border-neutral-300 text-neutral-700 hover:text-black hover:bg-neutral-100 shadow-sm'
+              }`}
+              title="Share this special card"
+            >
+              <Share2 size={15} />
+            </motion.button>
           )}
 
           {isFinished ? (

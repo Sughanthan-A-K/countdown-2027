@@ -86,6 +86,127 @@ function App() {
     }
   };
 
+  // Shared Card View detection from URL query params (e.g. ?card=birthday or ?date=2026-10-14)
+  const [sharedCardData, setSharedCardData] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const cardParam = (params.get('card') || '').toLowerCase();
+      const dateParam = params.get('date');
+
+      let target = null;
+      let cardType = null;
+
+      if (cardParam === 'birthday' || cardParam === 'oct14' || cardParam === 'bday') {
+        target = new Date(2026, 9, 14); // Oct 14
+        cardType = 'birthday';
+      } else if (cardParam === 'gandhi' || cardParam === 'oct2') {
+        target = new Date(2026, 9, 2); // Oct 2
+        cardType = 'gandhi';
+      } else if (cardParam === 'diwali' || cardParam === 'nov8') {
+        target = new Date(2026, 10, 8); // Nov 8
+        cardType = 'diwali';
+      } else if (dateParam) {
+        const parts = dateParam.split('-');
+        if (parts.length === 3) {
+          target = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          if (target.getMonth() === 9 && target.getDate() === 14) cardType = 'birthday';
+          else if (target.getMonth() === 9 && target.getDate() === 2) cardType = 'gandhi';
+          else if (target.getMonth() === 10 && target.getDate() === 8) cardType = 'diwali';
+        }
+      }
+
+      if (target && cardType) {
+        target.setHours(0, 0, 0, 0);
+
+        // Anti-spoiler guard: Only cards up to current date (or any card if in dev mode) are allowed!
+        const isDev = localStorage.getItem('isDevMode') === 'true';
+        const devStored = localStorage.getItem('devOverrideDate');
+        const effectiveToday = isDev && devStored ? normalizeDate(new Date(parseInt(devStored, 10))) : normalizeDate(new Date());
+
+        if (isDev || target.getTime() <= effectiveToday.getTime()) {
+          return { date: target, type: cardType };
+        }
+      }
+    } catch (e) {
+      console.warn('Error parsing shared card query:', e);
+    }
+    return null;
+  });
+
+  const isSharedCardView = !!sharedCardData;
+  const effectiveDarkMode = isSharedCardView ? false : isDarkMode;
+
+  const [shareToastText, setShareToastText] = useState("");
+  const [showShareToast, setShowShareToast] = useState(false);
+
+  const handleShareSpecialCard = async (type = 'birthday', customDate = null) => {
+    let shareUrl = window.location.origin;
+    let title = "Countdown 2027";
+    let text = "Check out this special card on Countdown 2027!";
+
+    const targetDate = customDate || calendarDate;
+
+    if (type === 'birthday' || (targetDate.getMonth() === 9 && targetDate.getDate() === 14)) {
+      shareUrl += '/?card=birthday';
+      title = "Sughanthan's Birthday - Countdown 2027 🎂";
+      text = globalLang === 'english'
+        ? "Hey! Today is Sughanthan's Birthday! Drop your wish in Countdown 2027: "
+        : "Hey! Innaiku Sughanthan Birthday! Countdown 2027-la unga wish-a drop pannunga: ";
+    } else if (type === 'gandhi' || (targetDate.getMonth() === 9 && targetDate.getDate() === 2)) {
+      shareUrl += '/?card=gandhi';
+      title = "Happy Gandhi Jayanti - Countdown 2027 👓";
+      text = "Happy Gandhi Jayanti on Countdown 2027: ";
+    } else if (type === 'diwali' || (targetDate.getMonth() === 10 && targetDate.getDate() === 8)) {
+      shareUrl += '/?card=diwali';
+      title = "Happy Diwali - Countdown 2027 🪔";
+      text = "Happy Diwali on Countdown 2027: ";
+    } else {
+      shareUrl += `/?date=${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url: shareUrl });
+        return;
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.warn('Share error:', err);
+        }
+      }
+    }
+
+    // Fallback: Copy link
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareToastText(globalLang === 'english' ? "Special Card link copied! 📋" : "Special Card link copy aagiduchi! 📋");
+      setShowShareToast(true);
+      setTimeout(() => setShowShareToast(false), 2500);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
+
+  const handleStartCountdown = () => {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('card');
+      url.searchParams.delete('date');
+      window.history.replaceState({}, '', url.pathname);
+    } catch (e) {
+      console.warn('URL cleanup error:', e);
+    }
+
+    setSharedCardData(null);
+
+    const isDone = localStorage.getItem('onboardingDone') === 'true';
+    if (!isDone) {
+      setTutorialState(0);
+    } else {
+      setTutorialState(-1);
+    }
+  };
+
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
   const [tutorialState, setTutorialState] = useState(() => {
     if (localStorage.getItem('onboardingDone')) return -1;
@@ -786,7 +907,7 @@ function App() {
       </svg>
 
       <AnimatePresence>
-        {tutorialState === 0 && (
+        {tutorialState === 0 && !isSharedCardView && (
           <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} onComplete={() => {
             const tier = getOnboardingTier(actualToday);
 
@@ -847,136 +968,140 @@ function App() {
 
       <div>
         <div 
-          className={`w-screen h-screen flex flex-col items-center justify-center relative overflow-hidden touch-none ${isDarkMode ? 'bg-black' : 'bg-neutral-100'}`}
+          className={`w-screen h-screen flex flex-col items-center justify-center relative overflow-hidden touch-none ${effectiveDarkMode ? 'bg-black' : 'bg-neutral-100'}`}
           onDoubleClick={handleReset}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
           {/* Confetti (Popper) is now triggered via canvas-confetti function call */}
 
-          {isDevMode && (
-            <button 
-              onClick={() => {
-                const stored = localStorage.getItem('devOverrideDate');
-                if (stored) {
-                  const selected = new Date(parseInt(stored, 10));
-                  selected.setHours(0, 0, 0, 0);
-                  setCalendarDate(selected);
-                } else {
-                  const today = normalizeDate(new Date());
-                  setCalendarDate(today);
-                }
-
-                if (navigator.vibrate) navigator.vibrate([50]);
-              }}
-              className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
-                isDarkMode 
-                  ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
-                  : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
-              }`}
-            >
-              <RotateCcw size={20} />
-            </button>
-          )}
-
-          <button 
-            onClick={toggleTheme}
-            className={`absolute top-8 right-8 z-[50] p-3 rounded-full border-2 shadow-md ${
-              isDarkMode 
-                ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
-                : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
-            }`}
-          >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-          
-          <AnimatePresence>
-            {finalHintStep === 'theme' && !showInfo && (
-              <motion.div
-                initial={{ opacity: 0, y: -10, scale: 0.8 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.8 }}
-                className={`absolute top-[85px] right-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 w-max max-w-[220px] text-center flex flex-col items-center gap-2 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
-              >
-                <span>{globalLang === 'english' ? 'Tap for Dark/Light mode' : 'Dark/Light mode maathikka itha tap pannunga'}</span>
+          {!isSharedCardView && (
+            <>
+              {isDevMode && (
                 <button 
-                  onClick={() => setFinalHintStep('none')}
-                  className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-transform active:scale-95 ${
-                    isDarkMode ? 'bg-black text-white hover:bg-neutral-800' : 'bg-white text-black hover:bg-neutral-200'
+                  onClick={() => {
+                    const stored = localStorage.getItem('devOverrideDate');
+                    if (stored) {
+                      const selected = new Date(parseInt(stored, 10));
+                      selected.setHours(0, 0, 0, 0);
+                      setCalendarDate(selected);
+                    } else {
+                      const today = normalizeDate(new Date());
+                      setCalendarDate(today);
+                    }
+
+                    if (navigator.vibrate) navigator.vibrate([50]);
+                  }}
+                  className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
+                    isDarkMode 
+                      ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
+                      : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
                   }`}
                 >
-                  Done
+                  <RotateCcw size={20} />
                 </button>
-                <div className={`absolute -top-[8px] right-5 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
-              </motion.div>
-            )}
-          </AnimatePresence>
+              )}
 
-          <button 
-            onClick={handleInfoClick}
-            className={`absolute top-8 left-8 z-[50] p-3 rounded-full border-2 shadow-md ${
-              isDarkMode 
-                ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
-                : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
-            }`}
-          >
-            <Info size={20} />
-          </button>
-          
-          {isDevMode && (
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                if (dateInputRef.current) {
-                  try {
-                    dateInputRef.current.showPicker();
-                  } catch (err) {
-                    dateInputRef.current.focus();
-                  }
-                }
-              }}
-              className={`absolute top-8 left-24 z-[50] p-3 rounded-full border-2 shadow-md flex items-center justify-center ${
-                isDarkMode 
-                  ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
-                  : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
-              }`}
-            >
-              <Calendar size={20} />
-              <input 
-                ref={dateInputRef}
-                type="date" 
-                className="absolute opacity-0 w-0 h-0 pointer-events-none"
-                min={`${actualToday.getFullYear()}-${String(actualToday.getMonth() + 1).padStart(2, '0')}-${String(actualToday.getDate()).padStart(2, '0')}`}
-                max="2027-01-01"
-                onChange={handleDevDateChange}
-              />
-            </button>
+              <button 
+                onClick={toggleTheme}
+                className={`absolute top-8 right-8 z-[50] p-3 rounded-full border-2 shadow-md ${
+                  isDarkMode 
+                    ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
+                    : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
+                }`}
+              >
+                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </button>
+              
+              <AnimatePresence>
+                {finalHintStep === 'theme' && !showInfo && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.8 }}
+                    className={`absolute top-[85px] right-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 w-max max-w-[220px] text-center flex flex-col items-center gap-2 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
+                  >
+                    <span>{globalLang === 'english' ? 'Tap for Dark/Light mode' : 'Dark/Light mode maathikka itha tap pannunga'}</span>
+                    <button 
+                      onClick={() => setFinalHintStep('none')}
+                      className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-transform active:scale-95 ${
+                        isDarkMode ? 'bg-black text-white hover:bg-neutral-800' : 'bg-white text-black hover:bg-neutral-200'
+                      }`}
+                    >
+                      Done
+                    </button>
+                    <div className={`absolute -top-[8px] right-5 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <button 
+                onClick={handleInfoClick}
+                className={`absolute top-8 left-8 z-[50] p-3 rounded-full border-2 shadow-md ${
+                  isDarkMode 
+                    ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
+                    : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
+                }`}
+              >
+                <Info size={20} />
+              </button>
+              
+              {isDevMode && (
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (dateInputRef.current) {
+                      try {
+                        dateInputRef.current.showPicker();
+                      } catch (err) {
+                        dateInputRef.current.focus();
+                      }
+                    }
+                  }}
+                  className={`absolute top-8 left-24 z-[50] p-3 rounded-full border-2 shadow-md flex items-center justify-center ${
+                    isDarkMode 
+                      ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
+                      : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
+                  }`}
+                >
+                  <Calendar size={20} />
+                  <input 
+                    ref={dateInputRef}
+                    type="date" 
+                    className="absolute opacity-0 w-0 h-0 pointer-events-none"
+                    min={`${actualToday.getFullYear()}-${String(actualToday.getMonth() + 1).padStart(2, '0')}-${String(actualToday.getDate()).padStart(2, '0')}`}
+                    max="2027-01-01"
+                    onChange={handleDevDateChange}
+                  />
+                </button>
+              )}
+
+              <AnimatePresence>
+                {finalHintStep === 'info' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.8 }}
+                    className={`absolute top-[85px] left-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 w-max max-w-[220px] text-center flex flex-col items-center gap-2 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
+                  >
+                    <span>{globalLang === 'english' ? 'Tap here for Calendar Info' : 'Calendar info theinjikka itha tap pannunga'}</span>
+                    <button 
+                      onClick={() => setFinalHintStep('theme')}
+                      className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-transform active:scale-95 ${
+                        isDarkMode ? 'bg-black text-white hover:bg-neutral-800' : 'bg-white text-black hover:bg-neutral-200'
+                      }`}
+                    >
+                      Next
+                    </button>
+                    <div className={`absolute -top-[8px] left-5 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
           )}
 
           <AnimatePresence>
-            {finalHintStep === 'info' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10, scale: 0.8 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.8 }}
-                className={`absolute top-[85px] left-8 z-[500] px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border-2 w-max max-w-[220px] text-center flex flex-col items-center gap-2 pointer-events-auto ${isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'}`}
-              >
-                <span>{globalLang === 'english' ? 'Tap here for Calendar Info' : 'Calendar info theinjikka itha tap pannunga'}</span>
-                <button 
-                  onClick={() => setFinalHintStep('theme')}
-                  className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-transform active:scale-95 ${
-                    isDarkMode ? 'bg-black text-white hover:bg-neutral-800' : 'bg-white text-black hover:bg-neutral-200'
-                  }`}
-                >
-                  Next
-                </button>
-                <div className={`absolute -top-[8px] left-5 border-l-[8px] border-r-[8px] border-b-[10px] border-transparent ${isDarkMode ? 'border-b-white' : 'border-b-neutral-900'}`} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <AnimatePresence>
-            {showInfo && (
+            {!isSharedCardView && showInfo && (
               <motion.div 
                 initial={{ opacity: 0 }} 
                 animate={{ opacity: 1 }} 
@@ -1106,14 +1231,16 @@ function App() {
             )}
           </AnimatePresence>
 
-          <SpeechBubble 
-            text={bubbleText} 
-            show={showBubble && bubblePosition !== 'top'} 
-            isDarkMode={isDarkMode} 
-            onNext={bubbleAction || getNextHandler()}
-            btnText={bubbleBtnText}
-            position={bubblePosition}
-          />
+          {!isSharedCardView && (
+            <SpeechBubble 
+              text={bubbleText} 
+              show={showBubble && bubblePosition !== 'top'} 
+              isDarkMode={isDarkMode} 
+              onNext={bubbleAction || getNextHandler()}
+              btnText={bubbleBtnText}
+              position={bubblePosition}
+            />
+          )}
 
           <motion.div 
             initial={tutorialState === 1 && tutorialTears === 0 ? { opacity: 0, y: 150, scale: 0.9 } : false}
@@ -1122,36 +1249,66 @@ function App() {
             className={`relative w-full max-w-[400px] h-[60vh] min-h-[450px] flex items-center justify-center perspective-[1200px] ${diwaliPhase >= 1 ? 'z-[1000]' : 'z-0'}`}
           >
             <AnimatePresence>
-                {pages.slice().reverse().map((page) => (
-                  <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
-                    key={page.id}
-                    dateText={page.dateText}
-                    daysRemaining={page.daysRemaining}
-                    index={page.index}
-                    isTop={page.index === 0}
-                    onTear={handleTear}
+                {isSharedCardView ? (
+                  <CalendarPage
+                    key={`shared-${sharedCardData.date.getTime()}`}
+                    dateText={formatDate(sharedCardData.date)}
+                    daysRemaining={getDaysRemaining(sharedCardData.date)}
+                    index={0}
+                    isTop={true}
+                    onTear={() => false}
                     onEyeClick={handleEyeClick}
-                    isDarkMode={isDarkMode}
-                    isGandhiJayanti={page.isGandhiJayanti}
-                    isBirthday={page.isBirthday}
+                    isDarkMode={false}
+                    isGandhiJayanti={sharedCardData.type === 'gandhi'}
+                    isBirthday={sharedCardData.type === 'birthday'}
                     onBirthdaySecret={(count) => {
                       setBirthdaySecretWishes(count);
                       setShowBirthdaySecret(true);
                     }}
-                    isDiwali={page.isDiwali} 
+                    isDiwali={sharedCardData.type === 'diwali'}
                     hasGandhiKey={hasGandhiKey}
-                    hasCornerStar={page.index === 0 && starVisible && !isSpecialCardDate(calendarDate)}
-                    onStarClick={handleStarClick}
-                    shouldAnimateStarFlight={shouldAnimateStarFlight}
-                    isTearLocked={isTearLocked}
-                    onDevTap={handleDevPillTap}
-                    onDevHoldStart={handleDevPillHoldStart}
-                    onDevHoldEnd={handleDevPillHoldEnd}
+                    hasCornerStar={false}
+                    onStarClick={() => {}}
+                    shouldAnimateStarFlight={false}
+                    isTearLocked={true}
+                    onShareSpecialCard={() => handleShareSpecialCard(sharedCardData.type, sharedCardData.date)}
                   />
-                ))}
+                ) : (
+                  pages.slice().reverse().map((page) => (
+                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
+                      key={page.id}
+                      dateText={page.dateText}
+                      daysRemaining={page.daysRemaining}
+                      index={page.index}
+                      isTop={page.index === 0}
+                      onTear={handleTear}
+                      onEyeClick={handleEyeClick}
+                      isDarkMode={isDarkMode}
+                      isGandhiJayanti={page.isGandhiJayanti}
+                      isBirthday={page.isBirthday}
+                      onBirthdaySecret={(count) => {
+                        setBirthdaySecretWishes(count);
+                        setShowBirthdaySecret(true);
+                      }}
+                      isDiwali={page.isDiwali} 
+                      hasGandhiKey={hasGandhiKey}
+                      hasCornerStar={page.index === 0 && starVisible && !isSpecialCardDate(calendarDate)}
+                      onStarClick={handleStarClick}
+                      shouldAnimateStarFlight={shouldAnimateStarFlight}
+                      isTearLocked={isTearLocked}
+                      onDevTap={handleDevPillTap}
+                      onDevHoldStart={handleDevPillHoldStart}
+                      onDevHoldEnd={handleDevPillHoldEnd}
+                      onShareSpecialCard={page.index === 0 ? () => handleShareSpecialCard(
+                        page.isBirthday ? 'birthday' : page.isGandhiJayanti ? 'gandhi' : 'diwali',
+                        addDays(calendarDate, page.index)
+                      ) : undefined}
+                    />
+                  ))
+                )}
 
                 {/* Refill Animation Overlay */}
-                {refillingPages.length > 0 && refillingPages.map((page, i) => (
+                {!isSharedCardView && refillingPages.length > 0 && refillingPages.map((page, i) => (
                   <motion.div
                     key={page.id}
                     initial={{ 
@@ -1193,8 +1350,43 @@ function App() {
                 ))}
             </AnimatePresence>
           </motion.div>
+
+          {/* Start Countdown 2027 Button (Directly below the card for shared card view) */}
+          {isSharedCardView && (
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.5, ease: "easeOut" }}
+              className="mt-6 z-50 pointer-events-auto flex flex-col items-center"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleStartCountdown}
+                className="px-6 py-3 rounded-full bg-neutral-900 text-white font-bold text-sm sm:text-base tracking-wide shadow-xl hover:bg-neutral-800 active:bg-black transition-all flex items-center gap-2.5 cursor-pointer border border-neutral-700/40"
+              >
+                <span>Start Countdown 2027</span>
+                <span className="text-amber-400 font-black text-base">➔</span>
+              </motion.button>
+            </motion.div>
+          )}
         </div>
       </div>
+
+      {/* Special Card Link Copied Toast */}
+      <AnimatePresence>
+        {showShareToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="fixed top-8 left-1/2 -translate-x-1/2 z-[600] px-5 py-2.5 rounded-full bg-neutral-900/95 text-white text-xs sm:text-sm font-semibold tracking-wide shadow-2xl backdrop-blur-md border border-neutral-700/60 pointer-events-none flex items-center gap-2"
+          >
+            <span>{shareToastText}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <KeyModal 
         isOpen={showKeyModal} 
         onClose={() => {
@@ -1211,10 +1403,10 @@ function App() {
         isOpen={showBirthdaySecret} 
         onClose={() => setShowBirthdaySecret(false)} 
         wishesCount={birthdaySecretWishes} 
-        isDarkMode={isDarkMode} 
+        isDarkMode={effectiveDarkMode} 
       />
       {showDiwaliEvent && (
-        <DiwaliEvent isDarkMode={isDarkMode} onExplode={() => setDiwaliPhase(1)} onComplete={() => {
+        <DiwaliEvent isDarkMode={effectiveDarkMode} onExplode={() => setDiwaliPhase(1)} onComplete={() => {
           setDiwaliRevealed(true);
           setShowDiwaliEvent(false);
           if (!isDevMode) localStorage.setItem('diwaliEventDone_2026', 'true');
