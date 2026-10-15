@@ -162,12 +162,12 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             {isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed)) && onShareSpecialCard && (
               <motion.button
                 key="special-card-share-btn"
-                initial={{ opacity: 0, scale: 0.6, y: -6 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.6 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ scale: 1.15 }}
-                whileTap={{ scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ scale: 1.12 }}
+                whileTap={{ scale: 0.92 }}
                 onClick={(e) => {
                   e.stopPropagation();
                   onShareSpecialCard();
