@@ -118,15 +118,7 @@ function App() {
 
       if (target && cardType) {
         target.setHours(0, 0, 0, 0);
-
-        // Anti-spoiler guard: Only cards up to current date (or any card if in dev mode) are allowed!
-        const isDev = localStorage.getItem('isDevMode') === 'true';
-        const devStored = localStorage.getItem('devOverrideDate');
-        const effectiveToday = isDev && devStored ? normalizeDate(new Date(parseInt(devStored, 10))) : normalizeDate(new Date());
-
-        if (isDev || target.getTime() <= effectiveToday.getTime()) {
-          return { date: target, type: cardType };
-        }
+        return { date: target, type: cardType };
       }
     } catch (e) {
       console.warn('Error parsing shared card query:', e);
@@ -135,7 +127,9 @@ function App() {
   });
 
   const isSharedCardView = !!sharedCardData;
-  const effectiveDarkMode = isSharedCardView ? false : isDarkMode;
+  const effectiveDarkMode = isSharedCardView 
+    ? (sharedCardData?.type === 'diwali' ? isDarkMode : false) 
+    : isDarkMode;
 
   const [shareToastText, setShareToastText] = useState("");
   const [showShareToast, setShowShareToast] = useState(false);
@@ -257,6 +251,20 @@ function App() {
       }
     }
   }, [calendarDate, isDevMode]);
+
+  useEffect(() => {
+    // Shared card Diwali trigger
+    if (isSharedCardView && sharedCardData?.type === 'diwali') {
+      setIsDarkMode(false);
+      setDiwaliPhase(0);
+      setDiwaliRevealed(false);
+      setShowDiwaliEvent(true);
+      const timer = setTimeout(() => {
+        setIsDarkMode(true);
+      }, 3300);
+      return () => clearTimeout(timer);
+    }
+  }, [isSharedCardView, sharedCardData]);
   const devClickCountRef = useRef(0);
   const devHoldTimerRef = useRef(null);
   const dateInputRef = useRef(null);
@@ -1258,14 +1266,18 @@ function App() {
                     isTop={true}
                     onTear={() => false}
                     onEyeClick={handleEyeClick}
-                    isDarkMode={false}
+                    isDarkMode={effectiveDarkMode}
                     isGandhiJayanti={sharedCardData.type === 'gandhi'}
                     isBirthday={sharedCardData.type === 'birthday'}
                     onBirthdaySecret={(count) => {
                       setBirthdaySecretWishes(count);
                       setShowBirthdaySecret(true);
                     }}
-                    isDiwali={sharedCardData.type === 'diwali'}
+                    isDiwali={sharedCardData.type === 'diwali' && diwaliRevealed}
+                    forceDiwaliMode={sharedCardData.type === 'diwali' && diwaliPhase > 0}
+                    diwaliPhase={sharedCardData.type === 'diwali' ? diwaliPhase : 0}
+                    diwaliRevealed={sharedCardData.type === 'diwali' ? diwaliRevealed : false}
+                    onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }}
                     hasGandhiKey={hasGandhiKey}
                     hasCornerStar={false}
                     onStarClick={() => {}}
@@ -1352,7 +1364,7 @@ function App() {
           </motion.div>
 
           {/* Start Countdown 2027 Button (Directly below the card for shared card view) */}
-          {isSharedCardView && (
+          {isSharedCardView && !showDiwaliEvent && (
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1409,7 +1421,7 @@ function App() {
         <DiwaliEvent isDarkMode={effectiveDarkMode} onExplode={() => setDiwaliPhase(1)} onComplete={() => {
           setDiwaliRevealed(true);
           setShowDiwaliEvent(false);
-          if (!isDevMode) localStorage.setItem('diwaliEventDone_2026', 'true');
+          if (!isDevMode && !isSharedCardView) localStorage.setItem('diwaliEventDone_2026', 'true');
         }} />
       )}
     </>

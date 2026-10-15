@@ -158,7 +158,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           )}
 
           {/* Share Button for Special Cards */}
-          {isTop && (isBirthday || isGandhiJayanti || isDiwaliActive) && onShareSpecialCard && (
+          {isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed)) && onShareSpecialCard && (
             <motion.button
               whileHover={{ scale: 1.15 }}
               whileTap={{ scale: 0.9 }}
