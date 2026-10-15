@@ -182,6 +182,9 @@ function App() {
   };
 
   const handleStartCountdown = () => {
+    const currentSharedType = sharedCardData?.type;
+    const currentSharedDate = sharedCardData?.date;
+
     try {
       const url = new URL(window.location.href);
       url.searchParams.delete('card');
@@ -191,9 +194,24 @@ function App() {
       console.warn('URL cleanup error:', e);
     }
 
+    const isDone = localStorage.getItem('onboardingDone') === 'true';
+
+    if (currentSharedType === 'diwali' && currentSharedDate) {
+      // User already completed the Diwali interactive event on the shared card!
+      // When entering calendar, Nov 8 must continue as the active, revealed celebration with fireworks!
+      localStorage.setItem('diwaliEventDone_2026', 'true');
+      setCalendarDate(currentSharedDate);
+      setDiwaliRevealed(true);
+      setDiwaliPhase(2);
+      setShowDiwaliEvent(false);
+      setIsDarkMode(true);
+      localStorage.setItem('isDarkMode', 'true');
+    } else if (currentSharedDate && isDone) {
+      setCalendarDate(currentSharedDate);
+    }
+
     setSharedCardData(null);
 
-    const isDone = localStorage.getItem('onboardingDone') === 'true';
     if (!isDone) {
       setTutorialState(0);
     } else {
@@ -231,17 +249,19 @@ function App() {
   useEffect(() => {
     // 10 = Nov, 8 = 8th
     if (calendarDate.getMonth() === 10 && calendarDate.getDate() === 8) {
-      if (isDevMode || !localStorage.getItem('diwaliEventDone_2026')) {
-        setDiwaliPhase(0);
-        setDiwaliRevealed(false);
-        setShowDiwaliEvent(true);
-        // Force Dark Mode during the blackout flicker (safely fully black at 3.3s)
-        setTimeout(() => {
-          setIsDarkMode(true);
-          localStorage.setItem('isDarkMode', 'true');
-        }, 3300);
-      } else {
-        setDiwaliRevealed(true);
+      if (!diwaliRevealed) {
+        if (isDevMode || !localStorage.getItem('diwaliEventDone_2026')) {
+          setDiwaliPhase(0);
+          setDiwaliRevealed(false);
+          setShowDiwaliEvent(true);
+          // Force Dark Mode during the blackout flicker (safely fully black at 3.3s)
+          setTimeout(() => {
+            setIsDarkMode(true);
+            localStorage.setItem('isDarkMode', 'true');
+          }, 3300);
+        } else {
+          setDiwaliRevealed(true);
+        }
       }
     } else {
       if (isDevMode) {
