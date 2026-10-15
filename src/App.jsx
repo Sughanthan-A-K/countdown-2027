@@ -212,6 +212,9 @@ function App() {
       setCalendarDate(currentSharedDate);
       setTutorialState(-1);
     } else if (!isDone) {
+      if (currentSharedDate) {
+        setPendingSharedDate(currentSharedDate);
+      }
       setTutorialState(0);
     } else {
       setTutorialState(-1);
@@ -219,6 +222,9 @@ function App() {
 
     setSharedCardData(null);
   };
+
+  // Saved shared card date for new user completing onboarding
+  const [pendingSharedDate, setPendingSharedDate] = useState(null);
 
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
   const [tutorialState, setTutorialState] = useState(() => {
@@ -606,8 +612,10 @@ function App() {
       } else {
         setShowBubble(false);
         const today = normalizeDate(new Date());
-        setCalendarDate(today);
-        localStorage.setItem('lastTornDate', today.getTime().toString());
+        const targetDate = pendingSharedDate || today;
+        setCalendarDate(targetDate);
+        setPendingSharedDate(null);
+        localStorage.setItem('lastTornDate', targetDate.getTime().toString());
         localStorage.setItem('onboardingDone', 'true');
         setTutorialState(-1);
         
@@ -1306,6 +1314,7 @@ function App() {
                     isTearLocked={true}
                     onShareSpecialCard={() => handleShareSpecialCard(sharedCardData.type, sharedCardData.date)}
                     globalLang={globalLang}
+                    isSharedCardView={true}
                   />
                 ) : (
                   pages.slice().reverse().map((page) => (

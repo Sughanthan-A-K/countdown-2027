@@ -7,7 +7,7 @@ import BirthdayLogo from './BirthdayLogo';
 import MagicalCornerStar from './MagicalCornerStar';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -32,16 +32,17 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const isSpecialRevealed = isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed));
 
   // Show intro hint & sparkle when special card is revealed until user interacts with it
-  // For Diwali, wait for first 3 out rockets to burst completely (~9.5s) so crackers are not disturbed!
+  // In shared card view: exactly when "Start Countdown 2027" appears, hint & sparkle appear instantly!
+  // In normal calendar view: wait for 3 out rockets (~9.5s) on Diwali so crackers are not disturbed.
   useEffect(() => {
     if (isSpecialRevealed && onShareSpecialCard && !hasDismissedShareHint) {
-      const delayMs = isDiwaliActive ? 9500 : 1200;
+      const delayMs = isSharedCardView ? 100 : (isDiwaliActive ? 9500 : 1200);
       const t1 = setTimeout(() => {
         setShowShareIntroHint(true);
       }, delayMs);
       return () => clearTimeout(t1);
     }
-  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive]);
+  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isSharedCardView]);
 
   const handleShareTap = () => {
     if (!hasDismissedShareHint) {
