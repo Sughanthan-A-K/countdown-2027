@@ -32,14 +32,16 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const isSpecialRevealed = isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed));
 
   // Show intro hint & sparkle when special card is revealed until user interacts with it
+  // For Diwali, wait for first 3 out rockets to burst completely (~9.5s) so crackers are not disturbed!
   useEffect(() => {
     if (isSpecialRevealed && onShareSpecialCard && !hasDismissedShareHint) {
+      const delayMs = isDiwaliActive ? 9500 : 1200;
       const t1 = setTimeout(() => {
         setShowShareIntroHint(true);
-      }, 800);
+      }, delayMs);
       return () => clearTimeout(t1);
     }
-  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint]);
+  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive]);
 
   const handleShareTap = () => {
     if (!hasDismissedShareHint) {
@@ -159,13 +161,39 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
         <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 ${cardBg} ${cardBorder}`} />
         
-        {isTop && hasCornerStar && (
-          <div className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] absolute top-4 pointer-events-none z-30">
-            <MagicalCornerStar 
-              onStarClick={onStarClick} 
-              shouldAnimateFlight={shouldAnimateStarFlight} 
-            />
-          </div>
+        {/* Share Hint Tooltip - Floating ABOVE the calendar card so it never blocks greetings or fireworks */}
+        {isSpecialRevealed && onShareSpecialCard && (
+          <AnimatePresence>
+            {showShareIntroHint && (
+              <div className="w-[85vw] max-w-[340px] absolute -top-12 z-50 flex justify-end pointer-events-none">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.85, y: 8 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.85, y: 8 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShareTap();
+                  }}
+                  className={`relative max-w-[220px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
+                    effectiveDarkMode
+                      ? 'bg-neutral-900/95 text-neutral-100 border-neutral-700 shadow-black/60'
+                      : 'bg-white/95 text-neutral-900 border-neutral-300 shadow-neutral-400/50'
+                  }`}
+                >
+                  <span>
+                    {(globalLang || localStorage.getItem('globalLang')) === 'english'
+                      ? "Tap here to share your wish with others ✨"
+                      : "Unga wish-a mathavangalukku share panna inga tap pannunga! ✨"}
+                  </span>
+                  {/* Downward pointing arrow right above the top-right corner star */}
+                  <div className={`absolute -bottom-1.5 right-4 w-3 h-3 rotate-45 border-b border-r ${
+                    effectiveDarkMode ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-neutral-300'
+                  }`} />
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
         )}
 
         <motion.div 
@@ -185,7 +213,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             />
           )}
 
-          {/* Special Cards Hidden Share Trigger with Twinkle & Hint */}
+          {/* Special Cards Hidden Share Trigger inside card */}
           {isSpecialRevealed && onShareSpecialCard && (
             <>
               {/* Invisible Top-Right Hitbox: Tap to share anytime */}
@@ -222,36 +250,6 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   )}
                 </AnimatePresence>
               </div>
-
-              {/* Share Hint Tooltip - Stays visible until user taps to share, then never shows again */}
-              <AnimatePresence>
-                {showShareIntroHint && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.85, y: -6 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.85, y: -6 }}
-                    transition={{ duration: 0.35, ease: "easeOut" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleShareTap();
-                    }}
-                    className={`absolute top-14 right-3.5 z-50 max-w-[220px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
-                      effectiveDarkMode
-                        ? 'bg-neutral-900/95 text-neutral-100 border-neutral-700 shadow-black/60'
-                        : 'bg-white/95 text-neutral-900 border-neutral-300 shadow-neutral-400/50'
-                    }`}
-                  >
-                    <span>
-                      {(globalLang || localStorage.getItem('globalLang')) === 'english'
-                        ? "Tap here to share your wish with others ✨"
-                        : "Unga wish-a mathavangalukku share panna inga tap pannunga! ✨"}
-                    </span>
-                    <div className={`absolute -top-1.5 right-5 w-3 h-3 rotate-45 border-t border-l ${
-                      effectiveDarkMode ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-neutral-300'
-                    }`} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </>
           )}
 
