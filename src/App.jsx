@@ -1364,24 +1364,28 @@ function App() {
           </motion.div>
 
           {/* Start Countdown 2027 Button (Directly below the card for shared card view) */}
-          {isSharedCardView && !showDiwaliEvent && (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.5, ease: "easeOut" }}
-              className="mt-6 z-50 pointer-events-auto flex flex-col items-center"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleStartCountdown}
-                className="px-6 py-3 rounded-full bg-neutral-900 text-white font-bold text-sm sm:text-base tracking-wide shadow-xl hover:bg-neutral-800 active:bg-black transition-all flex items-center gap-2.5 cursor-pointer border border-neutral-700/40"
+          <AnimatePresence>
+            {isSharedCardView && (sharedCardData?.type !== 'diwali' || diwaliRevealed) && (
+              <motion.div
+                key="shared-start-countdown-cta"
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="mt-6 z-50 pointer-events-auto flex flex-col items-center"
               >
-                <span>Start Countdown 2027</span>
-                <span className="text-amber-400 font-black text-base">➔</span>
-              </motion.button>
-            </motion.div>
-          )}
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleStartCountdown}
+                  className="px-6 py-3 rounded-full bg-neutral-900 text-white font-bold text-sm sm:text-base tracking-wide shadow-xl hover:bg-neutral-800 active:bg-black transition-all flex items-center gap-2.5 cursor-pointer border border-neutral-700/40"
+                >
+                  <span>Start Countdown 2027</span>
+                  <span className="text-amber-400 font-black text-base">➔</span>
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

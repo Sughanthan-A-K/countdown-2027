@@ -158,24 +158,31 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           )}
 
           {/* Share Button for Special Cards */}
-          {isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed)) && onShareSpecialCard && (
-            <motion.button
-              whileHover={{ scale: 1.15 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                onShareSpecialCard();
-              }}
-              className={`absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-40 p-2 rounded-full border shadow-sm transition-all duration-200 flex items-center justify-center cursor-pointer select-none pointer-events-auto ${
-                effectiveDarkMode 
-                  ? 'bg-neutral-800/90 border-neutral-700 text-neutral-300 hover:text-white hover:bg-neutral-700' 
-                  : 'bg-white/90 border-neutral-300 text-neutral-700 hover:text-black hover:bg-neutral-100 shadow-sm'
-              }`}
-              title="Share this special card"
-            >
-              <Share2 size={15} />
-            </motion.button>
-          )}
+          <AnimatePresence>
+            {isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed)) && onShareSpecialCard && (
+              <motion.button
+                key="special-card-share-btn"
+                initial={{ opacity: 0, scale: 0.6, y: -6 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.6 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onShareSpecialCard();
+                }}
+                className={`absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-40 p-2 rounded-full border shadow-sm transition-colors duration-200 flex items-center justify-center cursor-pointer select-none pointer-events-auto ${
+                  effectiveDarkMode 
+                    ? 'bg-neutral-800/90 border-neutral-700 text-neutral-300 hover:text-white hover:bg-neutral-700' 
+                    : 'bg-white/90 border-neutral-300 text-neutral-700 hover:text-black hover:bg-neutral-100 shadow-sm'
+                }`}
+                title="Share this special card"
+              >
+                <Share2 size={15} />
+              </motion.button>
+            )}
+          </AnimatePresence>
 
           {isFinished ? (
             // CELEBRATION UI
