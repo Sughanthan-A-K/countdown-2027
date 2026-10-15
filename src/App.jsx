@@ -198,25 +198,26 @@ function App() {
 
     if (currentSharedType === 'diwali' && currentSharedDate) {
       // User already completed the Diwali interactive event on the shared card!
-      // When entering calendar, Nov 8 must continue as the active, revealed celebration with fireworks!
+      // When entering calendar (even for new users!), Nov 8 must continue directly as the active, revealed celebration with fireworks!
       localStorage.setItem('diwaliEventDone_2026', 'true');
+      localStorage.setItem('onboardingDone', 'true');
       setCalendarDate(currentSharedDate);
       setDiwaliRevealed(true);
       setDiwaliPhase(2);
       setShowDiwaliEvent(false);
       setIsDarkMode(true);
       localStorage.setItem('isDarkMode', 'true');
+      setTutorialState(-1);
     } else if (currentSharedDate && isDone) {
       setCalendarDate(currentSharedDate);
-    }
-
-    setSharedCardData(null);
-
-    if (!isDone) {
+      setTutorialState(-1);
+    } else if (!isDone) {
       setTutorialState(0);
     } else {
       setTutorialState(-1);
     }
+
+    setSharedCardData(null);
   };
 
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
@@ -1304,6 +1305,7 @@ function App() {
                     shouldAnimateStarFlight={false}
                     isTearLocked={true}
                     onShareSpecialCard={() => handleShareSpecialCard(sharedCardData.type, sharedCardData.date)}
+                    globalLang={globalLang}
                   />
                 ) : (
                   pages.slice().reverse().map((page) => (
@@ -1335,6 +1337,7 @@ function App() {
                         page.isBirthday ? 'birthday' : page.isGandhiJayanti ? 'gandhi' : 'diwali',
                         addDays(calendarDate, page.index)
                       ) : undefined}
+                      globalLang={globalLang}
                     />
                   ))
                 )}

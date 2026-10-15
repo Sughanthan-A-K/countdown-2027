@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion';
 import { Sparkles, PartyPopper, Star, Share2 } from 'lucide-react';
 import GandhiPic from './GandhiPic';
@@ -7,12 +7,17 @@ import BirthdayLogo from './BirthdayLogo';
 import MagicalCornerStar from './MagicalCornerStar';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
   const [isTorn, setIsTorn] = useState(false);
   const [startFinaleLoop, setStartFinaleLoop] = useState(false);
+
+  // Sleeping Share Button states (Hidden by default to keep special card clean; wakes up on tap & auto-sleeps after 5s)
+  const [isShareAwake, setIsShareAwake] = useState(false);
+  const [showShareIntroHint, setShowShareIntroHint] = useState(false);
+  const shareTimerRef = useRef(null);
 
   useEffect(() => {
     if (diwaliPhase === 1) {
@@ -23,6 +28,33 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   
   const isFinished = daysRemaining <= 0;
   const isDiwaliActive = isDiwali || forceDiwaliMode; 
+  const isSpecialRevealed = isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed));
+
+  // Playful sleeping intro tooltip when special card is revealed
+  useEffect(() => {
+    if (isSpecialRevealed && onShareSpecialCard) {
+      const t1 = setTimeout(() => {
+        setShowShareIntroHint(true);
+      }, 1000);
+      const t2 = setTimeout(() => {
+        setShowShareIntroHint(false);
+      }, 6500);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        if (shareTimerRef.current) clearTimeout(shareTimerRef.current);
+      };
+    }
+  }, [isSpecialRevealed, onShareSpecialCard]);
+
+  const handleWakeUpShare = () => {
+    setShowShareIntroHint(false);
+    setIsShareAwake(true);
+    if (shareTimerRef.current) clearTimeout(shareTimerRef.current);
+    shareTimerRef.current = setTimeout(() => {
+      setIsShareAwake(false);
+    }, 5000);
+  };
   
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -157,32 +189,79 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             />
           )}
 
-          {/* Share Button for Special Cards */}
-          <AnimatePresence>
-            {isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed)) && onShareSpecialCard && (
-              <motion.button
-                key="special-card-share-btn"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ scale: 1.12 }}
-                whileTap={{ scale: 0.92 }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onShareSpecialCard();
-                }}
-                className={`absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-40 p-2 rounded-full border shadow-sm transition-colors duration-200 flex items-center justify-center cursor-pointer select-none pointer-events-auto ${
-                  effectiveDarkMode 
-                    ? 'bg-neutral-800/90 border-neutral-700 text-neutral-300 hover:text-white hover:bg-neutral-700' 
-                    : 'bg-white/90 border-neutral-300 text-neutral-700 hover:text-black hover:bg-neutral-100 shadow-sm'
-                }`}
-                title="Share this special card"
-              >
-                <Share2 size={15} />
-              </motion.button>
-            )}
-          </AnimatePresence>
+          {/* Sleeping / Awake Share Button for Special Cards */}
+          {isSpecialRevealed && onShareSpecialCard && (
+            <>
+              {/* Invisible Top-Right Hitbox: Tap to wake up sleeping share */}
+              {!isShareAwake && (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleWakeUpShare();
+                  }}
+                  className="absolute top-0 right-0 w-20 h-20 z-40 cursor-pointer pointer-events-auto"
+                  title="Tap to share"
+                />
+              )}
+
+              {/* Playful Sleeping Intro Tooltip */}
+              <AnimatePresence>
+                {showShareIntroHint && !isShareAwake && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.85, y: -6 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.85, y: -6 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleWakeUpShare();
+                    }}
+                    className={`absolute top-14 right-3.5 z-50 max-w-[210px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
+                      effectiveDarkMode
+                        ? 'bg-neutral-900/95 text-neutral-100 border-neutral-700 shadow-black/60'
+                        : 'bg-white/95 text-neutral-900 border-neutral-300 shadow-neutral-400/50'
+                    }`}
+                  >
+                    <span>
+                      {(globalLang || localStorage.getItem('globalLang')) === 'english'
+                        ? "I'm just sleeping! 😴 If you want to share, tap the top-right corner and I'll wake up!"
+                        : "Naan thoongittu irukken! 😴 Share panna top-right corner-ah tap pannunga, naan ezhunthuppen!"}
+                    </span>
+                    <div className={`absolute -top-1.5 right-5 w-3 h-3 rotate-45 border-t border-l ${
+                      effectiveDarkMode ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-neutral-300'
+                    }`} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Awake Share Button (stays for 5s then smoothly sleeps) */}
+              <AnimatePresence>
+                {isShareAwake && (
+                  <motion.button
+                    key="special-card-share-btn"
+                    initial={{ opacity: 0, scale: 0.4, rotate: -25 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                    exit={{ opacity: 0, scale: 0.4, rotate: 25 }}
+                    transition={{ duration: 0.35, type: 'spring', bounce: 0.4 }}
+                    whileHover={{ scale: 1.15 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onShareSpecialCard();
+                    }}
+                    className={`absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-50 p-2.5 rounded-full border shadow-xl transition-colors duration-200 flex items-center justify-center cursor-pointer select-none pointer-events-auto ${
+                      effectiveDarkMode 
+                        ? 'bg-neutral-800 border-neutral-600 text-yellow-300 hover:text-white hover:bg-neutral-700' 
+                        : 'bg-white border-neutral-300 text-neutral-900 hover:text-black hover:bg-neutral-100'
+                    }`}
+                    title="Share this special card"
+                  >
+                    <Share2 size={16} />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </>
+          )}
 
           {isFinished ? (
             // CELEBRATION UI
