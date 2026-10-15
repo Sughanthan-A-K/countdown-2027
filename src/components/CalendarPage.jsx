@@ -32,17 +32,16 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const isSpecialRevealed = isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed));
 
   // Show intro hint & sparkle when special card is revealed until user interacts with it
-  // In shared card view: exactly when "Start Countdown 2027" appears, hint & sparkle appear instantly!
-  // In normal calendar view: wait for 3 out rockets (~9.5s) on Diwali so crackers are not disturbed.
+  // Wait for 3 out rockets (~9.5s) on Diwali so crackers are enjoyed first, exactly matching "Start Countdown 2027"!
   useEffect(() => {
     if (isSpecialRevealed && onShareSpecialCard && !hasDismissedShareHint) {
-      const delayMs = isSharedCardView ? 100 : (isDiwaliActive ? 9500 : 1200);
+      const delayMs = isDiwaliActive ? 9500 : 1200;
       const t1 = setTimeout(() => {
         setShowShareIntroHint(true);
       }, delayMs);
       return () => clearTimeout(t1);
     }
-  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isSharedCardView]);
+  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive]);
 
   const handleShareTap = () => {
     if (!hasDismissedShareHint) {
@@ -226,27 +225,34 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 className="absolute top-0 right-0 w-20 h-20 z-40 cursor-pointer pointer-events-auto flex items-start justify-end p-3.5"
                 title="Tap to share your wish"
               >
-                {/* Exactly like Gandhi's eye twinkling star */}
+                {/* Exactly like Gandhi's eye twinkling star with smooth synchronized entry */}
                 <AnimatePresence>
                   {showShareIntroHint && (
                     <motion.div
+                      key="share-hint-star"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                       className="text-[#f7d13d] pointer-events-none mt-1 mr-1"
-                      style={{ filter: 'drop-shadow(0 0 4px rgba(247,209,61,1))' }}
-                      animate={{ 
-                        opacity: [0, 1, 1, 0, 0], 
-                        scale: [0, 1, 1, 0, 0],
-                        rotate: [0, 90, 180, 270, 270] 
-                      }} 
-                      transition={{ 
-                        duration: 2.5, 
-                        repeat: Infinity,
-                        times: [0, 0.1, 0.3, 0.4, 1], // Quick pop up, hold a bit, shrink back, wait 2s
-                        ease: "easeInOut"
-                      }}
+                      style={{ filter: 'drop-shadow(0 0 6px rgba(247,209,61,0.9))' }}
                     >
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 0 C 10 8, 12 10, 20 10 C 12 10, 10 12, 10 20 C 10 12, 8 10, 0 10 C 8 10, 10 8, 10 0 Z" />
-                      </svg>
+                      <motion.div
+                        animate={{ 
+                          scale: [1, 1.25, 0.9, 1.2, 1],
+                          rotate: [0, 90, 180, 270, 360],
+                          opacity: [1, 0.85, 1, 0.85, 1]
+                        }} 
+                        transition={{ 
+                          duration: 3, 
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10 0 C 10 8, 12 10, 20 10 C 12 10, 10 12, 10 20 C 10 12, 8 10, 0 10 C 8 10, 10 8, 10 0 Z" />
+                        </svg>
+                      </motion.div>
                     </motion.div>
                   )}
                 </AnimatePresence>

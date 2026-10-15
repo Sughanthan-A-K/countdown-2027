@@ -248,6 +248,29 @@ function App() {
   
   // Diwali Frame states
   const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
+  const [sharedCtaReady, setSharedCtaReady] = useState(false);
+
+  // Sync Start Countdown button with Diwali 3 outs or other card reveals
+  useEffect(() => {
+    if (isSharedCardView) {
+      if (sharedCardData?.type === 'diwali') {
+        if (diwaliRevealed) {
+          // Exactly after first 3 outs burst (~9.5s)
+          const t = setTimeout(() => {
+            setSharedCtaReady(true);
+          }, 9500);
+          return () => clearTimeout(t);
+        } else {
+          setSharedCtaReady(false);
+        }
+      } else {
+        const t = setTimeout(() => {
+          setSharedCtaReady(true);
+        }, 1200);
+        return () => clearTimeout(t);
+      }
+    }
+  }, [isSharedCardView, sharedCardData, diwaliRevealed]);
   
   // Birthday Secret Surprise states
   const [showBirthdaySecret, setShowBirthdaySecret] = useState(false);
@@ -1399,13 +1422,13 @@ function App() {
           {isSharedCardView && (
             <div className="h-16 mt-4 flex items-center justify-center z-50 pointer-events-auto">
               <AnimatePresence>
-                {(sharedCardData?.type !== 'diwali' || diwaliRevealed) && (
+                {sharedCtaReady && (
                   <motion.div
                     key="shared-start-countdown-cta"
-                    initial={{ opacity: 0, scale: 0.92, y: 8 }}
+                    initial={{ opacity: 0, scale: 0.88, y: 12 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.92, y: 8 }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    exit={{ opacity: 0, scale: 0.88, y: 12 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     className="flex flex-col items-center"
                   >
                     <motion.button
