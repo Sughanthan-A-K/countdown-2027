@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion';
-import { Sparkles, PartyPopper, Star, Share2 } from 'lucide-react';
+import { Sparkles, PartyPopper, Star, Share2, Rocket, Gift } from 'lucide-react';
 import GandhiPic from './GandhiPic';
 import ConfettiBurst from './ConfettiBurst';
 import BirthdayLogo from './BirthdayLogo';
@@ -204,7 +204,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 />
               )}
 
-              {/* Playful Sleeping Intro Tooltip */}
+              {/* Share Hint Tooltip */}
               <AnimatePresence>
                 {showShareIntroHint && !isShareAwake && (
                   <motion.div
@@ -216,7 +216,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                       e.stopPropagation();
                       handleWakeUpShare();
                     }}
-                    className={`absolute top-14 right-3.5 z-50 max-w-[210px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
+                    className={`absolute top-14 right-3.5 z-50 max-w-[220px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
                       effectiveDarkMode
                         ? 'bg-neutral-900/95 text-neutral-100 border-neutral-700 shadow-black/60'
                         : 'bg-white/95 text-neutral-900 border-neutral-300 shadow-neutral-400/50'
@@ -224,8 +224,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   >
                     <span>
                       {(globalLang || localStorage.getItem('globalLang')) === 'english'
-                        ? "I'm just sleeping! 😴 If you want to share, tap the top-right corner and I'll wake up!"
-                        : "Naan thoongittu irukken! 😴 Share panna top-right corner-ah tap pannunga, naan ezhunthuppen!"}
+                        ? "Tap here to share your wish with others ✨"
+                        : "Unga wish-a mathavangalukku share panna inga tap pannunga! ✨"}
                     </span>
                     <div className={`absolute -top-1.5 right-5 w-3 h-3 rotate-45 border-t border-l ${
                       effectiveDarkMode ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-neutral-300'
@@ -234,7 +234,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 )}
               </AnimatePresence>
 
-              {/* Awake Share Button (stays for 5s then smoothly sleeps) */}
+              {/* Awake Share Button (stays for 5s or hides immediately upon share click) */}
               <AnimatePresence>
                 {isShareAwake && (
                   <motion.button
@@ -248,15 +248,23 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     onClick={(e) => {
                       e.stopPropagation();
                       onShareSpecialCard();
+                      setIsShareAwake(false);
+                      if (shareTimerRef.current) clearTimeout(shareTimerRef.current);
                     }}
                     className={`absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-50 p-2.5 rounded-full border shadow-xl transition-colors duration-200 flex items-center justify-center cursor-pointer select-none pointer-events-auto ${
                       effectiveDarkMode 
                         ? 'bg-neutral-800 border-neutral-600 text-yellow-300 hover:text-white hover:bg-neutral-700' 
                         : 'bg-white border-neutral-300 text-neutral-900 hover:text-black hover:bg-neutral-100'
                     }`}
-                    title="Share this special card"
+                    title={isDiwaliActive ? "Share Diwali Rocket Wish" : "Share this special card"}
                   >
-                    <Share2 size={16} />
+                    {isDiwaliActive ? (
+                      <Rocket size={17} className="-rotate-45" />
+                    ) : isBirthday ? (
+                      <Gift size={16} />
+                    ) : (
+                      <Share2 size={16} />
+                    )}
                   </motion.button>
                 )}
               </AnimatePresence>
