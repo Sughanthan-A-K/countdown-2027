@@ -250,15 +250,14 @@ function App() {
   const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
   const [sharedCtaReady, setSharedCtaReady] = useState(false);
 
-  // Sync Start Countdown button with Diwali 3 outs or other card reveals
+  // Sync Start Countdown button, tooltip, and minura star after exactly 5 seconds
   useEffect(() => {
     if (isSharedCardView) {
       if (sharedCardData?.type === 'diwali') {
         if (diwaliRevealed) {
-          // Exactly after first 3 outs burst (~9.5s)
           const t = setTimeout(() => {
             setSharedCtaReady(true);
-          }, 9500);
+          }, 5000); // Exactly 5 seconds after card reveal
           return () => clearTimeout(t);
         } else {
           setSharedCtaReady(false);
@@ -305,16 +304,27 @@ function App() {
   useEffect(() => {
     // Shared card Diwali trigger
     if (isSharedCardView && sharedCardData?.type === 'diwali') {
-      setIsDarkMode(false);
-      setDiwaliPhase(0);
-      setDiwaliRevealed(false);
-      setShowDiwaliEvent(true);
-      const timer = setTimeout(() => {
+      const alreadyDone = !isDevMode && localStorage.getItem('diwaliEventDone_2026') === 'true';
+      if (alreadyDone) {
+        // User already witnessed the wish celebration earlier:
+        // Skip match & blackout, directly continue the crackers celebration in Dark Mode!
         setIsDarkMode(true);
-      }, 3300);
-      return () => clearTimeout(timer);
+        setDiwaliPhase(2);
+        setDiwaliRevealed(true);
+        setShowDiwaliEvent(false);
+      } else {
+        // First-time viewer: show blackout, match stick & lighting event
+        setIsDarkMode(false);
+        setDiwaliPhase(0);
+        setDiwaliRevealed(false);
+        setShowDiwaliEvent(true);
+        const timer = setTimeout(() => {
+          setIsDarkMode(true);
+        }, 3300);
+        return () => clearTimeout(timer);
+      }
     }
-  }, [isSharedCardView, sharedCardData]);
+  }, [isSharedCardView, sharedCardData, isDevMode]);
   const devClickCountRef = useRef(0);
   const devHoldTimerRef = useRef(null);
   const dateInputRef = useRef(null);
@@ -1338,6 +1348,7 @@ function App() {
                     onShareSpecialCard={() => handleShareSpecialCard(sharedCardData.type, sharedCardData.date)}
                     globalLang={globalLang}
                     isSharedCardView={true}
+                    forceShowShareHint={sharedCtaReady}
                   />
                 ) : (
                   pages.slice().reverse().map((page) => (
