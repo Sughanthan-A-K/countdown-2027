@@ -14,10 +14,11 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const [isTorn, setIsTorn] = useState(false);
   const [startFinaleLoop, setStartFinaleLoop] = useState(false);
 
-  // Sleeping Share Button states (Hidden by default to keep special card clean; wakes up on tap & auto-sleeps after 5s)
-  const [isShareAwake, setIsShareAwake] = useState(false);
+  // Special card share hint & sparkle indicator
+  const [hasDismissedShareHint, setHasDismissedShareHint] = useState(() => {
+    return localStorage.getItem('has_seen_special_share_hint') === 'true';
+  });
   const [showShareIntroHint, setShowShareIntroHint] = useState(false);
-  const shareTimerRef = useRef(null);
 
   useEffect(() => {
     if (diwaliPhase === 1) {
@@ -30,30 +31,25 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const isDiwaliActive = isDiwali || forceDiwaliMode; 
   const isSpecialRevealed = isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed));
 
-  // Playful sleeping intro tooltip when special card is revealed
+  // Show intro hint & sparkle when special card is revealed until user interacts with it
   useEffect(() => {
-    if (isSpecialRevealed && onShareSpecialCard) {
+    if (isSpecialRevealed && onShareSpecialCard && !hasDismissedShareHint) {
       const t1 = setTimeout(() => {
         setShowShareIntroHint(true);
-      }, 1000);
-      const t2 = setTimeout(() => {
-        setShowShareIntroHint(false);
-      }, 6500);
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-        if (shareTimerRef.current) clearTimeout(shareTimerRef.current);
-      };
+      }, 800);
+      return () => clearTimeout(t1);
     }
-  }, [isSpecialRevealed, onShareSpecialCard]);
+  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint]);
 
-  const handleWakeUpShare = () => {
+  const handleShareTap = () => {
+    if (!hasDismissedShareHint) {
+      localStorage.setItem('has_seen_special_share_hint', 'true');
+      setHasDismissedShareHint(true);
+    }
     setShowShareIntroHint(false);
-    setIsShareAwake(true);
-    if (shareTimerRef.current) clearTimeout(shareTimerRef.current);
-    shareTimerRef.current = setTimeout(() => {
-      setIsShareAwake(false);
-    }, 5000);
+    if (onShareSpecialCard) {
+      onShareSpecialCard();
+    }
   };
   
   const x = useMotionValue(0);
@@ -189,32 +185,55 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             />
           )}
 
-          {/* Sleeping / Awake Share Button for Special Cards */}
+          {/* Special Cards Hidden Share Trigger with Twinkle & Hint */}
           {isSpecialRevealed && onShareSpecialCard && (
             <>
-              {/* Invisible Top-Right Hitbox: Tap to wake up sleeping share */}
-              {!isShareAwake && (
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleWakeUpShare();
-                  }}
-                  className="absolute top-0 right-0 w-20 h-20 z-40 cursor-pointer pointer-events-auto"
-                  title="Tap to share"
-                />
-              )}
+              {/* Invisible Top-Right Hitbox: Tap to share anytime */}
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleShareTap();
+                }}
+                className="absolute top-0 right-0 w-20 h-20 z-40 cursor-pointer pointer-events-auto flex items-start justify-end p-3.5"
+                title="Tap to share your wish"
+              >
+                {/* Glowing & Twinkling Sparkle in place of share button when hint is showing */}
+                <AnimatePresence>
+                  {showShareIntroHint && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ 
+                        scale: [1, 1.35, 1],
+                        opacity: [0.7, 1, 0.7],
+                        rotate: [0, 45, 90, 180]
+                      }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: Infinity, 
+                        ease: "easeInOut" 
+                      }}
+                      className="relative p-1.5 flex items-center justify-center pointer-events-none"
+                    >
+                      {/* Ambient Glow ring */}
+                      <span className="absolute inset-0 rounded-full bg-yellow-400/30 blur-sm animate-pulse" />
+                      <Sparkles size={18} className="text-yellow-400 filter drop-shadow-[0_0_8px_rgba(250,204,21,0.8)] relative z-10" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
-              {/* Share Hint Tooltip */}
+              {/* Share Hint Tooltip - Stays visible until user taps to share, then never shows again */}
               <AnimatePresence>
-                {showShareIntroHint && !isShareAwake && (
+                {showShareIntroHint && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.85, y: -6 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.85, y: -6 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleWakeUpShare();
+                      handleShareTap();
                     }}
                     className={`absolute top-14 right-3.5 z-50 max-w-[220px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
                       effectiveDarkMode
@@ -231,41 +250,6 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                       effectiveDarkMode ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-neutral-300'
                     }`} />
                   </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Awake Share Button (stays for 5s or hides immediately upon share click) */}
-              <AnimatePresence>
-                {isShareAwake && (
-                  <motion.button
-                    key="special-card-share-btn"
-                    initial={{ opacity: 0, scale: 0.4, rotate: -25 }}
-                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                    exit={{ opacity: 0, scale: 0.4, rotate: 25 }}
-                    transition={{ duration: 0.35, type: 'spring', bounce: 0.4 }}
-                    whileHover={{ scale: 1.15 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onShareSpecialCard();
-                      setIsShareAwake(false);
-                      if (shareTimerRef.current) clearTimeout(shareTimerRef.current);
-                    }}
-                    className={`absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-50 p-2.5 rounded-full border shadow-xl transition-colors duration-200 flex items-center justify-center cursor-pointer select-none pointer-events-auto ${
-                      effectiveDarkMode 
-                        ? 'bg-neutral-800 border-neutral-600 text-yellow-300 hover:text-white hover:bg-neutral-700' 
-                        : 'bg-white border-neutral-300 text-neutral-900 hover:text-black hover:bg-neutral-100'
-                    }`}
-                    title={isDiwaliActive ? "Share Diwali Rocket Wish" : "Share this special card"}
-                  >
-                    {isDiwaliActive ? (
-                      <Rocket size={17} className="-rotate-45" />
-                    ) : isBirthday ? (
-                      <Gift size={16} />
-                    ) : (
-                      <Share2 size={16} />
-                    )}
-                  </motion.button>
                 )}
               </AnimatePresence>
             </>
