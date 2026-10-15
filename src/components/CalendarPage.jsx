@@ -197,27 +197,27 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 className="absolute top-0 right-0 w-20 h-20 z-40 cursor-pointer pointer-events-auto flex items-start justify-end p-3.5"
                 title="Tap to share your wish"
               >
-                {/* Glowing & Twinkling Sparkle in place of share button when hint is showing */}
+                {/* Exactly like Gandhi's eye twinkling star */}
                 <AnimatePresence>
                   {showShareIntroHint && (
                     <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
+                      className="text-[#f7d13d] pointer-events-none mt-1 mr-1"
+                      style={{ filter: 'drop-shadow(0 0 4px rgba(247,209,61,1))' }}
                       animate={{ 
-                        scale: [1, 1.35, 1],
-                        opacity: [0.7, 1, 0.7],
-                        rotate: [0, 45, 90, 180]
-                      }}
-                      exit={{ scale: 0, opacity: 0 }}
+                        opacity: [0, 1, 1, 0, 0], 
+                        scale: [0, 1, 1, 0, 0],
+                        rotate: [0, 90, 180, 270, 270] 
+                      }} 
                       transition={{ 
-                        duration: 2, 
-                        repeat: Infinity, 
-                        ease: "easeInOut" 
+                        duration: 2.5, 
+                        repeat: Infinity,
+                        times: [0, 0.1, 0.3, 0.4, 1], // Quick pop up, hold a bit, shrink back, wait 2s
+                        ease: "easeInOut"
                       }}
-                      className="relative p-1.5 flex items-center justify-center pointer-events-none"
                     >
-                      {/* Ambient Glow ring */}
-                      <span className="absolute inset-0 rounded-full bg-yellow-400/30 blur-sm animate-pulse" />
-                      <Sparkles size={18} className="text-yellow-400 filter drop-shadow-[0_0_8px_rgba(250,204,21,0.8)] relative z-10" />
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 0 C 10 8, 12 10, 20 10 C 12 10, 10 12, 10 20 C 10 12, 8 10, 0 10 C 8 10, 10 8, 10 0 Z" />
+                      </svg>
                     </motion.div>
                   )}
                 </AnimatePresence>
