@@ -196,27 +196,30 @@ function App() {
 
     const isDone = localStorage.getItem('onboardingDone') === 'true';
 
-    if (currentSharedType === 'diwali' && currentSharedDate) {
-      // User already completed the Diwali interactive event on the shared card!
-      // When entering calendar (even for new users!), Nov 8 must continue directly as the active, revealed celebration with fireworks!
-      localStorage.setItem('diwaliEventDone_2026', 'true');
-      localStorage.setItem('onboardingDone', 'true');
-      setCalendarDate(currentSharedDate);
-      setDiwaliRevealed(true);
-      setDiwaliPhase(2);
-      setShowDiwaliEvent(false);
-      setIsDarkMode(true);
-      localStorage.setItem('isDarkMode', 'true');
-      setTutorialState(-1);
-    } else if (currentSharedDate && isDone) {
-      setCalendarDate(currentSharedDate);
-      setTutorialState(-1);
-    } else if (!isDone) {
+    if (!isDone) {
+      // NEW USER: Strictly go through Onboarding Tutorial first!
+      // Save the shared date and mark Diwali event witnessed so it continues after onboarding
       if (currentSharedDate) {
         setPendingSharedDate(currentSharedDate);
+        if (currentSharedType === 'diwali') {
+          localStorage.setItem('diwaliEventDone_2026', 'true');
+        }
       }
       setTutorialState(0);
     } else {
+      // EXISTING USER (Onboarding already completed):
+      // Navigate directly into the calendar with smooth continuation
+      if (currentSharedDate) {
+        setCalendarDate(currentSharedDate);
+        if (currentSharedType === 'diwali') {
+          localStorage.setItem('diwaliEventDone_2026', 'true');
+          setDiwaliRevealed(true);
+          setDiwaliPhase(2);
+          setShowDiwaliEvent(false);
+          setIsDarkMode(true);
+          localStorage.setItem('isDarkMode', 'true');
+        }
+      }
       setTutorialState(-1);
     }
 
