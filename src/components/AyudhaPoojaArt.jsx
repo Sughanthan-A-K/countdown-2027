@@ -1,162 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Play sound synthesizers using native Web Audio API (No external sound files required)
-const playEraSound = (soundType) => {
-  try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-    if (ctx.state === 'suspended') {
-      ctx.resume();
-    }
-    const now = ctx.currentTime;
-
-    if (soundType === 'sword') {
-      // Metallic sword clash / whoosh
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(950, now);
-      osc.frequency.exponentialRampToValueAtTime(240, now + 0.35);
-
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.35);
-    } else if (soundType === 'gun') {
-      // Snappy rifle shot
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(320, now);
-      osc.frequency.exponentialRampToValueAtTime(45, now + 0.25);
-
-      gain.gain.setValueAtTime(0.28, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.25);
-    } else if (soundType === 'pen') {
-      // Crisp nib tick
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(1400, now);
-      osc.frequency.setValueAtTime(1800, now + 0.08);
-
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.18);
-    } else if (soundType === 'laptop') {
-      // Tech double mechanical click
-      [0, 0.08].forEach((delay) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(800, now + delay);
-        gain.gain.setValueAtTime(0.15, now + delay);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.06);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now + delay);
-        osc.stop(now + delay + 0.06);
-      });
-    } else if (soundType === 'veena') {
-      // Resonant sacred Veena string pluck / temple tone
-      [220, 330, 440, 660].forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.09);
-        gain.gain.setValueAtTime(0.16, now + idx * 0.09);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.85);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now + idx * 0.09);
-        osc.stop(now + idx * 0.09 + 0.85);
-      });
-    } else if (soundType === 'meme') {
-      // Playful upbeat pop
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(523.25, now); // C5
-      osc.frequency.exponentialRampToValueAtTime(1046.5, now + 0.2); // C6
-
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.3);
-    }
-  } catch (e) {
-    // Audio context may be blocked before interaction, safe fallback
-  }
-};
-
 export default function AyudhaPoojaArt({ isDarkMode }) {
-  // Timeline Stages:
-  // 0: Ancient Battlefield (King victorious with shining sword)
-  // 1: Indian Army / Border Era (Soldier rifle & bravery)
-  // 2: Educational / Pen Era (Ink pen & knowledge revolution)
-  // 3: Modern IT Era (Developer laptop with code, sandhanam & Sevvanthi)
-  // 4: Divine Saraswathi & Sacred Tools (Veena, Granthas, Spanner & Diyas)
-  // 5: Funny 2026 Meme ("Happy Pooja Holidays" meme card)
-  // 6: Grand Finale Harmony (All eras combined with celebration)
+  // Cinematic Timeline Steps:
+  // 0: Night Battlefield - King close-up lifts sword upward, zoom into gleaming blade
+  // 1: Flash Flare -> Border warzone, soldier rapid-firing rifle (daba-daba-daba muzzle flashes)
+  // 2: Flying bullet slowed down -> hand swoops in and catches bullet -> morphs into Ink Pen writing
+  // 3: Writing pad morphs into Digital Tablet with stylus -> user picks up tab
+  // 4: Tablet expands into Modern Laptop -> screen reveals "Happy Pooja Holidays! 🏖️" meme
+  // 5: Sudden cut -> Divine Saraswathi with Sacred Veena, Diya & Marigold garland
+  // 6: Grand celebration loop (All weapons & tools with flowers, replayable)
 
-  const [step, setStep] = useState(0);
+  const [scene, setScene] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
 
-  // Auto time-lapse progression
   useEffect(() => {
     if (!isPlaying) return;
 
-    // Steps duration in ms
-    const durations = [
-      2600, // 0: Sword & King
-      2200, // 1: Border Rifle
-      2200, // 2: Ink Pen
-      2200, // 3: Modern Laptop
-      2800, // 4: Sacred Veena
-      2400, // 5: Pooja Hegde Meme
+    // Cinematic scene durations (ms)
+    const sceneTimes = [
+      3200, // Scene 0: King close shot & sword elevation + zoom
+      2600, // Scene 1: Soldier rapid gunfire & bullet travel
+      2600, // Scene 2: Bullet caught in mid-air -> Ink Pen write
+      2400, // Scene 3: Paper pad -> Digital Tablet & Stylus
+      2500, // Scene 4: Tab -> Laptop open with Pooja Holidays Meme
+      3200, // Scene 5: Divine Saraswathi & Sacred Veena
     ];
 
-    if (step < durations.length) {
+    if (scene < sceneTimes.length) {
       const timer = setTimeout(() => {
-        const nextStep = step + 1;
-        setStep(nextStep);
-
-        // Sound trigger for each era
-        if (nextStep === 1) playEraSound('gun');
-        else if (nextStep === 2) playEraSound('pen');
-        else if (nextStep === 3) playEraSound('laptop');
-        else if (nextStep === 4) playEraSound('veena');
-        else if (nextStep === 5) playEraSound('meme');
-        else if (nextStep === 6) playEraSound('veena');
-      }, durations[step]);
-
+        setScene((prev) => prev + 1);
+      }, sceneTimes[scene]);
       return () => clearTimeout(timer);
     }
-  }, [step, isPlaying]);
+  }, [scene, isPlaying]);
 
-  // Restart sequence when clicked
   const handleReplay = (e) => {
     e.stopPropagation();
-    setStep(0);
+    setScene(0);
     setIsPlaying(true);
-    playEraSound('sword');
   };
 
   const strokeColor = isDarkMode ? '#f5f5f5' : '#1e1e1e';
@@ -165,396 +47,477 @@ export default function AyudhaPoojaArt({ isDarkMode }) {
   const sandalColor = '#fde047';
 
   return (
-    <div 
+    <div
       onClick={handleReplay}
       className="relative w-64 h-52 sm:w-72 sm:h-56 flex flex-col justify-center items-center select-none cursor-pointer group"
-      title="Tap to replay Ayudha Pooja Time-lapse"
+      title="Tap to replay Ayudha Pooja Cinematic Evolution"
     >
-      {/* Dynamic Evolution Stage Title Badge */}
-      <div className="absolute -top-1 px-3 py-0.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider shadow-sm z-30 transition-all border flex items-center gap-1.5"
+      {/* Cinematic Phase Tracker */}
+      <div
+        className="absolute -top-1 px-3 py-0.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider shadow-sm z-30 transition-all border flex items-center gap-1.5"
         style={{
           background: isDarkMode ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-          color: step === 5 ? '#ec4899' : goldColor,
-          borderColor: isDarkMode ? '#404040' : '#e5e7eb'
+          color: scene === 4 ? '#ec4899' : goldColor,
+          borderColor: isDarkMode ? '#404040' : '#e5e7eb',
         }}
       >
         <span>
-          {step === 0 && "Era 1: Raja Kaalam (King's Sword)"}
-          {step === 1 && "Era 2: Border Kaalam (Soldier's Rifle)"}
-          {step === 2 && "Era 3: Arivu Kaalam (Ink Pen)"}
-          {step === 3 && "Era 4: Modern IT Kaalam (Code & Laptop)"}
-          {step === 4 && "Era 5: Divine Saraswathi (Sacred Veena)"}
-          {step === 5 && "Era 6: 2026 Gen-Z (Pooja Holidays!) 😂"}
-          {step >= 6 && "Vetri & Thozhiluku Vandhanam! ✨"}
+          {scene === 0 && "1. Raja Kaalam: Vaal (Sword)"}
+          {scene === 1 && "2. Desam: Border Soldier (Rifle)"}
+          {scene === 2 && "3. Arivu: Bullet ➔ Pen"}
+          {scene === 3 && "4. Digital: Paper ➔ Tab"}
+          {scene === 4 && "5. IT Era: Laptop & Pooja Holidays 🏖️"}
+          {scene === 5 && "6. Divine: Saraswathi & Veena 🪕"}
+          {scene >= 6 && "Ayudha Pooja Vaazhthukkal! ✨"}
         </span>
       </div>
 
-      {/* Main Animation Stage Screen */}
-      <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-2xl">
+      {/* Main Cinematic Viewport (Screen 16:10 Ratio) */}
+      <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-2xl bg-black/40 border border-neutral-700/50 shadow-inner">
         <AnimatePresence mode="wait">
-          {/* STAGE 0: Ancient War / King's Shining Sword */}
-          {step === 0 && (
+          {/* ================= SCENE 0: KING CLOSE SHOT & SWORD ELEVATION ================= */}
+          {scene === 0 && (
             <motion.div
-              key="stage-sword"
-              initial={{ opacity: 0, x: -60, scale: 0.85 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 40, scale: 0.9 }}
-              transition={{ duration: 0.45, ease: 'easeOut' }}
-              className="relative w-full h-full flex items-center justify-center"
+              key="scene-king-sword"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 1.5, filter: 'brightness(2)' }}
+              transition={{ duration: 0.4 }}
+              className="relative w-full h-full flex items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-950 via-[#1a0f0a] to-neutral-900"
             >
-              {/* Sunset Battlefield Glow */}
-              <div className="absolute inset-0 bg-gradient-to-t from-amber-600/15 via-red-500/10 to-transparent rounded-2xl pointer-events-none" />
+              {/* Distant battlefield smoke / fire embers */}
+              <div className="absolute inset-0 bg-gradient-to-t from-amber-900/30 via-red-950/20 to-transparent pointer-events-none" />
 
-              <svg viewBox="0 0 220 160" fill="none" className="w-full h-full">
-                {/* King silhouette silhouette hand & shoulder on left */}
+              <motion.svg
+                viewBox="0 0 240 160"
+                className="w-full h-full"
+                initial={{ scale: 1, x: 0, y: 0 }}
+                animate={{ scale: 1.8, x: -30, y: -25 }}
+                transition={{ duration: 2.8, ease: [0.25, 1, 0.5, 1] }}
+              >
+                {/* King close-up silhouette (Left side profile with crown, beard & intense shoulder) */}
                 <g id="king-silhouette">
-                  <path d="M 0 160 L 0 85 Q 25 75, 45 92 Q 62 108, 68 135 L 70 160 Z" fill={isDarkMode ? '#3f3f46' : '#27272a'} />
-                  {/* Royal Crown / Armour glint */}
-                  <path d="M 12 75 L 18 55 L 26 65 L 34 50 L 42 66 L 48 76 Z" fill={goldColor} stroke={strokeColor} strokeWidth="1.5" />
-                  {/* Warrior Arm raising sword */}
-                  <path d="M 45 95 Q 65 80, 85 68 L 92 78 Q 72 90, 52 108 Z" fill={isDarkMode ? '#52525b' : '#3f3f46'} stroke={strokeColor} strokeWidth="1.5" />
+                  {/* Shoulder / Armor cloak */}
+                  <path d="M 0 160 L 0 95 Q 25 80, 55 100 Q 75 115, 85 160 Z" fill="#262626" />
+                  {/* Golden Shoulder Guard (Kavacham) */}
+                  <path d="M 40 98 Q 60 90, 75 108 L 65 125 Q 48 110, 35 112 Z" fill="#b45309" stroke="#f59e0b" strokeWidth="1.5" />
+                  {/* King's Head / Face profile (Facing right towards battlefield) */}
+                  <path d="M 15 95 Q 25 75, 42 75 Q 52 82, 54 94 Q 48 102, 38 104 Z" fill="#d97706" />
+                  {/* Beard profile */}
+                  <path d="M 38 90 L 52 92 L 44 105 L 34 100 Z" fill="#171717" />
+                  {/* Intense warrior eye */}
+                  <circle cx="44" cy="84" r="1.5" fill="#ffffff" />
+                  {/* Royal Crown glint */}
+                  <path d="M 22 75 L 26 58 L 34 68 L 44 54 L 50 68 L 54 75 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
                 </g>
 
-                {/* Shining Royal Sword (Vaal) held upright */}
+                {/* Hand coming up from bottom lifting shining royal sword */}
                 <motion.g
-                  id="royal-sword"
-                  initial={{ rotate: -25, originX: '90px', originY: '75px' }}
-                  animate={{ rotate: 12 }}
-                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  id="king-arm-sword"
+                  initial={{ y: 50, rotate: -25, originX: '75px', originY: '140px' }}
+                  animate={{ y: 0, rotate: 15 }}
+                  transition={{ duration: 1.8, ease: 'easeOut' }}
                 >
-                  {/* Sword Blade */}
-                  <polygon points="90,70 170,18 165,26 86,76" fill="#e2e8f0" stroke={strokeColor} strokeWidth="2" />
-                  <line x1="88" y1="73" x2="168" y2="22" stroke="#94a3b8" strokeWidth="1.5" />
-                  {/* Sword Hilt & Guard */}
-                  <rect x="74" y="70" width="16" height="6" rx="2" fill={goldColor} stroke={strokeColor} strokeWidth="1.5" transform="rotate(-32 74 70)" />
-                  <rect x="68" y="77" width="8" height="15" rx="3" fill="#b45309" stroke={strokeColor} strokeWidth="1.5" transform="rotate(-32 68 77)" />
-                  <circle cx="63" cy="91" r="5" fill={goldColor} stroke={strokeColor} strokeWidth="1.5" />
-                  {/* Chandanam & Kumkum on sword */}
-                  <circle cx="125" cy="46" r="3" fill={sandalColor} />
-                  <circle cx="125" cy="46" r="1.5" fill={kumkumColor} />
+                  {/* Muscular Arm */}
+                  <path d="M 60 145 Q 75 115, 100 95 L 110 105 Q 85 128, 70 160 Z" fill="#b45309" stroke="#171717" strokeWidth="1.5" />
+                  {/* Hand gripping hilt */}
+                  <ellipse cx="103" cy="98" rx="8" ry="6" fill="#d97706" stroke="#171717" strokeWidth="1.5" />
 
-                  {/* Sun / Gleam flash on blade tip */}
-                  <motion.g 
-                    animate={{ scale: [0.6, 1.3, 0.8], opacity: [0.4, 1, 0.6], rotate: [0, 90, 180] }} 
-                    transition={{ repeat: Infinity, duration: 1.2 }}
-                    transform="translate(170, 18)"
+                  {/* Shining Royal Sword (Vaal) */}
+                  <g id="blade-group">
+                    {/* Hilt and Pommel */}
+                    <circle cx="92" cy="112" r="5" fill="#f59e0b" stroke="#78350f" strokeWidth="1.5" />
+                    <rect x="94" y="100" width="8" height="14" rx="2" fill="#78350f" stroke="#f59e0b" strokeWidth="1.5" transform="rotate(-38 94 100)" />
+                    {/* Crossguard */}
+                    <rect x="96" y="94" width="22" height="6" rx="2" fill="#f59e0b" stroke="#78350f" strokeWidth="1.5" transform="rotate(-38 96 94)" />
+                    {/* Blade Body */}
+                    <polygon points="106,90 190,24 184,32 102,96" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5" />
+                    <line x1="104" y1="93" x2="187" y2="28" stroke="#cbd5e1" strokeWidth="1.5" />
+                    {/* Sandhanam & Kumkum on sword */}
+                    <circle cx="140" cy="62" r="3" fill={sandalColor} />
+                    <circle cx="140" cy="62" r="1.5" fill={kumkumColor} />
+                  </g>
+
+                  {/* Blinding Sword Tip Gleam (Triggers the cut transition) */}
+                  <motion.g
+                    transform="translate(190, 24)"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.2, 3], opacity: [0, 1, 1], rotate: [0, 90, 180] }}
+                    transition={{ delay: 1.8, duration: 1.1, ease: 'easeIn' }}
                   >
-                    <polygon points="0,-12 3,-3 12,0 3,3 0,12 -3,3 -12,0 -3,-3" fill="#fef08a" />
+                    <polygon points="0,-16 4,-4 16,0 4,4 0,16 -4,4 -16,0 -4,-4" fill="#ffffff" />
+                    <circle cx="0" cy="0" r="10" fill="#fde047" opacity="0.8" />
                   </motion.g>
+                </motion.g>
+              </motion.svg>
+            </motion.div>
+          )}
+
+          {/* ================= SCENE 1: SOLDIER RAPID GUNFIRE & BULLET TRAVEL ================= */}
+          {scene === 1 && (
+            <motion.div
+              key="scene-soldier-fire"
+              initial={{ opacity: 0, filter: 'brightness(2)' }}
+              animate={{ opacity: 1, filter: 'brightness(1)' }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="relative w-full h-full flex items-center justify-center overflow-hidden bg-neutral-900"
+            >
+              {/* Gunfire strobe flashes across screen */}
+              <motion.div
+                className="absolute inset-0 bg-amber-500/15 pointer-events-none"
+                animate={{ opacity: [0, 0.4, 0, 0.5, 0, 0.3, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity }}
+              />
+
+              <svg viewBox="0 0 240 160" className="w-full h-full">
+                {/* Border mountain outpost & sandbags */}
+                <path d="M 0 160 L 0 120 L 70 120 L 85 135 L 140 135 L 155 160 Z" fill="#3f3f46" stroke="#27272a" strokeWidth="2" />
+                <ellipse cx="35" cy="120" rx="30" ry="10" fill="#71717a" stroke="#27272a" strokeWidth="1.5" />
+                <ellipse cx="65" cy="122" rx="28" ry="9" fill="#52525b" stroke="#27272a" strokeWidth="1.5" />
+
+                {/* Soldier with helmet aiming rifle */}
+                <g id="soldier" transform="translate(10, 30)">
+                  {/* Helmet & Head */}
+                  <ellipse cx="50" cy="55" rx="16" ry="14" fill="#3f6212" stroke="#14532d" strokeWidth="1.5" />
+                  <rect x="42" y="66" width="16" height="12" fill="#d97706" />
+                  {/* Camo Torso */}
+                  <path d="M 30 78 L 70 78 L 75 110 L 25 110 Z" fill="#4d7c0f" stroke="#14532d" strokeWidth="1.5" />
+
+                  {/* Rifle Held firmly */}
+                  <g id="firing-rifle" transform="translate(45, 65)">
+                    {/* Stock */}
+                    <rect x="0" y="8" width="22" height="10" rx="2" fill="#78350f" />
+                    {/* Body & Magazine */}
+                    <rect x="20" y="5" width="40" height="12" rx="2" fill="#1e293b" />
+                    <path d="M 35 15 L 30 32 L 40 32 L 43 15 Z" fill="#0f172a" />
+                    {/* Barrel */}
+                    <rect x="60" y="7" width="55" height="6" fill="#334155" />
+                    <rect x="110" y="5" width="8" height="10" fill="#0f172a" />
+
+                    {/* DABA DABA DABA Muzzle Flash animation */}
+                    <motion.g
+                      transform="translate(120, 10)"
+                      animate={{ scale: [0.7, 1.6, 0.8, 1.8, 0.6], opacity: [0.6, 1, 0.4, 1, 0.5] }}
+                      transition={{ repeat: Infinity, duration: 0.18 }}
+                    >
+                      <polygon points="0,0 12,-10 8,-3 22,0 8,3 12,10" fill="#fef08a" />
+                      <polygon points="0,0 8,-6 6,-2 15,0 6,2 8,6" fill="#f97316" />
+                    </motion.g>
+                  </g>
+                </g>
+
+                {/* Golden Bullet flying through air in slow motion */}
+                <motion.g
+                  id="flying-bullet"
+                  initial={{ x: 130, y: 72, scale: 0.6 }}
+                  animate={{ x: 215, y: 72, scale: 1.8 }}
+                  transition={{ duration: 2.2, ease: 'linear' }}
+                >
+                  {/* Bullet tracer streak */}
+                  <line x1="-30" y1="0" x2="0" y2="0" stroke="#f59e0b" strokeWidth="3" opacity="0.7" />
+                  {/* Bullet Head */}
+                  <path d="M 0 -3 L 8 -3 Q 14 0, 8 3 L 0 3 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="1" />
                 </motion.g>
               </svg>
             </motion.div>
           )}
 
-          {/* STAGE 1: Soldier Border Rifle */}
-          {step === 1 && (
+          {/* ================= SCENE 2: BULLET CAUGHT IN MID-AIR -> INK PEN WRITING ================= */}
+          {scene === 2 && (
             <motion.div
-              key="stage-rifle"
-              initial={{ opacity: 0, x: -60, scale: 0.85 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 40, scale: 0.9 }}
-              transition={{ duration: 0.45, ease: 'easeOut' }}
-              className="relative w-full h-full flex items-center justify-center"
+              key="scene-bullet-to-pen"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="relative w-full h-full flex items-center justify-center overflow-hidden bg-neutral-900"
             >
-              <svg viewBox="0 0 220 160" fill="none" className="w-full h-full">
-                {/* Army Camo / Border mountain hill silhouette */}
-                <path d="M 0 160 L 40 120 L 110 140 L 170 105 L 220 135 L 220 160 Z" fill={isDarkMode ? '#27272a' : '#e2e8f0'} />
-                
-                {/* Service Rifle / INSAS with Sacred Thilakam */}
-                <g id="service-rifle" transform="translate(15, 30) rotate(-14 110 80)">
-                  {/* Barrel & Muzzle */}
-                  <rect x="40" y="70" width="130" height="7" rx="2" fill="#334155" stroke={strokeColor} strokeWidth="2" />
-                  <rect x="165" y="68" width="12" height="11" rx="2" fill="#1e293b" stroke={strokeColor} strokeWidth="1.5" />
-                  {/* Scope / Sight */}
-                  <rect x="85" y="60" width="35" height="8" rx="2" fill="#475569" stroke={strokeColor} strokeWidth="1.5" />
-                  {/* Stock & Grip (Wood / Olive) */}
-                  <path d="M 40 70 L 10 95 L 22 108 L 52 82 Z" fill="#65a30d" stroke={strokeColor} strokeWidth="2" />
-                  {/* Magazine */}
-                  <path d="M 85 77 L 78 108 L 92 108 L 96 77 Z" fill="#1e293b" stroke={strokeColor} strokeWidth="2" />
-                  {/* Chandanam & Kumkum on rifle */}
-                  <circle cx="110" cy="73" r="3.5" fill={sandalColor} />
-                  <circle cx="110" cy="73" r="1.8" fill={kumkumColor} />
-                  {/* Sevvanthi flower garland touch */}
-                  <circle cx="145" cy="74" r="5" fill="#f97316" />
-                  <circle cx="145" cy="74" r="2.5" fill="#fde047" />
+              <svg viewBox="0 0 240 160" className="w-full h-full">
+                {/* Paper notebook sliding in below */}
+                <g id="notebook-paper" transform="translate(40, 85)">
+                  <rect x="0" y="0" width="160" height="65" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="2" />
+                  <line x1="15" y1="20" x2="145" y2="20" stroke="#cbd5e1" strokeWidth="1.5" />
+                  <line x1="15" y1="36" x2="145" y2="36" stroke="#cbd5e1" strokeWidth="1.5" />
+                  <line x1="15" y1="52" x2="100" y2="52" stroke="#cbd5e1" strokeWidth="1.5" />
+
+                  {/* Animated handwriting text appear */}
+                  <motion.path
+                    d="M 20 32 Q 35 24, 50 32 T 80 32 T 115 30 T 140 32"
+                    fill="none"
+                    stroke="#0284c7"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ delay: 1.1, duration: 1.2, ease: 'easeInOut' }}
+                  />
                 </g>
 
-                {/* Sparkling bravery glint */}
-                <motion.circle 
-                  cx="180" cy="46" r="4" fill={goldColor}
-                  animate={{ scale: [1, 1.8, 1], opacity: [0.3, 1, 0.3] }}
-                  transition={{ repeat: Infinity, duration: 1 }}
-                />
-              </svg>
-            </motion.div>
-          )}
-
-          {/* STAGE 2: Ink Pen & Knowledge Revolution */}
-          {step === 2 && (
-            <motion.div
-              key="stage-pen"
-              initial={{ opacity: 0, x: -60, scale: 0.85 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 40, scale: 0.9 }}
-              transition={{ duration: 0.45, ease: 'easeOut' }}
-              className="relative w-full h-full flex items-center justify-center"
-            >
-              <svg viewBox="0 0 220 160" fill="none" className="w-full h-full">
-                {/* Vintage Journal / Open Notebook */}
-                <g id="notebook" transform="translate(30, 75)">
-                  <rect x="0" y="0" width="160" height="60" rx="6" fill={isDarkMode ? '#27272a' : '#f8fafc'} stroke={strokeColor} strokeWidth="2" />
-                  <line x1="80" y1="0" x2="80" y2="60" stroke={strokeColor} strokeWidth="2" strokeDasharray="3 2" />
-                  {/* Ruled lines */}
-                  <line x1="12" y1="18" x2="70" y2="18" stroke="#94a3b8" strokeWidth="1.5" />
-                  <line x1="12" y1="32" x2="65" y2="32" stroke="#94a3b8" strokeWidth="1.5" />
-                  <line x1="90" y1="18" x2="148" y2="18" stroke="#94a3b8" strokeWidth="1.5" />
-                  <line x1="90" y1="32" x2="140" y2="32" stroke="#94a3b8" strokeWidth="1.5" />
-                </g>
-
-                {/* Heroic Fountain / Ink Pen angled writing */}
-                <g id="ink-pen" transform="translate(100, 15) rotate(32)">
-                  {/* Barrel */}
-                  <rect x="0" y="20" width="16" height="75" rx="4" fill="#0284c7" stroke={strokeColor} strokeWidth="2" />
-                  <rect x="0" y="32" width="16" height="6" fill={goldColor} stroke={strokeColor} strokeWidth="1" />
-                  {/* Golden Nib */}
-                  <polygon points="0,20 8,2 16,20" fill={goldColor} stroke={strokeColor} strokeWidth="2" />
-                  <line x1="8" y1="5" x2="8" y2="16" stroke="#1e293b" strokeWidth="1.5" />
-                  {/* Chandanam & Kumkum Bottu */}
-                  <circle cx="8" cy="55" r="3" fill={sandalColor} />
-                  <circle cx="8" cy="55" r="1.5" fill={kumkumColor} />
-                </g>
-
-                {/* Glowing word: "அறிவு / Arivu" spark */}
-                <motion.text
-                  x="110" y="112"
-                  fill={goldColor}
-                  fontSize="12"
-                  fontWeight="bold"
-                  textAnchor="middle"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
+                {/* Hand reaching in, catching flying bullet & morphing into Pen */}
+                <motion.g
+                  id="hand-catching-pen"
+                  initial={{ x: 230, y: 15 }}
+                  animate={{ x: 120, y: 45 }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
                 >
-                  அறிவு dhaan Aayudham ✨
-                </motion.text>
-              </svg>
-            </motion.div>
-          )}
+                  {/* Fingers grasping */}
+                  <ellipse cx="25" cy="20" rx="9" ry="6" fill="#d97706" />
+                  <ellipse cx="18" cy="28" rx="8" ry="5" fill="#b45309" />
 
-          {/* STAGE 3: Modern IT Era (Developer Laptop & Code) */}
-          {step === 3 && (
-            <motion.div
-              key="stage-laptop"
-              initial={{ opacity: 0, x: -60, scale: 0.85 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 40, scale: 0.9 }}
-              transition={{ duration: 0.45, ease: 'easeOut' }}
-              className="relative w-full h-full flex items-center justify-center"
-            >
-              <svg viewBox="0 0 220 160" fill="none" className="w-full h-full">
-                {/* Modern Laptop */}
-                <g id="modern-laptop" transform="translate(35, 30)">
-                  {/* Screen Frame */}
-                  <rect x="15" y="10" width="120" height="75" rx="5" fill="#18181b" stroke={strokeColor} strokeWidth="2" />
-                  {/* Inner Display (Dark IDE / Terminal) */}
-                  <rect x="20" y="15" width="110" height="65" rx="3" fill="#09090b" />
-                  
-                  {/* Code editor window dots */}
-                  <circle cx="27" cy="22" r="2" fill="#ef4444" />
-                  <circle cx="33" cy="22" r="2" fill="#f59e0b" />
-                  <circle cx="39" cy="22" r="2" fill="#22c55e" />
-                  
-                  {/* Colorful Code lines */}
-                  <line x1="27" y1="32" x2="65" y2="32" stroke="#38bdf8" strokeWidth="2" />
-                  <line x1="33" y1="40" x2="85" y2="40" stroke="#a855f7" strokeWidth="2" />
-                  <line x1="33" y1="48" x2="110" y2="48" stroke="#4ade80" strokeWidth="2" />
-                  <line x1="27" y1="58" x2="75" y2="58" stroke="#fbbf24" strokeWidth="2" />
+                  {/* Bullet Morphing into Pen */}
+                  <motion.g
+                    initial={{ rotate: -15 }}
+                    animate={{ rotate: 42 }}
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                  >
+                    {/* Pen Body */}
+                    <rect x="5" y="-30" width="14" height="68" rx="3" fill="#0284c7" stroke="#0f172a" strokeWidth="1.5" />
+                    <rect x="5" y="-12" width="14" height="5" fill="#f59e0b" />
+                    {/* Golden Fountain Nib */}
+                    <polygon points="5,-30 12,-46 19,-30" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
+                    <line x1="12" y1="-42" x2="12" y2="-32" stroke="#0f172a" strokeWidth="1.2" />
+                    {/* Sandhanam Kumkum */}
+                    <circle cx="12" cy="0" r="2.5" fill={sandalColor} />
+                    <circle cx="12" cy="0" r="1.2" fill={kumkumColor} />
+                  </motion.g>
+                </motion.g>
 
-                  {/* Laptop Base & Keyboard */}
-                  <path d="M 0 85 L 150 85 L 140 96 L 10 96 Z" fill="#71717a" stroke={strokeColor} strokeWidth="2" />
-                  <rect x="55" y="87" width="40" height="6" rx="2" fill="#3f3f46" />
-
-                  {/* Sacred Sandhanam & Kumkum on Laptop screen back/border */}
-                  <circle cx="75" cy="13" r="3.5" fill={sandalColor} />
-                  <circle cx="75" cy="13" r="1.8" fill={kumkumColor} />
-
-                  {/* Sevvanthi flowers beside keyboard */}
-                  <circle cx="15" cy="90" r="5" fill="#f97316" />
-                  <circle cx="15" cy="90" r="2.5" fill="#fde047" />
-                  <circle cx="135" cy="90" r="5" fill="#fbbf24" />
-                  <circle cx="135" cy="90" r="2.5" fill="#ea580c" />
-                </g>
-
-                <text x="110" y="145" fill={isDarkMode ? '#38bdf8' : '#0284c7'} fontSize="11" fontWeight="bold" textAnchor="middle">
-                  {"// 2026 Developer Pooja 💻"}
+                <text x="120" y="32" fill={goldColor} fontSize="11" fontWeight="bold" textAnchor="middle">
+                  Bullet ➔ Pen: Arivu dhaan Aayudham! ✒️
                 </text>
               </svg>
             </motion.div>
           )}
 
-          {/* STAGE 4: Divine Saraswathi (Sacred Veena & Classical Tools) */}
-          {step === 4 && (
+          {/* ================= SCENE 3: PAPER PAD MORPHS INTO DIGITAL TABLET & STYLUS ================= */}
+          {scene === 3 && (
             <motion.div
-              key="stage-veena"
+              key="scene-paper-to-tab"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              className="relative w-full h-full flex items-center justify-center overflow-hidden bg-neutral-900"
+            >
+              <svg viewBox="0 0 240 160" className="w-full h-full">
+                {/* Modern Sleek Tablet (iPad / Graphic Tab) */}
+                <motion.g
+                  id="digital-tablet"
+                  transform="translate(45, 25)"
+                  initial={{ rotateX: 30 }}
+                  animate={{ rotateX: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  {/* Tablet Bezel */}
+                  <rect x="0" y="0" width="150" height="105" rx="10" fill="#18181b" stroke="#52525b" strokeWidth="2.5" />
+                  {/* Screen Glass */}
+                  <rect x="7" y="7" width="136" height="91" rx="6" fill="#09090b" />
+
+                  {/* Tablet Front Camera */}
+                  <circle cx="75" cy="4" r="1.5" fill="#71717a" />
+
+                  {/* Digital Drawing / UI Elements on Glass */}
+                  <rect x="18" y="18" width="55" height="6" rx="2" fill="#38bdf8" />
+                  <rect x="18" y="28" width="114" height="2" fill="#27272a" />
+                  <path d="M 20 70 Q 50 35, 80 65 T 130 50" fill="none" stroke="#a855f7" strokeWidth="3" strokeLinecap="round" />
+                  <circle cx="120" cy="80" r="10" fill="#22c55e" opacity="0.8" />
+
+                  {/* Sandhanam Kumkum on Tab top border */}
+                  <circle cx="75" cy="2" r="2.5" fill={sandalColor} />
+                  <circle cx="75" cy="2" r="1.2" fill={kumkumColor} />
+                </motion.g>
+
+                {/* Apple Pencil / Digital Stylus writing on glass */}
+                <motion.g
+                  id="digital-stylus"
+                  initial={{ x: 190, y: 30, rotate: 20 }}
+                  animate={{ x: 140, y: 70, rotate: 35 }}
+                  transition={{ repeat: Infinity, repeatType: 'reverse', duration: 1.2 }}
+                >
+                  <rect x="0" y="0" width="8" height="60" rx="3" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1" />
+                  <polygon points="0,60 4,72 8,60" fill="#cbd5e1" />
+                  <circle cx="4" cy="71" r="1" fill="#0284c7" />
+                </motion.g>
+
+                <text x="120" y="148" fill="#38bdf8" fontSize="11" fontWeight="bold" textAnchor="middle">
+                  Paper ➔ Tab & Stylus 📱
+                </text>
+              </svg>
+            </motion.div>
+          )}
+
+          {/* ================= SCENE 4: TAB OPENS INTO LAPTOP WITH POOJA HOLIDAYS MEME ================= */}
+          {scene === 4 && (
+            <motion.div
+              key="scene-laptop-meme"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              transition={{ duration: 0.4 }}
+              className="relative w-full h-full flex items-center justify-center overflow-hidden bg-neutral-900"
+            >
+              <svg viewBox="0 0 240 160" className="w-full h-full">
+                {/* Modern Laptop Base & Open Display */}
+                <g id="laptop-meme-display" transform="translate(30, 15)">
+                  {/* Laptop Screen Frame */}
+                  <rect x="15" y="5" width="150" height="95" rx="6" fill="#18181b" stroke="#71717a" strokeWidth="2" />
+                  {/* Display Screen */}
+                  <rect x="20" y="10" width="140" height="85" rx="4" fill="#fdf2f8" />
+
+                  {/* Inside Screen: Pooja Hegde Meme Card */}
+                  <g transform="translate(35, 15)">
+                    {/* Beach background gradient */}
+                    <rect x="0" y="0" width="110" height="55" rx="5" fill="#fbcfe8" />
+                    {/* Palm trees / Beach emoji */}
+                    <text x="8" y="22" fontSize="16">🏖️</text>
+                    <text x="85" y="22" fontSize="16">✨</text>
+
+                    {/* Actress Silhouette with stylish sunglasses & smile */}
+                    <g transform="translate(40, 6)">
+                      <ellipse cx="15" cy="18" rx="14" ry="15" fill="#fde68a" />
+                      {/* Stylish hair */}
+                      <path d="M 0 26 C -4 4, 34 4, 30 26 C 26 12, 4 12, 0 26 Z" fill="#171717" />
+                      {/* Sunglasses */}
+                      <rect x="6" y="14" width="7" height="5" rx="1.5" fill="#0f172a" />
+                      <rect x="17" y="14" width="7" height="5" rx="1.5" fill="#0f172a" />
+                      <line x1="13" y1="16" x2="17" y2="16" stroke="#0f172a" strokeWidth="1" />
+                      {/* Sandhanam Kumkum on actress forehead */}
+                      <circle cx="15" cy="10" r="1.8" fill={sandalColor} />
+                      <circle cx="15" cy="10" r="0.9" fill={kumkumColor} />
+                      {/* Smile */}
+                      <path d="M 11 25 Q 15 28, 19 25" stroke="#b91c1c" strokeWidth="1.2" fill="none" />
+                    </g>
+
+                    {/* Meme Text on Screen */}
+                    <text x="55" y="68" fill="#db2777" fontSize="8.5" fontWeight="900" textAnchor="middle">
+                      HAPPY "POOJA" HOLIDAYS! 🏖️
+                    </text>
+                    <text x="55" y="78" fill="#71717a" fontSize="7" fontWeight="bold" textAnchor="middle">
+                      (2026 Gen-Z Meme Special)
+                    </text>
+                  </g>
+
+                  {/* Sandhanam Kumkum on Laptop apple/center logo */}
+                  <circle cx="90" cy="6" r="2.5" fill={sandalColor} />
+                  <circle cx="90" cy="6" r="1.2" fill={kumkumColor} />
+
+                  {/* Laptop Keyboard & Trackpad base */}
+                  <path d="M 0 100 L 180 100 L 165 118 L 15 118 Z" fill="#52525b" stroke="#27272a" strokeWidth="2" />
+                  <rect x="68" y="103" width="44" height="10" rx="2" fill="#3f3f46" />
+
+                  {/* Sevvanthi flower beside keyboard */}
+                  <circle cx="20" cy="108" r="5" fill="#f97316" />
+                  <circle cx="20" cy="108" r="2.5" fill="#fde047" />
+                  <circle cx="160" cy="108" r="5" fill="#fbbf24" />
+                  <circle cx="160" cy="108" r="2.5" fill="#ea580c" />
+                </g>
+              </svg>
+            </motion.div>
+          )}
+
+          {/* ================= SCENE 5: DIVINE CLIMAX -> SARASWATHI & SACRED VEENA ================= */}
+          {scene === 5 && (
+            <motion.div
+              key="scene-saraswathi"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="relative w-full h-full flex items-center justify-center"
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative w-full h-full flex items-center justify-center overflow-hidden bg-gradient-to-t from-amber-950/40 via-neutral-900 to-neutral-950"
             >
-              <svg viewBox="0 0 220 160" fill="none" className="w-full h-full drop-shadow-lg">
-                {/* Divine Glowing Halo */}
-                <circle cx="110" cy="75" r="55" fill="rgba(245, 158, 11, 0.16)" />
+              <svg viewBox="0 0 240 160" className="w-full h-full drop-shadow-xl">
+                {/* Divine Glowing Sun Aura */}
+                <circle cx="120" cy="75" r="56" fill="rgba(245, 158, 11, 0.18)" />
 
                 {/* Holy Books / Granthas */}
-                <rect x="55" y="120" width="110" height="14" rx="3" fill="#b91c1c" stroke={strokeColor} strokeWidth="2.5" />
-                <rect x="65" y="108" width="90" height="13" rx="3" fill="#c2410c" stroke={strokeColor} strokeWidth="2.5" />
-                <circle cx="110" cy="114" r="3" fill={sandalColor} />
-                <circle cx="110" cy="114" r="1.5" fill={kumkumColor} />
+                <rect x="65" y="122" width="110" height="14" rx="3" fill="#b91c1c" stroke={strokeColor} strokeWidth="2" />
+                <rect x="75" y="110" width="90" height="13" rx="3" fill="#c2410c" stroke={strokeColor} strokeWidth="2" />
+                <circle cx="120" cy="116" r="3" fill={sandalColor} />
+                <circle cx="120" cy="116" r="1.5" fill={kumkumColor} />
 
-                {/* Chisel & Spanner across behind Veena */}
-                <g transform="rotate(-30 75 75)">
-                  <rect x="70" y="45" width="8" height="42" rx="2" fill={goldColor} stroke={strokeColor} strokeWidth="2" />
-                  <polygon points="70,45 74,34 78,45" fill="#f8fafc" stroke={strokeColor} strokeWidth="2" />
-                </g>
-                <g transform="rotate(32 145 75)">
-                  <path d="M 142 38 C 137 38, 134 42, 134 47 L 140 85 L 146 89 L 152 55 C 156 50, 156 42, 148 38 Z" fill="#94a3b8" stroke={strokeColor} strokeWidth="2" />
-                </g>
-
-                {/* Saraswathi Veena */}
-                <g id="veena">
-                  <rect x="107" y="30" width="6" height="76" rx="2" fill="#78350f" stroke={strokeColor} strokeWidth="2" />
-                  <line x1="108.5" y1="34" x2="108.5" y2="102" stroke={goldColor} strokeWidth="1" />
-                  <line x1="111.5" y1="34" x2="111.5" y2="102" stroke={goldColor} strokeWidth="1" />
-                  <path d="M 110 30 C 103 28, 98 22, 103 16 C 109 12, 116 18, 113 26 Z" fill={goldColor} stroke={strokeColor} strokeWidth="2" />
-                  <ellipse cx="110" cy="98" rx="22" ry="16" fill="#9a3412" stroke={strokeColor} strokeWidth="2.5" />
-                  <circle cx="110" cy="96" r="3.5" fill={sandalColor} />
-                  <circle cx="110" cy="96" r="1.8" fill={kumkumColor} />
+                {/* Saraswathi Sacred Veena (Centered) */}
+                <g id="sacred-veena">
+                  <rect x="117" y="30" width="6" height="78" rx="2" fill="#78350f" stroke={strokeColor} strokeWidth="2" />
+                  <line x1="118.5" y1="34" x2="118.5" y2="104" stroke={goldColor} strokeWidth="1" />
+                  <line x1="121.5" y1="34" x2="121.5" y2="104" stroke={goldColor} strokeWidth="1" />
+                  <path d="M 120 30 C 113 28, 108 22, 113 16 C 119 12, 126 18, 123 26 Z" fill={goldColor} stroke={strokeColor} strokeWidth="2" />
+                  <ellipse cx="120" cy="100" rx="22" ry="16" fill="#9a3412" stroke={strokeColor} strokeWidth="2.5" />
+                  <circle cx="120" cy="98" r="3.5" fill={sandalColor} />
+                  <circle cx="120" cy="98" r="1.8" fill={kumkumColor} />
                 </g>
 
-                {/* Sacred Diya / Vilakku on Left & Right */}
-                <g transform="translate(42, 118)">
+                {/* Glowing Sacred Diyas / Lamps on Left and Right */}
+                <g transform="translate(48, 120)">
                   <ellipse cx="0" cy="0" rx="9" ry="4" fill={goldColor} stroke={strokeColor} strokeWidth="1.5" />
-                  <motion.path 
-                    d="M 0 -2 Q -3 -12, 0 -18 Q 3 -12, 0 -2 Z" 
+                  <motion.path
+                    d="M 0 -2 Q -3 -12, 0 -18 Q 3 -12, 0 -2 Z"
                     fill="#f97316"
                     animate={{ scale: [1, 1.25, 0.9, 1.2, 1] }}
                     transition={{ repeat: Infinity, duration: 1.2 }}
                   />
                 </g>
-                <g transform="translate(178, 118)">
+                <g transform="translate(192, 120)">
                   <ellipse cx="0" cy="0" rx="9" ry="4" fill={goldColor} stroke={strokeColor} strokeWidth="1.5" />
-                  <motion.path 
-                    d="M 0 -2 Q -3 -12, 0 -18 Q 3 -12, 0 -2 Z" 
+                  <motion.path
+                    d="M 0 -2 Q -3 -12, 0 -18 Q 3 -12, 0 -2 Z"
                     fill="#f97316"
                     animate={{ scale: [1.1, 0.9, 1.2, 0.95, 1.1] }}
                     transition={{ repeat: Infinity, duration: 1.3 }}
                   />
                 </g>
+
+                <text x="120" y="24" fill={goldColor} fontSize="12" fontWeight="900" textAnchor="middle" className="tracking-widest uppercase">
+                  Saraswathi Pooja 🌸
+                </text>
               </svg>
             </motion.div>
           )}
 
-          {/* STAGE 5: The Famous 2026 Meme Punch (Pooja Hegde Holidays!) */}
-          {step === 5 && (
+          {/* ================= SCENE 6: GRAND FINALE HARMONY ================= */}
+          {scene >= 6 && (
             <motion.div
-              key="stage-meme"
-              initial={{ opacity: 0, rotate: -8, scale: 0.7 }}
-              animate={{ opacity: 1, rotate: [0, 3, -3, 0], scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.4, type: 'spring' }}
-              className="relative w-full h-full flex flex-col items-center justify-center p-2"
-            >
-              {/* Fun meme polaroid frame */}
-              <div className="w-48 bg-white text-neutral-900 rounded-xl p-2.5 shadow-2xl border-4 border-pink-400 rotate-1 flex flex-col items-center">
-                {/* Illustrated Meme Character (Pooja Hegde portrait style with cooling glass) */}
-                <div className="relative w-full h-24 bg-gradient-to-tr from-pink-300 via-rose-200 to-amber-100 rounded-lg flex items-center justify-center overflow-hidden border border-pink-200">
-                  {/* Animated Sunglasses / Stylist Actress silhouette */}
-                  <svg viewBox="0 0 100 80" className="w-20 h-20">
-                    {/* Hair */}
-                    <path d="M 20 60 C 15 20, 85 20, 80 60 C 85 40, 75 10, 50 10 C 25 10, 15 40, 20 60 Z" fill="#1e1e1e" />
-                    {/* Face */}
-                    <ellipse cx="50" cy="45" rx="22" ry="24" fill="#fde68a" />
-                    {/* Sandhanam & Kumkum pottu on actress forehead */}
-                    <circle cx="50" cy="32" r="3" fill="#fef08a" />
-                    <circle cx="50" cy="32" r="1.5" fill="#dc2626" />
-                    {/* Trendy Sunglasses */}
-                    <rect x="33" y="38" width="14" height="10" rx="3" fill="#0f172a" />
-                    <rect x="53" y="38" width="14" height="10" rx="3" fill="#0f172a" />
-                    <line x1="47" y1="43" x2="53" y2="43" stroke="#0f172a" strokeWidth="2" />
-                    {/* Smile */}
-                    <path d="M 42 56 Q 50 63, 58 56" stroke="#b91c1c" strokeWidth="2" fill="none" />
-                  </svg>
-
-                  {/* Vacation Palm Tree Sticker */}
-                  <div className="absolute top-1 right-2 text-sm">🏖️</div>
-                  <div className="absolute bottom-1 left-2 text-xs">✨</div>
-                </div>
-
-                {/* Meme Punchline */}
-                <div className="text-center mt-2">
-                  <p className="text-[11px] font-black tracking-tight text-pink-600 uppercase">
-                    Happy "Pooja" Holidays! 🏖️
-                  </p>
-                  <p className="text-[9px] font-bold text-neutral-500 italic mt-0.5">
-                    (2026 Meme Special)
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* STAGE 6: Grand Harmony / Climax (All eras unite) */}
-          {step >= 6 && (
-            <motion.div
-              key="stage-harmony"
-              initial={{ opacity: 0, scale: 0.85 }}
+              key="scene-finale"
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="relative w-full h-full flex flex-col items-center justify-center"
+              transition={{ duration: 0.5 }}
+              className="relative w-full h-full flex flex-col items-center justify-center bg-neutral-900/60 p-2"
             >
-              <svg viewBox="0 0 220 160" fill="none" className="w-full h-full drop-shadow-md">
+              <svg viewBox="0 0 240 160" className="w-full h-full drop-shadow-md">
                 {/* Aura */}
-                <circle cx="110" cy="75" r="58" fill={isDarkMode ? 'rgba(245, 158, 11, 0.12)' : 'rgba(251, 191, 36, 0.2)'} />
+                <circle cx="120" cy="75" r="58" fill={isDarkMode ? 'rgba(245, 158, 11, 0.12)' : 'rgba(251, 191, 36, 0.2)'} />
 
                 {/* Classical Books & Laptop combo */}
-                <rect x="60" y="122" width="100" height="13" rx="3" fill="#b91c1c" stroke={strokeColor} strokeWidth="2" />
-                <rect x="70" y="111" width="80" height="12" rx="3" fill="#c2410c" stroke={strokeColor} strokeWidth="2" />
+                <rect x="70" y="122" width="100" height="13" rx="3" fill="#b91c1c" stroke={strokeColor} strokeWidth="2" />
+                <rect x="80" y="111" width="80" height="12" rx="3" fill="#c2410c" stroke={strokeColor} strokeWidth="2" />
 
                 {/* Sword on Left, Laptop on Right, Veena in Center */}
-                {/* Sword */}
-                <g transform="translate(30, 20) rotate(-22)">
+                <g transform="translate(40, 20) rotate(-22)">
                   <polygon points="40,25 45,95 38,95" fill="#e2e8f0" stroke={strokeColor} strokeWidth="1.5" />
                   <rect x="34" y="93" width="14" height="4" fill={goldColor} />
                   <circle cx="41" cy="60" r="2.5" fill={kumkumColor} />
                 </g>
 
-                {/* Modern Laptop screen on Right */}
-                <g transform="translate(138, 55) rotate(14)">
+                <g transform="translate(148, 55) rotate(14)">
                   <rect x="0" y="0" width="38" height="26" rx="2" fill="#09090b" stroke={strokeColor} strokeWidth="1.5" />
                   <line x1="6" y1="8" x2="24" y2="8" stroke="#38bdf8" strokeWidth="1.5" />
-                  <line x1="6" y1="14" x2="30" y2="14" stroke="#4ade80" strokeWidth="1.5" />
                   <circle cx="19" cy="2" r="2" fill={sandalColor} />
                 </g>
 
                 {/* Veena Center */}
-                <g id="veena-center">
-                  <rect x="107" y="28" width="6" height="78" rx="2" fill="#78350f" stroke={strokeColor} strokeWidth="2" />
-                  <line x1="108.5" y1="32" x2="108.5" y2="102" stroke={goldColor} strokeWidth="1" />
-                  <line x1="111.5" y1="32" x2="111.5" y2="102" stroke={goldColor} strokeWidth="1" />
-                  <ellipse cx="110" cy="98" rx="22" ry="16" fill="#9a3412" stroke={strokeColor} strokeWidth="2.5" />
-                  <circle cx="110" cy="96" r="3.5" fill={sandalColor} />
-                  <circle cx="110" cy="96" r="1.8" fill={kumkumColor} />
-                </g>
+                <rect x="117" y="28" width="6" height="78" rx="2" fill="#78350f" stroke={strokeColor} strokeWidth="2" />
+                <ellipse cx="120" cy="98" rx="22" ry="16" fill="#9a3412" stroke={strokeColor} strokeWidth="2.5" />
+                <circle cx="120" cy="96" r="3.5" fill={sandalColor} />
+                <circle cx="120" cy="96" r="1.8" fill={kumkumColor} />
 
-                {/* Fresh Flowers & Offerings shower */}
-                <circle cx="50" cy="126" r="6" fill="#f97316" />
-                <circle cx="170" cy="126" r="6" fill="#fbbf24" />
-                <circle cx="90" cy="132" r="5" fill="#fde047" />
-                <circle cx="130" cy="132" r="5" fill="#ea580c" />
+                {/* Fresh Sevvanthi flowers shower */}
+                <circle cx="60" cy="126" r="6" fill="#f97316" />
+                <circle cx="180" cy="126" r="6" fill="#fbbf24" />
+                <circle cx="100" cy="132" r="5" fill="#fde047" />
+                <circle cx="140" cy="132" r="5" fill="#ea580c" />
               </svg>
 
-              {/* Replay Pill Prompt */}
+              {/* Tap to Replay Pill Prompt */}
               <div className="absolute bottom-1 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider bg-amber-500/15 text-amber-500 border border-amber-500/30 flex items-center gap-1">
                 <span>🔄 Tap anywhere to replay</span>
               </div>
@@ -563,15 +526,13 @@ export default function AyudhaPoojaArt({ isDarkMode }) {
         </AnimatePresence>
       </div>
 
-      {/* Progress Dots Indicator */}
-      <div className="flex items-center gap-1.5 mt-1.5 z-20">
+      {/* Progress timeline dots */}
+      <div className="flex items-center gap-1.5 mt-2 z-20">
         {[0, 1, 2, 3, 4, 5, 6].map((idx) => (
           <div
             key={idx}
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              step === idx 
-                ? 'w-5 bg-amber-500' 
-                : 'w-1.5 bg-neutral-400/40 dark:bg-neutral-600/40'
+              scene === idx ? 'w-5 bg-amber-500' : 'w-1.5 bg-neutral-400/40 dark:bg-neutral-600/40'
             }`}
           />
         ))}
