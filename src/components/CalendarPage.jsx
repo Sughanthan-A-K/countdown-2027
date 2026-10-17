@@ -4,10 +4,11 @@ import { Sparkles, PartyPopper, Star, Share2, Rocket, Gift } from 'lucide-react'
 import GandhiPic from './GandhiPic';
 import ConfettiBurst from './ConfettiBurst';
 import BirthdayLogo from './BirthdayLogo';
+import AyudhaPoojaArt from './AyudhaPoojaArt';
 import MagicalCornerStar from './MagicalCornerStar';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -29,7 +30,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   
   const isFinished = daysRemaining <= 0;
   const isDiwaliActive = isDiwali || forceDiwaliMode; 
-  const isSpecialRevealed = isTop && (isBirthday || isGandhiJayanti || (isDiwaliActive && diwaliRevealed));
+  const isSpecialRevealed = isTop && (isBirthday || isGandhiJayanti || isAyudhaPooja || (isDiwaliActive && diwaliRevealed));
 
   // Show intro hint & sparkle:
   // - In shared card view: Exactly when forceShowShareHint becomes true (synced with Start Countdown 2027)
@@ -43,14 +44,14 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           setShowShareIntroHint(false);
         }
       } else {
-        const delayMs = isDiwaliActive ? 5000 : 1200;
+        const delayMs = (isDiwaliActive || isAyudhaPooja) ? 5000 : 1200;
         const t1 = setTimeout(() => {
           setShowShareIntroHint(true);
         }, delayMs);
         return () => clearTimeout(t1);
       }
     }
-  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isSharedCardView, forceShowShareHint]);
+  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isAyudhaPooja, isSharedCardView, forceShowShareHint]);
 
   const handleShareTap = () => {
     if (!hasDismissedShareHint) {
@@ -374,6 +375,46 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 </div>
                 
                 <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0 ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
+                  <div className="flex items-baseline gap-1">
+                    <h1 className={`text-5xl sm:text-6xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                      {daysRemaining}
+                    </h1>
+                    <span className={`font-bold text-sm sm:text-base italic ${textSecondary}`}>
+                      th day
+                    </span>
+                  </div>
+                  <div 
+                    className={`px-5 py-1.5 rounded-full border-2 mt-3 cursor-default select-none ${pillBgOutline}`}
+                    onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
+                    onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
+                    onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                    onPointerLeave={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                  >
+                    <span className={`text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
+                      To reach 2027
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : isAyudhaPooja ? (
+              <>
+                <div className="pt-5 sm:pt-7 px-8 flex flex-col items-center w-full z-10 relative">
+                  <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
+                    {dateText}
+                  </h2>
+                  <motion.h3 
+                     initial={{ opacity: 0.8 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 2, repeatType: 'reverse' }}
+                     className="text-amber-500 font-black text-xs sm:text-sm tracking-widest uppercase mt-1.5 drop-shadow-sm text-center"
+                  >
+                    Happy Ayudha Pooja
+                  </motion.h3>
+                </div>
+
+                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full">
+                  <AyudhaPoojaArt isDarkMode={effectiveDarkMode} />
+                </div>
+                
+                <div className="pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0">
                   <div className="flex items-baseline gap-1">
                     <h1 className={`text-5xl sm:text-6xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
                       {daysRemaining}

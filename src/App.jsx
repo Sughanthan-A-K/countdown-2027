@@ -103,6 +103,9 @@ function App() {
       } else if (cardParam === 'gandhi' || cardParam === 'oct2') {
         target = new Date(2026, 9, 2); // Oct 2
         cardType = 'gandhi';
+      } else if (cardParam === 'ayudhapooja' || cardParam === 'ayudha' || cardParam === 'oct19' || cardParam === 'pooja') {
+        target = new Date(2026, 9, 19); // Oct 19
+        cardType = 'ayudhapooja';
       } else if (cardParam === 'diwali' || cardParam === 'nov8') {
         target = new Date(2026, 10, 8); // Nov 8
         cardType = 'diwali';
@@ -112,6 +115,7 @@ function App() {
           target = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
           if (target.getMonth() === 9 && target.getDate() === 14) cardType = 'birthday';
           else if (target.getMonth() === 9 && target.getDate() === 2) cardType = 'gandhi';
+          else if (target.getMonth() === 9 && target.getDate() === 19) cardType = 'ayudhapooja';
           else if (target.getMonth() === 10 && target.getDate() === 8) cardType = 'diwali';
         }
       }
@@ -151,6 +155,12 @@ function App() {
       shareUrl += '/?card=gandhi';
       title = "Happy Gandhi Jayanti - Countdown 2027 👓";
       text = "Happy Gandhi Jayanti on Countdown 2027: ";
+    } else if (type === 'ayudhapooja' || (targetDate.getMonth() === 9 && targetDate.getDate() === 19)) {
+      shareUrl += '/?card=ayudhapooja';
+      title = "Happy Ayudha Pooja - Countdown 2027 🌸";
+      text = globalLang === 'english'
+        ? "Wishing you and your family a very Happy Ayudha Pooja & Saraswathi Pooja on Countdown 2027: "
+        : "Ungalukkum ungal kudumbathirkum iniya Ayudha Pooja & Saraswathi Pooja nalvazhthukkal on Countdown 2027: ";
     } else if (type === 'diwali' || (targetDate.getMonth() === 10 && targetDate.getDate() === 8)) {
       shareUrl += '/?card=diwali';
       title = "Happy Diwali - Countdown 2027 🪔";
@@ -253,7 +263,7 @@ function App() {
   const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
   const [sharedCtaReady, setSharedCtaReady] = useState(false);
 
-  // Sync Start Countdown button, tooltip, and minura star after exactly 5 seconds
+  // Sync Start Countdown button, tooltip, and minura star after exactly 5 seconds for festival cards
   useEffect(() => {
     if (isSharedCardView) {
       if (sharedCardData?.type === 'diwali') {
@@ -265,6 +275,11 @@ function App() {
         } else {
           setSharedCtaReady(false);
         }
+      } else if (sharedCardData?.type === 'ayudhapooja') {
+        const t = setTimeout(() => {
+          setSharedCtaReady(true);
+        }, 5000); // 5 seconds for Ayudha Pooja
+        return () => clearTimeout(t);
       } else {
         const t = setTimeout(() => {
           setSharedCtaReady(true);
@@ -922,6 +937,7 @@ function App() {
       index: i,
       isGandhiJayanti: pageDate.getMonth() === 9 && pageDate.getDate() === 2,
       isBirthday: tutorialState === -1 && pageDate.getMonth() === 9 && pageDate.getDate() === 14,
+      isAyudhaPooja: pageDate.getMonth() === 9 && pageDate.getDate() === 19,
       isDiwaliDay: pageDate.getMonth() === 10 && pageDate.getDate() === 8,
       isDiwali: (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
       
@@ -1334,6 +1350,7 @@ function App() {
                     isDarkMode={effectiveDarkMode}
                     isGandhiJayanti={sharedCardData.type === 'gandhi'}
                     isBirthday={sharedCardData.type === 'birthday'}
+                    isAyudhaPooja={sharedCardData.type === 'ayudhapooja'}
                     onBirthdaySecret={(count) => {
                       setBirthdaySecretWishes(count);
                       setShowBirthdaySecret(true);
@@ -1366,6 +1383,7 @@ function App() {
                       isDarkMode={isDarkMode}
                       isGandhiJayanti={page.isGandhiJayanti}
                       isBirthday={page.isBirthday}
+                      isAyudhaPooja={page.isAyudhaPooja}
                       onBirthdaySecret={(count) => {
                         setBirthdaySecretWishes(count);
                         setShowBirthdaySecret(true);
@@ -1380,7 +1398,7 @@ function App() {
                       onDevHoldStart={handleDevPillHoldStart}
                       onDevHoldEnd={handleDevPillHoldEnd}
                       onShareSpecialCard={page.index === 0 ? () => handleShareSpecialCard(
-                        page.isBirthday ? 'birthday' : page.isGandhiJayanti ? 'gandhi' : 'diwali',
+                        page.isBirthday ? 'birthday' : page.isGandhiJayanti ? 'gandhi' : page.isAyudhaPooja ? 'ayudhapooja' : 'diwali',
                         addDays(calendarDate, page.index)
                       ) : undefined}
                       globalLang={globalLang}
