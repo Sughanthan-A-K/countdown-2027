@@ -7,21 +7,6 @@ export default function AyudhaPoojaArt({ isDarkMode }) {
 
   return (
     <div className="relative w-full max-w-[260px] h-48 sm:h-52 flex flex-col items-center justify-center select-none my-auto">
-      {/* Soft Ethereal Breathing Aura */}
-      <motion.div
-        animate={{
-          scale: [0.94, 1.05, 0.94],
-          opacity: isDarkMode ? [0.35, 0.55, 0.35] : [0.2, 0.35, 0.2],
-        }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute w-44 h-44 rounded-full blur-2xl pointer-events-none"
-        style={{
-          background: isDarkMode
-            ? 'radial-gradient(circle, rgba(245,158,11,0.5) 0%, rgba(217,119,6,0.15) 60%, transparent 75%)'
-            : 'radial-gradient(circle, rgba(245,158,11,0.35) 0%, rgba(251,191,36,0.12) 60%, transparent 75%)',
-        }}
-      />
-
       {/* Floating Gentle Festive Sparkles */}
       {[
         { top: '8%', left: '12%', delay: 0 },
@@ -66,16 +51,7 @@ export default function AyudhaPoojaArt({ isDarkMode }) {
         <img
           src={imageSrc}
           alt="Happy Ayudha Pooja"
-          className="w-full h-full object-contain pointer-events-none select-none drop-shadow-md"
-          style={
-            isDarkMode
-              ? {
-                  filter: 'drop-shadow(0 0 16px rgba(245,158,11,0.35)) drop-shadow(0 4px 12px rgba(0,0,0,0.5))',
-                }
-              : {
-                  filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.08))',
-                }
-          }
+          className="w-full h-full object-contain pointer-events-none select-none"
         />
       </motion.div>
     </div>
