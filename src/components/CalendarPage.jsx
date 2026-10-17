@@ -118,13 +118,17 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
   const effectiveDarkMode = isDarkMode || isDiwaliActive;
   
-  const cardBg = effectiveDarkMode ? 'bg-neutral-900' : 'bg-white';
+  const cardBg = effectiveDarkMode 
+    ? (isAyudhaPooja ? 'bg-black' : 'bg-neutral-900') 
+    : 'bg-white';
   const cardBorder = effectiveDarkMode ? 'border-neutral-300' : 'border-neutral-800';
   const textPrimary = effectiveDarkMode ? 'text-neutral-100' : 'text-neutral-800';
   const textSecondary = effectiveDarkMode ? 'text-neutral-400' : 'text-neutral-500';
   const pillBg = effectiveDarkMode ? 'bg-neutral-100' : 'bg-neutral-800';
   const pillText = effectiveDarkMode ? 'text-neutral-900' : 'text-white';
-  const pillBgOutline = effectiveDarkMode ? 'bg-neutral-900 border-neutral-300' : 'bg-white border-neutral-800';
+  const pillBgOutline = effectiveDarkMode 
+    ? (isAyudhaPooja ? 'bg-black border-neutral-300' : 'bg-neutral-900 border-neutral-300')
+    : 'bg-white border-neutral-800';
   const pillTextOutline = effectiveDarkMode ? 'text-neutral-200' : 'text-neutral-800';
 
   const isFirstOutExploded = diwaliRevealed;
@@ -411,6 +415,12 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
                     {dateText}
                   </h2>
+                  <motion.h3 
+                     initial={{ opacity: 0.8 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 2, repeatType: 'reverse' }}
+                     className="text-amber-500 font-black text-xs sm:text-sm tracking-widest uppercase mt-1.5 drop-shadow-sm text-center"
+                  >
+                    Happy Ayudha Pooja
+                  </motion.h3>
                 </div>
 
                 <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full">
