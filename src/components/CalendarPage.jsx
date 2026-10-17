@@ -180,35 +180,35 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           </div>
         )}
 
-        {/* Share Hint Tooltip - Positioned cleanly right below the corner star pointing UP at it */}
+        {/* Share Hint Tooltip - Floating ABOVE the calendar card and top buttons so it never gets obscured */}
         {isSpecialRevealed && onShareSpecialCard && (
           <AnimatePresence>
             {showShareIntroHint && (
-              <div className="w-[85vw] max-w-[340px] absolute top-14 z-50 flex justify-end pointer-events-none pr-3">
+              <div className="w-[85vw] max-w-[340px] absolute -top-14 z-[100] flex justify-end pointer-events-none">
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.85, y: -8 }}
+                  initial={{ opacity: 0, scale: 0.85, y: 8 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.85, y: -8 }}
+                  exit={{ opacity: 0, scale: 0.85, y: 8 }}
                   transition={{ duration: 0.35, ease: "easeOut" }}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleShareTap();
                   }}
-                  className={`relative max-w-[210px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
+                  className={`relative max-w-[220px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
                     effectiveDarkMode
-                      ? 'bg-neutral-900/95 text-neutral-100 border-neutral-700 shadow-black/70'
-                      : 'bg-white/95 text-neutral-900 border-neutral-300 shadow-neutral-400/50'
+                      ? 'bg-neutral-900/95 text-neutral-100 border-neutral-700 shadow-black/80'
+                      : 'bg-white/95 text-neutral-900 border-neutral-300 shadow-neutral-500/50'
                   }`}
                 >
-                  {/* Upward pointing arrow aiming directly at the twinkling star */}
-                  <div className={`absolute -top-1.5 right-4 w-3 h-3 rotate-45 border-t border-l ${
-                    effectiveDarkMode ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-neutral-300'
-                  }`} />
                   <span>
                     {(globalLang || localStorage.getItem('globalLang')) === 'english'
                       ? "Tap here to share your wish with others ✨"
                       : "Unga wish-a mathavangalukku share panna inga tap pannunga! ✨"}
                   </span>
+                  {/* Downward pointing arrow right above the top-right corner star */}
+                  <div className={`absolute -bottom-1.5 right-4 w-3 h-3 rotate-45 border-b border-r ${
+                    effectiveDarkMode ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-neutral-300'
+                  }`} />
                 </motion.div>
               </div>
             )}
