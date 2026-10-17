@@ -6,7 +6,7 @@ export default function AyudhaPoojaArt({ isDarkMode }) {
   const imageSrc = isDarkMode ? '/HAP Dark mode.png' : '/HAP Light mode.png';
 
   return (
-    <div className="relative w-full max-w-[260px] h-48 sm:h-52 flex flex-col items-center justify-center select-none my-auto">
+    <div className="relative w-full max-w-[270px] h-52 sm:h-56 flex flex-col items-center justify-center select-none my-auto">
       {/* Floating Gentle Festive Sparkles */}
       {[
         { top: '8%', left: '12%', delay: 0 },
