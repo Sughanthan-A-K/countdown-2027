@@ -411,12 +411,6 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
                     {dateText}
                   </h2>
-                  <motion.h3 
-                     initial={{ opacity: 0.8 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 2, repeatType: 'reverse' }}
-                     className="text-amber-500 font-black text-xs sm:text-sm tracking-widest uppercase mt-1.5 drop-shadow-sm text-center"
-                  >
-                    Happy Ayudha Pooja
-                  </motion.h3>
                 </div>
 
                 <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full">
