@@ -11,9 +11,13 @@ export default function AyudhaPoojaArt({ isDarkMode }) {
         className="relative max-w-[210px] max-h-[190px] sm:max-w-[230px] sm:max-h-[210px] w-full h-full flex items-center justify-center overflow-hidden rounded-2xl"
       >
         <img
-          src="/HPH.jpg"
+          src="/HPH_clean.png"
           alt="Happy Pooja Holidays"
-          className="w-full h-full object-contain filter drop-shadow-md select-none pointer-events-none"
+          className={`w-full h-full object-contain select-none pointer-events-none transition-all duration-300 ${
+            isDarkMode 
+              ? 'drop-shadow-[0_4px_16px_rgba(255,255,255,0.12)]' 
+              : 'drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
+          }`}
           loading="eager"
         />
       </motion.div>
