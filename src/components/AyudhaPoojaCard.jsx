@@ -264,11 +264,11 @@ export default function AyudhaPoojaCard({
               {/* Meme Visuals */}
               <div className="flex-1 relative w-full mt-1 rounded-xl overflow-hidden bg-black flex items-center justify-center">
                 <AnimatePresence mode="wait">
-                  {/* 1. POOJA IMAGE (Zoomed in slightly back: scale 1.02) */}
+                  {/* 1. POOJA IMAGE (Zoomed in by ~10px: scale 1.07) */}
                   {subPhase === 'image' && (
                     <motion.div
                       key="pooja-image"
-                      initial={{ opacity: 0, scale: 0.95 }}
+                      initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ 
                         opacity: 0, 
@@ -276,17 +276,17 @@ export default function AyudhaPoojaCard({
                         x: -15,
                         transition: { duration: 0.4 }
                       }}
-                      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black p-1"
+                      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black"
                     >
                       <img
                         src={poojaImgSrc}
                         alt="Ayudha Pooja Special"
-                        className="w-full h-full object-contain scale-[1.02]"
+                        className="w-full h-full object-contain scale-[1.07]"
                       />
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Zoomed further: scale 1.32, halved duration ~6.5s) */}
+                  {/* 2. POOJA VIDEO 1 (Zoomed in by ~10px: scale 1.39, halved duration ~6.5s) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -301,7 +301,7 @@ export default function AyudhaPoojaCard({
                         playsInline
                         muted
                         autoPlay
-                        className="w-full h-full object-contain scale-[1.32]"
+                        className="w-full h-full object-contain scale-[1.39]"
                       />
                     </motion.div>
                   )}
