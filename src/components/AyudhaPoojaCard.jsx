@@ -150,6 +150,22 @@ export default function AyudhaPoojaCard({
     }
   };
 
+  // Video freeze logic: Freeze on peak revealed frame so video doesn't loop back to empty/start!
+  const handleWishTimeUpdate = () => {
+    const video = wishVideoRef.current;
+    if (!video) return;
+
+    // Both Light Mode and Dark Mode finish their full drawing by ~5.7s.
+    // Freeze when duration - 0.15s or 5.7s is reached so the full beautiful illustration stays on screen!
+    const targetFreezeTime = video.duration && !isNaN(video.duration) 
+      ? Math.max(video.duration - 0.18, 0.5) 
+      : 5.7;
+
+    if (video.currentTime >= targetFreezeTime && !video.paused) {
+      video.pause();
+    }
+  };
+
   // When wish video starts (Phase 4), play and trigger corner share star after 3s
   useEffect(() => {
     if (phase === 4) {
@@ -187,26 +203,68 @@ export default function AyudhaPoojaCard({
       />
 
       {/* =========================================================================
-          PHASE 4: SARASWATHI WISH VIDEO (Full-bleed card video - not inside inner small frame!)
-          Fills naturally without small inner borders, with original festive wish vibe
+          PHASE 4: SARASWATHI WISH VIDEO (Comfortably zoomed-out festive visual)
+          - Video zooms out with rounded framing & gentle shadow
+          - Video frame freezes at its peak revealed state while audio plays fully
+          - Special card bottom "Today ... 74th day" counter is displayed below!
           ========================================================================= */}
       {phase === 4 && (
         <motion.div
           key="saraswathi-full-bleed-wish"
-          initial={{ opacity: 0, scale: 0.96 }}
+          initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          onClick={handleWishVideoTap}
-          className="absolute inset-0 z-0 flex items-center justify-center cursor-pointer pointer-events-auto"
-          title="Tap to replay"
+          className="relative z-10 w-full h-full flex flex-col items-center justify-between pointer-events-auto py-1"
         >
-          <video
-            ref={wishVideoRef}
-            src={wishVideoSrc}
-            playsInline
-            autoPlay
-            className="w-full h-full object-cover"
-          />
+          {/* Top Date Header Spacer / Subtle Wish Title */}
+          <div className="w-full flex justify-center pt-1">
+            <motion.span 
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="font-bold text-[11px] sm:text-xs tracking-widest uppercase text-amber-500/90 dark:text-amber-400/90"
+            >
+              Happy Saraswathi Pooja
+            </motion.span>
+          </div>
+
+          {/* Center Zoomed-Out Saraswathi Video (Tap to replay) */}
+          <div 
+            onClick={handleWishVideoTap}
+            className="flex-1 w-full flex items-center justify-center cursor-pointer my-auto px-4"
+            title="Tap to replay"
+          >
+            <div className={`relative w-[82%] max-w-[220px] aspect-square rounded-2xl overflow-hidden shadow-xl border-2 transition-transform active:scale-[0.98] ${
+              isDarkMode 
+                ? 'border-amber-700/40 shadow-black/60 bg-black' 
+                : 'border-amber-600/30 shadow-amber-900/10 bg-white'
+            }`}>
+              <video
+                ref={wishVideoRef}
+                src={wishVideoSrc}
+                playsInline
+                autoPlay
+                loop={false}
+                onTimeUpdate={handleWishTimeUpdate}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Bottom Today 74th day Special Counter */}
+          <div className="w-full flex flex-col items-center justify-center pb-2 z-20">
+            <div className="flex items-baseline gap-1">
+              <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase mr-1 ${textSecondary}`}>
+                Today
+              </span>
+              <h1 className={`text-4xl sm:text-5xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                {daysRemaining}
+              </h1>
+              <span className={`font-bold text-sm sm:text-base italic ${textSecondary}`}>
+                th day
+              </span>
+            </div>
+          </div>
         </motion.div>
       )}
 
