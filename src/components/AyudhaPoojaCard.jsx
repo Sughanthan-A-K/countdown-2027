@@ -158,6 +158,25 @@ export default function AyudhaPoojaCard({
     }
   };
 
+  const hasTriggeredShareRef = useRef(false);
+
+  // Trigger corner share star and tooltip 1s after the wish video/audio has played
+  const triggerShareWithDelay = () => {
+    if (!hasTriggeredShareRef.current) {
+      hasTriggeredShareRef.current = true;
+      setTimeout(() => {
+        if (onTriggerShareStar) {
+          onTriggerShareStar();
+        }
+      }, 1000); // exactly 1 second delay
+    }
+  };
+
+  // When wish audio finishes playing
+  const handleWishAudioEnded = () => {
+    triggerShareWithDelay();
+  };
+
   // Video freeze logic: Smoothly decelerate (slow down) video starting at 3.7s and pause at 4.5s!
   // Video frame stays frozen at 4.5s with full artwork while wish audio continues playing to the end.
   const handleWishTimeUpdate = () => {
@@ -176,7 +195,7 @@ export default function AyudhaPoojaCard({
     }
   };
 
-  // When wish video starts (Phase 4), start muted video + unmuted audio and trigger corner share star after 3s
+  // When wish video starts (Phase 4), start muted video + unmuted audio
   useEffect(() => {
     if (phase === 4) {
       if (wishVideoRef.current) {
@@ -189,15 +208,14 @@ export default function AyudhaPoojaCard({
         wishAudioRef.current.play().catch(() => {});
       }
 
-      const starTimer = setTimeout(() => {
-        if (onTriggerShareStar) {
-          onTriggerShareStar();
-        }
-      }, 3000);
+      // Fallback timer: wish video is ~5.8s; in case audio onEnded doesn't fire (e.g. autoplay restriction), trigger after 5.8s + 1s = 6.8s
+      const fallbackTimer = setTimeout(() => {
+        triggerShareWithDelay();
+      }, 7000);
 
-      return () => clearTimeout(starTimer);
+      return () => clearTimeout(fallbackTimer);
     }
-  }, [phase, onTriggerShareStar]);
+  }, [phase]);
 
   const poojaImgSrc = isDarkMode 
     ? "/Image and Audio/Pooja Dark mode.png" 
@@ -221,6 +239,7 @@ export default function AyudhaPoojaCard({
       <audio
         ref={wishAudioRef}
         src={wishVideoSrc}
+        onEnded={handleWishAudioEnded}
         preload="auto"
       />
 
