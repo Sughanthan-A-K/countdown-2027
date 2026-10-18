@@ -39,6 +39,7 @@ export default function AyudhaPoojaCard({
   const video1Ref = useRef(null);
   const video2Ref = useRef(null);
   const wishVideoRef = useRef(null);
+  const wishAudioRef = useRef(null);
 
   // 1. Exactly 1s: 2D Pattasu / Firecracker blast animation explodes the number away
   useEffect(() => {
@@ -142,36 +143,42 @@ export default function AyudhaPoojaCard({
     }
   };
 
-  // Replay wish video on tap when in phase 4
+  // Replay wish video & audio on tap when in phase 4
   const handleWishVideoTap = () => {
-    if (phase === 4 && wishVideoRef.current) {
-      wishVideoRef.current.currentTime = 0;
-      wishVideoRef.current.play().catch(() => {});
+    if (phase === 4) {
+      if (wishVideoRef.current) {
+        wishVideoRef.current.currentTime = 0;
+        wishVideoRef.current.play().catch(() => {});
+      }
+      if (wishAudioRef.current) {
+        wishAudioRef.current.currentTime = 0;
+        wishAudioRef.current.play().catch(() => {});
+      }
     }
   };
 
-  // Video freeze logic: Freeze on peak revealed frame so video doesn't loop back to empty/start!
+  // Video freeze logic: Freeze smoothly at exactly 4.0s!
+  // Video frame stays frozen with full artwork while wish audio continues playing to the end.
   const handleWishTimeUpdate = () => {
     const video = wishVideoRef.current;
     if (!video) return;
 
-    // Both Light Mode and Dark Mode finish their full drawing by ~5.7s.
-    // Freeze when duration - 0.15s or 5.7s is reached so the full beautiful illustration stays on screen!
-    const targetFreezeTime = video.duration && !isNaN(video.duration) 
-      ? Math.max(video.duration - 0.18, 0.5) 
-      : 5.7;
-
-    if (video.currentTime >= targetFreezeTime && !video.paused) {
+    // Smoothly freeze at exactly 4.0s
+    if (video.currentTime >= 4.0 && !video.paused) {
       video.pause();
     }
   };
 
-  // When wish video starts (Phase 4), play and trigger corner share star after 3s
+  // When wish video starts (Phase 4), start muted video + unmuted audio and trigger corner share star after 3s
   useEffect(() => {
     if (phase === 4) {
       if (wishVideoRef.current) {
         wishVideoRef.current.currentTime = 0;
         wishVideoRef.current.play().catch(() => {});
+      }
+      if (wishAudioRef.current) {
+        wishAudioRef.current.currentTime = 0;
+        wishAudioRef.current.play().catch(() => {});
       }
 
       const starTimer = setTimeout(() => {
@@ -202,65 +209,57 @@ export default function AyudhaPoojaCard({
         preload="auto" 
       />
 
+      {/* Wish Video Audio Track (plays fully even after video pauses at 4s) */}
+      <audio
+        ref={wishAudioRef}
+        src={wishVideoSrc}
+        preload="auto"
+      />
+
       {/* =========================================================================
-          PHASE 4: SARASWATHI WISH VIDEO (Comfortably zoomed-out festive visual)
-          - Video zooms out with rounded framing & gentle shadow
-          - Video frame freezes at its peak revealed state while audio plays fully
-          - Special card bottom "Today ... 74th day" counter is displayed below!
+          PHASE 4: SARASWATHI WISH VIDEO
+          - Full card view (not boxed into an inner card)
+          - Video freezes smoothly at exactly 4.0s
+          - Audio plays fully to completion
+          - Special card bottom "Today ... 74th day" counter is displayed
           ========================================================================= */}
       {phase === 4 && (
         <motion.div
           key="saraswathi-full-bleed-wish"
-          initial={{ opacity: 0, scale: 0.94 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="relative z-10 w-full h-full flex flex-col items-center justify-between pointer-events-auto py-1"
+          onClick={handleWishVideoTap}
+          className="absolute inset-0 z-0 flex flex-col items-center justify-between pointer-events-auto cursor-pointer"
+          title="Tap to replay"
         >
-          {/* Top Date Header Spacer / Subtle Wish Title */}
-          <div className="w-full flex justify-center pt-1">
-            <motion.span 
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="font-bold text-[11px] sm:text-xs tracking-widest uppercase text-amber-500/90 dark:text-amber-400/90"
-            >
-              Happy Saraswathi Pooja
-            </motion.span>
+          {/* Background Video (freezes at exactly 4.0s) */}
+          <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+            <video
+              ref={wishVideoRef}
+              src={wishVideoSrc}
+              playsInline
+              autoPlay
+              muted
+              loop={false}
+              onTimeUpdate={handleWishTimeUpdate}
+              className="w-full h-full object-cover"
+            />
           </div>
 
-          {/* Center Zoomed-Out Saraswathi Video (Tap to replay) */}
-          <div 
-            onClick={handleWishVideoTap}
-            className="flex-1 w-full flex items-center justify-center cursor-pointer my-auto px-4"
-            title="Tap to replay"
-          >
-            <div className={`relative w-[82%] max-w-[220px] aspect-square rounded-2xl overflow-hidden shadow-xl border-2 transition-transform active:scale-[0.98] ${
-              isDarkMode 
-                ? 'border-amber-700/40 shadow-black/60 bg-black' 
-                : 'border-amber-600/30 shadow-amber-900/10 bg-white'
-            }`}>
-              <video
-                ref={wishVideoRef}
-                src={wishVideoSrc}
-                playsInline
-                autoPlay
-                loop={false}
-                onTimeUpdate={handleWishTimeUpdate}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
+          {/* Top spacer */}
+          <div className="w-full h-12 z-10" />
 
           {/* Bottom Today 74th day Special Counter */}
-          <div className="w-full flex flex-col items-center justify-center pb-2 z-20">
+          <div className="w-full flex flex-col items-center justify-center pb-2 z-10">
             <div className="flex items-baseline gap-1">
-              <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase mr-1 ${textSecondary}`}>
+              <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase mr-1 drop-shadow-sm ${textSecondary}`}>
                 Today
               </span>
-              <h1 className={`text-4xl sm:text-5xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+              <h1 className={`text-4xl sm:text-5xl font-black leading-none tracking-tighter text-center drop-shadow-md ${textPrimary}`}>
                 {daysRemaining}
               </h1>
-              <span className={`font-bold text-sm sm:text-base italic ${textSecondary}`}>
+              <span className={`font-bold text-sm sm:text-base italic drop-shadow-sm ${textSecondary}`}>
                 th day
               </span>
             </div>
