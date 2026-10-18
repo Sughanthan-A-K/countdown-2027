@@ -201,7 +201,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         {isSpecialRevealed && onShareSpecialCard && (
           <AnimatePresence>
             {showShareIntroHint && (
-              <div className="w-[85vw] max-w-[340px] absolute -top-14 z-[100] flex justify-end pointer-events-none">
+              <div className="w-[85vw] max-w-[340px] absolute -top-16 z-[100] flex justify-end pointer-events-none">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.85, y: 8 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -211,7 +211,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     e.stopPropagation();
                     handleShareTap();
                   }}
-                  className={`relative max-w-[220px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
+                  className={`relative max-w-[240px] px-3.5 py-2.5 rounded-2xl text-[11px] leading-snug font-semibold shadow-2xl border cursor-pointer pointer-events-auto select-none ${
                     effectiveDarkMode
                       ? 'bg-neutral-900/95 text-neutral-100 border-neutral-700 shadow-black/80'
                       : 'bg-white/95 text-neutral-900 border-neutral-300 shadow-neutral-500/50'
@@ -219,10 +219,10 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 >
                   <span>
                     {(globalLang || localStorage.getItem('globalLang')) === 'english'
-                      ? "Tap here to share your wish with others ✨"
-                      : "Unga wish-a mathavangalukku share panna inga tap pannunga! ✨"}
+                      ? "Tap this invisible button here to share your wish with others! ✨"
+                      : "Unga wish-a mathavangalukku share panna intha invisible button-a tap pannunga! ✨"}
                   </span>
-                  {/* Downward pointing arrow right above the top-right corner star */}
+                  {/* Downward pointing arrow right above the top-right corner invisible button */}
                   <div className={`absolute -bottom-1.5 right-4 w-3 h-3 rotate-45 border-b border-r ${
                     effectiveDarkMode ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-neutral-300'
                   }`} />
@@ -261,34 +261,63 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 className="absolute top-0 right-0 w-20 h-20 z-40 cursor-pointer pointer-events-auto flex items-start justify-end p-3.5"
                 title="Tap to share your wish"
               >
-                {/* Exactly like Gandhi's eye twinkling star with smooth synchronized entry */}
+                {/* Modern subtle dashed beacon ripple pointing to the invisible hitbox (replaces star) */}
                 <AnimatePresence>
                   {showShareIntroHint && (
                     <motion.div
-                      key="share-hint-star"
-                      initial={{ opacity: 0, scale: 0 }}
+                      key="share-hint-beacon"
+                      initial={{ opacity: 0, scale: 0.6 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0 }}
-                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                      className="text-[#f7d13d] pointer-events-none mt-1 mr-1"
-                      style={{ filter: 'drop-shadow(0 0 6px rgba(247,209,61,0.9))' }}
+                      exit={{ opacity: 0, scale: 0.6 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="relative w-10 h-10 flex items-center justify-center pointer-events-none"
                     >
+                      {/* Outer expanding ripple ring */}
                       <motion.div
                         animate={{ 
-                          scale: [1, 1.25, 0.9, 1.2, 1],
-                          rotate: [0, 90, 180, 270, 360],
-                          opacity: [1, 0.85, 1, 0.85, 1]
-                        }} 
+                          scale: [0.8, 1.8],
+                          opacity: [0.9, 0]
+                        }}
                         transition={{ 
-                          duration: 3, 
+                          duration: 1.8, 
+                          repeat: Infinity,
+                          ease: "easeOut"
+                        }}
+                        className={`absolute inset-0 rounded-full border-2 border-dashed ${
+                          effectiveDarkMode ? 'border-amber-400' : 'border-amber-500'
+                        }`}
+                      />
+
+                      {/* Middle pulsing glow ring */}
+                      <motion.div
+                        animate={{ 
+                          scale: [1, 1.3, 1],
+                          opacity: [0.7, 1, 0.7]
+                        }}
+                        transition={{ 
+                          duration: 1.8, 
                           repeat: Infinity,
                           ease: "easeInOut"
                         }}
-                      >
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M10 0 C 10 8, 12 10, 20 10 C 12 10, 10 12, 10 20 C 10 12, 8 10, 0 10 C 8 10, 10 8, 10 0 Z" />
-                        </svg>
-                      </motion.div>
+                        className={`absolute w-7 h-7 rounded-full border border-amber-400/80 ${
+                          effectiveDarkMode ? 'bg-amber-400/10' : 'bg-amber-500/10'
+                        } backdrop-blur-[1px]`}
+                        style={{ filter: 'drop-shadow(0 0 6px rgba(251,191,36,0.6))' }}
+                      />
+
+                      {/* Central pulsing target dot */}
+                      <motion.div
+                        animate={{ 
+                          scale: [0.9, 1.25, 0.9],
+                          opacity: [0.85, 1, 0.85]
+                        }}
+                        transition={{ 
+                          duration: 1.2, 
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                        className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-200 shadow-[0_0_8px_rgba(251,191,36,0.9)]"
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>
