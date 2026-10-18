@@ -313,7 +313,7 @@ export default function AyudhaPoojaCard({
                   }
             }
             onClick={triggerDropToWishVideo}
-            className="w-[88%] max-w-[260px] aspect-[4/5] max-h-[300px] flex flex-col items-center cursor-pointer pointer-events-auto select-none"
+            className="w-[88%] max-w-[260px] aspect-[4/5] max-h-[305px] flex flex-col items-center cursor-pointer pointer-events-auto select-none"
             title="Tap to reveal special wish!"
           >
             {/* Hanging chain on top */}
@@ -341,7 +341,7 @@ export default function AyudhaPoojaCard({
                 isDarkMode ? 'bg-black' : 'bg-white'
               }`}>
                 <AnimatePresence mode="wait">
-                  {/* 1. POOJA IMAGE (Zoomed by +1.5px: scale 1.175, shifted up by 4px mb-1) */}
+                  {/* 1. POOJA IMAGE (Height increased by 4px at bottom: pb-1) */}
                   {subPhase === 'image' && (
                     <motion.div
                       key="pooja-image"
@@ -353,7 +353,7 @@ export default function AyudhaPoojaCard({
                         x: -15,
                         transition: { duration: 0.4 }
                       }}
-                      className={`absolute inset-0 flex items-center justify-center overflow-hidden mb-1 ${
+                      className={`absolute inset-0 flex items-center justify-center overflow-hidden pb-1 ${
                         isDarkMode ? 'bg-black' : 'bg-white'
                       }`}
                     >
