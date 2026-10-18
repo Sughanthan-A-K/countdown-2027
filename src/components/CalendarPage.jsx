@@ -22,7 +22,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   });
   const [showShareIntroHint, setShowShareIntroHint] = useState(false);
   const [ayudhaPoojaPhase, setAyudhaPoojaPhase] = useState(() => {
-    return localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true' ? 4 : 0;
+    const isDev = localStorage.getItem('isDevMode') === 'true';
+    return (!isDev && localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true') ? 4 : 0;
   });
 
   useEffect(() => {

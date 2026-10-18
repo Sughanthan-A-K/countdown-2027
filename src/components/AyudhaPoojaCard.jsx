@@ -30,7 +30,8 @@ export default function AyudhaPoojaCard({
   //    - Replays video smoothly on every tap
   //    - Exactly 3s later, triggers the calendar's corner star & tooltip!
 
-  const isAlreadyDone = typeof window !== 'undefined' && localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true';
+  const isDev = typeof window !== 'undefined' && localStorage.getItem('isDevMode') === 'true';
+  const isAlreadyDone = !isDev && typeof window !== 'undefined' && localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true';
   const [phase, setPhase] = useState(() => (isAlreadyDone ? 4 : 0)); 
   const [subPhase, setSubPhase] = useState('image'); // 'image' | 'video1' | 'video2'
   const [memeTapStep, setMemeTapStep] = useState(null); // null | 'holidays' | 'kidding'
