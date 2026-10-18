@@ -35,7 +35,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
   // Show intro hint & sparkle:
   // - In shared card view: Exactly when forceShowShareHint becomes true (synced with Start Countdown 2027)
-  // - In normal calendar view: exactly 5 seconds (5000ms) after Diwali card reveal
+  // - In normal calendar view: exactly 5 seconds (5000ms) after Diwali card reveal (or triggered dynamically by Ayudha Pooja)
   useEffect(() => {
     if (isSpecialRevealed && onShareSpecialCard && !hasDismissedShareHint) {
       if (isSharedCardView) {
@@ -44,8 +44,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         } else {
           setShowShareIntroHint(false);
         }
-      } else {
-        const delayMs = (isDiwaliActive || isAyudhaPooja) ? 5000 : 1200;
+      } else if (!isAyudhaPooja) {
+        const delayMs = isDiwaliActive ? 5000 : 1200;
         const t1 = setTimeout(() => {
           setShowShareIntroHint(true);
         }, delayMs);
@@ -421,6 +421,11 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     textPrimary={textPrimary}
                     textSecondary={textSecondary}
                     onShareSpecialCard={onShareSpecialCard}
+                    onTriggerShareStar={() => {
+                      if (!hasDismissedShareHint) {
+                        setShowShareIntroHint(true);
+                      }
+                    }}
                   />
                 </div>
                 
