@@ -185,8 +185,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     >
       <div className="relative pt-4 w-full flex justify-center">
         {/* Removed transition-colors because View Transition handles the visual fade/wipe instantly */}
-        <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-[800ms] ${cardBg} ${cardBorder}`} />
-        <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-[800ms] ${cardBg} ${cardBorder}`} />
+        <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${cardBg} ${cardBorder}`} />
+        <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${cardBg} ${cardBorder}`} />
         
         {isTop && hasCornerStar && (
           <div className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] absolute top-4 pointer-events-none z-30">
@@ -233,7 +233,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         )}
 
         <motion.div 
-          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder} transition-all duration-[800ms]`}`}
+          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder} transition-all duration-500`}`}
           style={{
             boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : dropShadow) : '0 20px 40px -10px rgba(0,0,0,0.1)',
             backfaceVisibility: 'hidden'
