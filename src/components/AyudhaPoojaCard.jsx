@@ -67,15 +67,15 @@ export default function AyudhaPoojaCard({
         audioRef.current.play().catch(() => {});
       }
 
-      // 3.2s of image -> go to Video 1
+      // Step 1: 3.0s of Pooja Image -> go to Video 1
       const tImg = setTimeout(() => {
         setSubPhase('video1');
-      }, 3200);
+      }, 3000);
       return () => clearTimeout(tImg);
     }
   }, [phase]);
 
-  // Video 1 playback (halved duration ~6.5s)
+  // Step 2: Video 1 duration shortened to 4.0s as requested -> go to Video 2
   useEffect(() => {
     if (phase === 3 && subPhase === 'video1') {
       if (video1Ref.current) {
@@ -85,13 +85,13 @@ export default function AyudhaPoojaCard({
 
       const tVid1 = setTimeout(() => {
         setSubPhase('video2');
-      }, 6500);
+      }, 4000); // 4 seconds
 
       return () => clearTimeout(tVid1);
     }
   }, [phase, subPhase]);
 
-  // Video 2 playback
+  // Step 3: Video 2 playback (plays the remaining time until music loop repeats or user taps)
   useEffect(() => {
     if (phase === 3 && subPhase === 'video2') {
       if (video2Ref.current) {
@@ -101,12 +101,23 @@ export default function AyudhaPoojaCard({
     }
   }, [phase, subPhase]);
 
-  // When Meme Audio finishes playing once (no loop!), automatically trigger the drop into Saraswathi wish video
+  // When Meme Audio finishes its cycle, loop back from the beginning (restart from first image & replay audio)
+  // Loop continues until user taps to drop the frame!
   const handleAudioEnded = () => {
-    triggerDropToWishVideo();
+    if (phase === 3) {
+      setSubPhase('image'); // restarts from first image!
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
+      }
+      // Trigger image -> video1 after 3s again
+      setTimeout(() => {
+        if (phase === 3) setSubPhase('video1');
+      }, 3000);
+    }
   };
 
-  // User taps meme frame -> unhooks and drops frame with gravity
+  // User taps meme frame -> unhooks and drops frame with gravity into wish video
   const triggerDropToWishVideo = () => {
     if (phase === 3) {
       if (audioRef.current) {
@@ -269,7 +280,7 @@ export default function AyudhaPoojaCard({
               {/* Meme Visuals */}
               <div className="flex-1 relative w-full mt-1 rounded-xl overflow-hidden bg-black flex items-center justify-center">
                 <AnimatePresence mode="wait">
-                  {/* 1. POOJA IMAGE (Zoomed in by ~10px: scale 1.07) */}
+                  {/* 1. POOJA IMAGE (Matching zoom scale: 1.15) */}
                   {subPhase === 'image' && (
                     <motion.div
                       key="pooja-image"
@@ -286,12 +297,12 @@ export default function AyudhaPoojaCard({
                       <img
                         src={poojaImgSrc}
                         alt="Ayudha Pooja Special"
-                        className="w-full h-full object-contain scale-[1.07]"
+                        className="w-full h-full object-contain scale-[1.15]"
                       />
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Zoomed nicely: scale 1.55, halved duration ~6.5s) */}
+                  {/* 2. POOJA VIDEO 1 (Matching identical zoom scale 1.15, shortened to 4s) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -306,7 +317,7 @@ export default function AyudhaPoojaCard({
                         playsInline
                         muted
                         autoPlay
-                        className="w-full h-full object-contain scale-[1.55]"
+                        className="w-full h-full object-contain scale-[1.15]"
                       />
                     </motion.div>
                   )}
