@@ -336,10 +336,12 @@ export default function AyudhaPoojaCard({
                 </span>
               </div>
 
-              {/* Meme Visuals */}
-              <div className="flex-1 relative w-full mt-1 rounded-xl overflow-hidden bg-black flex items-center justify-center">
+              {/* Meme Visuals Container with dynamic theme background: white in Light Mode, black in Dark Mode */}
+              <div className={`flex-1 relative w-full mt-1 rounded-xl overflow-hidden flex items-center justify-center transition-colors duration-300 ${
+                isDarkMode ? 'bg-black' : 'bg-white'
+              }`}>
                 <AnimatePresence mode="wait">
-                  {/* 1. POOJA IMAGE (Zoomed by +2px: scale 1.16) */}
+                  {/* 1. POOJA IMAGE (Zoomed by +1.5px: scale 1.175, shifted up by 4px mb-1) */}
                   {subPhase === 'image' && (
                     <motion.div
                       key="pooja-image"
@@ -351,24 +353,28 @@ export default function AyudhaPoojaCard({
                         x: -15,
                         transition: { duration: 0.4 }
                       }}
-                      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black"
+                      className={`absolute inset-0 flex items-center justify-center overflow-hidden mb-1 ${
+                        isDarkMode ? 'bg-black' : 'bg-white'
+                      }`}
                     >
                       <img
                         src={poojaImgSrc}
                         alt="Ayudha Pooja Special"
-                        className="w-full h-full object-contain scale-[1.16]"
+                        className="w-full h-full object-contain scale-[1.175]"
                       />
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Zoomed by +2px: scale 1.74, duration 3.2s) */}
+                  {/* 2. POOJA VIDEO 1 (White in Light Mode, Black in Dark Mode for bars) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
                       initial={{ opacity: 0, x: 15 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.35 } }}
-                      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black"
+                      className={`absolute inset-0 flex items-center justify-center overflow-hidden ${
+                        isDarkMode ? 'bg-black' : 'bg-white'
+                      }`}
                     >
                       <video
                         ref={video1Ref}
@@ -381,13 +387,15 @@ export default function AyudhaPoojaCard({
                     </motion.div>
                   )}
 
-                  {/* 3. POOJA VIDEO 2 (Clean original object-contain) */}
+                  {/* 3. POOJA VIDEO 2 (White in Light Mode, Black in Dark Mode for bars) */}
                   {subPhase === 'video2' && (
                     <motion.div
                       key="pooja-video-2"
                       initial={{ opacity: 0, scale: 1 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black"
+                      className={`absolute inset-0 flex items-center justify-center overflow-hidden ${
+                        isDarkMode ? 'bg-black' : 'bg-white'
+                      }`}
                     >
                       <video
                         ref={video2Ref}
