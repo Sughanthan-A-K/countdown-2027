@@ -10,18 +10,22 @@ export default function AyudhaPoojaCard({
   onTriggerShareStar,
 }) {
   // Phase sequence:
-  // 0: Initial card with center "74th day" - automatically after 1s, blast/fuse blowout effect happens
-  // 1: Blowout explosion / fuse goes off -> number vanishes
-  // 2: Blank mystery state ("Enna da number-a kaanom") - User MUST tap to trigger meme!
+  // 0: Initial card with center "74th day" - after exactly 1 second, blast animation happens
+  // 1: Blowout explosion / fuse flash -> ONLY center vanishes (Today / th day / pill all vanish, leaving empty mystery center!)
+  // 2: Mystery blank center - User taps -> triggers the hanging oonjal meme frame!
   // 3: Hanging Oonjal Meme frame:
+  //    - Top tag: "TODAY SPECIAL" with pulsing red live dot
+  //    - Gentle oonjal swaying motion
   //    - Pooja Image (plays looping Meme Audio)
-  //    - Smooth transition to Pooja Video 1 (cut to half duration ~6s, mild zoom out scale 1.18 so text is not hidden)
-  //    - Transition to Pooja Video 2 (zoomed scale 1.25 so black bars are covered)
-  //    - User tap -> drops frame with unhook gravity animation
-  // 4: Final Wish Video (Background fills full card natively with Light Mode.mp4 / Dark Mode.mp4)
-  //    - First time plays once through on tap / drop
-  //    - Every time user taps again, replays the wish video
-  //    - 3s after wish video starts -> triggers corner share star!
+  //    - Smooth cut to Pooja Video 1 (zoom out to object-contain scale-100 so all text is crystal clear, halved duration ~6.5s)
+  //    - Smooth cut to Pooja Video 2 (original object-contain as earlier without forced zoom)
+  //    - User tap on frame -> frame unhooks and drops with gravity!
+  // 4: Saraswathi Wish Video:
+  //    - Compacted height, perfectly centered in card
+  //    - Light Mode uses the video's matching parchment background (#e6dccb)
+  //    - Dark Mode uses the video's matching deep background (#14100c)
+  //    - Replays video from start on every user tap
+  //    - Exactly 3s after wish video starts -> triggers the corner star and tooltip hint!
 
   const [phase, setPhase] = useState(0); 
   const [subPhase, setSubPhase] = useState('image'); // 'image' | 'video1' | 'video2'
@@ -31,28 +35,28 @@ export default function AyudhaPoojaCard({
   const video2Ref = useRef(null);
   const wishVideoRef = useRef(null);
 
-  // 1. Exactly 1 second-la number fuse blowout aagidanum
+  // 1. Exactly 1 second-la blast aaganum
   useEffect(() => {
     if (phase === 0) {
       const burstTimer = setTimeout(() => {
         setPhase(1); // blowout animation
         setTimeout(() => {
-          setPhase(2); // number vanished, waiting for user tap
-        }, 600);
-      }, 1000); // 1 second
+          setPhase(2); // center blank, waiting for user tap
+        }, 550);
+      }, 1000);
       return () => clearTimeout(burstTimer);
     }
   }, [phase]);
 
-  // User taps when number is vanished -> starts meme sequence!
+  // User taps on the blank mystery card -> starts the meme sequence
   const handleMysteryTap = () => {
     if (phase === 2) {
-      setPhase(3); // Start meme sequence
+      setPhase(3); 
       setSubPhase('image');
     }
   };
 
-  // When phase 3 starts (Meme sequence), start Meme Audio
+  // When phase 3 starts (Meme sequence), start looping Meme Audio
   useEffect(() => {
     if (phase === 3) {
       if (audioRef.current) {
@@ -68,7 +72,7 @@ export default function AyudhaPoojaCard({
     }
   }, [phase]);
 
-  // Video 1 duration: cut in half (~6.5s)
+  // Video 1 playback (cut to half duration ~6.5s)
   useEffect(() => {
     if (phase === 3 && subPhase === 'video1') {
       if (video1Ref.current) {
@@ -76,7 +80,6 @@ export default function AyudhaPoojaCard({
         video1Ref.current.play().catch(() => {});
       }
 
-      // Halved duration: after 6.5s move to Video 2
       const tVid1 = setTimeout(() => {
         setSubPhase('video2');
       }, 6500);
@@ -85,7 +88,7 @@ export default function AyudhaPoojaCard({
     }
   }, [phase, subPhase]);
 
-  // Video 2 playback (loops until user taps or finishes)
+  // Video 2 playback
   useEffect(() => {
     if (phase === 3 && subPhase === 'video2') {
       if (video2Ref.current) {
@@ -95,7 +98,7 @@ export default function AyudhaPoojaCard({
     }
   }, [phase, subPhase]);
 
-  // User tap while meme is running -> unhooks, drops frame, and reveals background wish video!
+  // User taps meme frame -> unhooks and drops frame
   const triggerDropToWishVideo = () => {
     if (phase === 3) {
       if (audioRef.current) {
@@ -113,7 +116,7 @@ export default function AyudhaPoojaCard({
     }
   };
 
-  // When wish video (phase 4) starts, play once and trigger share star after 3 seconds
+  // When wish video starts (Phase 4), play and trigger corner share star after 3s
   useEffect(() => {
     if (phase === 4) {
       if (wishVideoRef.current) {
@@ -150,48 +153,28 @@ export default function AyudhaPoojaCard({
       />
 
       {/* =========================================================================
-          SARASWATHI WISH VIDEO: Full-bleed background card video
-          Fills behind the card naturally, plays on drop and replays on every user tap!
-          ========================================================================= */}
-      <div 
-        onClick={handleWishVideoTap}
-        className={`absolute inset-0 z-0 flex items-center justify-center transition-opacity duration-700 ${
-          phase === 4 ? 'opacity-100 cursor-pointer pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-      >
-        <video
-          ref={wishVideoRef}
-          src={wishVideoSrc}
-          playsInline
-          className="w-full h-full object-cover"
-        />
-        {/* Subtle festive greeting pill */}
-        <div className="absolute top-3 inset-x-0 flex justify-center pointer-events-none z-10">
-          <span className="px-3.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-black/70 text-amber-300 backdrop-blur-md border border-amber-500/40 shadow-xl">
-            Happy Ayudha Pooja
-          </span>
-        </div>
-      </div>
-
-      {/* =========================================================================
-          PHASE 0, 1, 2: Center Day Counter -> 1s Fuse Blowout -> Mystery Waiting
+          PHASE 0, 1, 2: Center Day Counter -> 1s Blast -> Blank Center Waiting
+          (Today / th day only show before blast; after blast, only blank space waits for tap)
           ========================================================================= */}
       {(phase === 0 || phase === 1 || phase === 2) && (
         <div 
           onClick={handleMysteryTap}
           className={`flex-1 flex flex-col items-center justify-center relative z-10 w-full ${phase === 2 ? 'cursor-pointer pointer-events-auto' : ''}`}
         >
-          <div className="w-full flex justify-start pl-8 z-20 mb-[-1rem]">
-            <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase ${textSecondary}`}>
-              Today
-            </span>
-          </div>
+          {/* Today tag only visible before blast */}
+          {phase === 0 && (
+            <div className="w-full flex justify-start pl-8 z-20 mb-[-1rem]">
+              <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase ${textSecondary}`}>
+                Today
+              </span>
+            </div>
+          )}
 
           <motion.div
             animate={
               phase === 1
                 ? {
-                    scale: [1, 1.3, 0.2],
+                    scale: [1, 1.35, 0.2],
                     filter: ["brightness(1) blur(0px)", "brightness(3) blur(2px)", "brightness(0) blur(14px)"],
                     opacity: [1, 1, 0],
                     rotate: [0, -8, 10]
@@ -203,9 +186,11 @@ export default function AyudhaPoojaCard({
             transition={{ duration: 0.55, ease: "easeInOut" }}
             className="relative flex items-center justify-center"
           >
-            <h1 className={`text-[7rem] sm:text-[8.5rem] font-black leading-none tracking-tighter text-center ${textPrimary}`}>
-              {daysRemaining}
-            </h1>
+            {phase === 0 && (
+              <h1 className={`text-[7rem] sm:text-[8.5rem] font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                {daysRemaining}
+              </h1>
+            )}
 
             {/* Spark/fuse blowout flash */}
             {phase === 1 && (
@@ -221,7 +206,7 @@ export default function AyudhaPoojaCard({
             )}
           </motion.div>
 
-          {/* Mystery hint when number is vanished */}
+          {/* Blank mystery state after blast: tap anywhere to see what happened */}
           {phase === 2 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.85 }}
@@ -229,23 +214,26 @@ export default function AyudhaPoojaCard({
               transition={{ repeat: Infinity, duration: 1.8 }}
               className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
             >
-              <span className="text-3xl mb-1.5">❓</span>
+              <span className="text-3xl mb-1.5 animate-bounce">❓</span>
               <span className="text-xs font-bold text-amber-500 tracking-wider bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm border border-amber-500/30">
                 Tap to see what happened! ✨
               </span>
             </motion.div>
           )}
 
-          <div className="w-full flex justify-end pr-8 z-20 mt-[-1rem]">
-            <span className={`font-bold text-lg sm:text-xl italic ${textSecondary}`}>
-              th day
-            </span>
-          </div>
+          {/* th day tag only visible before blast */}
+          {phase === 0 && (
+            <div className="w-full flex justify-end pr-8 z-20 mt-[-1rem]">
+              <span className={`font-bold text-lg sm:text-xl italic ${textSecondary}`}>
+                th day
+              </span>
+            </div>
+          )}
         </div>
       )}
 
       {/* =========================================================================
-          PHASE 3: Hanging Oonjal Meme Frame (Pooja Image -> Video 1 -> Video 2)
+          PHASE 3: Hanging Oonjal Meme Frame (TODAY SPECIAL)
           ========================================================================= */}
       {phase === 3 && (
         <div className="flex-1 w-full flex items-center justify-center relative z-20 my-auto py-1">
@@ -322,7 +310,7 @@ export default function AyudhaPoojaCard({
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Mild zoom-out to scale 1.18 so text is not cut) */}
+                  {/* 2. POOJA VIDEO 1 (Zoomed out: object-contain scale-100 so all text is 100% visible) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -337,12 +325,12 @@ export default function AyudhaPoojaCard({
                         playsInline
                         muted
                         autoPlay
-                        className="w-full h-full object-cover scale-[1.18]"
+                        className="w-full h-full object-contain scale-100"
                       />
                     </motion.div>
                   )}
 
-                  {/* 3. POOJA VIDEO 2 (Zoomed scale 1.25 to eliminate top/bottom black bars) */}
+                  {/* 3. POOJA VIDEO 2 (Restored to earlier original object-contain as requested) */}
                   {subPhase === 'video2' && (
                     <motion.div
                       key="pooja-video-2"
@@ -357,7 +345,7 @@ export default function AyudhaPoojaCard({
                         muted
                         autoPlay
                         loop
-                        className="w-full h-full object-cover scale-[1.25]"
+                        className="w-full h-full object-contain"
                       />
                     </motion.div>
                   )}
@@ -375,8 +363,49 @@ export default function AyudhaPoojaCard({
         </div>
       )}
 
-      {/* When phase is 4 (Wish video playing), empty flex space to let full background video shine */}
-      {phase === 4 && <div className="flex-1 w-full" />}
+      {/* =========================================================================
+          PHASE 4: Compact Saraswathi Wish Video perfectly centered in card
+          Seamless background match & replay on tap
+          ========================================================================= */}
+      {phase === 4 && (
+        <motion.div
+          key="saraswathi-wish-phase"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          onClick={handleWishVideoTap}
+          className="flex-1 w-full flex flex-col items-center justify-center my-auto py-2 relative z-10 cursor-pointer pointer-events-auto"
+          title="Tap to replay wish!"
+        >
+          {/* Subtitle */}
+          <div className="flex flex-col items-center w-full mb-2">
+            <motion.h3 
+              initial={{ opacity: 0.8 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ repeat: Infinity, duration: 2, repeatType: 'reverse' }}
+              className="text-amber-500 font-black text-xs sm:text-sm tracking-widest uppercase drop-shadow-sm text-center"
+            >
+              Happy Ayudha Pooja
+            </motion.h3>
+          </div>
+
+          {/* Compact Video Frame: height reduced, centered cleanly */}
+          <div className="relative w-[82%] max-w-[220px] aspect-square rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-500/40 bg-black">
+            <video
+              ref={wishVideoRef}
+              src={wishVideoSrc}
+              playsInline
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          <div className="mt-2 text-center">
+            <span className="text-[9px] font-bold tracking-wider text-amber-500/80 uppercase">
+              Tap to replay 🔁
+            </span>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
