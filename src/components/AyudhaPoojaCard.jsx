@@ -75,7 +75,7 @@ export default function AyudhaPoojaCard({
     }
   }, [phase]);
 
-  // Step 2: Video 1 duration shortened to 4.0s as requested -> go to Video 2
+  // Step 2: Video 1 duration shortened to 3.0s as requested -> go to Video 2
   useEffect(() => {
     if (phase === 3 && subPhase === 'video1') {
       if (video1Ref.current) {
@@ -85,7 +85,7 @@ export default function AyudhaPoojaCard({
 
       const tVid1 = setTimeout(() => {
         setSubPhase('video2');
-      }, 4000); // 4 seconds
+      }, 3000); // 3 seconds
 
       return () => clearTimeout(tVid1);
     }
@@ -280,7 +280,7 @@ export default function AyudhaPoojaCard({
               {/* Meme Visuals */}
               <div className="flex-1 relative w-full mt-1 rounded-xl overflow-hidden bg-black flex items-center justify-center">
                 <AnimatePresence mode="wait">
-                  {/* 1. POOJA IMAGE (Zoomed in by 2-4%: scale 1.18) */}
+                  {/* 1. POOJA IMAGE (Zoomed by 1-2px: scale 1.19) */}
                   {subPhase === 'image' && (
                     <motion.div
                       key="pooja-image"
@@ -297,12 +297,12 @@ export default function AyudhaPoojaCard({
                       <img
                         src={poojaImgSrc}
                         alt="Ayudha Pooja Special"
-                        className="w-full h-full object-contain scale-[1.18]"
+                        className="w-full h-full object-contain scale-[1.19]"
                       />
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Nalla zoom in: scale 1.60, shortened to 4s) */}
+                  {/* 2. POOJA VIDEO 1 (Zoomed by 10px: scale 1.66, duration 3s) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -317,7 +317,7 @@ export default function AyudhaPoojaCard({
                         playsInline
                         muted
                         autoPlay
-                        className="w-full h-full object-contain scale-[1.60]"
+                        className="w-full h-full object-contain scale-[1.66]"
                       />
                     </motion.div>
                   )}
