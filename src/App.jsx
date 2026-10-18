@@ -44,6 +44,11 @@ function App() {
   });
   const [shouldAnimateStarFlight, setShouldAnimateStarFlight] = useState(false);
   const [finalHintStep, setFinalHintStep] = useState('none');
+  // When an onboarding user completes the tutorial and intro steps (Info + Theme tooltip),
+  // wait 2 seconds before unlocking special event cards (Ayudha Pooja, Birthday, Diwali, Gandhi)
+  const [isSpecialEventsUnlocked, setIsSpecialEventsUnlocked] = useState(() => {
+    return localStorage.getItem('onboardingDone') === 'true';
+  });
   const [refillingPages, setRefillingPages] = useState([]);
 
   const [tutorialTears, setTutorialTears] = useState(0);
@@ -296,7 +301,7 @@ function App() {
   useEffect(() => {
     // 10 = Nov, 8 = 8th
     if (calendarDate.getMonth() === 10 && calendarDate.getDate() === 8) {
-      if (!diwaliRevealed) {
+      if (isSpecialEventsUnlocked && !diwaliRevealed) {
         if (isDevMode || !localStorage.getItem('diwaliEventDone_2026')) {
           setDiwaliPhase(0);
           setDiwaliRevealed(false);
@@ -317,7 +322,7 @@ function App() {
         setShowDiwaliEvent(false);
       }
     }
-  }, [calendarDate, isDevMode]);
+  }, [calendarDate, isDevMode, isSpecialEventsUnlocked]);
 
   useEffect(() => {
     // Shared card Diwali trigger
@@ -870,11 +875,19 @@ function App() {
     setTouchStartPos(null);
   };
 
+  const dismissFinalHints = () => {
+    setFinalHintStep('none');
+    // If completing onboarding intro, wait 2 seconds before activating special event animations!
+    setTimeout(() => {
+      setIsSpecialEventsUnlocked(true);
+    }, 2000);
+  };
+
   const toggleTheme = (e) => {
     e.stopPropagation();
     
     if (finalHintStep === 'theme') {
-      setFinalHintStep('none');
+      dismissFinalHints();
     }
 
     if (!document.startViewTransition) {
@@ -928,7 +941,7 @@ function App() {
     (tutorialState === 2 && tutorialTears >= 10) || 
     (tutorialState === -1 && !isDevMode && missedDays <= 0);
 
-    const isTutorialActive = tutorialState !== -1;
+    const isTutorialActive = tutorialState !== -1 || !isSpecialEventsUnlocked;
     const pages = [0, 1, 2].map((i) => {
     const pageDate = addDays(calendarDate, i);
     return {
@@ -1113,7 +1126,7 @@ function App() {
                   >
                     <span>{globalLang === 'english' ? 'Tap for Dark/Light mode' : 'Dark/Light mode maathikka itha tap pannunga'}</span>
                     <button 
-                      onClick={() => setFinalHintStep('none')}
+                      onClick={dismissFinalHints}
                       className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-transform active:scale-95 ${
                         isDarkMode ? 'bg-black text-white hover:bg-neutral-800' : 'bg-white text-black hover:bg-neutral-200'
                       }`}
