@@ -119,18 +119,18 @@ export default function AyudhaPoojaCard({
   };
 
   // User taps meme frame:
-  // 1. Shows "Happy Pooja Holidays" (with Pooja in red text)
-  // 2. After 1.0s, switches smoothly to "Just Kidding"
-  // 3. Then after 1.2s, meme frame falls down with gravity drop animation into wish video
+  // 1. Shows "Happy Pooja Holidays" (with Pooja in red text) for 2.5s
+  // 2. Then switches smoothly to "Just Kidding" for 2.0s
+  // 3. Then meme frame falls down with gravity drop animation into wish video
   const triggerDropToWishVideo = () => {
     if (phase === 3 && !memeTapStep) {
-      setMemeTapStep('holidays'); // Step 1: "Happy Pooja Holidays"
+      setMemeTapStep('holidays'); // Step 1: "Happy Pooja Holidays" (2.5s)
 
-      // Step 2: After 1.0s, change to "Just Kidding"
+      // Step 2: After 2.5s, change to "Just Kidding"
       setTimeout(() => {
         setMemeTapStep('kidding');
 
-        // Step 3: After 1.2s of "Just Kidding", trigger fall drop animation into Saraswathi wish video
+        // Step 3: After 2.0s of "Just Kidding", trigger fall drop animation into Saraswathi wish video
         setTimeout(() => {
           setIsFalling(true);
           if (onPhaseChange) {
@@ -143,8 +143,8 @@ export default function AyudhaPoojaCard({
           setTimeout(() => {
             setPhase(4); // Reveal wish video
           }, 550);
-        }, 1200);
-      }, 1000);
+        }, 2000);
+      }, 2500);
     }
   };
 
