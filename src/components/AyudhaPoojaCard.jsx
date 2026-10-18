@@ -147,6 +147,7 @@ export default function AyudhaPoojaCard({
   const handleWishVideoTap = () => {
     if (phase === 4) {
       if (wishVideoRef.current) {
+        wishVideoRef.current.playbackRate = 1;
         wishVideoRef.current.currentTime = 0;
         wishVideoRef.current.play().catch(() => {});
       }
@@ -157,14 +158,20 @@ export default function AyudhaPoojaCard({
     }
   };
 
-  // Video freeze logic: Freeze smoothly at exactly 4.5s!
-  // Video frame stays frozen with full artwork while wish audio continues playing to the end.
+  // Video freeze logic: Smoothly decelerate (slow down) video starting at 3.7s and pause at 4.5s!
+  // Video frame stays frozen at 4.5s with full artwork while wish audio continues playing to the end.
   const handleWishTimeUpdate = () => {
     const video = wishVideoRef.current;
     if (!video) return;
 
-    // Smoothly freeze at exactly 4.5s
-    if (video.currentTime >= 4.5 && !video.paused) {
+    const t = video.currentTime;
+
+    // Smoothly slow down the video as it approaches 4.5s
+    if (t >= 3.7 && t < 4.5) {
+      const remainingProgress = (4.5 - t) / (4.5 - 3.7); // 1 down to 0
+      video.playbackRate = Math.max(0.25, remainingProgress);
+    } else if (t >= 4.5 && !video.paused) {
+      video.playbackRate = 1;
       video.pause();
     }
   };
@@ -173,6 +180,7 @@ export default function AyudhaPoojaCard({
   useEffect(() => {
     if (phase === 4) {
       if (wishVideoRef.current) {
+        wishVideoRef.current.playbackRate = 1;
         wishVideoRef.current.currentTime = 0;
         wishVideoRef.current.play().catch(() => {});
       }
@@ -209,7 +217,7 @@ export default function AyudhaPoojaCard({
         preload="auto" 
       />
 
-      {/* Wish Video Audio Track (plays fully even after video pauses at 4s) */}
+      {/* Wish Video Audio Track (plays fully even after video pauses at 4.5s) */}
       <audio
         ref={wishAudioRef}
         src={wishVideoSrc}
@@ -218,10 +226,10 @@ export default function AyudhaPoojaCard({
 
       {/* =========================================================================
           PHASE 4: SARASWATHI WISH VIDEO
-          - Scaled down & centered nicely so the drawing and greeting are fully visible
-          - Video freezes smoothly at exactly 4.5s
+          - Scaled up by 5px and centered cleanly
+          - Video smoothly slows down (decelerates) and pauses at 4.5s
           - Audio plays fully to completion
-          - Bottom uses CalendarPage's standard counter without overlap
+          - "Today", "74th day" counter placed right at the bottom
           ========================================================================= */}
       {phase === 4 && (
         <motion.div
@@ -230,21 +238,38 @@ export default function AyudhaPoojaCard({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
           onClick={handleWishVideoTap}
-          className="w-full h-full flex flex-col items-center justify-center pointer-events-auto cursor-pointer relative"
+          className="w-full h-full flex flex-col items-center justify-between pointer-events-auto cursor-pointer relative pb-1"
           title="Tap to replay"
         >
-          {/* Scaled down, nicely centered Saraswathi drawing video */}
-          <div className="w-[88%] max-w-[280px] aspect-square flex items-center justify-center overflow-hidden my-auto">
-            <video
-              ref={wishVideoRef}
-              src={wishVideoSrc}
-              playsInline
-              autoPlay
-              muted
-              loop={false}
-              onTimeUpdate={handleWishTimeUpdate}
-              className="w-full h-full object-contain scale-[0.92]"
-            />
+          {/* Centered video scaled up by 5px (280px + 5px = 285px, scale 0.94) */}
+          <div className="flex-1 w-full flex items-center justify-center my-auto overflow-hidden">
+            <div className="w-[90%] max-w-[285px] aspect-square flex items-center justify-center overflow-hidden">
+              <video
+                ref={wishVideoRef}
+                src={wishVideoSrc}
+                playsInline
+                autoPlay
+                muted
+                loop={false}
+                onTimeUpdate={handleWishTimeUpdate}
+                className="w-full h-full object-contain scale-[0.95]"
+              />
+            </div>
+          </div>
+
+          {/* Special Card Counter: "Today", "74th day" */}
+          <div className="w-full flex flex-col items-center justify-center pb-1 z-20">
+            <div className="flex items-baseline gap-1.5">
+              <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase mr-0.5 ${textSecondary}`}>
+                Today
+              </span>
+              <h1 className={`text-4xl sm:text-5xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                {daysRemaining}
+              </h1>
+              <span className={`font-bold text-sm sm:text-base italic ${textSecondary}`}>
+                th day
+              </span>
+            </div>
           </div>
         </motion.div>
       )}
