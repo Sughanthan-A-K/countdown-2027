@@ -218,6 +218,8 @@ function App() {
         setPendingSharedDate(currentSharedDate);
         if (currentSharedType === 'diwali') {
           localStorage.setItem('diwaliEventDone_2026', 'true');
+        } else if (currentSharedType === 'ayudhapooja') {
+          localStorage.setItem('ayudhaPoojaEventDone_2026', 'true');
         }
       }
       setTutorialState(0);
@@ -233,6 +235,8 @@ function App() {
           setShowDiwaliEvent(false);
           setIsDarkMode(true);
           localStorage.setItem('isDarkMode', 'true');
+        } else if (currentSharedType === 'ayudhapooja') {
+          localStorage.setItem('ayudhaPoojaEventDone_2026', 'true');
         }
       }
       setTutorialState(-1);

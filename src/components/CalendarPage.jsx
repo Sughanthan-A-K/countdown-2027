@@ -21,7 +21,9 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     return localStorage.getItem('has_seen_special_share_hint') === 'true';
   });
   const [showShareIntroHint, setShowShareIntroHint] = useState(false);
-  const [ayudhaPoojaPhase, setAyudhaPoojaPhase] = useState(0);
+  const [ayudhaPoojaPhase, setAyudhaPoojaPhase] = useState(() => {
+    return localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true' ? 4 : 0;
+  });
 
   useEffect(() => {
     if (diwaliPhase === 1) {

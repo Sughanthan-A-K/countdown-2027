@@ -30,7 +30,8 @@ export default function AyudhaPoojaCard({
   //    - Replays video smoothly on every tap
   //    - Exactly 3s later, triggers the calendar's corner star & tooltip!
 
-  const [phase, setPhase] = useState(0); 
+  const isAlreadyDone = typeof window !== 'undefined' && localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true';
+  const [phase, setPhase] = useState(() => (isAlreadyDone ? 4 : 0)); 
   const [subPhase, setSubPhase] = useState('image'); // 'image' | 'video1' | 'video2'
   const [memeTapStep, setMemeTapStep] = useState(null); // null | 'holidays' | 'kidding'
   const [isFalling, setIsFalling] = useState(false);
@@ -40,6 +41,13 @@ export default function AyudhaPoojaCard({
   const video2Ref = useRef(null);
   const wishVideoRef = useRef(null);
   const wishAudioRef = useRef(null);
+
+  // If already completed previously, notify parent of phase 4 right on mount
+  useEffect(() => {
+    if (isAlreadyDone && onPhaseChange) {
+      onPhaseChange(4);
+    }
+  }, []);
 
   // 1. Exactly 1s: 2D Pattasu / Firecracker blast animation explodes the number away
   useEffect(() => {
@@ -167,6 +175,13 @@ export default function AyudhaPoojaCard({
 
   // Trigger corner share star and tooltip 1s after the wish video/audio has played
   const triggerShareWithDelay = () => {
+    // Save completion state in localStorage so returning user or user after onboarding sees Saraswathi wish directly!
+    try {
+      localStorage.setItem('ayudhaPoojaEventDone_2026', 'true');
+    } catch (e) {
+      console.warn("Storage error:", e);
+    }
+
     if (!hasTriggeredShareRef.current) {
       hasTriggeredShareRef.current = true;
       setTimeout(() => {
