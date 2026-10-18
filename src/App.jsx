@@ -928,6 +928,7 @@ function App() {
     (tutorialState === 2 && tutorialTears >= 10) || 
     (tutorialState === -1 && !isDevMode && missedDays <= 0);
 
+    const isTutorialActive = tutorialState !== -1;
     const pages = [0, 1, 2].map((i) => {
     const pageDate = addDays(calendarDate, i);
     return {
@@ -935,11 +936,11 @@ function App() {
       dateText: formatDate(pageDate),
       daysRemaining: getDaysRemaining(pageDate),
       index: i,
-      isGandhiJayanti: pageDate.getMonth() === 9 && pageDate.getDate() === 2,
-      isBirthday: tutorialState === -1 && pageDate.getMonth() === 9 && pageDate.getDate() === 14,
-      isAyudhaPooja: pageDate.getMonth() === 9 && pageDate.getDate() === 19,
-      isDiwaliDay: pageDate.getMonth() === 10 && pageDate.getDate() === 8,
-      isDiwali: (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
+      isGandhiJayanti: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 2,
+      isBirthday: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 14,
+      isAyudhaPooja: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 19,
+      isDiwaliDay: !isTutorialActive && pageDate.getMonth() === 10 && pageDate.getDate() === 8,
+      isDiwali: !isTutorialActive && (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
       
     };
   });
