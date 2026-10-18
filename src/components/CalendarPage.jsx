@@ -9,7 +9,7 @@ import AyudhaPoojaCard from './AyudhaPoojaCard';
 import MagicalCornerStar from './MagicalCornerStar';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, onCtaReady }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -470,7 +470,10 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     onShareSpecialCard={onShareSpecialCard}
                     onPhaseChange={(p) => setAyudhaPoojaPhase(p)}
                     onTriggerShareStar={() => {
-                      if (!hasDismissedShareHint) {
+                      if (onCtaReady) {
+                        onCtaReady();
+                      }
+                      if (!hasDismissedShareHint || isSharedCardView) {
                         setShowShareIntroHint(true);
                       }
                     }}

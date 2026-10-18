@@ -268,7 +268,7 @@ function App() {
   const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
   const [sharedCtaReady, setSharedCtaReady] = useState(false);
 
-  // Sync Start Countdown button, tooltip, and minura star after exactly 5 seconds for festival cards
+  // Sync Start Countdown button, tooltip, and beacon for festival cards
   useEffect(() => {
     if (isSharedCardView) {
       if (sharedCardData?.type === 'diwali') {
@@ -281,10 +281,8 @@ function App() {
           setSharedCtaReady(false);
         }
       } else if (sharedCardData?.type === 'ayudhapooja') {
-        const t = setTimeout(() => {
-          setSharedCtaReady(true);
-        }, 5000); // 5 seconds for Ayudha Pooja
-        return () => clearTimeout(t);
+        // For Ayudha Pooja: Show buttons and tooltip ONLY after Saraswathi video finishes playing!
+        setSharedCtaReady(false);
       } else {
         const t = setTimeout(() => {
           setSharedCtaReady(true);
@@ -1383,6 +1381,7 @@ function App() {
                     globalLang={globalLang}
                     isSharedCardView={true}
                     forceShowShareHint={sharedCtaReady}
+                    onCtaReady={() => setSharedCtaReady(true)}
                   />
                 ) : (
                   pages.slice().reverse().map((page) => (
