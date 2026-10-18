@@ -5,6 +5,7 @@ import GandhiPic from './GandhiPic';
 import ConfettiBurst from './ConfettiBurst';
 import BirthdayLogo from './BirthdayLogo';
 import AyudhaPoojaArt from './AyudhaPoojaArt';
+import AyudhaPoojaCard from './AyudhaPoojaCard';
 import MagicalCornerStar from './MagicalCornerStar';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
@@ -118,17 +119,13 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
   const effectiveDarkMode = isDarkMode || isDiwaliActive;
   
-  const cardBg = effectiveDarkMode 
-    ? (isAyudhaPooja ? 'bg-black' : 'bg-neutral-900') 
-    : 'bg-white';
+  const cardBg = effectiveDarkMode ? 'bg-neutral-900' : 'bg-white';
   const cardBorder = effectiveDarkMode ? 'border-neutral-300' : 'border-neutral-800';
   const textPrimary = effectiveDarkMode ? 'text-neutral-100' : 'text-neutral-800';
   const textSecondary = effectiveDarkMode ? 'text-neutral-400' : 'text-neutral-500';
   const pillBg = effectiveDarkMode ? 'bg-neutral-100' : 'bg-neutral-800';
   const pillText = effectiveDarkMode ? 'text-neutral-900' : 'text-white';
-  const pillBgOutline = effectiveDarkMode 
-    ? (isAyudhaPooja ? 'bg-black border-neutral-300' : 'bg-neutral-900 border-neutral-300')
-    : 'bg-white border-neutral-800';
+  const pillBgOutline = effectiveDarkMode ? 'bg-neutral-900 border-neutral-300' : 'bg-white border-neutral-800';
   const pillTextOutline = effectiveDarkMode ? 'text-neutral-200' : 'text-neutral-800';
 
   const isFirstOutExploded = diwaliRevealed;
@@ -411,33 +408,25 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               </>
             ) : isAyudhaPooja ? (
               <>
-                <div className="pt-5 sm:pt-7 px-8 flex flex-col items-center w-full z-10 relative">
+                <div className="pt-4 sm:pt-6 px-8 flex flex-col items-center w-full z-10 relative">
                   <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
                     {dateText}
                   </h2>
-                  <motion.h3 
-                     initial={{ opacity: 0.8 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 2, repeatType: 'reverse' }}
-                     className="text-amber-500 font-black text-xs sm:text-sm tracking-widest uppercase mt-1.5 drop-shadow-sm text-center"
-                  >
-                    Happy Ayudha Pooja
-                  </motion.h3>
                 </div>
 
-                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full">
-                  <AyudhaPoojaArt isDarkMode={effectiveDarkMode} />
+                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full overflow-hidden">
+                  <AyudhaPoojaCard
+                    isDarkMode={effectiveDarkMode}
+                    daysRemaining={daysRemaining}
+                    textPrimary={textPrimary}
+                    textSecondary={textSecondary}
+                    onShareSpecialCard={onShareSpecialCard}
+                  />
                 </div>
                 
                 <div className="pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0">
-                  <div className="flex items-baseline gap-1">
-                    <h1 className={`text-5xl sm:text-6xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
-                      {daysRemaining}
-                    </h1>
-                    <span className={`font-bold text-sm sm:text-base italic ${textSecondary}`}>
-                      th day
-                    </span>
-                  </div>
                   <div 
-                    className={`px-5 py-1.5 rounded-full border-2 mt-3 cursor-default select-none ${pillBgOutline}`}
+                    className={`px-5 py-1.5 rounded-full border-2 mt-2 cursor-default select-none ${pillBgOutline}`}
                     onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
                     onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
                     onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
