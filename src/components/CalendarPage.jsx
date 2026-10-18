@@ -21,6 +21,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     return localStorage.getItem('has_seen_special_share_hint') === 'true';
   });
   const [showShareIntroHint, setShowShareIntroHint] = useState(false);
+  const [ayudhaPoojaPhase, setAyudhaPoojaPhase] = useState(0);
 
   useEffect(() => {
     if (diwaliPhase === 1) {
@@ -119,24 +120,27 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
   const effectiveDarkMode = isDarkMode || isDiwaliActive;
   
-  const cardBg = isAyudhaPooja
+  // Start normal original calendar (white in Light Mode / dark in Dark Mode).
+  // Once the Saraswathi wish video drops (phase 4), seamlessly and invisibly transition to matching tone!
+  const isAyudhaWishActive = isAyudhaPooja && ayudhaPoojaPhase === 4;
+  const cardBg = isAyudhaWishActive
     ? (effectiveDarkMode ? 'bg-[#14100c]' : 'bg-[#e6dccb]')
     : (effectiveDarkMode ? 'bg-neutral-900' : 'bg-white');
-  const cardBorder = isAyudhaPooja
-    ? (effectiveDarkMode ? 'border-amber-900/60' : 'border-amber-700/40')
+  const cardBorder = isAyudhaWishActive
+    ? (effectiveDarkMode ? 'border-amber-900/60' : 'border-amber-700/30')
     : (effectiveDarkMode ? 'border-neutral-300' : 'border-neutral-800');
-  const textPrimary = isAyudhaPooja
+  const textPrimary = isAyudhaWishActive
     ? (effectiveDarkMode ? 'text-amber-100' : 'text-[#3d2e1e]')
     : (effectiveDarkMode ? 'text-neutral-100' : 'text-neutral-800');
-  const textSecondary = isAyudhaPooja
+  const textSecondary = isAyudhaWishActive
     ? (effectiveDarkMode ? 'text-amber-300/70' : 'text-[#7d654c]')
     : (effectiveDarkMode ? 'text-neutral-400' : 'text-neutral-500');
   const pillBg = effectiveDarkMode ? 'bg-neutral-100' : 'bg-neutral-800';
   const pillText = effectiveDarkMode ? 'text-neutral-900' : 'text-white';
-  const pillBgOutline = isAyudhaPooja
+  const pillBgOutline = isAyudhaWishActive
     ? (effectiveDarkMode ? 'bg-[#1a140f] border-amber-800/60' : 'bg-[#f0e8dc] border-amber-800/40')
     : (effectiveDarkMode ? 'bg-neutral-900 border-neutral-300' : 'bg-white border-neutral-800');
-  const pillTextOutline = isAyudhaPooja
+  const pillTextOutline = isAyudhaWishActive
     ? (effectiveDarkMode ? 'text-amber-200' : 'text-[#4a3b2c]')
     : (effectiveDarkMode ? 'text-neutral-200' : 'text-neutral-800');
 
@@ -433,6 +437,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     textPrimary={textPrimary}
                     textSecondary={textSecondary}
                     onShareSpecialCard={onShareSpecialCard}
+                    onPhaseChange={(p) => setAyudhaPoojaPhase(p)}
                     onTriggerShareStar={() => {
                       if (!hasDismissedShareHint) {
                         setShowShareIntroHint(true);
