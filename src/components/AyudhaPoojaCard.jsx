@@ -365,7 +365,7 @@ export default function AyudhaPoojaCard({
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (White in Light Mode, Black in Dark Mode for bars) */}
+                  {/* 2. POOJA VIDEO 1 (Embedded black bars trimmed away in Light Mode with overflow mask, black in Dark Mode) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -376,18 +376,21 @@ export default function AyudhaPoojaCard({
                         isDarkMode ? 'bg-black' : 'bg-white'
                       }`}
                     >
-                      <video
-                        ref={video1Ref}
-                        src="/Image and Audio/Pooja Video 1.mp4"
-                        playsInline
-                        muted
-                        autoPlay
-                        className="w-full h-full object-contain scale-[1.74]"
-                      />
+                      <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+                        <video
+                          ref={video1Ref}
+                          src="/Image and Audio/Pooja Video 1.mp4"
+                          playsInline
+                          muted
+                          autoPlay
+                          // Scaled 2.15x with object-cover so embedded vertical black letterboxes are trimmed away!
+                          className={`w-full h-full ${!isDarkMode ? 'object-cover scale-[2.15]' : 'object-contain scale-[1.74]'}`}
+                        />
+                      </div>
                     </motion.div>
                   )}
 
-                  {/* 3. POOJA VIDEO 2 (White in Light Mode, Black in Dark Mode for bars) */}
+                  {/* 3. POOJA VIDEO 2 */}
                   {subPhase === 'video2' && (
                     <motion.div
                       key="pooja-video-2"
@@ -404,7 +407,7 @@ export default function AyudhaPoojaCard({
                         muted
                         autoPlay
                         loop
-                        className="w-full h-full object-contain"
+                        className={`w-full h-full ${!isDarkMode ? 'object-cover scale-[1.35]' : 'object-contain'}`}
                       />
                     </motion.div>
                   )}
