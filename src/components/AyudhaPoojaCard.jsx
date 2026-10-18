@@ -365,7 +365,7 @@ export default function AyudhaPoojaCard({
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Using object-cover with scale to crop out video's internal black letterbox bars) */}
+                  {/* 2. POOJA VIDEO 1 (Cropped letterbox bars: white in Light Mode, black in Dark Mode) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -376,14 +376,22 @@ export default function AyudhaPoojaCard({
                         isDarkMode ? 'bg-black' : 'bg-white'
                       }`}
                     >
-                      <video
-                        ref={video1Ref}
-                        src="/Image and Audio/Pooja Video 1.mp4"
-                        playsInline
-                        muted
-                        autoPlay
-                        className="w-full h-full object-cover scale-[1.35]"
-                      />
+                      <div 
+                        className="w-full h-full flex items-center justify-center overflow-hidden"
+                        style={{
+                          // Crops the video's internal baked-in top & bottom black letterbox bars (~17%) cleanly!
+                          clipPath: 'inset(17.5% 0% 17.5% 0%)',
+                        }}
+                      >
+                        <video
+                          ref={video1Ref}
+                          src="/Image and Audio/Pooja Video 1.mp4"
+                          playsInline
+                          muted
+                          autoPlay
+                          className="w-full h-full object-contain scale-[1.74]"
+                        />
+                      </div>
                     </motion.div>
                   )}
 
