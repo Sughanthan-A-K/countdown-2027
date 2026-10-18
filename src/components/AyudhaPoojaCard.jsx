@@ -195,7 +195,16 @@ export default function AyudhaPoojaCard({
     }
   };
 
-  // When wish video starts (Phase 4), start muted video + unmuted audio
+  const poojaImgSrc = isDarkMode 
+    ? "/Image and Audio/Pooja Dark mode.png" 
+    : "/Image and Audio/Pooja.png";
+
+  const wishVideoSrc = isDarkMode 
+    ? "/Image and Audio/Dark Mode.mp4" 
+    : "/Image and Audio/Light Mode.mp4";
+
+  // When wish video starts (Phase 4) or when isDarkMode / theme toggles:
+  // Re-sync video & audio so switching between Light and Dark mode seamlessly continues playing with sound!
   useEffect(() => {
     if (phase === 4) {
       if (wishVideoRef.current) {
@@ -204,8 +213,11 @@ export default function AyudhaPoojaCard({
         wishVideoRef.current.play().catch(() => {});
       }
       if (wishAudioRef.current) {
+        wishAudioRef.current.load();
         wishAudioRef.current.currentTime = 0;
-        wishAudioRef.current.play().catch(() => {});
+        wishAudioRef.current.play().catch((err) => {
+          console.warn("Wish audio playback error:", err);
+        });
       }
 
       // Fallback timer: wish video is ~5.8s; in case audio onEnded doesn't fire (e.g. autoplay restriction), trigger after 5.8s + 1s = 6.8s
@@ -215,15 +227,7 @@ export default function AyudhaPoojaCard({
 
       return () => clearTimeout(fallbackTimer);
     }
-  }, [phase]);
-
-  const poojaImgSrc = isDarkMode 
-    ? "/Image and Audio/Pooja Dark mode.png" 
-    : "/Image and Audio/Pooja.png";
-
-  const wishVideoSrc = isDarkMode 
-    ? "/Image and Audio/Dark Mode.mp4" 
-    : "/Image and Audio/Light Mode.mp4";
+  }, [phase, isDarkMode]);
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-between overflow-hidden select-none">
@@ -235,8 +239,9 @@ export default function AyudhaPoojaCard({
         preload="auto" 
       />
 
-      {/* Wish Video Audio Track (plays fully even after video pauses at 4.5s) */}
+      {/* Wish Video Audio Track (key ensures element re-mounts/reloads cleanly on theme change) */}
       <audio
+        key={`wish-audio-${isDarkMode ? 'dark' : 'light'}`}
         ref={wishAudioRef}
         src={wishVideoSrc}
         onEnded={handleWishAudioEnded}
@@ -264,6 +269,7 @@ export default function AyudhaPoojaCard({
           <div className="flex-1 w-full flex items-center justify-center my-auto overflow-hidden">
             <div className="w-[100%] max-w-[320px] aspect-square flex items-center justify-center overflow-hidden">
               <video
+                key={`wish-video-${isDarkMode ? 'dark' : 'light'}`}
                 ref={wishVideoRef}
                 src={wishVideoSrc}
                 playsInline
