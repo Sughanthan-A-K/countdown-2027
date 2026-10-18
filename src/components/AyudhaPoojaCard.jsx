@@ -241,9 +241,9 @@ export default function AyudhaPoojaCard({
           className="w-full h-full flex flex-col items-center justify-between pointer-events-auto cursor-pointer relative pb-1"
           title="Tap to replay"
         >
-          {/* Centered video scaled up by 10px (285px + 10px = 295px, scale 0.98) */}
+          {/* Centered video scaled up by another 5px (295px + 5px = 300px, scale 1.0) */}
           <div className="flex-1 w-full flex items-center justify-center my-auto overflow-hidden">
-            <div className="w-[92%] max-w-[295px] aspect-square flex items-center justify-center overflow-hidden">
+            <div className="w-[94%] max-w-[300px] aspect-square flex items-center justify-center overflow-hidden">
               <video
                 ref={wishVideoRef}
                 src={wishVideoSrc}
@@ -252,7 +252,7 @@ export default function AyudhaPoojaCard({
                 muted
                 loop={false}
                 onTimeUpdate={handleWishTimeUpdate}
-                className="w-full h-full object-contain scale-[0.98]"
+                className="w-full h-full object-contain scale-[1.0]"
               />
             </div>
           </div>
