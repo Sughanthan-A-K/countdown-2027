@@ -75,7 +75,7 @@ export default function AyudhaPoojaCard({
     }
   }, [phase]);
 
-  // Step 2: Video 1 duration set to 3.2s as requested -> go to Video 2
+  // Step 2: Video 1 duration shortened to 3.0s as requested -> go to Video 2
   useEffect(() => {
     if (phase === 3 && subPhase === 'video1') {
       if (video1Ref.current) {
@@ -85,7 +85,7 @@ export default function AyudhaPoojaCard({
 
       const tVid1 = setTimeout(() => {
         setSubPhase('video2');
-      }, 3200); // 3.2 seconds (+0.2s added)
+      }, 3200); // 3.2 seconds (+0.2s)
 
       return () => clearTimeout(tVid1);
     }
@@ -280,7 +280,7 @@ export default function AyudhaPoojaCard({
               {/* Meme Visuals */}
               <div className="flex-1 relative w-full mt-1 rounded-xl overflow-hidden bg-black flex items-center justify-center">
                 <AnimatePresence mode="wait">
-                  {/* 1. POOJA IMAGE (Zoomed out by 5px: scale 1.14) */}
+                  {/* 1. POOJA IMAGE (Zoomed out by ~5px: scale 1.14) */}
                   {subPhase === 'image' && (
                     <motion.div
                       key="pooja-image"
@@ -302,7 +302,7 @@ export default function AyudhaPoojaCard({
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Zoomed in by 4px: scale 1.70, duration 3.2s) */}
+                  {/* 2. POOJA VIDEO 1 (Zoomed in by ~4px: scale 1.70, duration 3.2s) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
