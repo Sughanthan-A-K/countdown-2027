@@ -264,29 +264,29 @@ export default function AyudhaPoojaCard({
               {/* Meme Visuals */}
               <div className="flex-1 relative w-full mt-1 rounded-xl overflow-hidden bg-black flex items-center justify-center">
                 <AnimatePresence mode="wait">
-                  {/* 1. POOJA IMAGE (Nicely zoomed scale-1.08) */}
+                  {/* 1. POOJA IMAGE (Zoomed out by 5-10px: scale 0.96) */}
                   {subPhase === 'image' && (
                     <motion.div
                       key="pooja-image"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1.08 }}
+                      initial={{ opacity: 0, scale: 0.90 }}
+                      animate={{ opacity: 1, scale: 1 }}
                       exit={{ 
                         opacity: 0, 
                         clipPath: "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
                         x: -15,
                         transition: { duration: 0.4 }
                       }}
-                      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black"
+                      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black p-2"
                     >
                       <img
                         src={poojaImgSrc}
                         alt="Ayudha Pooja Special"
-                        className="w-full h-full object-contain scale-[1.08]"
+                        className="w-full h-full object-contain scale-[0.96]"
                       />
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Lightly zoomed scale-1.08 so text is not cut & not sunken, halved duration ~6.5s) */}
+                  {/* 2. POOJA VIDEO 1 (Zoomed in by ~20px: scale 1.20, halved duration ~6.5s) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -301,7 +301,7 @@ export default function AyudhaPoojaCard({
                         playsInline
                         muted
                         autoPlay
-                        className="w-full h-full object-contain scale-[1.08]"
+                        className="w-full h-full object-contain scale-[1.20]"
                       />
                     </motion.div>
                   )}
