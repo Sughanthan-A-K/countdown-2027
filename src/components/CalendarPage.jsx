@@ -446,7 +446,22 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   />
                 </div>
                 
-                <div className="pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0">
+                <div className={`pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0`}>
+                  {ayudhaPoojaPhase === 4 && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="flex items-baseline gap-1 mb-1"
+                    >
+                      <h1 className={`text-4xl sm:text-5xl font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                        {daysRemaining}
+                      </h1>
+                      <span className={`font-bold text-xs sm:text-sm italic ${textSecondary}`}>
+                        th day
+                      </span>
+                    </motion.div>
+                  )}
                   <div 
                     className={`px-5 py-1.5 rounded-full border-2 mt-2 cursor-default select-none ${pillBgOutline}`}
                     onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
