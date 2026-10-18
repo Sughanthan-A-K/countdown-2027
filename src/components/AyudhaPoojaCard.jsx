@@ -280,7 +280,7 @@ export default function AyudhaPoojaCard({
               {/* Meme Visuals */}
               <div className="flex-1 relative w-full mt-1 rounded-xl overflow-hidden bg-black flex items-center justify-center">
                 <AnimatePresence mode="wait">
-                  {/* 1. POOJA IMAGE (Matching zoom scale: 1.15) */}
+                  {/* 1. POOJA IMAGE (Zoomed in by 2-4%: scale 1.18) */}
                   {subPhase === 'image' && (
                     <motion.div
                       key="pooja-image"
@@ -297,12 +297,12 @@ export default function AyudhaPoojaCard({
                       <img
                         src={poojaImgSrc}
                         alt="Ayudha Pooja Special"
-                        className="w-full h-full object-contain scale-[1.15]"
+                        className="w-full h-full object-contain scale-[1.18]"
                       />
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Matching identical zoom scale 1.15, shortened to 4s) */}
+                  {/* 2. POOJA VIDEO 1 (Nalla zoom in: scale 1.60, shortened to 4s) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -317,7 +317,7 @@ export default function AyudhaPoojaCard({
                         playsInline
                         muted
                         autoPlay
-                        className="w-full h-full object-contain scale-[1.15]"
+                        className="w-full h-full object-contain scale-[1.60]"
                       />
                     </motion.div>
                   )}
