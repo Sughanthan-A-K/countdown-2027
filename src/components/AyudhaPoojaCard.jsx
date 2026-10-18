@@ -126,18 +126,18 @@ export default function AyudhaPoojaCard({
     if (phase === 3 && !showJustKidding) {
       setShowJustKidding(true);
 
-      // After 1.4s of "Just Kidding", trigger the fall drop animation
+      // After 1.4s of "Just Kidding", trigger the fall drop animation & smooth 1s card color transition
       setTimeout(() => {
         setIsFalling(true);
+        if (onPhaseChange) {
+          onPhaseChange(4); // Starts smooth 1s card color transition right when meme card drops
+        }
         if (audioRef.current) {
           audioRef.current.pause();
         }
 
         setTimeout(() => {
-          setPhase(4); // Reveal full-card wish video
-          if (onPhaseChange) {
-            onPhaseChange(4);
-          }
+          setPhase(4); // Reveal wish video
         }, 550);
       }, 1400);
     }
