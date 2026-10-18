@@ -157,14 +157,14 @@ export default function AyudhaPoojaCard({
     }
   };
 
-  // Video freeze logic: Freeze smoothly at exactly 4.0s!
+  // Video freeze logic: Freeze smoothly at exactly 4.5s!
   // Video frame stays frozen with full artwork while wish audio continues playing to the end.
   const handleWishTimeUpdate = () => {
     const video = wishVideoRef.current;
     if (!video) return;
 
-    // Smoothly freeze at exactly 4.0s
-    if (video.currentTime >= 4.0 && !video.paused) {
+    // Smoothly freeze at exactly 4.5s
+    if (video.currentTime >= 4.5 && !video.paused) {
       video.pause();
     }
   };
@@ -218,23 +218,23 @@ export default function AyudhaPoojaCard({
 
       {/* =========================================================================
           PHASE 4: SARASWATHI WISH VIDEO
-          - Full card view (not boxed into an inner card)
-          - Video freezes smoothly at exactly 4.0s
+          - Scaled down & centered nicely so the drawing and greeting are fully visible
+          - Video freezes smoothly at exactly 4.5s
           - Audio plays fully to completion
-          - Special card bottom "Today ... 74th day" counter is displayed
+          - Bottom uses CalendarPage's standard counter without overlap
           ========================================================================= */}
       {phase === 4 && (
         <motion.div
           key="saraswathi-full-bleed-wish"
-          initial={{ opacity: 0, scale: 0.98 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
           onClick={handleWishVideoTap}
-          className="absolute inset-0 z-0 flex flex-col items-center justify-between pointer-events-auto cursor-pointer"
+          className="w-full h-full flex flex-col items-center justify-center pointer-events-auto cursor-pointer relative"
           title="Tap to replay"
         >
-          {/* Background Video (freezes at exactly 4.0s) */}
-          <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+          {/* Scaled down, nicely centered Saraswathi drawing video */}
+          <div className="w-[88%] max-w-[280px] aspect-square flex items-center justify-center overflow-hidden my-auto">
             <video
               ref={wishVideoRef}
               src={wishVideoSrc}
@@ -243,26 +243,8 @@ export default function AyudhaPoojaCard({
               muted
               loop={false}
               onTimeUpdate={handleWishTimeUpdate}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain scale-[0.92]"
             />
-          </div>
-
-          {/* Top spacer */}
-          <div className="w-full h-12 z-10" />
-
-          {/* Bottom Today 74th day Special Counter */}
-          <div className="w-full flex flex-col items-center justify-center pb-2 z-10">
-            <div className="flex items-baseline gap-1">
-              <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase mr-1 drop-shadow-sm ${textSecondary}`}>
-                Today
-              </span>
-              <h1 className={`text-4xl sm:text-5xl font-black leading-none tracking-tighter text-center drop-shadow-md ${textPrimary}`}>
-                {daysRemaining}
-              </h1>
-              <span className={`font-bold text-sm sm:text-base italic drop-shadow-sm ${textSecondary}`}>
-                th day
-              </span>
-            </div>
           </div>
         </motion.div>
       )}
