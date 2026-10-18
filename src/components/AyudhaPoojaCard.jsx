@@ -268,21 +268,26 @@ export default function AyudhaPoojaCard({
           ========================================================================= */}
       {phase === 3 && (
         <div className="flex-1 w-full flex items-center justify-center relative z-20 my-auto py-1">
-          {/* Central "Just Kidding" Pop-up when user taps */}
+          {/* Central "Just Kidding" Refined Minimalist Pill when user taps */}
           <AnimatePresence>
             {showJustKidding && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.6, y: 15 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.7 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, scale: 0.85, y: 12, filter: "blur(4px)" }}
+                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.9, y: -8, filter: "blur(4px)" }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute z-50 pointer-events-none flex flex-col items-center"
               >
-                <div className="px-5 py-2 rounded-2xl bg-black/85 backdrop-blur-md border-2 border-amber-400 text-amber-300 shadow-2xl shadow-black/80 flex items-center gap-2">
-                  <span className="text-xl">😂</span>
-                  <span className="text-sm font-black tracking-widest uppercase drop-shadow-md">
-                    Just Kidding!
+                <div className="relative px-6 py-2.5 rounded-full bg-neutral-950/85 backdrop-blur-xl border border-amber-400/40 text-amber-200 shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_24px_rgba(251,191,36,0.25)] flex items-center gap-2.5">
+                  {/* Subtle golden shimmer dot */}
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-400 to-yellow-200 animate-pulse shadow-[0_0_8px_#fbbf24]" />
+                  
+                  {/* Elegant refined typography */}
+                  <span className="text-[11px] sm:text-xs font-bold tracking-[0.25em] uppercase text-amber-100">
+                    Just Kidding
                   </span>
+                  
+                  <span className="text-amber-400/90 text-xs font-serif italic">✨</span>
                 </div>
               </motion.div>
             )}
