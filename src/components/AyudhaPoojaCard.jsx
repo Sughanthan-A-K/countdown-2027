@@ -11,21 +11,23 @@ export default function AyudhaPoojaCard({
   onPhaseChange,
 }) {
   // Phase sequence:
-  // 0: Initial card (clean original calendar with "74th day").
-  //    At 1.0s, an intense luminous flash & expansion burst (velicham) detonates the number!
-  // 1: Blast flash/velicham -> number instantly disappears.
-  // 2: Pure empty mystery center (NO emojis) - User wonders "Ennada enna aachu?", taps to reveal!
+  // 0: Initial card (clean white in Light Mode / dark in Dark Mode) with "Today", "74th day".
+  // 1: Exactly after 1.2s, a stylish festive rotating Chakra / Wheel of Fortune energy effect spins into center,
+  //    swirling the number into a gold vortex and vanishing it with a clear, deliberate visual effect!
+  // 2: Pulsing glowing chakra center portal with shimmering particles - user clearly sees something magical is waiting, taps it!
   // 3: Hanging Oonjal Meme frame:
-  //    - Top tag: "TODAY SPECIAL" (no inner share/drop buttons)
-  //    - Pooja Image (mild zoom)
-  //    - Pooja Video 1: mildly zoomed in (scale 1.15) so it's not small/sunken, text clearly legible, duration halved (~6.5s)
-  //    - Pooja Video 2: original clean aspect
-  //    - User tap on frame -> unhooks and drops frame with gravity!
+  //    - Gentle sway animation
+  //    - Top tag: "TODAY SPECIAL" with red live dot (NO "Tap to Drop" or inner share buttons!)
+  //    - Pooja Image (zoomed slightly scale-1.08 to fit nicely, plays looping Meme Audio)
+  //    - Pooja Video 1: mildly zoomed in (scale-1.08) so it's not sunken, all text visible, duration halved (~6.5s)
+  //    - Pooja Video 2: original clean object-contain without forced stretch
+  //    - User tap on frame -> frame drops down by gravity!
   // 4: Saraswathi Wish Video:
-  //    - Prominent larger size (w-[92%] max-w-[270px])
-  //    - Plays through, and freezes cleanly right where Saraswathi is fully revealed without hiding or looping back!
-  //    - Replays from start on user tap
-  //    - Immediately upon freeze, triggers the calendar's corner star & tooltip!
+  //    - Compacted height, perfectly centered in card
+  //    - NO top "Ayudha Pooja" text, NO "Tap to replay" text (video already has text)
+  //    - Card background changes seamlessly to match video's background tone
+  //    - Replays video smoothly on every tap
+  //    - Exactly 3s later, triggers the calendar's corner star & tooltip!
 
   const [phase, setPhase] = useState(0); 
   const [subPhase, setSubPhase] = useState('image'); // 'image' | 'video1' | 'video2'
@@ -35,20 +37,20 @@ export default function AyudhaPoojaCard({
   const video2Ref = useRef(null);
   const wishVideoRef = useRef(null);
 
-  // 1. Exactly 1s: Luminous flash & explosion burst (velicham)
+  // 1. After 1.2s: Chakra wheel spin & vortex effect dissolves the number
   useEffect(() => {
     if (phase === 0) {
-      const burstTimer = setTimeout(() => {
-        setPhase(1); // flash / velicham burst
+      const spinTimer = setTimeout(() => {
+        setPhase(1); // Chakra wheel spins & absorbs the number
         setTimeout(() => {
-          setPhase(2); // empty mystery center waiting for user tap
-        }, 500);
-      }, 1000);
-      return () => clearTimeout(burstTimer);
+          setPhase(2); // Waiting in glowing portal state
+        }, 850);
+      }, 1200);
+      return () => clearTimeout(spinTimer);
     }
   }, [phase]);
 
-  // User taps on the empty mystery card -> triggers meme sequence
+  // User taps on the glowing chakra portal -> reveals meme
   const handleMysteryTap = () => {
     if (phase === 2) {
       setPhase(3); 
@@ -111,36 +113,6 @@ export default function AyudhaPoojaCard({
     }
   };
 
-  // When wish video finishes, FREEZE on the majestic fully revealed Saraswathi frame!
-  // And immediately trigger corner star & tooltip!
-  const handleWishVideoEnded = () => {
-    if (wishVideoRef.current) {
-      wishVideoRef.current.pause();
-      // Keep paused on the last beautiful frame so Saraswathi stays fully visible
-    }
-    if (onTriggerShareStar) {
-      onTriggerShareStar();
-    }
-  };
-
-  // Also trigger star as fallback if video is long (at 4s)
-  useEffect(() => {
-    if (phase === 4) {
-      if (wishVideoRef.current) {
-        wishVideoRef.current.currentTime = 0;
-        wishVideoRef.current.play().catch(() => {});
-      }
-
-      const starFallback = setTimeout(() => {
-        if (onTriggerShareStar) {
-          onTriggerShareStar();
-        }
-      }, 4000);
-
-      return () => clearTimeout(starFallback);
-    }
-  }, [phase, onTriggerShareStar]);
-
   // Replay wish video on tap when in phase 4
   const handleWishVideoTap = () => {
     if (phase === 4 && wishVideoRef.current) {
@@ -148,6 +120,24 @@ export default function AyudhaPoojaCard({
       wishVideoRef.current.play().catch(() => {});
     }
   };
+
+  // When wish video starts (Phase 4), play and trigger corner share star after 3s
+  useEffect(() => {
+    if (phase === 4) {
+      if (wishVideoRef.current) {
+        wishVideoRef.current.currentTime = 0;
+        wishVideoRef.current.play().catch(() => {});
+      }
+
+      const starTimer = setTimeout(() => {
+        if (onTriggerShareStar) {
+          onTriggerShareStar();
+        }
+      }, 3000);
+
+      return () => clearTimeout(starTimer);
+    }
+  }, [phase, onTriggerShareStar]);
 
   const poojaImgSrc = isDarkMode 
     ? "/Image and Audio/Pooja Dark mode.png" 
@@ -168,7 +158,7 @@ export default function AyudhaPoojaCard({
       />
 
       {/* =========================================================================
-          PHASE 0, 1, 2: Center Day Counter -> 1s Luminous Burst / Velicham -> Empty
+          PHASE 0, 1, 2: Center Day Counter -> Chakra Wheel Spin & Disappear -> Interactive Portal
           ========================================================================= */}
       {(phase === 0 || phase === 1 || phase === 2) && (
         <div 
@@ -183,49 +173,84 @@ export default function AyudhaPoojaCard({
             </div>
           )}
 
-          <motion.div
-            animate={
-              phase === 1
-                ? {
-                    scale: [1, 1.4, 0.1],
-                    filter: [
-                      "brightness(1) blur(0px) contrast(1)", 
-                      "brightness(4) blur(4px) contrast(2)", 
-                      "brightness(0) blur(16px)"
-                    ],
-                    opacity: [1, 1, 0],
-                  }
-                : phase === 2
-                ? { opacity: 0, scale: 0.5 }
-                : { scale: 1, opacity: 1 }
-            }
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="relative flex items-center justify-center"
-          >
-            {phase === 0 && (
-              <h1 className={`text-[7rem] sm:text-[8.5rem] font-black leading-none tracking-tighter text-center ${textPrimary}`}>
-                {daysRemaining}
-              </h1>
-            )}
+          <div className="relative flex items-center justify-center">
+            {/* Spinning Golden Wheel / Chakra Effect during Phase 1 & 2 */}
+            <AnimatePresence>
+              {(phase === 1 || phase === 2) && (
+                <motion.div
+                  key="chakra-wheel"
+                  initial={{ opacity: 0, scale: 0.3, rotate: 0 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: phase === 1 ? [0.4, 1.3, 1] : [1, 1.1, 1],
+                    rotate: 360 
+                  }}
+                  transition={{ 
+                    rotate: { repeat: Infinity, duration: phase === 1 ? 1.2 : 4, ease: "linear" },
+                    scale: { duration: 0.8 }
+                  }}
+                  className="absolute pointer-events-none z-30 flex items-center justify-center"
+                >
+                  {/* Intricate Ayudha Pooja Sacred Wheel SVG */}
+                  <svg width="140" height="140" viewBox="0 0 100 100" className="text-amber-500 drop-shadow-[0_0_12px_rgba(245,158,11,0.8)]">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeDasharray="6 4" opacity="0.85" />
+                    <circle cx="50" cy="50" r="32" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.6" />
+                    <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.9" />
+                    {/* 8 Spokes / Rays */}
+                    {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+                      <line
+                        key={deg}
+                        x1="50"
+                        y1="12"
+                        x2="50"
+                        y2="42"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        transform={`rotate(${deg} 50 50)`}
+                      />
+                    ))}
+                  </svg>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            {/* Powerful Luminous Blast Flash (Velicham) without cartoon emojis */}
-            {phase === 1 && (
+            {/* The Number: Swirls into the chakra wheel and vanishes */}
+            <motion.div
+              animate={
+                phase === 1
+                  ? {
+                      scale: [1, 0.7, 0],
+                      rotate: [0, 180, 360],
+                      opacity: [1, 0.8, 0],
+                      filter: ["blur(0px)", "blur(2px)", "blur(8px)"],
+                    }
+                  : phase === 2
+                  ? { opacity: 0, scale: 0 }
+                  : { scale: 1, opacity: 1 }
+              }
+              transition={{ duration: 0.75, ease: "easeInOut" }}
+              className="relative flex items-center justify-center"
+            >
+              {phase === 0 && (
+                <h1 className={`text-[7rem] sm:text-[8.5rem] font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                  {daysRemaining}
+                </h1>
+              )}
+            </motion.div>
+
+            {/* In Phase 2: Gentle pulsating aura inside the wheel inviting the user to tap */}
+            {phase === 2 && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.3 }}
-                animate={{ 
-                  opacity: [0, 1, 0.8, 0], 
-                  scale: [0.5, 1.8, 2.8] 
-                }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: [0.95, 1.05, 0.95] }}
+                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                className="absolute flex flex-col items-center justify-center pointer-events-none z-40"
               >
-                {/* Core White-Hot Light */}
-                <div className="w-36 h-36 rounded-full bg-white blur-xl opacity-95" />
-                {/* Outer Golden Aura Flash */}
-                <div className="absolute w-52 h-52 rounded-full bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-500 blur-2xl opacity-80" />
+                <div className="w-16 h-16 rounded-full bg-amber-400/20 blur-md animate-pulse" />
               </motion.div>
             )}
-          </motion.div>
+          </div>
 
           {phase === 0 && (
             <div className="w-full flex justify-end pr-8 z-20 mt-[-1rem]">
@@ -279,7 +304,7 @@ export default function AyudhaPoojaCard({
                 ? 'bg-neutral-900/95 border-amber-500/40 shadow-black/80' 
                 : 'bg-white/95 border-amber-600/30 shadow-neutral-400/60'
             }`}>
-              {/* Header: TODAY SPECIAL (Pure clean header) */}
+              {/* Header: TODAY SPECIAL */}
               <div className="w-full flex items-center justify-center pb-1 px-1 border-b border-amber-500/20">
                 <span className="text-[10px] font-black tracking-widest uppercase text-amber-500 flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
@@ -290,7 +315,7 @@ export default function AyudhaPoojaCard({
               {/* Meme Visuals */}
               <div className="flex-1 relative w-full mt-1 rounded-xl overflow-hidden bg-black flex items-center justify-center">
                 <AnimatePresence mode="wait">
-                  {/* 1. POOJA IMAGE */}
+                  {/* 1. POOJA IMAGE (Nicely zoomed scale-1.08) */}
                   {subPhase === 'image' && (
                     <motion.div
                       key="pooja-image"
@@ -312,7 +337,7 @@ export default function AyudhaPoojaCard({
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Stepped zoom to scale 1.15: text fully visible, not small/sunken) */}
+                  {/* 2. POOJA VIDEO 1 (Lightly zoomed scale-1.08, halved duration ~6.5s) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -327,12 +352,12 @@ export default function AyudhaPoojaCard({
                         playsInline
                         muted
                         autoPlay
-                        className="w-full h-full object-contain scale-[1.15]"
+                        className="w-full h-full object-contain scale-[1.08]"
                       />
                     </motion.div>
                   )}
 
-                  {/* 3. POOJA VIDEO 2 (Clean original contain) */}
+                  {/* 3. POOJA VIDEO 2 (Clean original object-contain) */}
                   {subPhase === 'video2' && (
                     <motion.div
                       key="pooja-video-2"
@@ -359,10 +384,7 @@ export default function AyudhaPoojaCard({
       )}
 
       {/* =========================================================================
-          PHASE 4: Saraswathi Wish Video
-          - Larger size (w-[92%] max-w-[270px])
-          - Freezes cleanly on the full Saraswathi frame (no loop hide!)
-          - Replays on tap
+          PHASE 4: Saraswathi Wish Video (Clean, Compact, Seamless)
           ========================================================================= */}
       {phase === 4 && (
         <motion.div
@@ -372,16 +394,14 @@ export default function AyudhaPoojaCard({
           transition={{ duration: 0.6, ease: "easeOut" }}
           onClick={handleWishVideoTap}
           className="flex-1 w-full flex flex-col items-center justify-center my-auto py-1 relative z-10 cursor-pointer pointer-events-auto"
-          title="Tap to replay wish"
+          title="Tap to replay"
         >
-          {/* Prominent, larger sized frame with smooth border */}
-          <div className="relative w-[92%] max-w-[270px] aspect-square rounded-2xl overflow-hidden shadow-2xl border border-amber-600/30">
+          {/* Compact Video Frame */}
+          <div className="relative w-[80%] max-w-[210px] aspect-square rounded-2xl overflow-hidden shadow-2xl border border-amber-600/30">
             <video
               ref={wishVideoRef}
               src={wishVideoSrc}
               playsInline
-              autoPlay
-              onEnded={handleWishVideoEnded}
               className="w-full h-full object-contain"
             />
           </div>
