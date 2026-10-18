@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CrackerBurst2D from './CrackerBurst2D';
 
 export default function AyudhaPoojaCard({
+  isTop = true,
   isDarkMode,
   daysRemaining,
   textPrimary,
@@ -50,9 +51,9 @@ export default function AyudhaPoojaCard({
     }
   }, []);
 
-  // 1. Exactly 1s: 2D Pattasu / Firecracker blast animation explodes the number away
+  // 1. Exactly 1s after card becomes top/visible: 2D Pattasu / Firecracker blast animation explodes the number away
   useEffect(() => {
-    if (phase === 0) {
+    if (isTop && phase === 0) {
       const burstTimer = setTimeout(() => {
         setPhase(1); // 2D firecracker explosion
         setTimeout(() => {
@@ -61,7 +62,7 @@ export default function AyudhaPoojaCard({
       }, 1000);
       return () => clearTimeout(burstTimer);
     }
-  }, [phase]);
+  }, [isTop, phase]);
 
   // User taps on the empty mystery card -> triggers meme sequence
   const handleMysteryTap = () => {
@@ -198,21 +199,28 @@ export default function AyudhaPoojaCard({
     triggerShareWithDelay();
   };
 
-  // Video freeze logic: Smoothly decelerate (slow down) video starting at 3.7s and pause at 4.5s!
-  // Video frame stays frozen at 4.5s with full artwork while wish audio continues playing to the end.
+  // Video freeze & audio sync logic:
+  // Video plays smoothly and freezes at 4.5s.
+  // At the EXACT SAME MOMENT, audio is paused simultaneously!
   const handleWishTimeUpdate = () => {
     const video = wishVideoRef.current;
     if (!video) return;
 
     const t = video.currentTime;
 
-    // Smoothly slow down the video as it approaches 4.5s
-    if (t >= 3.7 && t < 4.5) {
-      const remainingProgress = (4.5 - t) / (4.5 - 3.7); // 1 down to 0
-      video.playbackRate = Math.max(0.25, remainingProgress);
+    // Smoothly step down playbackRate near the freeze point without hammering CPU/GPU on every frame
+    if (t >= 3.8 && t < 4.5) {
+      if (video.playbackRate !== 0.6) {
+        video.playbackRate = 0.6;
+      }
     } else if (t >= 4.5 && !video.paused) {
       video.playbackRate = 1;
       video.pause();
+      // Simultaneously pause the wish audio at the exact same moment!
+      if (wishAudioRef.current && !wishAudioRef.current.paused) {
+        wishAudioRef.current.pause();
+      }
+      triggerShareWithDelay();
     }
   };
 
@@ -283,7 +291,7 @@ export default function AyudhaPoojaCard({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
           onClick={handleWishVideoTap}
-          className="w-full h-full flex flex-col items-center justify-between pointer-events-auto cursor-pointer relative pb-1"
+          className={`w-full h-full flex flex-col items-center justify-between pointer-events-auto cursor-pointer relative pb-1 ${isDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#e6dccb]'}`}
           title="Tap to replay"
         >
           {/* Centered video scaled up by another 5px (315px + 5px = 320px, scale 1.07) */}

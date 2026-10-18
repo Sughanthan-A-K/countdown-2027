@@ -244,7 +244,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             backfaceVisibility: 'hidden'
           }}
         >
-          {isTop && (
+          {isTop && !isAyudhaWishActive && (
             <motion.div 
               className={`absolute inset-0 pointer-events-none z-50 ${effectiveDarkMode ? 'mix-blend-overlay' : 'mix-blend-multiply'}`}
               style={{
@@ -466,6 +466,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
                 <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full overflow-hidden">
                   <AyudhaPoojaCard
+                    isTop={isTop}
                     isDarkMode={effectiveDarkMode}
                     daysRemaining={daysRemaining}
                     textPrimary={textPrimary}
