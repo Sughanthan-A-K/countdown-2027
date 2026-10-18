@@ -101,6 +101,11 @@ export default function AyudhaPoojaCard({
     }
   }, [phase, subPhase]);
 
+  // When Meme Audio finishes playing once (no loop!), automatically trigger the drop into Saraswathi wish video
+  const handleAudioEnded = () => {
+    triggerDropToWishVideo();
+  };
+
   // User taps meme frame -> unhooks and drops frame with gravity
   const triggerDropToWishVideo = () => {
     if (phase === 3) {
@@ -150,11 +155,11 @@ export default function AyudhaPoojaCard({
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-between overflow-hidden select-none">
-      {/* Background Hidden Meme Audio */}
+      {/* Background Meme Audio (plays once until end, no re-looping) */}
       <audio 
         ref={audioRef} 
         src="/Image and Audio/Meme Audio.mp3" 
-        loop 
+        onEnded={handleAudioEnded}
         preload="auto" 
       />
 
@@ -286,7 +291,7 @@ export default function AyudhaPoojaCard({
                     </motion.div>
                   )}
 
-                  {/* 2. POOJA VIDEO 1 (Zoomed in by ~10px: scale 1.39, halved duration ~6.5s) */}
+                  {/* 2. POOJA VIDEO 1 (Zoomed nicely: scale 1.55, halved duration ~6.5s) */}
                   {subPhase === 'video1' && (
                     <motion.div
                       key="pooja-video-1"
@@ -301,7 +306,7 @@ export default function AyudhaPoojaCard({
                         playsInline
                         muted
                         autoPlay
-                        className="w-full h-full object-contain scale-[1.39]"
+                        className="w-full h-full object-contain scale-[1.55]"
                       />
                     </motion.div>
                   )}
