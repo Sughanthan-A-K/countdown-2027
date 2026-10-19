@@ -127,7 +127,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   // Once the Saraswathi wish video drops (phase 4), seamlessly and invisibly transition to matching tone!
   const isAyudhaWishActive = isAyudhaPooja && ayudhaPoojaPhase === 4;
   const cardBg = isAyudhaWishActive
-    ? (effectiveDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#e6dccb]')
+    ? (effectiveDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#e4dbce]')
     : (effectiveDarkMode ? 'bg-neutral-900' : 'bg-white');
   const cardBorder = isAyudhaWishActive
     ? (effectiveDarkMode ? 'border-amber-900/60' : 'border-amber-700/30')
