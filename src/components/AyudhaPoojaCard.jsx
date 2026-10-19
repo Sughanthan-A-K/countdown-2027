@@ -291,7 +291,7 @@ export default function AyudhaPoojaCard({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
           onClick={handleWishVideoTap}
-          className={`w-full h-full flex flex-col items-center justify-between pointer-events-auto cursor-pointer relative pb-1 ${isDarkMode ? 'bg-black' : 'bg-[#e4dbce]'}`}
+          className={`w-full h-full flex flex-col items-center justify-between pointer-events-auto cursor-pointer relative pb-1 ${isDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#e4dbce]'}`}
           title="Tap to replay"
         >
           {/* Centered video scaled up by another 5px (315px + 5px = 320px, scale 1.07) */}
