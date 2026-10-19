@@ -222,9 +222,9 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 >
                   <span>
                     {(globalLang || localStorage.getItem('globalLang')) === 'english' ? (
-                      <>Tap this <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">invisible button</span> here to share your wish with others! ✨</>
+                      <>Tap this <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">invisible button</span> here to share this card! ✨</>
                     ) : (
-                      <>Unga wish-a mathavangalukku share panna intha <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">invisible button-a</span> tap pannunga! ✨</>
+                      <>Intha card-a share panna intha <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">invisible button-a</span> tap pannunga! ✨</>
                     )}
                   </span>
                   {/* Downward pointing arrow right above the top-right corner invisible button */}

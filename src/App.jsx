@@ -174,9 +174,10 @@ function App() {
       shareUrl += `/?date=${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
     }
 
+    // Share ONLY the link directly without extra wish text
     if (navigator.share) {
       try {
-        await navigator.share({ title, text, url: shareUrl });
+        await navigator.share({ url: shareUrl });
         return;
       } catch (err) {
         if (err.name !== 'AbortError') {
