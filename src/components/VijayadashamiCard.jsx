@@ -306,8 +306,8 @@ export default function VijayadashamiCard({
     }
   };
 
-  // When wish audio finishes playing
-  const handleWishAudioEnded = () => {
+  // When wish audio finishes playing (or video ends)
+  const handleWishEnded = () => {
     triggerShareWithDelay();
   };
 
@@ -374,7 +374,7 @@ export default function VijayadashamiCard({
         key={`vijaya-wish-audio-${isDarkMode ? 'dark' : 'light'}`}
         ref={wishAudioRef}
         src={wishVideoSrc}
-        onEnded={handleWishAudioEnded}
+        onEnded={handleWishEnded}
         preload="auto" 
       />
 
@@ -406,6 +406,7 @@ export default function VijayadashamiCard({
                 autoPlay
                 muted
                 loop={false}
+                onEnded={handleWishEnded}
                 onTimeUpdate={handleWishTimeUpdate}
                 className="w-full h-full object-contain scale-[1.07]"
               />

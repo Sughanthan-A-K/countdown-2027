@@ -54,13 +54,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           setShowShareIntroHint(false);
         }
       } else if (isVijayadashami) {
-        // For Vijayadashami: Trigger tooltip automatically 1.5s after entering Phase 4 (Wish video)
-        if (vijayadashamiPhase === 4) {
-          const t1 = setTimeout(() => {
-            setShowShareIntroHint(true);
-          }, 1500);
-          return () => clearTimeout(t1);
-        }
+        // For Vijayadashami: Tooltip is strictly triggered by onTriggerShareStar after wish video completely finishes + 1s delay
       } else if (!isAyudhaPooja) {
         const delayMs = isDiwaliActive ? 5000 : 1200;
         const t1 = setTimeout(() => {
