@@ -299,8 +299,8 @@ function App() {
         } else {
           setSharedCtaReady(false);
         }
-      } else if (sharedCardData?.type === 'ayudhapooja') {
-        // For Ayudha Pooja: Show buttons and tooltip ONLY after Saraswathi video finishes playing!
+      } else if (sharedCardData?.type === 'ayudhapooja' || sharedCardData?.type === 'vijayadashami') {
+        // For Ayudha Pooja & Vijayadashami: Show buttons and tooltip ONLY after wish video finishes playing!
         setSharedCtaReady(false);
       } else {
         const t = setTimeout(() => {
@@ -1414,7 +1414,7 @@ function App() {
                 ) : (
                   pages.slice().reverse().map((page) => (
                     <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
-                      key={`${page.id}-${calendarDate.getTime()}`}
+                      key={page.id}
                       dateText={page.dateText}
                       daysRemaining={page.daysRemaining}
                       index={page.index}
