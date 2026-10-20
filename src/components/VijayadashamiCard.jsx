@@ -162,30 +162,70 @@ export default function VijayadashamiCard({
   }, [phase, subPhase]);
 
   // Step 2: "Vijayaதசமி Meme" Image duration: EXACTLY 5.2 seconds!
-  // Meme Audio 2 plays loud and clear throughout this entire 5.2s duration.
-  // After 5.2s, seamlessly moves to Vijaya.mp4 video!
+  // Meme Audio 2 plays during this 5.2s.
+  // In the last 0.4s of this 5.2s (at 4800ms), Meme Audio 2 smoothly stops.
+  // After 5.2s, transitions to Vijaya.mp4 video!
   useEffect(() => {
     if (phase === 3 && subPhase === 'meme') {
+      let audio2FadeInterval = null;
+
+      // Smoothly stop Meme Audio 2 right as Vijayaதசமி Meme ends
+      const tFadeAudio2 = setTimeout(() => {
+        audio2FadeInterval = setInterval(() => {
+          if (audio2Ref.current) {
+            if (audio2Ref.current.volume > 0.05) {
+              audio2Ref.current.volume = Math.max(0, audio2Ref.current.volume - 0.08);
+            } else {
+              audio2Ref.current.volume = 0;
+            }
+          }
+        }, 30);
+      }, 4800);
+
       const tMeme = setTimeout(() => {
+        if (audio2FadeInterval) clearInterval(audio2FadeInterval);
+        if (audio2Ref.current) {
+          audio2Ref.current.pause();
+          audio2Ref.current.volume = 1;
+        }
         setSubPhase('video');
       }, 5200); // exactly 5.2s
 
       return () => {
+        clearTimeout(tFadeAudio2);
         clearTimeout(tMeme);
+        if (audio2FadeInterval) clearInterval(audio2FadeInterval);
       };
     }
   }, [phase, subPhase]);
 
   // Step 3: Vijaya____.mp4 Video playback:
-  // User requested: "Vijaya intha video la irukura audio ah mute pannidu"
-  // and Meme Audio 2 continues playing seamlessly until its end!
+  // User requested: "Vijaya video oda audio ah mute pannatha Unmute pannidu..."
+  // Video plays unmuted with its own high-quality native audio!
   useEffect(() => {
     if (phase === 3 && subPhase === 'video') {
+      // Guarantee Meme Audio 1 & 2 are stopped
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      if (audio2Ref.current) {
+        audio2Ref.current.pause();
+      }
+
       if (videoRef.current) {
         const v = videoRef.current;
         v.currentTime = 0;
-        v.muted = true; // Video audio MUTED as requested
-        v.play().catch((err) => console.error("Video play error:", err));
+        v.muted = false; // UNMUTED as requested!
+        v.volume = 1;
+        const playPromise = v.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.warn("Autoplay with sound needs interaction, retrying muted:", err);
+            // Fallback only if mobile blocks unmuted autoplay without prior touch
+            v.muted = false;
+            v.play().catch(() => {});
+          });
+        }
       }
     }
   }, [phase, subPhase]);
