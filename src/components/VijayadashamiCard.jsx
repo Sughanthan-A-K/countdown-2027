@@ -758,7 +758,7 @@ export default function VijayadashamiCard({
                       >
                         <video
                           ref={videoRef}
-                          src="/Image and Audio/Vijaya____.mp4"
+                          src="/Image and Audio/Vijaya.mp4"
                           playsInline
                           webkit-playsinline="true"
                           autoPlay
