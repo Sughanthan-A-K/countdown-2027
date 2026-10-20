@@ -22,6 +22,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     return localStorage.getItem('has_seen_special_share_hint') === 'true';
   });
   const [showShareIntroHint, setShowShareIntroHint] = useState(false);
+  const [showReturningShareTwinkle, setShowReturningShareTwinkle] = useState(false);
   const [ayudhaPoojaPhase, setAyudhaPoojaPhase] = useState(() => {
     const isDev = localStorage.getItem('isDevMode') === 'true';
     return (!isDev && localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true') ? 4 : 0;
@@ -339,6 +340,30 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                       />
                     </motion.div>
                   )}
+
+                  {/* Returning users who already tapped/dismissed share tooltip: graceful subtle vector golden star twinkle */}
+                  {showReturningShareTwinkle && !showShareIntroHint && (
+                    <motion.div
+                      key="returning-share-twinkle-star"
+                      initial={{ opacity: 0, scale: 0.3, rotate: 0 }}
+                      animate={{ 
+                        opacity: [0, 1, 0.4, 1, 0],
+                        scale: [0.3, 1.3, 0.85, 1.35, 0.2],
+                        rotate: [0, 45, 90, 135, 180]
+                      }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ 
+                        duration: 2.8, 
+                        times: [0, 0.25, 0.5, 0.75, 1],
+                        ease: "easeInOut" 
+                      }}
+                      className="relative w-8 h-8 flex items-center justify-center pointer-events-none"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-amber-300 drop-shadow-[0_0_12px_rgba(251,191,36,1)]">
+                        <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4L12 0Z" />
+                      </svg>
+                    </motion.div>
+                  )}
                 </AnimatePresence>
               </div>
             </>
@@ -493,6 +518,12 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                       }
                       if (!hasDismissedShareHint || isSharedCardView) {
                         setShowShareIntroHint(true);
+                      } else {
+                        // Already dismissed tooltip users: show graceful twinkle star at invisible share button
+                        setShowReturningShareTwinkle(true);
+                        setTimeout(() => {
+                          setShowReturningShareTwinkle(false);
+                        }, 3500); // twinkle once then fade out
                       }
                     }}
                   />
@@ -535,6 +566,12 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                       }
                       if (!hasDismissedShareHint || isSharedCardView) {
                         setShowShareIntroHint(true);
+                      } else {
+                        // Already dismissed tooltip users: show graceful twinkle star at invisible share button
+                        setShowReturningShareTwinkle(true);
+                        setTimeout(() => {
+                          setShowReturningShareTwinkle(false);
+                        }, 3500); // twinkle once then fade out
                       }
                     }}
                   />
