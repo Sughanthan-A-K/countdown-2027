@@ -87,15 +87,19 @@ export default function VijayadashamiCard({
   };
 
   // When phase 3 starts (Meme sequence):
-  // 1. "Yesterday" shows with Meme Audio for 1.8s
-  // 2. Then "But Now..." badge message pops up at 1.8s
-  // 3. Audio smoothly fades out before transitioning into Vijayaதசமி Meme
+  // 1. "Yesterday" shows with Meme Audio
+  // 2. At 1.8s, "But Now..." badge message pops up
+  // 3. At 3.0s, transition to Vijayaதசமி Meme
+  // 4. Meme Audio plays across BOTH "Yesterday" and "Vijayaதசமி Meme",
+  //    and smoothly fades to silent in the final 0.5s of "Vijayaதசமி Meme"!
   useEffect(() => {
     if (phase === 3 && subPhase === 'yesterday') {
       if (audioRef.current) {
         audioRef.current.volume = 1;
         audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {});
+        audioRef.current.play().catch((err) => {
+          console.warn("Audio autoplay prevented, will play on interaction:", err);
+        });
       }
 
       // Step 1a: After 1.8s, "But Now..." message appears
@@ -103,48 +107,47 @@ export default function VijayadashamiCard({
         setShowButNowBadge(true);
       }, 1800);
 
-      // Step 1b: Smooth audio fade-out between 2.2s and 3.0s
-      const fadeInterval = setInterval(() => {
-        if (audioRef.current && audioRef.current.volume > 0.08) {
-          audioRef.current.volume = Math.max(0, audioRef.current.volume - 0.15);
-        }
-      }, 90);
-
-      const tStartFade = setTimeout(() => {
-        // fade begins
-      }, 2100);
-
-      // Step 1c: At 3.0s, transition to Vijayaதசமி Meme and stop audio completely
-      const tYesterday = setTimeout(() => {
-        clearInterval(fadeInterval);
-        if (audioRef.current) {
-          audioRef.current.pause();
-          audioRef.current.volume = 1;
-        }
+      // Step 1b: At 3.0s, transition into Vijayaதசமி Meme (Audio keeps playing without stopping!)
+      const tToMeme = setTimeout(() => {
         setSubPhase('meme');
       }, 3000);
 
       return () => {
         clearTimeout(tButNow);
-        clearTimeout(tStartFade);
-        clearTimeout(tYesterday);
-        clearInterval(fadeInterval);
+        clearTimeout(tToMeme);
       };
     }
   }, [phase, subPhase]);
 
-  // Step 2: "Vijayaதசமி Meme" Image duration (3.2s) -> go to Vijaya____.mp4 Video
+  // Step 2: "Vijayaதசமி Meme" Image duration (3.2s):
+  // Audio continues playing throughout, then in the last 0.5s fades smoothly to 0 before Vijaya____ video starts
   useEffect(() => {
     if (phase === 3 && subPhase === 'meme') {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
+      let fadeInterval = null;
+
+      // Start smooth fade 0.5s before transition (at 2700ms)
+      const tFade = setTimeout(() => {
+        fadeInterval = setInterval(() => {
+          if (audioRef.current && audioRef.current.volume > 0.05) {
+            audioRef.current.volume = Math.max(0, audioRef.current.volume - 0.15);
+          }
+        }, 50);
+      }, 2700);
 
       const tMeme = setTimeout(() => {
+        if (fadeInterval) clearInterval(fadeInterval);
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.volume = 1;
+        }
         setSubPhase('video');
-      }, 3200); // 3.2 seconds
+      }, 3200); // 3.2 seconds total meme duration
 
-      return () => clearTimeout(tMeme);
+      return () => {
+        clearTimeout(tFade);
+        clearTimeout(tMeme);
+        if (fadeInterval) clearInterval(fadeInterval);
+      };
     }
   }, [phase, subPhase]);
 
@@ -156,17 +159,20 @@ export default function VijayadashamiCard({
         audioRef.current.pause();
       }
       if (videoRef.current) {
-        videoRef.current.muted = false;
-        videoRef.current.volume = 1;
-        videoRef.current.currentTime = 0;
-        videoRef.current.play().catch((e) => {
-          console.warn("Video play error:", e);
-          // Fallback if browser requires muted for autoplay:
-          if (videoRef.current) {
-            videoRef.current.muted = false;
-            videoRef.current.play().catch(() => {});
-          }
-        });
+        const v = videoRef.current;
+        v.currentTime = 0;
+        // Attempt unmuted play first:
+        v.muted = false;
+        v.volume = 1;
+        const playPromise = v.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((e) => {
+            console.warn("Unmuted autoplay restricted by browser, retrying muted:", e);
+            // If browser policy blocks sound without direct tap, start playback muted so video immediately plays!
+            v.muted = true;
+            v.play().catch((err) => console.error("Video play fallback failed:", err));
+          });
+        }
       }
     }
   }, [phase, subPhase]);
@@ -563,28 +569,32 @@ export default function VijayadashamiCard({
 
           <motion.div
             key="hanging-meme-frame-vijaya"
-            initial={{ opacity: 0, scale: 0.75, y: -30 }}
+            initial={{ opacity: 0, scale: 0.85, y: -20 }}
             animate={
               isFalling
                 ? {
-                    y: 460,
-                    rotate: 24,
+                    y: 420,
+                    rotate: 18,
                     opacity: 0,
-                    scale: 0.65,
-                    transition: { duration: 0.55, ease: [0.32, 0, 0.67, 0] }
+                    scale: 0.7,
+                    transition: { duration: 0.5, ease: [0.32, 0, 0.67, 0] }
                   }
                 : {
                     opacity: 1,
                     scale: 1,
                     y: 0,
-                    rotate: [-1.6, 1.6, -1.6],
+                    rotate: [-0.7, 0.7, -0.7],
                     transition: {
-                      y: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
-                      scale: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
-                      rotate: { repeat: Infinity, duration: 3, ease: "easeInOut" }
+                      y: { duration: 0.4, ease: "easeOut" },
+                      scale: { duration: 0.4, ease: "easeOut" },
+                      rotate: { repeat: Infinity, duration: 4, ease: "easeInOut" }
                     }
                   }
             }
+            style={{ 
+              willChange: 'transform, opacity',
+              transform: 'translateZ(0)',
+            }}
             onClick={triggerDropToWishVideo}
             className="w-[92%] max-w-[276px] aspect-[4/5] max-h-[326px] flex flex-col items-center cursor-pointer pointer-events-auto select-none"
             title="Tap to reveal special wish!"
@@ -746,8 +756,10 @@ export default function VijayadashamiCard({
                           ref={videoRef}
                           src="/Image and Audio/Vijaya____.mp4"
                           playsInline
+                          webkit-playsinline="true"
                           autoPlay
                           loop
+                          preload="auto"
                           className="w-full absolute left-0 right-0 max-w-none"
                           style={{
                             aspectRatio: '16 / 9',
