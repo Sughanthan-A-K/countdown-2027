@@ -125,13 +125,17 @@ export default function VijayadashamiCard({
     if (phase === 3 && subPhase === 'meme') {
       let fadeInterval = null;
 
-      // Start smooth fade 0.5s before transition (at 2700ms)
+      // Start smooth fade 0.5s before transition (at 2700ms) with small 30ms steps for pure whisper-smooth fade
       const tFade = setTimeout(() => {
         fadeInterval = setInterval(() => {
-          if (audioRef.current && audioRef.current.volume > 0.05) {
-            audioRef.current.volume = Math.max(0, audioRef.current.volume - 0.15);
+          if (audioRef.current) {
+            if (audioRef.current.volume > 0.05) {
+              audioRef.current.volume = Math.max(0, audioRef.current.volume - 0.06);
+            } else {
+              audioRef.current.volume = 0;
+            }
           }
-        }, 50);
+        }, 30);
       }, 2700);
 
       const tMeme = setTimeout(() => {
