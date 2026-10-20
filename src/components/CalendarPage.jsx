@@ -6,10 +6,11 @@ import ConfettiBurst from './ConfettiBurst';
 import BirthdayLogo from './BirthdayLogo';
 import AyudhaPoojaArt from './AyudhaPoojaArt';
 import AyudhaPoojaCard from './AyudhaPoojaCard';
+import VijayadashamiCard from './VijayadashamiCard';
 import MagicalCornerStar from './MagicalCornerStar';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, onCtaReady }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -25,6 +26,10 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     const isDev = localStorage.getItem('isDevMode') === 'true';
     return (!isDev && localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true') ? 4 : 0;
   });
+  const [vijayadashamiPhase, setVijayadashamiPhase] = useState(() => {
+    const isDev = localStorage.getItem('isDevMode') === 'true';
+    return (!isDev && localStorage.getItem('vijayadashamiEventDone_2026') === 'true') ? 4 : 0;
+  });
 
   useEffect(() => {
     if (diwaliPhase === 1) {
@@ -35,11 +40,11 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   
   const isFinished = daysRemaining <= 0;
   const isDiwaliActive = isDiwali || forceDiwaliMode; 
-  const isSpecialRevealed = isTop && (isBirthday || isGandhiJayanti || isAyudhaPooja || (isDiwaliActive && diwaliRevealed));
+  const isSpecialRevealed = isTop && (isBirthday || isGandhiJayanti || isAyudhaPooja || isVijayadashami || (isDiwaliActive && diwaliRevealed));
 
   // Show intro hint & sparkle:
   // - In shared card view: Exactly when forceShowShareHint becomes true (synced with Start Countdown 2027)
-  // - In normal calendar view: exactly 5 seconds (5000ms) after Diwali card reveal (or triggered dynamically by Ayudha Pooja)
+  // - In normal calendar view: exactly 5 seconds (5000ms) after Diwali card reveal (or triggered dynamically by Ayudha Pooja / Vijayadashami)
   useEffect(() => {
     if (isSpecialRevealed && onShareSpecialCard && !hasDismissedShareHint) {
       if (isSharedCardView) {
@@ -48,7 +53,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         } else {
           setShowShareIntroHint(false);
         }
-      } else if (!isAyudhaPooja) {
+      } else if (!isAyudhaPooja && !isVijayadashami) {
         const delayMs = isDiwaliActive ? 5000 : 1200;
         const t1 = setTimeout(() => {
           setShowShareIntroHint(true);
@@ -56,7 +61,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         return () => clearTimeout(t1);
       }
     }
-  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isAyudhaPooja, isSharedCardView, forceShowShareHint]);
+  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isAyudhaPooja, isVijayadashami, isSharedCardView, forceShowShareHint]);
 
   const handleShareTap = () => {
     if (!hasDismissedShareHint) {
@@ -124,26 +129,33 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const effectiveDarkMode = isDarkMode || isDiwaliActive;
   
   // Start normal original calendar (white in Light Mode / dark in Dark Mode).
-  // Once the Saraswathi wish video drops (phase 4), seamlessly and invisibly transition to matching tone!
+  // Once the Saraswathi or Vijayadashami wish video drops (phase 4), seamlessly and invisibly transition to matching tone!
   const isAyudhaWishActive = isAyudhaPooja && ayudhaPoojaPhase === 4;
-  const cardBg = isAyudhaWishActive
-    ? (effectiveDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#e4dbce]')
+  const isVijayadashamiWishActive = isVijayadashami && vijayadashamiPhase === 4;
+  const isSpecialWishActive = isAyudhaWishActive || isVijayadashamiWishActive;
+
+  const cardBg = isSpecialWishActive
+    ? (isVijayadashamiWishActive
+        ? (effectiveDarkMode ? 'bg-[#181818]' : 'bg-[#e6decc]')
+        : (effectiveDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#e4dbce]'))
     : (effectiveDarkMode ? 'bg-neutral-900' : 'bg-white');
-  const cardBorder = isAyudhaWishActive
+  const cardBorder = isSpecialWishActive
     ? (effectiveDarkMode ? 'border-amber-900/60' : 'border-amber-700/30')
     : (effectiveDarkMode ? 'border-neutral-300' : 'border-neutral-800');
-  const textPrimary = isAyudhaWishActive
+  const textPrimary = isSpecialWishActive
     ? (effectiveDarkMode ? 'text-amber-100' : 'text-[#3d2e1e]')
     : (effectiveDarkMode ? 'text-neutral-100' : 'text-neutral-800');
-  const textSecondary = isAyudhaWishActive
+  const textSecondary = isSpecialWishActive
     ? (effectiveDarkMode ? 'text-amber-300/70' : 'text-[#7d654c]')
     : (effectiveDarkMode ? 'text-neutral-400' : 'text-neutral-500');
   const pillBg = effectiveDarkMode ? 'bg-neutral-100' : 'bg-neutral-800';
   const pillText = effectiveDarkMode ? 'text-neutral-900' : 'text-white';
-  const pillBgOutline = isAyudhaWishActive
-    ? (effectiveDarkMode ? 'bg-[#0f0f0f] border-amber-800/60' : 'bg-[#f0e8dc] border-amber-800/40')
+  const pillBgOutline = isSpecialWishActive
+    ? (isVijayadashamiWishActive
+        ? (effectiveDarkMode ? 'bg-[#181818] border-amber-800/60' : 'bg-[#e6decc] border-amber-800/40')
+        : (effectiveDarkMode ? 'bg-[#0f0f0f] border-amber-800/60' : 'bg-[#f0e8dc] border-amber-800/40'))
     : (effectiveDarkMode ? 'bg-neutral-900 border-neutral-300' : 'bg-white border-neutral-800');
-  const pillTextOutline = isAyudhaWishActive
+  const pillTextOutline = isSpecialWishActive
     ? (effectiveDarkMode ? 'text-amber-200' : 'text-[#4a3b2c]')
     : (effectiveDarkMode ? 'text-neutral-200' : 'text-neutral-800');
 
@@ -473,6 +485,48 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     textSecondary={textSecondary}
                     onShareSpecialCard={onShareSpecialCard}
                     onPhaseChange={(p) => setAyudhaPoojaPhase(p)}
+                    onTriggerShareStar={() => {
+                      if (onCtaReady) {
+                        onCtaReady();
+                      }
+                      if (!hasDismissedShareHint || isSharedCardView) {
+                        setShowShareIntroHint(true);
+                      }
+                    }}
+                  />
+                </div>
+                
+                <div className="pb-6 sm:pb-8 flex flex-col items-center justify-center w-full z-10 relative gap-0">
+                  <div 
+                    className={`px-5 py-1.5 rounded-full border-2 mt-2 cursor-default select-none ${pillBgOutline}`}
+                    onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
+                    onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
+                    onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                    onPointerLeave={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
+                  >
+                    <span className={`text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
+                      To reach 2027
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : isVijayadashami ? (
+              <>
+                <div className="pt-4 sm:pt-6 px-8 flex flex-col items-center w-full z-10 relative">
+                  <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
+                    {dateText}
+                  </h2>
+                </div>
+
+                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full overflow-hidden">
+                  <VijayadashamiCard
+                    isTop={isTop}
+                    isDarkMode={effectiveDarkMode}
+                    daysRemaining={daysRemaining}
+                    textPrimary={textPrimary}
+                    textSecondary={textSecondary}
+                    onShareSpecialCard={onShareSpecialCard}
+                    onPhaseChange={(p) => setVijayadashamiPhase(p)}
                     onTriggerShareStar={() => {
                       if (onCtaReady) {
                         onCtaReady();
