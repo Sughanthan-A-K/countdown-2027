@@ -42,6 +42,7 @@ export default function VijayadashamiCard({
   const [isFalling, setIsFalling] = useState(false);
 
   const audioRef = useRef(null);
+  const audio2Ref = useRef(null);
   const videoRef = useRef(null);
   const wishVideoRef = useRef(null);
   const wishAudioRef = useRef(null);
@@ -87,11 +88,14 @@ export default function VijayadashamiCard({
   };
 
   // When phase 3 starts (Meme sequence):
-  // 1. "Yesterday" shows with Meme Audio
+  // 1. "Yesterday" shows with Meme Audio for 6.5s
   // 2. At 1.8s, "But Now..." badge message pops up
-  // 3. At 3.0s, transition to Vijayaதசமி Meme
-  // 4. Meme Audio plays across BOTH "Yesterday" and "Vijayaதசமி Meme",
-  //    and smoothly fades to silent in the final 0.5s of "Vijayaதசமி Meme"!
+  // 3. In the last 0.5s of "Yesterday" (at 6.0s):
+  //    - Meme Audio 1 smoothly fades out (6.0s -> 6.5s)
+  //    - Meme Audio 2 starts playing and smoothly fades IN from 0 to 1 in that 0.5s!
+  // 4. Exactly at 6.5s, transitions to "Vijayaதசமி Meme" (lasts 5.2s)
+  // 5. At 6.5s + 5.2s = 11.7s, switches to Vijaya____ video (video audio is MUTED,
+  //    and Meme Audio 2 continues playing until its end, perfectly ending together!)
   useEffect(() => {
     if (phase === 3 && subPhase === 'yesterday') {
       if (audioRef.current) {
@@ -107,76 +111,81 @@ export default function VijayadashamiCard({
         setShowButNowBadge(true);
       }, 1800);
 
-      // Step 1b: At 3.0s, transition into Vijayaதசமி Meme (Audio keeps playing without stopping!)
-      const tToMeme = setTimeout(() => {
-        setSubPhase('meme');
-      }, 3000);
+      let fadeOutInterval = null;
+      let fadeInInterval = null;
 
-      return () => {
-        clearTimeout(tButNow);
-        clearTimeout(tToMeme);
-      };
-    }
-  }, [phase, subPhase]);
+      // Step 1b: At 6.0s (last 0.5s of the 6.5s Yesterday stage):
+      // - Meme Audio 1 fades OUT
+      // - Meme Audio 2 starts from volume 0 and fades IN over 0.5s
+      const tCrossFade = setTimeout(() => {
+        if (audio2Ref.current) {
+          audio2Ref.current.volume = 0;
+          audio2Ref.current.currentTime = 0;
+          audio2Ref.current.play().catch(() => {});
+        }
 
-  // Step 2: "Vijayaதசமி Meme" Image duration (3.2s):
-  // Audio continues playing throughout, then in the last 0.5s fades smoothly to 0 before Vijaya____ video starts
-  useEffect(() => {
-    if (phase === 3 && subPhase === 'meme') {
-      let fadeInterval = null;
-
-      // Start smooth fade 0.5s before transition (at 2700ms) with small 30ms steps for pure whisper-smooth fade
-      const tFade = setTimeout(() => {
-        fadeInterval = setInterval(() => {
+        fadeOutInterval = setInterval(() => {
           if (audioRef.current) {
-            if (audioRef.current.volume > 0.05) {
-              audioRef.current.volume = Math.max(0, audioRef.current.volume - 0.06);
-            } else {
-              audioRef.current.volume = 0;
-            }
+            audioRef.current.volume = Math.max(0, audioRef.current.volume - 0.06);
           }
         }, 30);
-      }, 2700);
 
-      const tMeme = setTimeout(() => {
-        if (fadeInterval) clearInterval(fadeInterval);
+        fadeInInterval = setInterval(() => {
+          if (audio2Ref.current) {
+            audio2Ref.current.volume = Math.min(1, audio2Ref.current.volume + 0.06);
+          }
+        }, 30);
+      }, 6000);
+
+      // Step 1c: Exactly at 6.5s, Yesterday finishes -> transition to Vijayaதசமி Meme!
+      const tToMeme = setTimeout(() => {
+        if (fadeOutInterval) clearInterval(fadeOutInterval);
+        if (fadeInInterval) clearInterval(fadeInInterval);
         if (audioRef.current) {
           audioRef.current.pause();
           audioRef.current.volume = 1;
         }
-        setSubPhase('video');
-      }, 3200); // 3.2 seconds total meme duration
+        if (audio2Ref.current) {
+          audio2Ref.current.volume = 1;
+        }
+        setSubPhase('meme');
+      }, 6500);
 
       return () => {
-        clearTimeout(tFade);
+        clearTimeout(tButNow);
+        clearTimeout(tCrossFade);
+        clearTimeout(tToMeme);
+        if (fadeOutInterval) clearInterval(fadeOutInterval);
+        if (fadeInInterval) clearInterval(fadeInInterval);
+      };
+    }
+  }, [phase, subPhase]);
+
+  // Step 2: "Vijayaதசமி Meme" Image duration: EXACTLY 5.2 seconds!
+  // Meme Audio 2 plays loud and clear throughout this entire 5.2s duration.
+  // After 5.2s, seamlessly moves to Vijaya.mp4 video!
+  useEffect(() => {
+    if (phase === 3 && subPhase === 'meme') {
+      const tMeme = setTimeout(() => {
+        setSubPhase('video');
+      }, 5200); // exactly 5.2s
+
+      return () => {
         clearTimeout(tMeme);
-        if (fadeInterval) clearInterval(fadeInterval);
       };
     }
   }, [phase, subPhase]);
 
   // Step 3: Vijaya____.mp4 Video playback:
-  // Plays with its own full native audio loud and clear!
+  // User requested: "Vijaya intha video la irukura audio ah mute pannidu"
+  // and Meme Audio 2 continues playing seamlessly until its end!
   useEffect(() => {
     if (phase === 3 && subPhase === 'video') {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
       if (videoRef.current) {
         const v = videoRef.current;
         v.currentTime = 0;
-        // Attempt unmuted play first:
-        v.muted = false;
-        v.volume = 1;
-        const playPromise = v.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((e) => {
-            console.warn("Unmuted autoplay restricted by browser, retrying muted:", e);
-            // If browser policy blocks sound without direct tap, start playback muted so video immediately plays!
-            v.muted = true;
-            v.play().catch((err) => console.error("Video play fallback failed:", err));
-          });
-        }
+        v.muted = true; // Video audio MUTED as requested
+        v.play().catch((err) => console.error("Video play error:", err));
       }
     }
   }, [phase, subPhase]);
@@ -206,6 +215,9 @@ export default function VijayadashamiCard({
           }
           if (audioRef.current) {
             audioRef.current.pause();
+          }
+          if (audio2Ref.current) {
+            audio2Ref.current.pause();
           }
           if (videoRef.current) {
             videoRef.current.pause();
@@ -259,29 +271,10 @@ export default function VijayadashamiCard({
     triggerShareWithDelay();
   };
 
-  // Video freeze & audio sync logic:
-  // Video plays smoothly and freezes at 4.5s.
-  // At the EXACT SAME MOMENT, audio is paused simultaneously!
+  // User requested: "VijayaDashami. Dark Mode.mp4 / Light Mode.mp4 ithu full ah play aaghatum pause panna vendam"
+  // Both video and audio play to completion (6.0s), and the end triggers the corner star!
   const handleWishTimeUpdate = () => {
-    const video = wishVideoRef.current;
-    if (!video) return;
-
-    const t = video.currentTime;
-
-    // Smoothly step down playbackRate near the freeze point without hammering CPU/GPU on every frame
-    if (t >= 3.8 && t < 4.5) {
-      if (video.playbackRate !== 0.6) {
-        video.playbackRate = 0.6;
-      }
-    } else if (t >= 4.5 && !video.paused) {
-      video.playbackRate = 1;
-      video.pause();
-      // Simultaneously pause the wish audio at the exact same moment!
-      if (wishAudioRef.current && !wishAudioRef.current.paused) {
-        wishAudioRef.current.pause();
-      }
-      triggerShareWithDelay();
-    }
+    // Video plays completely without pausing
   };
 
   const wishVideoSrc = isDarkMode 
@@ -316,11 +309,18 @@ export default function VijayadashamiCard({
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-between overflow-hidden select-none">
-      {/* Background Meme Audio */}
+      {/* Background Meme Audio 1 */}
       <audio 
         ref={audioRef} 
         src="/Image and Audio/Meme Audio.mp3" 
         onEnded={handleAudioEnded}
+        preload="auto" 
+      />
+
+      {/* Background Meme Audio 2 (plays across Vijayaதசமி Meme and Vijaya video) */}
+      <audio 
+        ref={audio2Ref} 
+        src="/Image and Audio/Meme Audio 2.m4a" 
         preload="auto" 
       />
 
