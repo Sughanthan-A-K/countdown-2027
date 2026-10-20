@@ -53,7 +53,15 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         } else {
           setShowShareIntroHint(false);
         }
-      } else if (!isAyudhaPooja && !isVijayadashami) {
+      } else if (isVijayadashami) {
+        // For Vijayadashami: Trigger tooltip automatically 1.5s after entering Phase 4 (Wish video)
+        if (vijayadashamiPhase === 4) {
+          const t1 = setTimeout(() => {
+            setShowShareIntroHint(true);
+          }, 1500);
+          return () => clearTimeout(t1);
+        }
+      } else if (!isAyudhaPooja) {
         const delayMs = isDiwaliActive ? 5000 : 1200;
         const t1 = setTimeout(() => {
           setShowShareIntroHint(true);
@@ -61,7 +69,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         return () => clearTimeout(t1);
       }
     }
-  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isAyudhaPooja, isVijayadashami, isSharedCardView, forceShowShareHint]);
+  }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isAyudhaPooja, isVijayadashami, vijayadashamiPhase, isSharedCardView, forceShowShareHint]);
 
   const handleShareTap = () => {
     if (!hasDismissedShareHint) {

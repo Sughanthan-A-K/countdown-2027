@@ -106,10 +106,10 @@ export default function VijayadashamiCard({
         });
       }
 
-      // Step 1a: After 1.8s, "But Now..." message appears
+      // Step 1a: "But Now..." appears in the LAST 2 SECONDS of Yesterday (at 4.5s)
       const tButNow = setTimeout(() => {
         setShowButNowBadge(true);
-      }, 1800);
+      }, 4500);
 
       let fadeOutInterval = null;
       let fadeInInterval = null;
@@ -163,24 +163,24 @@ export default function VijayadashamiCard({
 
   // Step 2: "Vijayaதசமி Meme" Image duration: EXACTLY 5.2 seconds!
   // Meme Audio 2 plays during this 5.2s.
-  // In the last 0.4s of this 5.2s (at 4800ms), Meme Audio 2 smoothly stops.
+  // In the last 0.8s of this 5.2s (at 4400ms), Meme Audio 2 smoothly fades out.
   // After 5.2s, transitions to Vijaya.mp4 video!
   useEffect(() => {
     if (phase === 3 && subPhase === 'meme') {
       let audio2FadeInterval = null;
 
-      // Smoothly stop Meme Audio 2 right as Vijayaதசமி Meme ends
+      // Smoothly stop Meme Audio 2 over 0.8s as Vijayaதசமி Meme ends
       const tFadeAudio2 = setTimeout(() => {
         audio2FadeInterval = setInterval(() => {
           if (audio2Ref.current) {
-            if (audio2Ref.current.volume > 0.05) {
-              audio2Ref.current.volume = Math.max(0, audio2Ref.current.volume - 0.08);
+            if (audio2Ref.current.volume > 0.04) {
+              audio2Ref.current.volume = Math.max(0, audio2Ref.current.volume - 0.04);
             } else {
               audio2Ref.current.volume = 0;
             }
           }
-        }, 30);
-      }, 4800);
+        }, 35);
+      }, 4400);
 
       const tMeme = setTimeout(() => {
         if (audio2FadeInterval) clearInterval(audio2FadeInterval);
@@ -322,18 +322,23 @@ export default function VijayadashamiCard({
     : "/Image and Audio/VijayaDashami. Light Mode.mp4";
 
   // When wish video starts (Phase 4) or when isDarkMode / theme toggles:
-  // Re-sync video & audio so switching between Light and Dark mode seamlessly continues playing with sound!
+  // Direct tap handler from phase 3 or direct mount guarantees autoplay!
   useEffect(() => {
     if (phase === 4) {
       if (wishVideoRef.current) {
-        wishVideoRef.current.playbackRate = 1;
-        wishVideoRef.current.currentTime = 0;
-        wishVideoRef.current.play().catch(() => {});
+        const v = wishVideoRef.current;
+        v.playbackRate = 1;
+        v.currentTime = 0;
+        v.play().catch((err) => {
+          console.warn("Wish video play error, attempting fallback:", err);
+          v.play().catch(() => {});
+        });
       }
       if (wishAudioRef.current) {
-        wishAudioRef.current.load();
-        wishAudioRef.current.currentTime = 0;
-        wishAudioRef.current.play().catch((err) => {
+        const a = wishAudioRef.current;
+        a.load();
+        a.currentTime = 0;
+        a.play().catch((err) => {
           console.warn("Wish audio playback error:", err);
         });
       }
