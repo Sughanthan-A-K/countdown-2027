@@ -227,27 +227,23 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       className="absolute flex items-center justify-center inset-0 select-none touch-none"
     >
       <div className="relative pt-4 w-full flex justify-center">
-        {/* Top binder rings / anchor tabs */}
-        <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
-          isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
-          (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
-          (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
-          `${cardBg} ${cardBorder}`))
-        }`} 
-        style={{
-          display: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'none' : 'block'
-        }}
-        />
-        <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
-          isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
-          (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
-          (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
-          `${cardBg} ${cardBorder}`))
-        }`} 
-        style={{
-          display: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'none' : 'block'
-        }}
-        />
+        {/* Top binder rings / anchor tabs (Dec 16 split pieces carry their own binder ring) */}
+        {!(isTop && isDec16Blocked && lokiCrackStage >= 4) && (
+          <>
+            <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
+              isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
+              (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
+              (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
+              `${cardBg} ${cardBorder}`))
+            }`} />
+            <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
+              isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
+              (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
+              (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
+              `${cardBg} ${cardBorder}`))
+            }`} />
+          </>
+        )}
         
         {isTop && hasCornerStar && (
           <div className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] absolute top-4 pointer-events-none z-30">
@@ -308,27 +304,35 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           }}
           animate={
             isTop && isDec16Blocked && lokiCrackStage >= 4 ? {
-              x: -180,
-              y: -50,
-              rotateZ: -16,
-              rotateY: -25,
-              scale: 0.1,
+              x: -220,
+              y: -80,
+              rotateZ: -28,
+              rotateY: -35,
+              rotateX: 15,
+              scale: 0.05,
               opacity: 0,
-              transition: { duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }
+              transition: { 
+                duration: 4.0, 
+                ease: [0.16, 1, 0.3, 1] // True cosmic zero-gravity drift: starts moving steadily then floats forever into deep distance
+              }
             } : undefined
           }
-          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${
-            lokiCrackStage >= 3 ? 'bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700' :
-            (lokiCrackStage === 2 ? 'bg-neutral-900/90 border-emerald-500/70 shadow-[0_0_25px_rgba(16,185,129,0.3)] transition-all duration-500' :
-            (lokiCrackStage === 1 ? 'border-emerald-600/50 transition-all duration-500' :
+          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-visible border-2 z-20 ${
+            isDec16Blocked && lokiCrackStage >= 3 ? 'bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700' :
+            (isDec16Blocked && lokiCrackStage === 2 ? 'bg-neutral-900/90 border-emerald-500/70 shadow-[0_0_25px_rgba(16,185,129,0.3)] transition-all duration-500' :
+            (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/50 transition-all duration-500' :
             (diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder} transition-all duration-500`)))
           }`}
           style={{
-            boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : (lokiCrackStage >= 3 ? '0 0 60px rgba(16,185,129,0.55)' : (lokiCrackStage === 2 ? '0 0 30px rgba(16,185,129,0.35)' : dropShadow))) : '0 20px 40px -10px rgba(0,0,0,0.1)',
+            boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : (isDec16Blocked && lokiCrackStage >= 3 ? '0 0 60px rgba(16,185,129,0.55)' : (isDec16Blocked && lokiCrackStage === 2 ? '0 0 30px rgba(16,185,129,0.35)' : dropShadow))) : '0 20px 40px -10px rgba(0,0,0,0.1)',
             backfaceVisibility: 'hidden',
             clipPath: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'polygon(0 0, 52% 0, 48% 100%, 0 100%)' : 'none'
           }}
         >
+          {/* Attached Left Binder Anchor (Moves WITH left piece during Stage 4 float) */}
+          {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
+            <div className="absolute -top-3 left-[15%] w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-30 border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]" />
+          )}
           {/* Dec 16 Loki Multiverse Crack (Progressive Tap Stages) */}
           {isTop && isDec16Blocked && lokiCrackStage > 0 && lokiCrackStage < 4 && (
             <LokiTimelineCrack crackStage={lokiCrackStage} />
@@ -797,22 +801,28 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         {/* Right Half of Split Card (Stage 4) */}
         {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
           <motion.div
-            initial={{ x: 0, y: 0, rotateZ: 0, opacity: 1, scale: 1 }}
+            initial={{ x: 0, y: 0, rotateZ: 0, rotateY: 0, rotateX: 0, opacity: 1, scale: 1 }}
             animate={{
-              x: 180,
-              y: -50,
-              rotateZ: 16,
-              rotateY: 25,
-              scale: 0.1,
+              x: 220,
+              y: -80,
+              rotateZ: 28,
+              rotateY: 35,
+              rotateX: -15,
+              scale: 0.05,
               opacity: 0,
-              transition: { duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }
+              transition: { 
+                duration: 4.0, 
+                ease: [0.16, 1, 0.3, 1] // Cosmic zero-gravity smooth float into distance
+              }
             }}
-            className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col absolute overflow-hidden border-2 z-20 bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] pointer-events-none"
+            className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col absolute overflow-visible border-2 z-20 bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] pointer-events-none"
             style={{
               clipPath: 'polygon(52% 0, 100% 0, 100% 100%, 48% 100%)',
               backfaceVisibility: 'hidden'
             }}
           >
+            {/* Attached Right Binder Anchor (Moves WITH right piece during Stage 4 float) */}
+            <div className="absolute -top-3 right-[15%] w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-30 border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]" />
             <div className="pt-8 sm:pt-10 px-8 flex flex-col items-center w-full z-10 relative">
               <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
                 {dateText}

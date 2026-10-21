@@ -294,6 +294,14 @@ function App() {
   const [showDiwaliEvent, setShowDiwaliEvent] = useState(false);
   const [diwaliPhase, setDiwaliPhase] = useState(0);
   const [lokiCrackStage, setLokiCrackStage] = useState(0); // 0 = normal, 1 = first crack, 2 = deep branching, 3 = full cosmos breach
+
+  // Ensure Loki crack stage is strictly 0 whenever we are NOT on Dec 16
+  const isDec16Card = calendarDate.getFullYear() === 2026 && calendarDate.getMonth() === 11 && calendarDate.getDate() === 16;
+  useEffect(() => {
+    if (!isDec16Card && lokiCrackStage !== 0) {
+      setLokiCrackStage(0);
+    }
+  }, [isDec16Card, lokiCrackStage]);
   
   // Diwali Frame states
   const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
@@ -755,8 +763,6 @@ function App() {
     setShowBubble(false);
   };
 
-  const isDec16Card = calendarDate.getFullYear() === 2026 && calendarDate.getMonth() === 11 && calendarDate.getDate() === 16;
-
   const handleTear = () => {
     if (tutorialState === 0 || tutorialState === 3 || tutorialState === 4) return false;
     if (tutorialState === 2 && tutorialTears >= 10) return false;
@@ -829,6 +835,8 @@ function App() {
     if (isDevMode) {
       localStorage.removeItem('devOverrideDate');
     }
+    // Always reset Dec 16 crack / timeline state when double tapping to reset back to today
+    setLokiCrackStage(0);
 
     if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
     setShowBubble(false);
@@ -895,15 +903,12 @@ function App() {
     const endY = e.changedTouches[0].clientY;
     const distance = Math.sqrt(Math.pow(endX - touchStartPos.x, 2) + Math.pow(endY - touchStartPos.y, 2));
     
-    if (distance < 15) {
-      if (navigator.vibrate) navigator.vibrate(15); 
-      const currentTime = new Date().getTime();
-      const tapLength = currentTime - lastTap;
-      if (tapLength < 500 && tapLength > 0) {
-        handleReset();
-      }
-      setLastTap(currentTime);
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTap;
+    if (tapLength < 500 && tapLength > 0) {
+      handleReset();
     }
+    setLastTap(currentTime);
     setTouchStartPos(null);
   };
 
@@ -1131,8 +1136,8 @@ function App() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Full Screen Multiverse Cosmos Environment (Active as Loki Crack deepens) */}
-          {lokiCrackStage >= 2 && (
+          {/* Full Screen Multiverse Cosmos Environment (Strictly ONLY for Dec 16 as Loki Crack deepens) */}
+          {isDec16Card && lokiCrackStage >= 2 && (
             <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
               {/* Deep Space Emerald Nebula Backdrop */}
               <motion.div 
