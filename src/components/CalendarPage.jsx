@@ -214,7 +214,11 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       dragElastic={1.2} 
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      animate={isTop && !isTorn ? { x: 0, y: 0, rotate: 0 } : undefined}
+      animate={
+        isTop && isDec16Blocked && lokiCrackStage >= 4 
+          ? undefined 
+          : (isTop && !isTorn ? { x: 0, y: 0, rotate: 0 } : undefined)
+      }
       exit={{ 
         x: exitX, 
         y: exitY, 
@@ -315,7 +319,15 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 duration: 4.0, 
                 ease: [0.16, 1, 0.3, 1] // True cosmic zero-gravity drift: starts moving steadily then floats forever into deep distance
               }
-            } : undefined
+            } : {
+              x: 0,
+              y: 0,
+              rotateZ: 0,
+              rotateY: 0,
+              rotateX: 0,
+              scale: 1,
+              opacity: 1
+            }
           }
           className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-visible border-2 z-20 ${
             isDec16Blocked && lokiCrackStage >= 3 ? 'bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700' :
