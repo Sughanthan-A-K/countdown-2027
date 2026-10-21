@@ -10,9 +10,10 @@ import VijayadashamiCard from './VijayadashamiCard';
 import MagicalCornerStar from './MagicalCornerStar';
 import DiwaliRocketUI from './DiwaliRocketUI';
 import LokiTimelineCrack from './LokiTimelineCrack';
+import LokiTimelinePortal from './LokiTimelinePortal';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady, isDec16Blocked, lokiCrackStage = 0, onLokiCardTap }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady, isDec16Blocked, lokiCrackStage = 0, onLokiCardTap, isDec16UnderlyingHidden }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -192,7 +193,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     <motion.div
       style={{
         zIndex: (isTop && diwaliPhase >= 1) ? 1000 : (isTop ? 100 : 100 - index),
-        opacity: (!isTop && diwaliPhase >= 1 && !diwaliRevealed) ? 0 : 1,
+        opacity: (isDec16UnderlyingHidden) ? 0 : ((!isTop && diwaliPhase >= 1 && !diwaliRevealed) ? 0 : 1),
         pointerEvents: isTop && !isTorn && !isFinished ? 'auto' : 'none',
         position: 'absolute',
         top: 0,
@@ -226,9 +227,19 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       className="absolute flex items-center justify-center inset-0 select-none touch-none"
     >
       <div className="relative pt-4 w-full flex justify-center">
-        {/* Removed transition-colors because View Transition handles the visual fade/wipe instantly */}
-        <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${cardBg} ${cardBorder}`} />
-        <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${cardBg} ${cardBorder}`} />
+        {/* Top binder rings / anchor tabs */}
+        <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
+          lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
+          (lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
+          (lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
+          `${cardBg} ${cardBorder}`))
+        }`} />
+        <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
+          lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
+          (lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
+          (lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
+          `${cardBg} ${cardBorder}`))
+        }`} />
         
         {isTop && hasCornerStar && (
           <div className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] absolute top-4 pointer-events-none z-30">
@@ -276,12 +287,28 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           </AnimatePresence>
         )}
 
+        {/* Loki Time Portal (Emerges behind the splitting cards on stage 4) */}
+        {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
+          <LokiTimelinePortal />
+        )}
+
         <motion.div 
           onClick={(e) => {
             if (isTop && isDec16Blocked && onLokiCardTap) {
               onLokiCardTap();
             }
           }}
+          animate={
+            isTop && isDec16Blocked && lokiCrackStage >= 4 ? {
+              x: -180,
+              y: -50,
+              rotateZ: -20,
+              rotateY: -28,
+              opacity: 0,
+              scale: 0.8,
+              transition: { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
+            } : undefined
+          }
           className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${
             lokiCrackStage >= 3 ? 'bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700' :
             (lokiCrackStage === 2 ? 'bg-neutral-900/90 border-emerald-500/70 shadow-[0_0_25px_rgba(16,185,129,0.3)] transition-all duration-500' :
@@ -290,11 +317,12 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           }`}
           style={{
             boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : (lokiCrackStage >= 3 ? '0 0 60px rgba(16,185,129,0.55)' : (lokiCrackStage === 2 ? '0 0 30px rgba(16,185,129,0.35)' : dropShadow))) : '0 20px 40px -10px rgba(0,0,0,0.1)',
-            backfaceVisibility: 'hidden'
+            backfaceVisibility: 'hidden',
+            clipPath: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'polygon(0 0, 52% 0, 48% 100%, 0 100%)' : 'none'
           }}
         >
           {/* Dec 16 Loki Multiverse Crack (Progressive Tap Stages) */}
-          {isTop && isDec16Blocked && lokiCrackStage > 0 && (
+          {isTop && isDec16Blocked && lokiCrackStage > 0 && lokiCrackStage < 4 && (
             <LokiTimelineCrack crackStage={lokiCrackStage} />
           )}
           {isTop && !isAyudhaWishActive && (
@@ -757,6 +785,59 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               </>
             )}
         </motion.div>
+
+        {/* Right Half of Split Card (Stage 4: Drifts right in space) */}
+        {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
+          <motion.div
+            initial={{ x: 0, y: 0, rotateZ: 0, rotateY: 0, opacity: 1, scale: 1 }}
+            animate={{
+              x: 180,
+              y: 50,
+              rotateZ: 20,
+              rotateY: 28,
+              opacity: 0,
+              scale: 0.8,
+              transition: { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
+            }}
+            className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col absolute overflow-hidden border-2 z-20 bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] pointer-events-none"
+            style={{
+              clipPath: 'polygon(52% 0, 100% 0, 100% 100%, 48% 100%)',
+              backfaceVisibility: 'hidden'
+            }}
+          >
+            <div className="pt-8 sm:pt-10 px-8 flex flex-col items-center w-full z-10 relative">
+              <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
+                {dateText}
+              </h2>
+            </div>
+
+            <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-2">
+              <div className="w-full flex justify-start pl-8 z-20 mb-[-1rem]">
+                <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase ${textSecondary}`}>
+                  Today
+                </span>
+              </div>
+              
+              <h1 className={`text-[7.5rem] sm:text-[9.5rem] font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                {daysRemaining}
+              </h1>
+              
+              <div className="w-full flex justify-end pr-8 z-20 mt-[-1rem]">
+                <span className={`font-bold text-lg sm:text-xl italic ${textSecondary}`}>
+                  th day
+                </span>
+              </div>
+            </div>
+            
+            <div className="pb-6 sm:pb-8 flex justify-center w-full z-10 relative">
+              <div className={`px-6 py-2 rounded-full border-2 cursor-default select-none ${pillBgOutline}`}>
+                <span className={`text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
+                  To reach 2027
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );

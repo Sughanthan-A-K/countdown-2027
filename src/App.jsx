@@ -974,12 +974,14 @@ function App() {
     (tutorialState === -1 && !isDevMode && missedDays <= 0);
 
     const isTutorialActive = tutorialState !== -1 || !isSpecialEventsUnlocked;
+    const isDec16Active = isDec16Card;
     const pages = [0, 1, 2].map((i) => {
     const pageDate = addDays(calendarDate, i);
+    const isHiddenBehindDec16 = isDec16Active && i > 0;
     return {
       id: `${pageDate.getTime()}-${resetCount}`, 
-      dateText: formatDate(pageDate),
-      daysRemaining: getDaysRemaining(pageDate),
+      dateText: isHiddenBehindDec16 ? "" : formatDate(pageDate),
+      daysRemaining: isHiddenBehindDec16 ? 0 : getDaysRemaining(pageDate),
       index: i,
       isGandhiJayanti: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 2,
       isBirthday: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 14,
@@ -987,7 +989,7 @@ function App() {
       isVijayadashami: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 20,
       isDiwaliDay: !isTutorialActive && pageDate.getMonth() === 10 && pageDate.getDate() === 8,
       isDiwali: !isTutorialActive && (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
-      
+      isDec16UnderlyingHidden: isHiddenBehindDec16
     };
   });
 
@@ -1528,9 +1530,10 @@ function App() {
                       globalLang={globalLang}
                       isDec16Blocked={page.index === 0 && isDec16Card}
                       lokiCrackStage={page.index === 0 ? lokiCrackStage : 0}
+                      isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
                       onLokiCardTap={() => {
-                        if (navigator.vibrate) navigator.vibrate(25);
-                        setLokiCrackStage(prev => Math.min(prev + 1, 3));
+                        if (navigator.vibrate) navigator.vibrate(30);
+                        setLokiCrackStage(prev => Math.min(prev + 1, 4));
                       }}
                     />
                   ))
