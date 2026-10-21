@@ -200,12 +200,6 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         left: 0,
         width: '100%',
         height: '100%',
-        x: isTop ? x : 0,
-        y: isTop ? y : 0, 
-        rotateX: isTop ? rotateX : 0,
-        rotateY: isTop ? rotateY : 0,
-        rotateZ: isTop ? rotateZ : 0,
-        scale: 1, 
         transformOrigin: 'top center',
         backfaceVisibility: 'hidden'
       }}
@@ -230,7 +224,17 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       transition={{ type: 'spring', stiffness: 300, damping: 25, mass: 0.5 }}
       className="absolute flex items-center justify-center inset-0 select-none touch-none"
     >
-      <div className="relative pt-4 w-full flex justify-center">
+      <motion.div 
+        style={{
+          x: isTop ? x : 0,
+          y: isTop ? y : 0, 
+          rotateX: isTop ? rotateX : 0,
+          rotateY: isTop ? rotateY : 0,
+          rotateZ: isTop ? rotateZ : 0,
+          scale: 1
+        }}
+        className="relative pt-4 w-full flex justify-center"
+      >
         {/* Top binder rings / anchor tabs (Dec 16 split pieces carry their own binder ring) */}
         {!(isTop && isDec16Blocked && lokiCrackStage >= 4) && (
           <>
@@ -868,7 +872,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             </div>
           </motion.div>
         )}
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
