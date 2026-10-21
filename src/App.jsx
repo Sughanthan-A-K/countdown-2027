@@ -302,14 +302,8 @@ function App() {
   useEffect(() => {
     if (isSharedCardView) {
       if (sharedCardData?.type === 'diwali') {
-        if (diwaliRevealed) {
-          const t = setTimeout(() => {
-            setSharedCtaReady(true);
-          }, 5000); // Exactly 5 seconds after card reveal
-          return () => clearTimeout(t);
-        } else {
-          setSharedCtaReady(false);
-        }
+        // Controlled dynamically by 5 Outs burst callback via onCtaReady
+        setSharedCtaReady(false);
       } else if (sharedCardData?.type === 'ayudhapooja' || sharedCardData?.type === 'vijayadashami') {
         // For Ayudha Pooja & Vijayadashami: Show buttons and tooltip ONLY after wish video finishes playing!
         setSharedCtaReady(false);
@@ -320,7 +314,7 @@ function App() {
         return () => clearTimeout(t);
       }
     }
-  }, [isSharedCardView, sharedCardData, diwaliRevealed]);
+  }, [isSharedCardView, sharedCardData]);
   
   // Birthday Secret Surprise states
   const [showBirthdaySecret, setShowBirthdaySecret] = useState(false);
@@ -1500,7 +1494,7 @@ function App() {
                       delay: i * 0.04 // Rapid dealing effect
                     }}
                     className="absolute flex items-center justify-center inset-0 pointer-events-none"
-                    style={{ zIndex: 100 + i }}
+                    style={{ zIndex: 1200 + i }}
                   >
                     <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
                       dateText={page.dateText}

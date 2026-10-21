@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.5 }, launchOrigin = null, loop = false, skipInitial = false, forceRocket = false, onFirstBurst }) {
+export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.5 }, launchOrigin = null, loop = false, skipInitial = false, forceRocket = false, onFirstBurst, onFifthBurst }) {
   const canvasRef = useRef(null);
   const loopTimerRef = useRef(null);
   
@@ -9,6 +9,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
   const waveRef = useRef(0);
   const hasFiredInitial = useRef(false);
   const hasFiredFirstBurstCallback = useRef(false);
+  const hasFiredFifthBurstCallback = useRef(false);
 
   // Tracking state for sequential crackers
   // We want 10 Outs first, then random cracker selection where only ONE cracker runs at a time
@@ -929,6 +930,11 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         burstCountRef.current++;
         currentCrackerRef.current = 'out';
         fireOut(false);
+        // After 5th out, trigger callback for Diwali share/rocket/CTA appearance
+        if (burstCountRef.current === 5 && onFifthBurst && !hasFiredFifthBurstCallback.current) {
+          hasFiredFifthBurstCallback.current = true;
+          onFifthBurst();
+        }
         // After 10th out, wait an extra 2.0s peaceful quiet before first Pusvanam!
         if (burstCountRef.current === 10) {
           return 5200; // 3.2s out dissipation + 2.0s quiet gap

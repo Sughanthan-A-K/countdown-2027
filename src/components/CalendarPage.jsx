@@ -8,6 +8,7 @@ import AyudhaPoojaArt from './AyudhaPoojaArt';
 import AyudhaPoojaCard from './AyudhaPoojaCard';
 import VijayadashamiCard from './VijayadashamiCard';
 import MagicalCornerStar from './MagicalCornerStar';
+import DiwaliRocketUI from './DiwaliRocketUI';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
 export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady }) {
@@ -23,6 +24,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   });
   const [showShareIntroHint, setShowShareIntroHint] = useState(false);
   const [showReturningShareTwinkle, setShowReturningShareTwinkle] = useState(false);
+  const [isDiwaliRocketFlying, setIsDiwaliRocketFlying] = useState(false);
+  const [showDiwaliRocketAmbient, setShowDiwaliRocketAmbient] = useState(false);
   const [ayudhaPoojaPhase, setAyudhaPoojaPhase] = useState(() => {
     const isDev = localStorage.getItem('isDevMode') === 'true';
     return (!isDev && localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true') ? 4 : 0;
@@ -45,7 +48,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
   // Show intro hint & sparkle:
   // - In shared card view: Exactly when forceShowShareHint becomes true (synced with Start Countdown 2027)
-  // - In normal calendar view: exactly 5 seconds (5000ms) after Diwali card reveal (or triggered dynamically by Ayudha Pooja / Vijayadashami)
+  // - In normal calendar view: exactly when 5 Outs burst (or triggered dynamically by Ayudha Pooja / Vijayadashami)
   useEffect(() => {
     if (isSpecialRevealed && onShareSpecialCard && !hasDismissedShareHint) {
       if (isSharedCardView) {
@@ -56,17 +59,37 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         }
       } else if (isVijayadashami) {
         // For Vijayadashami: Tooltip is strictly triggered by onTriggerShareStar after wish video completely finishes + 1s delay
+      } else if (isDiwaliActive) {
+        // For Diwali: strictly triggered after 5 Outs burst callback
       } else if (!isAyudhaPooja) {
-        const delayMs = isDiwaliActive ? 5000 : 1200;
         const t1 = setTimeout(() => {
           setShowShareIntroHint(true);
-        }, delayMs);
+        }, 1200);
         return () => clearTimeout(t1);
       }
     }
   }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isAyudhaPooja, isVijayadashami, vijayadashamiPhase, isSharedCardView, forceShowShareHint]);
 
   const handleShareTap = () => {
+    if (isDiwaliActive) {
+      if (isDiwaliRocketFlying) return; // Prevent double trigger while rocket is swooshing
+      setIsDiwaliRocketFlying(true);
+      if (!hasDismissedShareHint) {
+        localStorage.setItem('has_seen_special_share_hint', 'true');
+        setHasDismissedShareHint(true);
+      }
+      setShowShareIntroHint(false);
+
+      // 3D Rocket flight takes ~1.3s to loop & blast out of screen, then open Share!
+      setTimeout(() => {
+        setIsDiwaliRocketFlying(false);
+        if (onShareSpecialCard) {
+          onShareSpecialCard();
+        }
+      }, 1300);
+      return;
+    }
+
     if (!hasDismissedShareHint) {
       localStorage.setItem('has_seen_special_share_hint', 'true');
       setHasDismissedShareHint(true);
@@ -341,8 +364,16 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     </motion.div>
                   )}
 
-                  {/* Returning users who already tapped/dismissed share tooltip: graceful subtle vector golden star twinkle */}
-                  {showReturningShareTwinkle && !showShareIntroHint && (
+                  {/* Diwali Rocket 3D (Replaces star twinkle for Diwali card) */}
+                  {isDiwaliActive && (
+                    <DiwaliRocketUI 
+                      isFlying={isDiwaliRocketFlying} 
+                      isAmbient={showDiwaliRocketAmbient} 
+                    />
+                  )}
+
+                  {/* Returning users who already tapped/dismissed share tooltip: graceful subtle vector golden star twinkle (for non-Diwali cards) */}
+                  {!isDiwaliActive && showReturningShareTwinkle && !showShareIntroHint && (
                     <motion.div
                       key="returning-share-twinkle-star"
                       initial={{ opacity: 0, scale: 0.3, rotate: 0 }}
@@ -595,7 +626,25 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               <>
                 {/* Background Fireworks spanning the entire card natively! */}
                 <div className={`absolute inset-0 z-0 overflow-hidden rounded-3xl ${effectiveDarkMode ? 'opacity-100' : 'opacity-80'}`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)', isolation: 'isolate' }}>
-                  <ConfettiBurst active={diwaliRevealed || startFinaleLoop} origin={{ y: 0.5, x: 0.5 }} loop={true} skipInitial={!startFinaleLoop} onFirstBurst={onCalendarReveal} />
+                  <ConfettiBurst 
+                    active={diwaliRevealed || startFinaleLoop} 
+                    origin={{ y: 0.5, x: 0.5 }} 
+                    loop={true} 
+                    skipInitial={!startFinaleLoop} 
+                    onFirstBurst={onCalendarReveal}
+                    onFifthBurst={() => {
+                      if (onCtaReady) onCtaReady();
+                      if (!hasDismissedShareHint || isSharedCardView) {
+                        setShowShareIntroHint(true);
+                      } else {
+                        // Returning users who dismissed tooltip: show subtle floating 3D rocket in corner
+                        setShowDiwaliRocketAmbient(true);
+                        setTimeout(() => {
+                          setShowDiwaliRocketAmbient(false);
+                        }, 3500);
+                      }
+                    }} 
+                  />
                 </div>
 
                 <div className={`pt-6 sm:pt-8 px-8 flex flex-col items-center w-full z-10 relative ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}`}>
