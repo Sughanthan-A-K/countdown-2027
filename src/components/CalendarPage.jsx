@@ -9,9 +9,10 @@ import AyudhaPoojaCard from './AyudhaPoojaCard';
 import VijayadashamiCard from './VijayadashamiCard';
 import MagicalCornerStar from './MagicalCornerStar';
 import DiwaliRocketUI from './DiwaliRocketUI';
+import LokiTimelineCrack from './LokiTimelineCrack';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady, isDec16Blocked, showLokiUniverse, onLokiCrackClick }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -276,12 +277,22 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         )}
 
         <motion.div 
-          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder} transition-all duration-500`}`}
+          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${
+            showLokiUniverse ? 'bg-black/90 border-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.4)] transition-all duration-700' :
+            (diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder} transition-all duration-500`)
+          }`}
           style={{
-            boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : dropShadow) : '0 20px 40px -10px rgba(0,0,0,0.1)',
+            boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : (showLokiUniverse ? '0 0 60px rgba(16,185,129,0.5)' : dropShadow)) : '0 20px 40px -10px rgba(0,0,0,0.1)',
             backfaceVisibility: 'hidden'
           }}
         >
+          {/* Dec 16 Loki Multiverse Crack & Universe Reveal */}
+          {isTop && isDec16Blocked && (
+            <LokiTimelineCrack 
+              isExpanded={showLokiUniverse} 
+              onClick={onLokiCrackClick} 
+            />
+          )}
           {isTop && !isAyudhaWishActive && (
             <motion.div 
               className={`absolute inset-0 pointer-events-none z-50 ${effectiveDarkMode ? 'mix-blend-overlay' : 'mix-blend-multiply'}`}

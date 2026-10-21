@@ -293,6 +293,7 @@ function App() {
   const [isDevMode, setIsDevMode] = useState(() => localStorage.getItem('isDevMode') === 'true');
   const [showDiwaliEvent, setShowDiwaliEvent] = useState(false);
   const [diwaliPhase, setDiwaliPhase] = useState(0);
+  const [showLokiUniverse, setShowLokiUniverse] = useState(false);
   
   // Diwali Frame states
   const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
@@ -754,11 +755,19 @@ function App() {
     setShowBubble(false);
   };
 
+  const isDec16Card = calendarDate.getFullYear() === 2026 && calendarDate.getMonth() === 11 && calendarDate.getDate() === 16;
+
   const handleTear = () => {
     if (tutorialState === 0 || tutorialState === 3 || tutorialState === 4) return false;
     if (tutorialState === 2 && tutorialTears >= 10) return false;
     if (tutorialState === -1 && !isDevMode && missedDays <= 0) {
        return false;
+    }
+
+    // Dec 16 Tear Block: The card refuses to tear! Must interact with the Multiverse crack
+    if (isDec16Card) {
+      setShowLokiUniverse(true);
+      return false;
     }
 
     const isTopGandhi = calendarDate.getMonth() === 9 && calendarDate.getDate() === 2;
@@ -1113,11 +1122,60 @@ function App() {
 
       <div>
         <div 
-          className={`w-screen h-screen flex flex-col items-center justify-center relative overflow-hidden touch-none ${effectiveDarkMode ? 'bg-black' : 'bg-neutral-100'}`}
+          className={`w-screen h-screen flex flex-col items-center justify-center relative overflow-hidden touch-none transition-colors duration-1000 ${
+            showLokiUniverse ? 'bg-black' : (effectiveDarkMode ? 'bg-black' : 'bg-neutral-100')
+          }`}
           onDoubleClick={handleReset}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
+          {/* Full Screen Multiverse Cosmos Environment (Active when Loki Universe Crack triggers) */}
+          {showLokiUniverse && (
+            <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+              {/* Deep Space Emerald Nebula Backdrop */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.35)_0%,_rgba(6,78,59,0.25)_40%,_rgba(0,0,0,0.95)_75%)]"
+              />
+
+              {/* Glowing green multiverse stars specks */}
+              {[...Array(35)].map((_, i) => (
+                <motion.div
+                  key={`cosmos-star-${i}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ 
+                    opacity: [0.1, 0.9, 0.1],
+                    scale: [0.5, 1.3, 0.5]
+                  }}
+                  transition={{
+                    duration: 2 + (i % 4) * 0.7,
+                    repeat: Infinity,
+                    delay: (i * 0.12) % 2,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute rounded-full bg-emerald-200 shadow-[0_0_10px_#34d399]"
+                  style={{
+                    width: `${(i % 3) + 1.5}px`,
+                    height: `${(i % 3) + 1.5}px`,
+                    top: `${(i * 19) % 95}%`,
+                    left: `${(i * 29) % 95}%`
+                  }}
+                />
+              ))}
+
+              {/* Ambient reflection halo surrounding the card */}
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.15, 1],
+                  opacity: [0.4, 0.75, 0.4]
+                }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[490px] rounded-[40px] bg-emerald-500/20 blur-[45px] pointer-events-none"
+              />
+            </div>
+          )}
           {/* Confetti (Popper) is now triggered via canvas-confetti function call */}
 
           {!isSharedCardView && (
@@ -1468,6 +1526,9 @@ function App() {
                         addDays(calendarDate, page.index)
                       ) : undefined}
                       globalLang={globalLang}
+                      isDec16Blocked={page.index === 0 && isDec16Card}
+                      showLokiUniverse={page.index === 0 && showLokiUniverse}
+                      onLokiCrackClick={() => setShowLokiUniverse(true)}
                     />
                   ))
                 )}
