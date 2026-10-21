@@ -293,7 +293,7 @@ function App() {
   const [isDevMode, setIsDevMode] = useState(() => localStorage.getItem('isDevMode') === 'true');
   const [showDiwaliEvent, setShowDiwaliEvent] = useState(false);
   const [diwaliPhase, setDiwaliPhase] = useState(0);
-  const [showLokiUniverse, setShowLokiUniverse] = useState(false);
+  const [lokiCrackStage, setLokiCrackStage] = useState(0); // 0 = normal, 1 = first crack, 2 = deep branching, 3 = full cosmos breach
   
   // Diwali Frame states
   const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
@@ -764,9 +764,9 @@ function App() {
        return false;
     }
 
-    // Dec 16 Tear Block: The card refuses to tear! Must interact with the Multiverse crack
+    // Dec 16 Tear Block: The card refuses to tear!
+    // It remains completely normal until the user starts tapping it.
     if (isDec16Card) {
-      setShowLokiUniverse(true);
       return false;
     }
 
@@ -1123,20 +1123,20 @@ function App() {
       <div>
         <div 
           className={`w-screen h-screen flex flex-col items-center justify-center relative overflow-hidden touch-none transition-colors duration-1000 ${
-            showLokiUniverse ? 'bg-black' : (effectiveDarkMode ? 'bg-black' : 'bg-neutral-100')
+            lokiCrackStage >= 2 ? 'bg-black' : (effectiveDarkMode ? 'bg-black' : 'bg-neutral-100')
           }`}
           onDoubleClick={handleReset}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Full Screen Multiverse Cosmos Environment (Active when Loki Universe Crack triggers) */}
-          {showLokiUniverse && (
+          {/* Full Screen Multiverse Cosmos Environment (Active as Loki Crack deepens) */}
+          {lokiCrackStage >= 2 && (
             <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
               {/* Deep Space Emerald Nebula Backdrop */}
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
+                animate={{ opacity: lokiCrackStage >= 3 ? 1 : 0.6, scale: 1 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
                 className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.35)_0%,_rgba(6,78,59,0.25)_40%,_rgba(0,0,0,0.95)_75%)]"
               />
 
@@ -1169,10 +1169,10 @@ function App() {
               <motion.div
                 animate={{ 
                   scale: [1, 1.15, 1],
-                  opacity: [0.4, 0.75, 0.4]
+                  opacity: lokiCrackStage >= 3 ? [0.5, 0.85, 0.5] : [0.25, 0.5, 0.25]
                 }}
                 transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[490px] rounded-[40px] bg-emerald-500/20 blur-[45px] pointer-events-none"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[490px] rounded-[40px] bg-emerald-500/25 blur-[45px] pointer-events-none"
               />
             </div>
           )}
@@ -1527,8 +1527,11 @@ function App() {
                       ) : undefined}
                       globalLang={globalLang}
                       isDec16Blocked={page.index === 0 && isDec16Card}
-                      showLokiUniverse={page.index === 0 && showLokiUniverse}
-                      onLokiCrackClick={() => setShowLokiUniverse(true)}
+                      lokiCrackStage={page.index === 0 ? lokiCrackStage : 0}
+                      onLokiCardTap={() => {
+                        if (navigator.vibrate) navigator.vibrate(25);
+                        setLokiCrackStage(prev => Math.min(prev + 1, 3));
+                      }}
                     />
                   ))
                 )}
