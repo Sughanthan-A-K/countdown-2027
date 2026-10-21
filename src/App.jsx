@@ -868,12 +868,18 @@ function App() {
       // Delay the actual state reset so they watch the cards fly in
       setTimeout(() => {
         setCalendarDate(today);
+        if (dateInputRef.current) {
+          dateInputRef.current.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        }
         setResetCount(c => c + 1);
         setRefillingPages([]);
         if (tutorialState === 3) setTutorialState(4);
       }, animationDelay + 100); 
     } else {
       setCalendarDate(today);
+      if (dateInputRef.current) {
+        dateInputRef.current.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      }
       setResetCount(c => c + 1);
       if (tutorialState === 3) setTutorialState(4);
     }
@@ -1285,6 +1291,7 @@ function App() {
                   <input 
                     ref={dateInputRef}
                     type="date" 
+                    value={`${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, '0')}-${String(calendarDate.getDate()).padStart(2, '0')}`}
                     className="absolute opacity-0 w-0 h-0 pointer-events-none"
                     min={`${actualToday.getFullYear()}-${String(actualToday.getMonth() + 1).padStart(2, '0')}-${String(actualToday.getDate()).padStart(2, '0')}`}
                     max="2027-01-01"
