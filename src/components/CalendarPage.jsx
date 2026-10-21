@@ -227,13 +227,27 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       className="absolute flex items-center justify-center inset-0 select-none touch-none"
     >
       <div className="relative pt-4 w-full flex justify-center">
-        {/* Top binder rings / anchor tabs (Hide on Stage 4 when card splits) */}
-        {!(isTop && isDec16Blocked && lokiCrackStage >= 4) && (
-          <>
-            <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${cardBg} ${cardBorder}`} />
-            <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${cardBg} ${cardBorder}`} />
-          </>
-        )}
+        {/* Top binder rings / anchor tabs */}
+        <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
+          isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
+          (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
+          (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
+          `${cardBg} ${cardBorder}`))
+        }`} 
+        style={{
+          display: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'none' : 'block'
+        }}
+        />
+        <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
+          isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
+          (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
+          (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
+          `${cardBg} ${cardBorder}`))
+        }`} 
+        style={{
+          display: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'none' : 'block'
+        }}
+        />
         
         {isTop && hasCornerStar && (
           <div className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] absolute top-4 pointer-events-none z-30">
@@ -295,10 +309,12 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           animate={
             isTop && isDec16Blocked && lokiCrackStage >= 4 ? {
               x: -180,
-              y: 80,
-              rotateZ: -14,
+              y: -50,
+              rotateZ: -16,
+              rotateY: -25,
+              scale: 0.1,
               opacity: 0,
-              transition: { duration: 0.9, ease: [0.32, 0, 0.67, 0] } // Accelerates away like gravity pull into portal
+              transition: { duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }
             } : undefined
           }
           className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${
@@ -781,13 +797,15 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         {/* Right Half of Split Card (Stage 4) */}
         {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
           <motion.div
-            initial={{ x: 0, y: 0, rotateZ: 0, opacity: 1 }}
+            initial={{ x: 0, y: 0, rotateZ: 0, opacity: 1, scale: 1 }}
             animate={{
               x: 180,
-              y: 80,
-              rotateZ: 14,
+              y: -50,
+              rotateZ: 16,
+              rotateY: 25,
+              scale: 0.1,
               opacity: 0,
-              transition: { duration: 0.9, ease: [0.32, 0, 0.67, 0] }
+              transition: { duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }
             }}
             className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col absolute overflow-hidden border-2 z-20 bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] pointer-events-none"
             style={{
