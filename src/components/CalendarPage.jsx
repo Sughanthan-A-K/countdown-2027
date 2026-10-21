@@ -209,7 +209,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         transformOrigin: 'top center',
         backfaceVisibility: 'hidden'
       }}
-      drag={isTop && !isTorn && !isFinished && !isTearLocked}
+      drag={isTop && !isTorn && !isFinished && !isTearLocked && !isDec16Blocked}
       dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
       dragElastic={1.2} 
       onDragStart={handleDragStart}
@@ -300,13 +300,17 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           }}
           animate={
             isTop && isDec16Blocked && lokiCrackStage >= 4 ? {
-              x: -180,
-              y: -50,
-              rotateZ: -20,
-              rotateY: -28,
-              opacity: 0,
-              scale: 0.8,
-              transition: { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
+              x: [-10, -70, -180, -320, -500],
+              y: [-15, -45, -95, -160, -260],
+              rotateZ: [-2, -8, -18, -32, -45],
+              rotateY: [0, -15, -30, -45, -60],
+              scale: [1, 0.85, 0.55, 0.25, 0.05],
+              opacity: [1, 1, 0.9, 0.6, 0],
+              transition: { 
+                duration: 9.0, 
+                ease: "easeOut",
+                times: [0, 0.2, 0.5, 0.8, 1]
+              }
             } : undefined
           }
           className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${
@@ -786,18 +790,22 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             )}
         </motion.div>
 
-        {/* Right Half of Split Card (Stage 4: Drifts right in space) */}
+        {/* Right Half of Split Card (Stage 4: Drifts right in zero-gravity space) */}
         {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
           <motion.div
             initial={{ x: 0, y: 0, rotateZ: 0, rotateY: 0, opacity: 1, scale: 1 }}
             animate={{
-              x: 180,
-              y: 50,
-              rotateZ: 20,
-              rotateY: 28,
-              opacity: 0,
-              scale: 0.8,
-              transition: { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
+              x: [10, 70, 180, 320, 500],
+              y: [15, 45, 95, 160, 260],
+              rotateZ: [2, 8, 18, 32, 45],
+              rotateY: [0, 15, 30, 45, 60],
+              scale: [1, 0.85, 0.55, 0.25, 0.05],
+              opacity: [1, 1, 0.9, 0.6, 0],
+              transition: { 
+                duration: 9.0, 
+                ease: "easeOut",
+                times: [0, 0.2, 0.5, 0.8, 1]
+              }
             }}
             className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col absolute overflow-hidden border-2 z-20 bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] pointer-events-none"
             style={{
