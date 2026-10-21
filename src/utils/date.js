@@ -36,7 +36,7 @@ export function getDiffDays(date1, date2) {
 /**
  * Determines the onboarding tutorial tier based on cut-off date:
  * - Up to Dec 14: 'full' (10-sheet tearing tutorial + double tap reset)
- * - Dec 15 onwards: 'skip' (Tutorial skipped, direct to today countdown)
+ * - Dec 15 onwards: 'skip' (Language selection only, tutorial skipped, direct to today countdown)
  */
 export function getOnboardingTier(date = null) {
   let target = date;
@@ -55,12 +55,42 @@ export function getOnboardingTier(date = null) {
 
   if (year > 2026) return 'skip';
 
-  // Up to Dec 14: Full Onboarding (10 dates tearing tutorial)
+  // Up to Dec 14: Full Onboarding (10 dates tearing tutorial + key eligibility)
   if (month < 11 || (month === 11 && day <= 14)) {
     return 'full';
   }
-  // After Dec 14 (Dec 15 onwards): Onboarding skipped completely
+  // After Dec 14 (Dec 15 onwards): Onboarding skipped to direct countdown
   return 'skip';
+}
+
+/**
+ * Checks if user is eligible to collect Gandhi Key / Corner Star.
+ * Rule: Only users who onboarded on or before Dec 14 are eligible.
+ * New users onboarding Dec 15 onwards will never receive the Key.
+ */
+export function isKeyEligible() {
+  if (typeof window === 'undefined') return true;
+  const isDev = localStorage.getItem('isDevMode') === 'true';
+  const devDateStr = localStorage.getItem('devOverrideDate');
+  if (isDev && devDateStr) {
+    const devDate = new Date(parseInt(devDateStr, 10));
+    if (devDate.getFullYear() > 2026) return false;
+    if (devDate.getMonth() === 11 && devDate.getDate() > 14) return false;
+    return true;
+  }
+
+  const storedOnboardDate = localStorage.getItem('onboardingDoneDate');
+  if (storedOnboardDate) {
+    const d = new Date(parseInt(storedOnboardDate, 10));
+    if (d.getFullYear() > 2026) return false;
+    if (d.getMonth() === 11 && d.getDate() > 14) return false;
+    return true;
+  }
+  // If not recorded yet, check current date
+  const now = new Date();
+  if (now.getFullYear() > 2026) return false;
+  if (now.getMonth() === 11 && now.getDate() > 14) return false;
+  return true;
 }
 
 /**

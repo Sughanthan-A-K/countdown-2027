@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getDaysRemaining, normalizeDate } from '../utils/date';
 
-export default function Onboarding({ onComplete, globalLang, setGlobalLang }) {
+export default function Onboarding({ onComplete, globalLang, setGlobalLang, tier = 'full' }) {
   const [index, setIndex] = useState(0);
   const daysLeft = getDaysRemaining(normalizeDate(new Date()));
+
+  const isSkipTier = tier === 'skip';
 
   const pages = globalLang === 'english' ? [
     { isLangSelect: true },
@@ -40,7 +42,12 @@ export default function Onboarding({ onComplete, globalLang, setGlobalLang }) {
   const handleLangSelect = (lang) => {
     setGlobalLang(lang);
     localStorage.setItem('globalLang', lang);
-    setIndex(1); // Move to the next page automatically
+    if (isSkipTier) {
+      // For Dec 15+ new users: Skip tutorial sheets, directly enter calendar
+      onComplete();
+    } else {
+      setIndex(1); // Move to the next page automatically
+    }
   };
 
   return (

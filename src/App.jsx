@@ -7,7 +7,7 @@ import ConfettiBurst from './components/ConfettiBurst';
 import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
 import confetti from 'canvas-confetti';
-import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier, isSpecialCardDate } from './utils/date';
+import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier, isSpecialCardDate, isKeyEligible } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
@@ -40,7 +40,7 @@ function App() {
     const isDone = localStorage.getItem('onboardingDone') === 'true';
     const hasTorn = localStorage.getItem('hasFirstTearAfterOnboarding') === 'true';
     const hasKey = localStorage.getItem('hasGandhiKey') === 'true';
-    return isDone && hasTorn && !hasKey;
+    return isDone && hasTorn && !hasKey && isKeyEligible();
   });
   const [shouldAnimateStarFlight, setShouldAnimateStarFlight] = useState(false);
   const [finalHintStep, setFinalHintStep] = useState('none');
@@ -266,8 +266,7 @@ function App() {
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
   const [tutorialState, setTutorialState] = useState(() => {
     if (localStorage.getItem('onboardingDone')) return -1;
-    if (getOnboardingTier(new Date()) === 'skip') return -1;
-    return 0;
+    return 0; // Both full and skip tiers start at 0 so user selects their language first
   });
   
   const [bubbleText, setBubbleText] = useState("");
@@ -690,6 +689,7 @@ function App() {
         setPendingSharedDate(null);
         localStorage.setItem('lastTornDate', targetDate.getTime().toString());
         localStorage.setItem('onboardingDone', 'true');
+        localStorage.setItem('onboardingDoneDate', targetDate.getTime().toString());
         setTutorialState(-1);
         
         // Show the Info hint bubble (requires manual click to proceed)
@@ -756,7 +756,7 @@ function App() {
     }
 
     const isTopGandhi = calendarDate.getMonth() === 9 && calendarDate.getDate() === 2;
-    if (isTopGandhi && !hasGandhiKey) {
+    if (isTopGandhi && !hasGandhiKey && isKeyEligible()) {
        setBubbleText(globalLang === "english" ? "Something is sparkling in the eyes... Tap to see what it is" : "Kannula etho minuminukkuthe... enna nu Tap panni paarunga");
        setBubblePosition('bottom');
        setShowBubble(true);
@@ -764,7 +764,7 @@ function App() {
        return false;
     }
 
-    const isStarCardBlocked = tutorialState === -1 && !hasGandhiKey && hasFirstTearAfterOnboarding && !isSpecialCardDate(calendarDate);
+    const isStarCardBlocked = tutorialState === -1 && !hasGandhiKey && isKeyEligible() && hasFirstTearAfterOnboarding && !isSpecialCardDate(calendarDate);
     if (isStarCardBlocked) {
        setBubbleText(globalLang === "english" ? "Something is sparkling in the corner... Tap to see what it is" : "Corner-la oru natchathiram minunguthe... enna nu Tap panni paarunga");
        setBubblePosition('bottom');
@@ -796,8 +796,8 @@ function App() {
         localStorage.setItem('hasFirstTearAfterOnboarding', 'true');
       }
 
-      // Spawn star on newly revealed card if it is a normal day (Rule 1 & 2)
-      if (!hasGandhiKey && !isSpecialCardDate(nextDate)) {
+      // Spawn star on newly revealed card if it is a normal day (Rule 1 & 2) and eligible
+      if (!hasGandhiKey && isKeyEligible() && !isSpecialCardDate(nextDate)) {
         setTimeout(() => {
           setShouldAnimateStarFlight(true);
           setStarVisible(true);
@@ -1029,7 +1029,7 @@ function App() {
 
       <AnimatePresence>
         {tutorialState === 0 && !isSharedCardView && (
-          <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} onComplete={() => {
+          <Onboarding globalLang={globalLang} setGlobalLang={setGlobalLang} tier={getOnboardingTier(actualToday)} onComplete={() => {
             const tier = getOnboardingTier(actualToday);
 
             // Delay confetti until the physical drop animation is mostly complete (0.7 seconds)
@@ -1061,21 +1061,38 @@ function App() {
               setTimeout(() => setIsRevealing(false), 4500); // Stop confetti state after 4.5 seconds
 
               if (tier === 'skip') {
-                // After Dec 25 (Final Week of 2026): Skip tearing tutorial, go straight to active countdown!
+                // Dec 15 onwards: Language chosen -> direct to today countdown with 2-step SpeechBubble guidance
                 const today = normalizeDate(new Date());
-                setCalendarDate(today);
-                localStorage.setItem('lastTornDate', today.getTime().toString());
+                const effectiveToday = isDevMode ? calendarDate : today;
+                setCalendarDate(effectiveToday);
+                localStorage.setItem('lastTornDate', effectiveToday.getTime().toString());
                 localStorage.setItem('onboardingDone', 'true');
+                localStorage.setItem('onboardingDoneDate', effectiveToday.getTime().toString());
                 setTutorialState(-1);
 
                 setTimeout(() => {
+                  // Message 1: Welcome & Purpose with Next button
                   showMsg(
                     globalLang === 'english'
-                      ? <>Welcome to the {highlight('Final Countdown of 2026')}!<br/>Only {highlight(`${getDaysRemaining(today)} days`)} left until 2027!</>
-                      : <>Welcome to the {highlight('Final Countdown of 2026')}!<br/>2027-kku innum {highlight(`${getDaysRemaining(today)} days`)} thaan irukku!</>,
-                    5000
+                      ? <>Welcome to the {highlight('Final Countdown of 2026')}!<br/>Make every day count and {highlight('do something good')} every day...</>
+                      : <>Welcome to the {highlight('Final Countdown of 2026')}!<br/>Intha Calendar-ah use panni {highlight('do something good')} every day...</>,
+                    0,
+                    () => {
+                      // Message 2: Tear Date rule & Daily Notification with Next button -> Info hint
+                      showMsg(
+                        globalLang === 'english'
+                          ? <>Once the day ends, you can swipe to {highlight('tear today\'s Date')}.<br/>You will get a daily notification!</>
+                          : <>Once intha day mudinjathum, neenga innaiku {highlight('Date-ah swipe panni')} kizhichidalam.<br/>Daily ungalukku notification varum!</>,
+                        0,
+                        () => {
+                          setShowBubble(false);
+                          setFinalHintStep('info');
+                        },
+                        'Next'
+                      );
+                    },
+                    'Next'
                   );
-                  setFinalHintStep('info');
                 }, 1200);
               }
             }, 700);
