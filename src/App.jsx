@@ -129,8 +129,20 @@ function App() {
         }
       }
 
+      const isDev = localStorage.getItem('isDevMode') === 'true';
+      const now = new Date();
+      now.setHours(23, 59, 59, 999); // Allow viewing shared cards once the festival date has arrived
+
       if (target && cardType) {
         target.setHours(0, 0, 0, 0);
+
+        // Security check: Block future festival cards from URL params in production!
+        // Future cards can ONLY be previewed if Developer Mode is explicitly enabled.
+        if (!isDev && target > now) {
+          console.warn(`Future card "${cardType}" (${target.toDateString()}) is locked until its release date.`);
+          return null;
+        }
+
         return { date: target, type: cardType };
       }
     } catch (e) {
