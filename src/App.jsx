@@ -1085,6 +1085,7 @@ function App() {
                           : <>Once intha day mudinjathum, neenga innaiku {highlight('Date-ah swipe panni')} kizhichidalam.<br/>Daily ungalukku notification varum!</>,
                         0,
                         () => {
+                          askNotification();
                           setShowBubble(false);
                           setFinalHintStep('info');
                         },
