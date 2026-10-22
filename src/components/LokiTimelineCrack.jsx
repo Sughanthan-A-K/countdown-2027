@@ -72,162 +72,162 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             style={{ mixBlendMode: 'screen' }}
           >
             <defs>
-              {/* --- TAP 3 ORIGINAL 2 BEAMS --- */}
-              {/* Beam 1: Origin at crack seam (102, 185) -> (140, 152), shoots OUTWARDS towards Top-Right screen */}
+              {/* --- TAP 3 ORIGINAL 2 BEAMS (Infinite Screen Piercing) --- */}
+              {/* Beam 1: Origin at crack seam (102, 185) -> (140, 152), shoots OUTWARDS past screen */}
               <linearGradient 
                 id="outwardBeam1" 
                 gradientUnits="userSpaceOnUse"
                 x1="121" 
                 y1="168" 
-                x2="670" 
-                y2="-300"
+                x2="3500" 
+                y2="-1800"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Beam 2: Blue line in image - Center spine crack seam (102, 185) -> (85, 248), shoots OUTWARDS towards Bottom-Left screen */}
+              {/* Beam 2: From center spine crack seam (102, 185) -> (85, 248), shoots OUTWARDS past screen */}
               <linearGradient 
                 id="outwardBeam2" 
                 gradientUnits="userSpaceOnUse"
                 x1="93" 
                 y1="216" 
-                x2="-450" 
-                y2="730"
+                x2="-2800" 
+                y2="4200"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* --- TAP 4 EXTRA BEAMS FROM EXACT CRACK SEAMS --- */}
-              {/* Seam 3: Top Spine Crack (104, 65) -> (108, 78) - shoots out towards Top-Center/Right */}
+              {/* --- TAP 4 EXTRA BEAMS FROM EXACT CRACK SEAMS (Infinite Lengths) --- */}
+              {/* Seam 3: Top Spine Crack (104, 65) -> (108, 78) */}
               <linearGradient 
                 id="outwardBeamTopSpine" 
                 gradientUnits="userSpaceOnUse"
                 x1="106" 
                 y1="71" 
-                x2="60" 
-                y2="-380"
+                x2="-300" 
+                y2="-4000"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 4: Upper-Left Branch Crack (76, 100) -> (45, 108) - shoots out towards Top-Left screen */}
+              {/* Seam 4: Upper-Left Branch Crack (76, 100) -> (45, 108) */}
               <linearGradient 
                 id="outwardBeamUpperLeft" 
                 gradientUnits="userSpaceOnUse"
                 x1="60" 
                 y1="104" 
-                x2="-400" 
-                y2="-220"
+                x2="-3200" 
+                y2="-2600"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 5: Mid-Left Branch Crack (40, 156) -> (26, 172) - shoots out towards Mid-Left screen */}
+              {/* Seam 5: Mid-Left Branch Crack (40, 156) -> (26, 172) */}
               <linearGradient 
                 id="outwardBeamMidLeftSeam" 
                 gradientUnits="userSpaceOnUse"
                 x1="33" 
                 y1="164" 
-                x2="-520" 
-                y2="170"
+                x2="-4000" 
+                y2="500"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 6: Mid-Right Branch Crack (165, 138) -> (182, 148) - shoots out towards Mid-Right screen */}
+              {/* Seam 6: Mid-Right Branch Crack (165, 138) -> (182, 148) */}
               <linearGradient 
                 id="outwardBeamMidRightSeam" 
                 gradientUnits="userSpaceOnUse"
                 x1="173" 
                 y1="143" 
-                x2="780" 
-                y2="140"
+                x2="4200" 
+                y2="900"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 7: Lower-Right Branch Crack (85, 248) -> (126, 274) - shoots out towards Bottom-Right screen */}
+              {/* Seam 7: Lower-Right Branch Crack (85, 248) -> (126, 274) */}
               <linearGradient 
                 id="outwardBeamLowerRightSeam" 
                 gradientUnits="userSpaceOnUse"
                 x1="105" 
                 y1="261" 
-                x2="650" 
-                y2="780"
+                x2="3500" 
+                y2="4200"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 8: Bottom Spine Crack (96, 350) -> (102, 400) - shoots out towards Bottom-Center screen */}
+              {/* Seam 8: Bottom Spine Crack (96, 350) -> (102, 400) */}
               <linearGradient 
                 id="outwardBeamBottomSpineSeam" 
                 gradientUnits="userSpaceOnUse"
                 x1="99" 
                 y1="375" 
-                x2="90" 
-                y2="880"
+                x2="600" 
+                y2="4500"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* --- MICRO-CRACK SLIVERS (Chinna chinna cracks-la irunthu vara beams) --- */}
+              {/* --- MICRO-CRACK SLIVERS (Infinite lengths) --- */}
               {/* Micro 1: Top-Right corner micro crack (168, 22 -> 200, 5) */}
-              <linearGradient id="microBeamTopRight" gradientUnits="userSpaceOnUse" x1="184" y1="13" x2="680" y2="-280">
+              <linearGradient id="microBeamTopRight" gradientUnits="userSpaceOnUse" x1="184" y1="13" x2="3500" y2="-2200">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
               {/* Micro 2: Upper-Left far edge micro crack (14, 42 -> 0, 15) */}
-              <linearGradient id="microBeamUpperEdge" gradientUnits="userSpaceOnUse" x1="7" y1="28" x2="-450" y2="-180">
+              <linearGradient id="microBeamUpperEdge" gradientUnits="userSpaceOnUse" x1="7" y1="28" x2="-3500" y2="-1800">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
               {/* Micro 3: Bottom-Left corner micro crack (14, 382 -> 0, 400) */}
-              <linearGradient id="microBeamBottomCorner" gradientUnits="userSpaceOnUse" x1="7" y1="391" x2="-420" y2="780">
+              <linearGradient id="microBeamBottomCorner" gradientUnits="userSpaceOnUse" x1="7" y1="391" x2="-3500" y2="4200">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
               {/* Micro 4: Right edge gap micro crack (155, 210 -> 180, 235) */}
-              <linearGradient id="microBeamRightEdge" gradientUnits="userSpaceOnUse" x1="167" y1="222" x2="720" y2="420">
+              <linearGradient id="microBeamRightEdge" gradientUnits="userSpaceOnUse" x1="167" y1="222" x2="4000" y2="2800">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
@@ -243,9 +243,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               </filter>
             </defs>
 
-            {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding out towards Top-Right --- */}
+            {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding INFINITELY across screen --- */}
             <motion.polygon
-              points="102,185 140,152 780,-280 560,-320"
+              points="102,185 140,152 4200,-1600 3200,-2200"
               fill="url(#outwardBeam1)"
               filter="url(#outwardBeamGlow)"
               initial={{ opacity: 0 }}
@@ -253,9 +253,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.1, ease: "easeOut" }}
             />
 
-            {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding out towards Bottom-Left --- */}
+            {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
             <motion.polygon
-              points="102,185 85,248 -420,840 -480,620"
+              points="102,185 85,248 -2600,4500 -3200,3800"
               fill="url(#outwardBeam2)"
               filter="url(#outwardBeamGlow)"
               initial={{ opacity: 0 }}
@@ -264,14 +264,13 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             />
 
             {/* ============================================================ */}
-            {/* TAP 4: RANDOM OUTWARD LIGHT BURSTS (TAKKU TAKKUNU INSTANT FLASH) */}
-            {/* No scale-down/pinch animations! Direct instant light shoot! */}
+            {/* TAP 4: RANDOM OUTWARD LIGHT BURSTS (INFINITELY PROJECTING ACROSS ALL SCREENS) */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- 1st POP (0.04s): Piercing Upper-Left corner --- */}
+                {/* --- 1st POP (0.04s): Piercing Upper-Left corner to infinity --- */}
                 <motion.polygon
-                  points="76,100 45,108 -340,-260 -240,-360"
+                  points="76,100 45,108 -3400,-2600 -2400,-3600"
                   fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -279,10 +278,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 0.04 }}
                 />
 
-                {/* --- 2nd POP (0.22s): Blade beam slicing through Mid-Right --- */}
-                {/* Seam (165,138 -> 182,148) -> shoots STRAIGHT OUT to right edge (680,80 to 760,260) */}
+                {/* --- 2nd POP (0.22s): Blade beam slicing through Mid-Right to infinity --- */}
                 <motion.polygon
-                  points="165,138 182,148 760,260 680,80"
+                  points="165,138 182,148 4500,1800 4200,300"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -290,9 +288,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 0.22 }}
                 />
 
-                {/* --- 3rd POP (0.42s): Upper-Right corner gap --- */}
+                {/* --- 3rd POP (0.42s): Upper-Right corner gap to infinity --- */}
                 <motion.polygon
-                  points="168,22 200,5 560,-220 480,-300"
+                  points="168,22 200,5 3800,-1600 3200,-2400"
                   fill="url(#microBeamTopRight)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -300,9 +298,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 0.42 }}
                 />
 
-                {/* --- 4th POP (0.60s): Steep upward fissure shaft tilting North-North-West --- */}
+                {/* --- 4th POP (0.60s): Steep upward fissure shaft to infinity --- */}
                 <motion.polygon
-                  points="104,65 108,78 40,-420 -80,-380"
+                  points="104,65 108,78 400,-4200 -800,-3800"
                   fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -310,9 +308,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 0.60 }}
                 />
 
-                {/* --- 5th POP (0.80s): Narrow oblique beam cutting through Lower-Right corner --- */}
+                {/* --- 5th POP (0.80s): Narrow oblique beam cutting through Lower-Right to infinity --- */}
                 <motion.polygon
-                  points="85,248 126,274 580,720 460,820"
+                  points="85,248 126,274 3800,4200 3000,4800"
                   fill="url(#outwardBeamLowerRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -320,9 +318,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 0.80 }}
                 />
 
-                {/* --- 6th POP (1.00s): Sharp horizontal sliver piercing West --- */}
+                {/* --- 6th POP (1.00s): Sharp horizontal sliver piercing West to infinity --- */}
                 <motion.polygon
-                  points="40,156 26,172 -480,220 -500,130"
+                  points="40,156 26,172 -4200,1200 -4500,200"
                   fill="url(#outwardBeamMidLeftSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -330,9 +328,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.00 }}
                 />
 
-                {/* --- 7th POP (1.15s): Right edge gap behind 'th day' (seam 155,210 -> 180,235 shoots straight out to right) --- */}
+                {/* --- 7th POP (1.15s): Right edge gap behind 'th day' to infinity --- */}
                 <motion.polygon
-                  points="155,210 180,235 680,420 620,180"
+                  points="155,210 180,235 4400,3200 3800,1200"
                   fill="url(#microBeamRightEdge)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -340,9 +338,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.15 }}
                 />
 
-                {/* --- 8th POP (1.30s): Off-center vertical beam piercing South-South-East --- */}
+                {/* --- 8th POP (1.30s): Off-center vertical beam piercing South-South-East to infinity --- */}
                 <motion.polygon
-                  points="96,350 102,400 190,880 70,880"
+                  points="96,350 102,400 1200,4500 200,4500"
                   fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -350,9 +348,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.30 }}
                 />
 
-                {/* --- 9th POP (1.45s): Bottom-Left corner far gap --- */}
+                {/* --- 9th POP (1.45s): Bottom-Left corner far gap to infinity --- */}
                 <motion.polygon
-                  points="14,382 0,400 -320,680 -380,580"
+                  points="14,382 0,400 -2600,4800 -3400,4000"
                   fill="url(#microBeamBottomCorner)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
