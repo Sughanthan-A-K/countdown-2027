@@ -367,29 +367,60 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
         {/* ============================================================ */}
         {/* TAP 4: ESCALATING BRIGHT CORE AT EXACT CARD CENTER (100, 200) */}
-        {/* SVG coordinates-la exact Card Center (50%, 50%) = (100, 200) */}
+        {/* Blinding white-hot emerald explosion core expanding before shatter */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-center-bright-core">
             <defs>
               <radialGradient id="exactCardCenterCore" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.9" />
-                <stop offset="55%" stopColor="#34d399" stopOpacity="0.65" />
-                <stop offset="85%" stopColor="#10b981" stopOpacity="0.25" />
+                <stop offset="20%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="40%" stopColor="#a7f3d0" stopOpacity="0.9" />
+                <stop offset="65%" stopColor="#34d399" stopOpacity="0.8" />
+                <stop offset="85%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </radialGradient>
+              <radialGradient id="intenseWhiteFlash" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="40%" stopColor="#ecfdf5" stopOpacity="0.95" />
+                <stop offset="75%" stopColor="#6ee7b7" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+              </radialGradient>
+              <filter id="intenseCoreGlow" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="6" result="blur1" />
+                <feGaussianBlur stdDeviation="14" result="blur2" />
+                <feMerge>
+                  <feMergeNode in="blur2" />
+                  <feMergeNode in="blur1" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
+            {/* Broad volumetric emerald bloom */}
             <motion.circle
               cx="100"
               cy="200"
-              r="40"
+              r="70"
               fill="url(#exactCardCenterCore)"
-              filter="url(#pureGreenGlow)"
-              initial={{ scale: 0.3, opacity: 0 }}
+              filter="url(#intenseCoreGlow)"
+              initial={{ scale: 0.2, opacity: 0 }}
               animate={{
-                scale: [0.4, 0.9, 1.4, 2.0],
-                opacity: [0, 0.5, 0.85, 1.0]
+                scale: [0.3, 0.8, 1.5, 2.8],
+                opacity: [0, 0.6, 0.95, 1.0]
+              }}
+              transition={{ duration: 2.1, ease: [0.12, 0.8, 0.2, 1] }}
+            />
+            {/* Blinding white-hot singularity flash core */}
+            <motion.circle
+              cx="100"
+              cy="200"
+              r="35"
+              fill="url(#intenseWhiteFlash)"
+              filter="url(#intenseCoreGlow)"
+              initial={{ scale: 0.1, opacity: 0 }}
+              animate={{
+                scale: [0.2, 0.6, 1.2, 2.2],
+                opacity: [0, 0.7, 1.0, 1.0]
               }}
               transition={{ duration: 2.1, ease: [0.12, 0.8, 0.2, 1] }}
             />
