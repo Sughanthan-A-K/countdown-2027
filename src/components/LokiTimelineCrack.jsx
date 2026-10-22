@@ -6,9 +6,9 @@ import { motion } from 'framer-motion';
  * 
  * Progressive, Realistic Broken Glass Cracking:
  * 
- * 1. Clean Single Lines (No artificial double lines or blinking noise):
- *    - Pure, single crystalline fracture path with natural jagged geometry.
- *    - Only emerald green light bleeds through the crack gaps (no white glint/sparkle noise).
+ * 1. Clean Single Lines:
+ *    - Pure single crystalline fracture path with natural jagged geometry.
+ *    - Pure emerald green light bleeds through the crack gaps.
  * 
  * 2. Gap Widening:
  *    - Tap 1: Single fine crack.
@@ -16,10 +16,11 @@ import { motion } from 'framer-motion';
  *    - Tap 3: Center spine opens wider, pure green aura radiates.
  *    - Tap 4: Center spine splits wide as deep cracks continuously multiply.
  * 
- * 3. 4th Tap Rapid Cascade & Brightness Escalation (Over exactly 2.0s before shatter):
- *    - Cracks continuously develop & spread rapidly outward.
- *    - Same emerald god rays stay in place, but their BRIGHTNESS intensifies steadily (opacity 0.2 -> 1.0, glow scale 1.0 -> 2.2).
- *    - At exactly 2.0 seconds, the card explodes into slow-mo shards!
+ * 3. Intense Neon God Rays (Strong Piercing Laser Beams):
+ *    - Not a faint wash, but strong piercing neon emerald laser shafts with white-hot cores.
+ *    - Sequenced organically to reveal one by one as the cracks shoot open across the card!
+ *    - Over 2.0s, each ray blasts outward piercing far across the full screen in 3D,
+ *      then triggers the majestic glass shatter!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -60,7 +61,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Stage 4: Same emerald volumetric god rays whose BRIGHTNESS continuously escalates over the 2 seconds */}
+      {/* Stage 4: Strong, Piercing Neon Emerald God Rays Revealing One by One as Cracks Spread */}
       {isLightRaysCreeping && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
           <svg 
@@ -69,116 +70,143 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             style={{ mixBlendMode: 'screen' }}
           >
             <defs>
-              <radialGradient id="glassImpactBloom" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#34d399" stopOpacity="1" />
-                <stop offset="35%" stopColor="#10b981" stopOpacity="0.8" />
-                <stop offset="70%" stopColor="#059669" stopOpacity="0.35" />
+              {/* Intense neon core bloom at fracture origin */}
+              <radialGradient id="neonImpactBloom" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.95" />
+                <stop offset="55%" stopColor="#10b981" stopOpacity="0.8" />
+                <stop offset="85%" stopColor="#059669" stopOpacity="0.4" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
 
-              <linearGradient id="pureGreenRay1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#34d399" stopOpacity="0.8" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.35" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+              {/* Strong Neon Ray Gradients: White-hot luminous core transitioning to electric emerald */}
+              <linearGradient id="strongNeonRay1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="40%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="75%" stopColor="#10b981" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              <linearGradient id="pureGreenRay2" x1="50%" y1="50%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="20%" stopColor="#34d399" stopOpacity="0.8" />
-                <stop offset="65%" stopColor="#10b981" stopOpacity="0.35" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+              <linearGradient id="strongNeonRay2" x1="50%" y1="50%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="40%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="75%" stopColor="#10b981" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              <linearGradient id="pureGreenRay3" x1="50%" y1="50%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="20%" stopColor="#34d399" stopOpacity="0.8" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.35" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+              <linearGradient id="strongNeonRay3" x1="50%" y1="50%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="40%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="75%" stopColor="#10b981" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              <filter id="glassRayBlur" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="6" />
+              {/* Tighter blur for crisp, piercing neon beams */}
+              <filter id="neonBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3.5" result="blur1" />
+                <feGaussianBlur stdDeviation="9" result="blur2" />
+                <feMerge>
+                  <feMergeNode in="blur2" />
+                  <feMergeNode in="blur1" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
               </filter>
             </defs>
 
-            {/* Impact Center Point Bloom (Brightness increases steadily 0.2 -> 1.0) */}
+            {/* Impact Center Point Bloom */}
             <motion.ellipse
               cx="102"
               cy="185"
-              rx="24"
-              ry="24"
-              fill="url(#glassImpactBloom)"
-              initial={{ scale: 0.4, opacity: 0.2 }}
-              animate={{ scale: [0.4, 2.0], opacity: [0.2, 1.0] }}
+              rx="22"
+              ry="22"
+              fill="url(#neonImpactBloom)"
+              initial={{ scale: 0.2, opacity: 0.3 }}
+              animate={{ scale: [0.3, 2.2], opacity: [0.3, 1.0] }}
               transition={{ duration: 2.0, ease: "easeIn" }}
-              filter="url(#glassRayBlur)"
+              filter="url(#neonBeamGlow)"
             />
 
-            {/* Crepuscular Rays radiating out through the crack fissures with ESCALATING BRIGHTNESS (Extending far out of card across full viewport) */}
+            {/* Ray 1: Top-Right fissure shaft (reveals at 0.1s as top right crack shoots) */}
             <motion.polygon
               points="102,185 145,150 780,-280 560,-320"
-              fill="url(#pureGreenRay1)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
+              fill="url(#strongNeonRay1)"
+              filter="url(#neonBeamGlow)"
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
+              transition={{ duration: 1.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             />
-            <motion.polygon
-              points="102,185 118,190 820,120 780,360"
-              fill="url(#pureGreenRay1)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 0.95] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
-            <motion.polygon
-              points="102,185 85,250 620,820 400,880"
-              fill="url(#pureGreenRay1)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
-            <motion.polygon
-              points="102,185 85,250 -420,840 -480,620"
-              fill="url(#pureGreenRay2)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 0.95] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
-            <motion.polygon
-              points="102,185 88,125 -500,80 -520,320"
-              fill="url(#pureGreenRay2)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
-            <motion.polygon
-              points="102,185 106,75 -380,-300 -480,-130"
-              fill="url(#pureGreenRay2)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 0.95] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
+
+            {/* Ray 2: Top vertical fissure shaft (reveals at 0.2s as spine opens) */}
             <motion.polygon
               points="102,185 98,15 -60,-360 260,-360"
-              fill="url(#pureGreenRay3)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.2 }}
-              animate={{ opacity: [0.2, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
+              fill="url(#strongNeonRay3)"
+              filter="url(#neonBeamGlow)"
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
+              transition={{ duration: 1.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             />
+
+            {/* Ray 3: Top-Left branch shaft (reveals at 0.35s as top-left crack branches) */}
+            <motion.polygon
+              points="102,185 106,75 -380,-300 -480,-130"
+              fill="url(#strongNeonRay2)"
+              filter="url(#neonBeamGlow)"
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
+              transition={{ duration: 1.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            />
+
+            {/* Ray 4: Left horizontal fissure shaft (reveals at 0.5s as left cracks expand) */}
+            <motion.polygon
+              points="102,185 88,125 -500,80 -520,320"
+              fill="url(#strongNeonRay2)"
+              filter="url(#neonBeamGlow)"
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
+              transition={{ duration: 1.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            />
+
+            {/* Ray 5: Right horizontal fissure shaft (reveals at 0.65s as right cracks branch) */}
+            <motion.polygon
+              points="102,185 118,190 820,120 780,360"
+              fill="url(#strongNeonRay1)"
+              filter="url(#neonBeamGlow)"
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
+              transition={{ duration: 1.5, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            />
+
+            {/* Ray 6: Bottom-Left fissure shaft (reveals at 0.8s as lower cracks spread) */}
+            <motion.polygon
+              points="102,185 85,250 -420,840 -480,620"
+              fill="url(#strongNeonRay2)"
+              filter="url(#neonBeamGlow)"
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
+              transition={{ duration: 1.4, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            />
+
+            {/* Ray 7: Bottom-Right fissure shaft (reveals at 0.95s as bottom-right cracks connect) */}
+            <motion.polygon
+              points="102,185 85,250 620,820 400,880"
+              fill="url(#strongNeonRay1)"
+              filter="url(#neonBeamGlow)"
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
+              transition={{ duration: 1.3, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
+            />
+
+            {/* Ray 8: Downward spine fissure shaft (reveals at 1.1s as card fully splits) */}
             <motion.polygon
               points="102,185 102,385 -60,880 260,880"
-              fill="url(#pureGreenRay3)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
+              fill="url(#strongNeonRay3)"
+              filter="url(#neonBeamGlow)"
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
+              transition={{ duration: 1.2, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
             />
           </svg>
         </div>
