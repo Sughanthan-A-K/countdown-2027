@@ -1178,15 +1178,17 @@ function App() {
                 />
               ))}
 
-              {/* Ambient reflection halo surrounding the card */}
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.15, 1],
-                  opacity: lokiCrackStage >= 3 ? [0.5, 0.85, 0.5] : [0.25, 0.5, 0.25]
-                }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[490px] rounded-[40px] bg-emerald-500/25 blur-[45px] pointer-events-none"
-              />
+              {/* Ambient reflection halo surrounding the card (Hide on Stage 4 so it does not produce a flat horizontal fog) */}
+              {lokiCrackStage < 4 && (
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.15, 1],
+                    opacity: lokiCrackStage >= 3 ? [0.5, 0.85, 0.5] : [0.25, 0.5, 0.25]
+                  }}
+                  transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[490px] rounded-[40px] bg-emerald-500/25 blur-[45px] pointer-events-none"
+                />
+              )}
             </div>
           )}
           {/* Confetti (Popper) is now triggered via canvas-confetti function call */}
