@@ -110,7 +110,7 @@ export default function LokiTimelinePortal() {
         />
       </div>
 
-      {/* 3. Dark Multiverse Timeline Branches (Pure, ultra-smooth, flawless natural curves swaying fluidly across and out of screen) */}
+      {/* 3. Dark Multiverse Timeline Branches (Rigid, interactive draggable branches) */}
       <svg 
         viewBox="0 0 1000 1000" 
         preserveAspectRatio="none"
@@ -119,13 +119,22 @@ export default function LokiTimelinePortal() {
       >
         {/* Branch 1: Upper graceful arc crossing from beyond left (-150) to beyond right (1150) */}
         <motion.g
-          animate={{ 
-            y: [-12, 12, -12],
-            rotate: [-0.6, 0.6, -0.6]
-          }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          drag
+          dragSnapToOrigin
+          dragElastic={0}
+          dragTransition={{ bounceStiffness: 400, bounceDamping: 28 }}
+          whileDrag={{ cursor: 'grabbing' }}
+          className="pointer-events-auto cursor-grab"
           style={{ transformOrigin: "500px 300px" }}
         >
+          {/* Invisible thick hit-area stroke for effortless touch & drag */}
+          <path
+            d="M -150 220 Q 250 340, 500 370 T 1150 390"
+            fill="none"
+            stroke="transparent"
+            strokeWidth="50"
+            strokeLinecap="round"
+          />
           {/* Ambient drop shadow */}
           <path
             d="M -150 220 Q 250 340, 500 370 T 1150 390"
@@ -156,13 +165,21 @@ export default function LokiTimelinePortal() {
 
         {/* Branch 2: High Sweeping gentle branch */}
         <motion.g
-          animate={{ 
-            y: [10, -10, 10],
-            rotate: [0.8, -0.8, 0.8]
-          }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          drag
+          dragSnapToOrigin
+          dragElastic={0}
+          dragTransition={{ bounceStiffness: 400, bounceDamping: 28 }}
+          whileDrag={{ cursor: 'grabbing' }}
+          className="pointer-events-auto cursor-grab"
           style={{ transformOrigin: "500px 150px" }}
         >
+          <path
+            d="M -120 70 Q 400 160, 680 140 T 1120 180"
+            fill="none"
+            stroke="transparent"
+            strokeWidth="50"
+            strokeLinecap="round"
+          />
           <path
             d="M -120 70 Q 400 160, 680 140 T 1120 180"
             fill="none"
@@ -190,13 +207,21 @@ export default function LokiTimelinePortal() {
 
         {/* Branch 3: Lower Ascending Vine (Smooth continuous bezier curve) */}
         <motion.g
-          animate={{ 
-            y: [-15, 14, -15],
-            rotate: [-0.7, 0.7, -0.7]
-          }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          drag
+          dragSnapToOrigin
+          dragElastic={0}
+          dragTransition={{ bounceStiffness: 400, bounceDamping: 28 }}
+          whileDrag={{ cursor: 'grabbing' }}
+          className="pointer-events-auto cursor-grab"
           style={{ transformOrigin: "500px 750px" }}
         >
+          <path
+            d="M -150 820 Q 200 720, 520 670 T 1150 860"
+            fill="none"
+            stroke="transparent"
+            strokeWidth="50"
+            strokeLinecap="round"
+          />
           <path
             d="M -150 820 Q 200 720, 520 670 T 1150 860"
             fill="none"
@@ -224,13 +249,21 @@ export default function LokiTimelinePortal() {
 
         {/* Branch 4: Long Diagonal Branch crossing gracefully through the rift */}
         <motion.g
-          animate={{ 
-            x: [-10, 10, -10],
-            y: [8, -8, 8]
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          drag
+          dragSnapToOrigin
+          dragElastic={0}
+          dragTransition={{ bounceStiffness: 400, bounceDamping: 28 }}
+          whileDrag={{ cursor: 'grabbing' }}
+          className="pointer-events-auto cursor-grab"
           style={{ transformOrigin: "500px 500px" }}
         >
+          <path
+            d="M 1150 80 Q 750 380, 450 550 T -120 880"
+            fill="none"
+            stroke="transparent"
+            strokeWidth="50"
+            strokeLinecap="round"
+          />
           <path
             d="M 1150 80 Q 750 380, 450 550 T -120 880"
             fill="none"
@@ -258,13 +291,21 @@ export default function LokiTimelinePortal() {
 
         {/* Branch 5: Mid-lower gentle horizontal vine */}
         <motion.g
-          animate={{ 
-            y: [10, -10, 10],
-            rotate: [0.5, -0.5, 0.5]
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
+          drag
+          dragSnapToOrigin
+          dragElastic={0}
+          dragTransition={{ bounceStiffness: 400, bounceDamping: 28 }}
+          whileDrag={{ cursor: 'grabbing' }}
+          className="pointer-events-auto cursor-grab"
           style={{ transformOrigin: "500px 520px" }}
         >
+          <path
+            d="M -100 480 Q 300 420, 650 490 T 1150 510"
+            fill="none"
+            stroke="transparent"
+            strokeWidth="50"
+            strokeLinecap="round"
+          />
           <path
             d="M -100 480 Q 300 420, 650 490 T 1150 510"
             fill="none"
