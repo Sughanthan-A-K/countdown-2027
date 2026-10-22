@@ -249,18 +249,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="url(#outwardBeam1)"
               filter="url(#outwardBeamGlow)"
               initial={{ opacity: 0 }}
-              animate={{ 
-                opacity: [0, 1, 0.88, 1, 0.92, 1],
-              }}
-              transition={{ 
-                opacity: {
-                  times: [0, 0.1, 0.35, 0.6, 0.8, 1],
-                  duration: 0.9,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                  ease: "easeInOut"
-                }
-              }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, ease: "easeOut" }}
             />
 
             {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
@@ -269,24 +259,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="url(#outwardBeam2)"
               filter="url(#outwardBeamGlow)"
               initial={{ opacity: 0 }}
-              animate={{ 
-                opacity: [0, 1, 0.9, 1, 0.85, 1],
-              }}
-              transition={{ 
-                opacity: {
-                  delay: 0.05,
-                  times: [0, 0.1, 0.4, 0.65, 0.85, 1],
-                  duration: 0.85,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                  ease: "easeInOut"
-                }
-              }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
             />
 
             {/* ============================================================ */}
-            {/* TAP 4: ASYMMETRIC RANDOM TIMING & SHIMMERING (JOLIKKURA) LIGHT BURSTS */}
-            {/* Realistic unpredictable delays + luminous electric shimmer */}
+            {/* TAP 4: ASYMMETRIC RANDOM TIMING LIGHT BURSTS (SOLID & CLEAN) */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
@@ -296,18 +274,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 1, 0.82, 1, 0.9, 1] 
-                  }}
-                  transition={{ 
-                    opacity: {
-                      delay: 0.04,
-                      duration: 0.7,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
-                    }
-                  }}
+                  animate={{ opacity: 0.95 }}
+                  transition={{ duration: 0.08, delay: 0.04 }}
                 />
 
                 {/* --- 2nd POP (0.38s): Blade beam slicing through Mid-Right --- */}
@@ -316,18 +284,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 0.95, 0.8, 1, 0.85, 0.95] 
-                  }}
-                  transition={{ 
-                    opacity: {
-                      delay: 0.38,
-                      duration: 0.75,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
-                    }
-                  }}
+                  animate={{ opacity: 0.9 }}
+                  transition={{ duration: 0.08, delay: 0.38 }}
                 />
 
                 {/* --- 3rd POP (0.52s): Upper-Right corner gap --- */}
@@ -336,18 +294,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   fill="url(#microBeamTopRight)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 0.9, 0.75, 0.95, 0.8, 0.9] 
-                  }}
-                  transition={{ 
-                    opacity: {
-                      delay: 0.52,
-                      duration: 0.65,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
-                    }
-                  }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.08, delay: 0.52 }}
                 />
 
                 {/* --- 4th POP (0.85s): Steep upward fissure shaft tilting North-North-West --- */}
@@ -356,18 +304,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 1, 0.84, 1, 0.88, 1] 
-                  }}
-                  transition={{ 
-                    opacity: {
-                      delay: 0.85,
-                      duration: 0.8,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
-                    }
-                  }}
+                  animate={{ opacity: 0.92 }}
+                  transition={{ duration: 0.08, delay: 0.85 }}
                 />
 
                 {/* --- 5th POP (1.02s): Narrow oblique beam cutting through Lower-Right corner --- */}
@@ -376,18 +314,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   fill="url(#outwardBeamLowerRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 0.95, 0.78, 1, 0.85, 0.95] 
-                  }}
-                  transition={{ 
-                    opacity: {
-                      delay: 1.02,
-                      duration: 0.7,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
-                    }
-                  }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 1.02 }}
                 />
 
                 {/* --- 6th POP (1.18s): Sharp horizontal sliver piercing West --- */}
@@ -396,18 +324,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   fill="url(#outwardBeamMidLeftSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 0.95, 0.8, 0.95, 0.78, 0.95] 
-                  }}
-                  transition={{ 
-                    opacity: {
-                      delay: 1.18,
-                      duration: 0.75,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
-                    }
-                  }}
+                  animate={{ opacity: 0.9 }}
+                  transition={{ duration: 0.08, delay: 1.18 }}
                 />
 
                 {/* --- 7th POP (1.35s): Right edge gap behind 'th day' --- */}
@@ -416,18 +334,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   fill="url(#microBeamRightEdge)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 0.9, 0.72, 0.95, 0.82, 0.9] 
-                  }}
-                  transition={{ 
-                    opacity: {
-                      delay: 1.35,
-                      duration: 0.65,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
-                    }
-                  }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.08, delay: 1.35 }}
                 />
 
                 {/* --- 8th POP (1.42s): Off-center vertical beam piercing South-South-East --- */}
@@ -436,18 +344,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 1, 0.85, 1, 0.88, 1] 
-                  }}
-                  transition={{ 
-                    opacity: {
-                      delay: 1.42,
-                      duration: 0.8,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
-                    }
-                  }}
+                  animate={{ opacity: 0.92 }}
+                  transition={{ duration: 0.08, delay: 1.42 }}
                 />
 
                 {/* --- 9th POP (1.58s): Bottom-Left corner far gap --- */}
@@ -456,19 +354,52 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   fill="url(#microBeamBottomCorner)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 0.9, 0.75, 0.95, 0.8, 0.9] 
-                  }}
-                  transition={{ 
-                    opacity: {
-                      delay: 1.58,
-                      duration: 0.7,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
-                    }
-                  }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.08, delay: 1.58 }}
                 />
+              </g>
+            )}
+
+            {/* ============================================================ */}
+            {/* LUMINOUS CRACK DUST PARTICLES (LIGHT SHAFTS-KULLA DRIFTING SPECKS) */}
+            {/* Natural God-ray motes floating organically through the emerald beams */}
+            {/* ============================================================ */}
+            {crackStage >= 3 && (
+              <g key="crack-luminous-dust-motes">
+                {[
+                  { cx: 110, cy: 175, r: 1.2, dx: 120, dy: -90, dur: 2.2, delay: 0.1 },
+                  { cx: 95, cy: 195, r: 1.5, dx: -130, dy: 110, dur: 2.5, delay: 0.2 },
+                  { cx: 125, cy: 160, r: 1.0, dx: 140, dy: -120, dur: 2.0, delay: 0.4 },
+                  { cx: 80, cy: 220, r: 1.4, dx: -110, dy: 130, dur: 2.3, delay: 0.3 },
+                  { cx: 105, cy: 130, r: 1.1, dx: -40, dy: -130, dur: 2.6, delay: 0.5 },
+                  { cx: 140, cy: 145, r: 1.6, dx: 150, dy: -70, dur: 2.1, delay: 0.6 },
+                  { cx: 70, cy: 260, r: 1.2, dx: -140, dy: 90, dur: 2.4, delay: 0.7 },
+                  { cx: 115, cy: 230, r: 1.3, dx: 110, dy: 120, dur: 2.2, delay: 0.8 },
+                  { cx: 60, cy: 120, r: 1.0, dx: -130, dy: -90, dur: 2.7, delay: 0.9 },
+                  { cx: 150, cy: 200, r: 1.4, dx: 140, dy: 50, dur: 2.3, delay: 1.0 },
+                ].map((pt, i) => (
+                  <motion.circle
+                    key={`dust-${i}`}
+                    cx={pt.cx}
+                    cy={pt.cy}
+                    r={pt.r}
+                    fill="#ffffff"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{
+                      opacity: [0, 0.9, 0.95, 0],
+                      scale: [0.5, 1.2, 1, 0.8],
+                      x: [0, pt.dx],
+                      y: [0, pt.dy]
+                    }}
+                    transition={{
+                      duration: pt.dur,
+                      delay: pt.delay,
+                      repeat: Infinity,
+                      ease: "easeOut"
+                    }}
+                  />
+                ))}
               </g>
             )}
           </svg>
