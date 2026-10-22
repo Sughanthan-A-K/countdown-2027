@@ -61,7 +61,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
       )}
 
       {/* ============================================================ */}
-      {/* TAP 3 & TAP 4: OUTWARD 3D LIGHT BEAMS POPPING FROM CRACK ORIGINS */}
+      {/* TAP 3 & TAP 4: OUTWARD 3D LIGHT BEAMS FROM CRACK SEAM SEGMENTS */}
+      {/* Card-kulla irukura exact crack line/fissure-la irunthu thaan light screen-ku veliya pogum */}
       {/* ============================================================ */}
       {crackStage >= 3 && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
@@ -72,12 +73,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           >
             <defs>
               {/* --- TAP 3 ORIGINAL 2 BEAMS --- */}
-              {/* Beam 1: Origin at center (102, 185) -> shoots out towards Top-Right (780, -280) */}
+              {/* Beam 1: Origin at crack seam (102, 185) -> (140, 152), shoots OUTWARDS towards Top-Right screen */}
               <linearGradient 
                 id="outwardBeam1" 
                 gradientUnits="userSpaceOnUse"
-                x1="102" 
-                y1="185" 
+                x1="121" 
+                y1="168" 
                 x2="670" 
                 y2="-300"
               >
@@ -88,12 +89,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Beam 2: Origin at center (102, 185) -> shoots out towards Bottom-Left (-450, 730) */}
+              {/* Beam 2: Blue line in image - Center spine crack seam (102, 185) -> (85, 248), shoots OUTWARDS towards Bottom-Left screen */}
               <linearGradient 
                 id="outwardBeam2" 
                 gradientUnits="userSpaceOnUse"
-                x1="102" 
-                y1="185" 
+                x1="93" 
+                y1="216" 
                 x2="-450" 
                 y2="730"
               >
@@ -104,62 +105,14 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* --- TAP 4 EXTRA RANDOM BEAMS ACROSS ALL SIDES --- */}
-              {/* Wave 1: Top-Left (Apex anchored at crack node 45, 108 -> shoots OUTWARDS past card edge) */}
+              {/* --- TAP 4 EXTRA BEAMS FROM EXACT CRACK SEAMS --- */}
+              {/* Seam 3: Top Spine Crack (104, 65) -> (108, 78) - shoots out towards Top-Center/Right */}
               <linearGradient 
-                id="outwardBeamTopLeft" 
+                id="outwardBeamTopSpine" 
                 gradientUnits="userSpaceOnUse"
-                x1="45" 
-                y1="108" 
-                x2="-380" 
-                y2="-260"
-              >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Wave 2: Mid-Right (Apex anchored at crack node 182, 148 -> shoots OUTWARDS past card edge) */}
-              <linearGradient 
-                id="outwardBeamMidRight" 
-                gradientUnits="userSpaceOnUse"
-                x1="182" 
-                y1="148" 
-                x2="780" 
-                y2="220"
-              >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Wave 2: Bottom-Right (Apex anchored at crack node 126, 274 -> shoots OUTWARDS past card edge) */}
-              <linearGradient 
-                id="outwardBeamBottomRight" 
-                gradientUnits="userSpaceOnUse"
-                x1="126" 
-                y1="274" 
-                x2="600" 
-                y2="820"
-              >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Wave 3: Top-Center (Apex anchored at crack spine 104, 65 -> shoots UPWARDS out of card) */}
-              <linearGradient 
-                id="outwardBeamTopVertical" 
-                gradientUnits="userSpaceOnUse"
-                x1="104" 
-                y1="65" 
-                x2="104" 
+                x1="106" 
+                y1="71" 
+                x2="60" 
                 y2="-380"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
@@ -169,14 +122,14 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Wave 3: Mid-Left (Apex anchored at crack node 26, 172 -> shoots LEFTWARDS out of card) */}
+              {/* Seam 4: Upper-Left Branch Crack (76, 100) -> (45, 108) - shoots out towards Top-Left screen */}
               <linearGradient 
-                id="outwardBeamMidLeft" 
+                id="outwardBeamUpperLeft" 
                 gradientUnits="userSpaceOnUse"
-                x1="26" 
-                y1="172" 
-                x2="-520" 
-                y2="172"
+                x1="60" 
+                y1="104" 
+                x2="-400" 
+                y2="-220"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
@@ -185,13 +138,61 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Wave 3: Bottom-Center (Apex anchored at crack spine 96, 350 -> shoots DOWNWARDS out of card) */}
+              {/* Seam 5: Mid-Left Branch Crack (40, 156) -> (26, 172) - shoots out towards Mid-Left screen */}
               <linearGradient 
-                id="outwardBeamBottomDown" 
+                id="outwardBeamMidLeftSeam" 
                 gradientUnits="userSpaceOnUse"
-                x1="96" 
-                y1="350" 
-                x2="96" 
+                x1="33" 
+                y1="164" 
+                x2="-520" 
+                y2="170"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Seam 6: Mid-Right Branch Crack (165, 138) -> (182, 148) - shoots out towards Mid-Right screen */}
+              <linearGradient 
+                id="outwardBeamMidRightSeam" 
+                gradientUnits="userSpaceOnUse"
+                x1="173" 
+                y1="143" 
+                x2="780" 
+                y2="140"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Seam 7: Lower-Right Branch Crack (85, 248) -> (126, 274) - shoots out towards Bottom-Right screen */}
+              <linearGradient 
+                id="outwardBeamLowerRightSeam" 
+                gradientUnits="userSpaceOnUse"
+                x1="105" 
+                y1="261" 
+                x2="650" 
+                y2="780"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Seam 8: Bottom Spine Crack (96, 350) -> (102, 400) - shoots out towards Bottom-Center screen */}
+              <linearGradient 
+                id="outwardBeamBottomSpineSeam" 
+                gradientUnits="userSpaceOnUse"
+                x1="99" 
+                y1="375" 
+                x2="90" 
                 y2="880"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
@@ -213,12 +214,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               </filter>
             </defs>
 
-            {/* --- TAP 3 BEAM 1: Top-Right fissure shaft radiating outward from center (102, 185) --- */}
+            {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding out towards Top-Right --- */}
             <motion.polygon
-              points="102,185 145,150 780,-280 560,-320"
+              points="102,185 140,152 780,-280 560,-320"
               fill="url(#outwardBeam1)"
               filter="url(#outwardBeamGlow)"
-              style={{ transformOrigin: "102px 185px" }}
+              style={{ transformOrigin: "121px 168px" }}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ 
                 scale: [0, 1.08, 1], 
@@ -227,12 +228,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.22, ease: [0.1, 0.9, 0.2, 1] }}
             />
 
-            {/* --- TAP 3 BEAM 2: Bottom-Left fissure shaft radiating outward from center (102, 185) --- */}
+            {/* --- TAP 3 BEAM 2 (Blue Line in screenshot): From spine crack seam (102, 185) -> (85, 248) expanding out towards Bottom-Left --- */}
             <motion.polygon
-              points="102,185 85,250 -420,840 -480,620"
+              points="102,185 85,248 -420,840 -480,620"
               fill="url(#outwardBeam2)"
               filter="url(#outwardBeamGlow)"
-              style={{ transformOrigin: "102px 185px" }}
+              style={{ transformOrigin: "93px 216px" }}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ 
                 scale: [0, 1.08, 1], 
@@ -242,71 +243,70 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             />
 
             {/* ============================================================ */}
-            {/* TAP 4: RANDOM OUTWARD LIGHT BURSTS POPPING WITH NEW CRACKS */}
-            {/* Pure Cones: Apex firmly anchored AT crack point -> expanding OUTWARDS away from card */}
+            {/* TAP 4: RANDOM OUTWARD LIGHT BURSTS FROM EXACT CRACK SEAMS */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- FIRST POP (0.05s): 1 Beam -> Top-Left (Apex anchored at crack node 45, 108) --- */}
+                {/* --- FIRST POP (0.05s): Seam 4 (76,100 -> 45,108) Upper-Left crack seam --- */}
                 <motion.polygon
-                  points="45,108 -320,-340 -460,-150"
-                  fill="url(#outwardBeamTopLeft)"
+                  points="76,100 45,108 -480,-130 -380,-300"
+                  fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "45px 108px" }}
+                  style={{ transformOrigin: "60px 104px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 0.05, ease: [0.1, 0.9, 0.2, 1] }}
                 />
 
-                {/* --- SECOND POP (0.55s): 2 Beams -> Mid-Right & Bottom-Right --- */}
-                {/* Mid-Right: Apex anchored at crack node (182, 148) -> expanding out to right */}
+                {/* --- SECOND POP (0.55s): Seam 6 & Seam 7 Right side crack seams --- */}
+                {/* Seam 6: (165,138 -> 182,148) Mid-Right crack line */}
                 <motion.polygon
-                  points="182,148 780,50 780,380"
-                  fill="url(#outwardBeamMidRight)"
+                  points="165,138 182,148 780,260 780,20"
+                  fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "182px 148px" }}
+                  style={{ transformOrigin: "173px 143px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 0.55, ease: [0.1, 0.9, 0.2, 1] }}
                 />
-                {/* Bottom-Right: Apex anchored at crack node (126, 274) -> expanding out to bottom-right */}
+                {/* Seam 7: (85,248 -> 126,274) Lower-Right crack line */}
                 <motion.polygon
-                  points="126,274 720,720 450,900"
-                  fill="url(#outwardBeamBottomRight)"
+                  points="85,248 126,274 680,820 420,890"
+                  fill="url(#outwardBeamLowerRightSeam)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "126px 274px" }}
+                  style={{ transformOrigin: "105px 261px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 0.62, ease: [0.1, 0.9, 0.2, 1] }}
                 />
 
-                {/* --- THIRD POP (1.05s): 3 Beams across all remaining sides --- */}
-                {/* Top-Center: Apex anchored at crack spine (104, 65) -> expanding straight UPWARDS out of card */}
+                {/* --- THIRD POP (1.05s): Seam 3, Seam 5, Seam 8 across all crack lines --- */}
+                {/* Seam 3: (104,65 -> 108,78) Top Spine crack line -> expanding out Top screen */}
                 <motion.polygon
-                  points="104,65 -50,-380 260,-380"
-                  fill="url(#outwardBeamTopVertical)"
+                  points="104,65 108,78 260,-360 -60,-360"
+                  fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "104px 65px" }}
+                  style={{ transformOrigin: "106px 71px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 1.05, ease: [0.1, 0.9, 0.2, 1] }}
                 />
-                {/* Mid-Left: Apex anchored at crack node (26, 172) -> expanding straight LEFTWARDS out of card */}
+                {/* Seam 5: (40,156 -> 26,172) Mid-Left crack line -> expanding out Left screen */}
                 <motion.polygon
-                  points="26,172 -520,30 -520,320"
-                  fill="url(#outwardBeamMidLeft)"
+                  points="40,156 26,172 -520,320 -520,20"
+                  fill="url(#outwardBeamMidLeftSeam)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "26px 172px" }}
+                  style={{ transformOrigin: "33px 164px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 1.12, ease: [0.1, 0.9, 0.2, 1] }}
                 />
-                {/* Bottom-Center: Apex anchored at crack spine (96, 350) -> expanding straight DOWNWARDS out of card */}
+                {/* Seam 8: (96,350 -> 102,400) Bottom Spine crack line -> expanding out Bottom screen */}
                 <motion.polygon
-                  points="96,350 -60,880 250,880"
-                  fill="url(#outwardBeamBottomDown)"
+                  points="96,350 102,400 240,880 -80,880"
+                  fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "96px 350px" }}
+                  style={{ transformOrigin: "99px 375px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 1.20, ease: [0.1, 0.9, 0.2, 1] }}
