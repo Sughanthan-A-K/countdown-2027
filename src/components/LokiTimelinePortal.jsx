@@ -149,7 +149,7 @@ export default function LokiTimelinePortal() {
             opacity: { duration: 4, ease: "easeOut" }
           }}
           // Top tapered sharp, bottom rounded bulbous cloud tear (distinct top vs bottom)
-          className="absolute h-[80vh] max-h-[800px] w-64 sm:w-80 pointer-events-none rounded-[15%_75%_55%_35%/70%_25%_65%_45%]"
+          className="absolute h-[92vh] max-h-[920px] w-64 sm:w-80 pointer-events-none rounded-[15%_75%_55%_35%/70%_25%_65%_45%]"
           style={{
             background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,1) 0%, rgba(52,211,153,0.92) 35%, rgba(16,185,129,0.7) 60%, rgba(5,150,105,0.3) 80%, transparent 95%)',
             boxShadow: '0 0 100px rgba(52,211,153,0.7), 0 0 180px rgba(16,185,129,0.5)',
@@ -169,7 +169,7 @@ export default function LokiTimelinePortal() {
             scaleY: { duration: 7.2, ease: [0.16, 1, 0.3, 1] }
           }}
           // Top is high & pinched diagonally to left, bottom is wide & rounded to right
-          className="absolute h-[74vh] max-h-[740px] w-24 sm:w-36 pointer-events-none rounded-[20%_65%_40%_60%/65%_35%_55%_45%]"
+          className="absolute h-[86vh] max-h-[860px] w-24 sm:w-36 pointer-events-none rounded-[20%_65%_40%_60%/65%_35%_55%_45%]"
           style={{
             background: 'radial-gradient(ellipse at 50% 55%, #04251c 0%, #021a13 45%, #010f0a 80%, transparent 100%)',
             borderLeft: '4px solid #d1fae5',
@@ -202,7 +202,7 @@ export default function LokiTimelinePortal() {
             scaleX: { duration: 6.0, ease: [0.16, 1, 0.3, 1] },
             opacity: { duration: 5, repeat: Infinity, ease: "easeInOut" }
           }}
-          className="absolute h-[70vh] max-h-[700px] w-5 sm:w-6 pointer-events-none rounded-[50%]"
+          className="absolute h-[82vh] max-h-[820px] w-5 sm:w-6 pointer-events-none rounded-[50%]"
           style={{
             background: 'linear-gradient(180deg, transparent 0%, rgba(209,250,229,0.9) 15%, #ffffff 50%, rgba(167,243,208,0.9) 85%, transparent 100%)',
             boxShadow: '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 120px #10b981',
