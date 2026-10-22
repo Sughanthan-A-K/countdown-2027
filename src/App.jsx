@@ -6,6 +6,7 @@ import SpeechBubble from './components/SpeechBubble';
 import ConfettiBurst from './components/ConfettiBurst';
 import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
+import LokiTimelinePortal from './components/LokiTimelinePortal';
 import confetti from 'canvas-confetti';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier, isSpecialCardDate, isKeyEligible } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
@@ -1142,54 +1143,52 @@ function App() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Full Screen Multiverse Cosmos Environment (Strictly ONLY for Dec 16 as Loki Crack deepens) */}
-          {isDec16Card && lokiCrackStage >= 2 && (
-            <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-              {/* Deep Space Emerald Nebula Backdrop */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: lokiCrackStage >= 3 ? 1 : 0.6, scale: 1 }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.35)_0%,_rgba(6,78,59,0.25)_40%,_rgba(0,0,0,0.95)_75%)]"
-              />
+          {/* Full Screen Multiverse Cosmos / Portal Environment (Floods entire viewport for Dec 16) */}
+          {isDec16Card && (
+            <>
+              {/* Cosmos Nebula while cracking */}
+              {lokiCrackStage >= 2 && lokiCrackStage < 5 && (
+                <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                  {/* Deep Space Emerald Nebula Backdrop */}
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: lokiCrackStage >= 3 ? 1 : 0.6, scale: 1 }}
+                    transition={{ duration: 1.2, ease: "easeOut" }}
+                    className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.35)_0%,_rgba(6,78,59,0.25)_40%,_rgba(0,0,0,0.95)_75%)]"
+                  />
 
-              {/* Glowing green multiverse stars specks */}
-              {[...Array(35)].map((_, i) => (
-                <motion.div
-                  key={`cosmos-star-${i}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0.1, 0.9, 0.1],
-                    scale: [0.5, 1.3, 0.5]
-                  }}
-                  transition={{
-                    duration: 2 + (i % 4) * 0.7,
-                    repeat: Infinity,
-                    delay: (i * 0.12) % 2,
-                    ease: "easeInOut"
-                  }}
-                  className="absolute rounded-full bg-emerald-200 shadow-[0_0_10px_#34d399]"
-                  style={{
-                    width: `${(i % 3) + 1.5}px`,
-                    height: `${(i % 3) + 1.5}px`,
-                    top: `${(i * 19) % 95}%`,
-                    left: `${(i * 29) % 95}%`
-                  }}
-                />
-              ))}
-
-              {/* Ambient reflection halo surrounding the card (Hide on Stage 4 so it does not produce a flat horizontal fog) */}
-              {lokiCrackStage < 4 && (
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.15, 1],
-                    opacity: lokiCrackStage >= 3 ? [0.5, 0.85, 0.5] : [0.25, 0.5, 0.25]
-                  }}
-                  transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[490px] rounded-[40px] bg-emerald-500/25 blur-[45px] pointer-events-none"
-                />
+                  {/* Glowing green multiverse stars specks */}
+                  {[...Array(35)].map((_, i) => (
+                    <motion.div
+                      key={`cosmos-star-${i}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ 
+                        opacity: [0.1, 0.9, 0.1],
+                        scale: [0.5, 1.3, 0.5]
+                      }}
+                      transition={{
+                        duration: 2 + (i % 4) * 0.7,
+                        repeat: Infinity,
+                        delay: (i * 0.12) % 2,
+                        ease: "easeInOut"
+                      }}
+                      className="absolute rounded-full bg-emerald-200 shadow-[0_0_10px_#34d399]"
+                      style={{
+                        width: `${(i % 3) + 1.5}px`,
+                        height: `${(i % 3) + 1.5}px`,
+                        top: `${(i * 19) % 95}%`,
+                        left: `${(i * 29) % 95}%`
+                      }}
+                    />
+                  ))}
+                </div>
               )}
-            </div>
+
+              {/* Loki Time Portal on stage 5: Rendered directly at root level with fixed inset-0 to ensure 100% full screen coverage without any top/bottom dead bars */}
+              {lokiCrackStage >= 5 && (
+                <LokiTimelinePortal />
+              )}
+            </>
           )}
           {/* Confetti (Popper) is now triggered via canvas-confetti function call */}
 

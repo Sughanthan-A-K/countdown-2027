@@ -292,11 +292,6 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           </AnimatePresence>
         )}
 
-        {/* Loki Time Portal (Revealed as Mind Stone Blast disintegrates the Dec 16 card) */}
-        {isTop && isDec16Blocked && lokiCrackStage >= 5 && (
-          <LokiTimelinePortal />
-        )}
-
         {/* Loki / Wanda Mind Stone Explosive Glass Shatter Effect (Stage 5) */}
         {isTop && isDec16Blocked && lokiCrackStage >= 5 && (
           <LokiMindStoneShatter />

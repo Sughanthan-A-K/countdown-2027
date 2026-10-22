@@ -9,9 +9,10 @@ import { motion } from 'framer-motion';
  * - crackStage 1: Subtle initial fissure drawing across the card.
  * - crackStage 2: Deeper electrical branching with green glow bleeding through.
  * - crackStage 3: Full cosmic breach: universe nebula & stars visible.
- * - crackStage 4 (Creep & Sunbeam Light Rays Phase):
- *   Crack widens massively with piercing volumetric green light rays (like sunbeams breaking through clouds)
- *   radiating across the screen for 2 seconds before the final glass shatter!
+ * - crackStage 4 (Light Ray Creep & Glass Fracture Transition):
+ *   Natural emerald sunlight / crepuscular beam shafts beaming through jagged broken glass fractures
+ *   (referencing Images 2, 3, 4: light traveling through broken glass gaps), glowing white-hot along the edges
+ *   for 2 seconds before the final glass shatter!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -26,7 +27,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: isFullUniverse ? 0.95 : (crackStage === 2 ? 0.75 : 0.45) }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="absolute inset-0 bg-black/80 pointer-events-none rounded-3xl"
+        className="absolute inset-0 bg-black/85 pointer-events-none rounded-3xl"
       />
 
       {/* Cosmic Nebula & Stars behind the crack (revealed on stage 2 & 3) */}
@@ -51,51 +52,148 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Volumetric Sunbeam Light Rays breaking through the cracks on 4th tap (like sunlight breaking through dark clouds) */}
+      {/* Stage 4: Light traveling through cracked broken glass gaps (Images 2, 3, 4) */}
       {isLightRaysCreeping && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible">
-          {/* Intense central emerald flare pulse */}
-          <motion.div
-            initial={{ scale: 0.3, opacity: 0 }}
-            animate={{ scale: [0.5, 2.8], opacity: [0.2, 1, 0.85] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-            className="absolute w-48 h-48 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-200 to-white blur-2xl"
-          />
+        <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
+          {/* SVG Volumetric Light Cones / Crepuscular God Rays streaming out from crack apertures */}
+          <svg 
+            viewBox="0 0 200 400" 
+            className="w-full h-full absolute inset-0 overflow-visible pointer-events-none"
+            style={{ mixBlendMode: 'screen' }}
+          >
+            <defs>
+              {/* Radial gradient from fracture puncture hole at (105, 180) */}
+              <radialGradient id="holeBloom" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.9" />
+                <stop offset="60%" stopColor="#10b981" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+              </radialGradient>
 
-          {/* 8 Piercing Volumetric Light Shafts / Sunbeams shooting out through the fractures across the screen */}
-          {[
-            { angle: -65, length: '120vw', width: '38px', delay: 0 },
-            { angle: -25, length: '140vw', width: '45px', delay: 0.1 },
-            { angle: 15, length: '130vw', width: '35px', delay: 0.05 },
-            { angle: 60, length: '125vw', width: '50px', delay: 0.15 },
-            { angle: 115, length: '135vw', width: '40px', delay: 0.08 },
-            { angle: 155, length: '120vw', width: '48px', delay: 0.12 },
-            { angle: -120, length: '140vw', width: '42px', delay: 0.18 },
-            { angle: -160, length: '130vw', width: '36px', delay: 0.06 }
-          ].map((beam, i) => (
-            <motion.div
-              key={`sunbeam-${i}`}
-              initial={{ scaleY: 0, opacity: 0 }}
+              {/* Linear gradients for fan shafts radiating outward */}
+              <linearGradient id="rayGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.75" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              <linearGradient id="rayGrad2" x1="50%" y1="50%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="20%" stopColor="#a7f3d0" stopOpacity="0.8" />
+                <stop offset="65%" stopColor="#10b981" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+              </linearGradient>
+
+              <linearGradient id="rayGrad3" x1="50%" y1="50%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="20%" stopColor="#6ee7b7" stopOpacity="0.75" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              <filter id="softGlowRay" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="7" />
+              </filter>
+            </defs>
+
+            {/* Core puncture bloom hole where the fracture point originates */}
+            <motion.ellipse
+              cx="105"
+              cy="180"
+              rx="24"
+              ry="24"
+              fill="url(#holeBloom)"
+              initial={{ scale: 0.2, opacity: 0 }}
               animate={{ 
-                scaleY: [0, 1.2, 1],
-                opacity: [0, 0.9, 0.75]
+                scale: [0.5, 1.4, 1.2], 
+                opacity: [0, 1, 0.9] 
               }}
-              transition={{
-                duration: 1.8,
-                delay: beam.delay,
-                ease: [0.16, 1, 0.3, 1]
-              }}
-              className="absolute pointer-events-none origin-bottom"
-              style={{
-                width: beam.width,
-                height: beam.length,
-                transform: `rotate(${beam.angle}deg)`,
-                background: 'linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(110,231,183,0.85) 25%, rgba(16,185,129,0.5) 60%, transparent 100%)',
-                filter: 'blur(6px)',
-                mixBlendMode: 'screen'
-              }}
+              transition={{ duration: 1.8, ease: "easeOut" }}
+              filter="url(#softGlowRay)"
             />
-          ))}
+
+            {/* Natural Crepuscular Beams Beaming Out Through Glass Fractures */}
+            {/* Beam 1: Top-Right fissure gap shaft */}
+            <motion.polygon
+              points="105,180 140,160 380,-80 260,-120"
+              fill="url(#rayGrad1)"
+              filter="url(#softGlowRay)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.9, 0.75] }}
+              transition={{ duration: 1.6, delay: 0.05, ease: "easeOut" }}
+            />
+
+            {/* Beam 2: Right horizontal breach beam */}
+            <motion.polygon
+              points="105,180 112,185 420,120 400,240"
+              fill="url(#rayGrad1)"
+              filter="url(#softGlowRay)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.85, 0.7] }}
+              transition={{ duration: 1.7, delay: 0.15, ease: "easeOut" }}
+            />
+
+            {/* Beam 3: Bottom-Right branch shaft */}
+            <motion.polygon
+              points="105,180 88,240 320,520 200,560"
+              fill="url(#rayGrad1)"
+              filter="url(#softGlowRay)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.9, 0.75] }}
+              transition={{ duration: 1.8, delay: 0.1, ease: "easeOut" }}
+            />
+
+            {/* Beam 4: Bottom-Left fissure shaft */}
+            <motion.polygon
+              points="105,180 88,240 -120,540 -180,420"
+              fill="url(#rayGrad2)"
+              filter="url(#softGlowRay)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.85, 0.7] }}
+              transition={{ duration: 1.6, delay: 0.08, ease: "easeOut" }}
+            />
+
+            {/* Beam 5: Left branch gap shaft */}
+            <motion.polygon
+              points="105,180 92,130 -200,80 -220,190"
+              fill="url(#rayGrad2)"
+              filter="url(#softGlowRay)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.9, 0.75] }}
+              transition={{ duration: 1.7, delay: 0.12, ease: "easeOut" }}
+            />
+
+            {/* Beam 6: Top-Left branch shaft */}
+            <motion.polygon
+              points="105,180 105,80 -80,-100 -180,-30"
+              fill="url(#rayGrad2)"
+              filter="url(#softGlowRay)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.85, 0.7] }}
+              transition={{ duration: 1.8, delay: 0.02, ease: "easeOut" }}
+            />
+
+            {/* Beam 7: Upward vertical fracture beam */}
+            <motion.polygon
+              points="105,180 100,20 40,-160 160,-160"
+              fill="url(#rayGrad3)"
+              filter="url(#softGlowRay)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.95, 0.8] }}
+              transition={{ duration: 1.6, delay: 0.06, ease: "easeOut" }}
+            />
+
+            {/* Beam 8: Downward spine fracture beam */}
+            <motion.polygon
+              points="105,180 98,380 40,580 160,580"
+              fill="url(#rayGrad3)"
+              filter="url(#softGlowRay)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.9, 0.75] }}
+              transition={{ duration: 1.7, delay: 0.14, ease: "easeOut" }}
+            />
+          </svg>
         </div>
       )}
 
@@ -124,14 +222,14 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         <motion.path
           d="M 100 20 L 105 80 L 92 130 L 112 180 L 88 240 L 106 310 L 98 380"
           stroke="#10b981"
-          strokeWidth={isLightRaysCreeping ? "24" : (isFullUniverse ? "14" : (crackStage === 2 ? "8" : "4"))}
+          strokeWidth={isLightRaysCreeping ? "22" : (isFullUniverse ? "14" : (crackStage === 2 ? "8" : "4"))}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
           filter="url(#fissureGlow)"
           opacity={isLightRaysCreeping ? 1 : (isFullUniverse ? 0.9 : 0.6)}
           animate={{
-            strokeWidth: isLightRaysCreeping ? [16, 26, 22] : (isFullUniverse ? [12, 16, 12] : [6, 9, 6])
+            strokeWidth: isLightRaysCreeping ? [16, 24, 20] : (isFullUniverse ? [12, 16, 12] : [6, 9, 6])
           }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -166,7 +264,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           <motion.path
             d="M 105 80 L 75 110 M 92 130 L 60 155 M 112 180 L 140 160 M 88 240 L 125 265 M 106 310 L 70 335"
             stroke="#34d399"
-            strokeWidth={isLightRaysCreeping ? "5" : (isFullUniverse ? "3" : "1.8")}
+            strokeWidth={isLightRaysCreeping ? "6" : (isFullUniverse ? "3" : "1.8")}
             strokeLinecap="round"
             strokeLinejoin="round"
             fill="none"
@@ -181,13 +279,27 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           <motion.path
             d="M 75 110 L 45 105 M 60 155 L 35 180 M 140 160 L 175 175 M 125 265 L 160 280 M 70 335 L 40 350"
             stroke="#6ee7b7"
-            strokeWidth={isLightRaysCreeping ? "4" : "2"}
+            strokeWidth={isLightRaysCreeping ? "4.5" : "2"}
             strokeLinecap="round"
             strokeLinejoin="round"
             fill="none"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
             transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
+          />
+        )}
+
+        {/* Stage 4: Hot white edge highlights on secondary fractures (matching bright fractured glass edges in Images 2, 3, 4) */}
+        {isLightRaysCreeping && (
+          <motion.path
+            d="M 105 80 L 75 110 M 92 130 L 60 155 M 112 180 L 140 160 M 88 240 L 125 265 M 106 310 L 70 335 M 75 110 L 45 105 M 60 155 L 35 180 M 140 160 L 175 175 M 125 265 L 160 280 M 70 335 L 40 350"
+            stroke="#ffffff"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+            animate={{ opacity: [0.6, 1, 0.7] }}
+            transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
           />
         )}
       </svg>
