@@ -16,10 +16,12 @@ import { motion } from 'framer-motion';
  *    - Tap 3: Center spine opens wider, pure green aura radiates.
  *    - Tap 4: Center spine splits wide as deep cracks continuously multiply.
  * 
- * 3. Outward Projecting Neon God Rays (Center-to-Outer Trajectory):
- *    - FIXED DIRECTION: Originates at center fracture point (102, 185) and SHOOTS OUTWARD towards the screen borders!
- *    - White-hot piercing neon light at center that blasts outwards with expanding width into the room/screen in 3D.
- *    - Revealed sequentially as cracks spread over the 2 seconds before the final shatter!
+ * 3. TRUE OUTWARD SHOOTING VOLUMETRIC GOD RAYS (Card Center -> Screen Outer):
+ *    - Origin strictly anchored at the fracture breach center (102, 185).
+ *    - Rays expand and SHOOT OUTWARD from the crack gaps toward the outer screen (not spotlighting inward!).
+ *    - Sequenced organically to reveal one by one as the cracks shoot open across the card!
+ *    - Over 2.0s, each beam shoots outward piercing far across the full screen in 3D,
+ *      then triggers the majestic glass shatter!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -30,6 +32,18 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
   // Single clean fissure stroke & gap width
   const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : (crackStage === 3 ? 3.4 : 5.0));
   const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 14));
+
+  // 8 Outward-Shooting Laser Shafts originating at the crack center
+  const outwardBeams = [
+    { angle: -65, delay: 0.1, length: '120vw', width: '38px' }, // Up-Right (Fissure 1)
+    { angle: -90, delay: 0.2, length: '130vw', width: '45px' }, // Top Vertical (Spine top)
+    { angle: -125, delay: 0.35, length: '125vw', width: '36px' }, // Up-Left (Top branch)
+    { angle: -160, delay: 0.5, length: '135vw', width: '42px' }, // Left Horizontal
+    { angle: 25, delay: 0.65, length: '140vw', width: '40px' }, // Right Horizontal
+    { angle: 145, delay: 0.8, length: '130vw', width: '38px' }, // Down-Left (Lower branch)
+    { angle: 55, delay: 0.95, length: '135vw', width: '44px' }, // Down-Right
+    { angle: 90, delay: 1.1, length: '125vw', width: '40px' }, // Down Vertical (Spine bottom)
+  ];
 
   return (
     <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
@@ -60,99 +74,64 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Stage 4: Powerful Neon Emerald Rays Shooting Directly from Center (102, 185) OUTWARD to full screen */}
+      {/* Stage 4: Volumetric God Rays SHOOTING OUTWARD from the Card Center to Screen Outer */}
       {isLightRaysCreeping && (
-        <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
-          <svg 
-            viewBox="0 0 200 400" 
-            className="w-full h-full absolute inset-0 overflow-visible pointer-events-none"
-            style={{ mixBlendMode: 'screen' }}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible">
+          {/* Central Puncture Light Flare Pulse (Origin of all outward rays) */}
+          <motion.div
+            initial={{ scale: 0.2, opacity: 0 }}
+            animate={{ scale: [0.3, 2.0], opacity: [0.3, 1.0] }}
+            transition={{ duration: 2.0, ease: "easeIn" }}
+            className="absolute w-28 h-28 rounded-full pointer-events-none"
+            style={{
+              top: '46%',
+              left: '51%',
+              transform: 'translate(-50%, -50%)',
+              background: 'radial-gradient(circle, #ffffff 0%, rgba(110,231,183,0.95) 25%, rgba(16,185,129,0.7) 55%, transparent 75%)',
+              filter: 'blur(8px)',
+              mixBlendMode: 'screen'
+            }}
+          />
+
+          {/* Outward-Shooting Laser Shafts: Origin strictly locked at center crack, expanding outwards! */}
+          <div 
+            className="absolute pointer-events-none"
+            style={{
+              top: '46%',
+              left: '51%',
+              width: 0,
+              height: 0
+            }}
           >
-            <defs>
-              {/* Intense neon core bloom at fracture origin */}
-              <radialGradient id="neonImpactBloom" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.95" />
-                <stop offset="55%" stopColor="#10b981" stopOpacity="0.8" />
-                <stop offset="85%" stopColor="#059669" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </radialGradient>
-
-              {/* OUTWARD Ray Gradient: 0% is CENTER (White-hot), 100% is OUTER SCREEN (Emerald fade) */}
-              <linearGradient id="outwardRay" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="45%" stopColor="#34d399" stopOpacity="0.8" />
-                <stop offset="80%" stopColor="#10b981" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Tighter blur for crisp, piercing neon beams */}
-              <filter id="neonBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3.5" result="blur1" />
-                <feGaussianBlur stdDeviation="9" result="blur2" />
-                <feMerge>
-                  <feMergeNode in="blur2" />
-                  <feMergeNode in="blur1" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* Impact Center Point Bloom */}
-            <motion.ellipse
-              cx="102"
-              cy="185"
-              rx="24"
-              ry="24"
-              fill="url(#neonImpactBloom)"
-              initial={{ scale: 0.3, opacity: 0.3 }}
-              animate={{ scale: [0.4, 2.2], opacity: [0.3, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-              filter="url(#neonBeamGlow)"
-            />
-
-            {/* OUTWARD SHOOTING NEON LIGHT BEAMS (Centered at 102, 185 with origin-center transform) */}
-            {[
-              { angle: -65, delay: 0.1, length: '120vw', width: '90px' },
-              { angle: -25, delay: 0.25, length: '130vw', width: '110px' },
-              { angle: 15, delay: 0.4, length: '125vw', width: '85px' },
-              { angle: 60, delay: 0.55, length: '135vw', width: '120px' },
-              { angle: 115, delay: 0.7, length: '130vw', width: '95px' },
-              { angle: 155, delay: 0.85, length: '120vw', width: '100px' },
-              { angle: -120, delay: 1.0, length: '140vw', width: '115px' },
-              { angle: -160, delay: 1.15, length: '130vw', width: '90px' },
-            ].map((beam, i) => (
-              <motion.g
-                key={`outward-neon-beam-${i}`}
-                style={{
-                  transformOrigin: "102px 185px",
-                  transform: `rotate(${beam.angle}deg)`
+            {outwardBeams.map((beam, i) => (
+              <motion.div
+                key={`outward-neon-ray-${i}`}
+                initial={{ scaleY: 0, opacity: 0 }}
+                animate={{ 
+                  scaleY: [0, 1.0],
+                  opacity: [0, 1.0]
                 }}
-              >
-                {/* 
-                  Cone Polygon projecting strictly OUTWARD from Center (102, 185):
-                  Apex starts sharp at center (102, 185) and fans wide out past the screen!
-                */}
-                <motion.polygon
-                  points="102,185 102,185 -50,-800 254,-800"
-                  fill="url(#outwardRay)"
-                  filter="url(#neonBeamGlow)"
-                  initial={{ scaleY: 0, opacity: 0 }}
-                  animate={{ 
-                    scaleY: [0, 1.3],
-                    opacity: [0, 0.95, 1.0]
-                  }}
-                  transition={{ 
-                    duration: 1.8 - i * 0.1,
-                    delay: beam.delay,
-                    ease: [0.16, 1, 0.3, 1]
-                  }}
-                  style={{ transformOrigin: "102px 185px" }}
-                />
-              </motion.g>
+                transition={{
+                  duration: 2.0 - beam.delay * 0.5,
+                  delay: beam.delay,
+                  ease: [0.16, 1, 0.3, 1]
+                }}
+                className="absolute pointer-events-none"
+                style={{
+                  top: 0,
+                  left: 0,
+                  width: beam.width,
+                  height: beam.length,
+                  marginLeft: `calc(-${beam.width} / 2)`,
+                  transformOrigin: 'top center',
+                  transform: `rotate(${beam.angle}deg)`,
+                  background: 'linear-gradient(to bottom, #ffffff 0%, rgba(167,243,208,0.95) 15%, rgba(52,211,153,0.85) 40%, rgba(16,185,129,0.4) 70%, transparent 100%)',
+                  filter: 'blur(4px)',
+                  mixBlendMode: 'screen'
+                }}
+              />
             ))}
-          </svg>
+          </div>
         </div>
       )}
 
@@ -284,7 +263,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: Continuous Cracks Spreading Rapidly (Exactly 2.0s) */}
+        {/* TAP 4: Continuous Cracks Spreading Rapidly While Rays Escalate Brightness (Exactly 2.0s) */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-cascades">
