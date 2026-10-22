@@ -60,27 +60,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* TAP 4: Center Core White-Hot Escalation - Exactly centered at Card Center point (100, 200) */}
-      {crackStage >= 4 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.4 }}
-          animate={{
-            opacity: [0, 0.4, 0.8, 1.0],
-            scale: [0.6, 1.0, 1.5, 2.0]
-          }}
-          transition={{ duration: 2.0, ease: [0.12, 0.8, 0.2, 1] }}
-          className="absolute w-48 h-48 rounded-full pointer-events-none z-[65]"
-          style={{
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            background: 'radial-gradient(circle at center, #ffffff 0%, rgba(167,243,208,0.95) 25%, rgba(52,211,153,0.7) 50%, rgba(16,185,129,0.3) 70%, transparent 85%)',
-            filter: 'blur(18px)',
-            mixBlendMode: 'screen'
-          }}
-        />
-      )}
-
       {/* ============================================================ */}
       {/* TAP 3 & TAP 4: OUTWARD 3D LIGHT BEAMS FROM CRACK SEAM SEGMENTS */}
       {/* Card-kulla irukura exact crack line/fissure-la irunthu thaan light screen-ku veliya pogum */}
@@ -351,9 +330,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.00 }}
                 />
 
-                {/* --- 7th POP (1.15s): Right edge gap behind 'th day' --- */}
+                {/* --- 7th POP (1.15s): Right edge gap behind 'th day' (seam 155,210 -> 180,235 shoots straight out to right) --- */}
                 <motion.polygon
-                  points="155,210 180,235 680,350 620,460"
+                  points="155,210 180,235 680,420 620,180"
                   fill="url(#microBeamRightEdge)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -400,11 +379,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
         {/* ============================================================ */}
         {/* TAP 1: Center Spine Fracture (Shoots down on 1st tap, STAYS CONSTANT!) */}
+        {/* Strictly contained within card borders (y: 10 to y: 390) so glow doesn't bleed out */}
         {/* ============================================================ */}
         {/* Pure Emerald Light Bleeding Through Widening Spine Gap */}
         {crackStage >= 2 && (
           <motion.path
-            d="M 98 0 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 400"
+            d="M 98 12 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 388"
             stroke="#10b981"
             strokeWidth={glowWidth}
             strokeLinecap="round"
