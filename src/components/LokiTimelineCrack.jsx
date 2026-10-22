@@ -105,14 +105,14 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               </linearGradient>
 
               {/* --- TAP 4 EXTRA RANDOM BEAMS ACROSS ALL SIDES --- */}
-              {/* Wave 1: Top-Left (from crack node 45, 108 -> -480, -200) */}
+              {/* Wave 1: Top-Left (from center 102, 185 -> through top-left to -480, -200) */}
               <linearGradient 
                 id="outwardBeamTopLeft" 
                 gradientUnits="userSpaceOnUse"
-                x1="45" 
-                y1="108" 
-                x2="-480" 
-                y2="-200"
+                x1="102" 
+                y1="185" 
+                x2="-430" 
+                y2="-210"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
@@ -121,61 +121,13 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Wave 2: Mid-Right (from crack node 182, 148 -> 780, 220) */}
+              {/* Wave 2: Mid-Right (from center 102, 185 -> through mid-right to 800, 240) */}
               <linearGradient 
                 id="outwardBeamMidRight" 
                 gradientUnits="userSpaceOnUse"
-                x1="182" 
-                y1="148" 
-                x2="780" 
-                y2="220"
-              >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Wave 2: Bottom-Right (from crack node 126, 274 -> 550, 780) */}
-              <linearGradient 
-                id="outwardBeamBottomRight" 
-                gradientUnits="userSpaceOnUse"
-                x1="126" 
-                y1="274" 
-                x2="550" 
-                y2="780"
-              >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Wave 3: Top-Center Vertical (from crack node 104, 65 -> 100, -400) */}
-              <linearGradient 
-                id="outwardBeamTopVertical" 
-                gradientUnits="userSpaceOnUse"
-                x1="104" 
-                y1="65" 
-                x2="100" 
-                y2="-400"
-              >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Wave 3: Mid-Left (from crack node 26, 172 -> -520, 240) */}
-              <linearGradient 
-                id="outwardBeamMidLeft" 
-                gradientUnits="userSpaceOnUse"
-                x1="26" 
-                y1="172" 
-                x2="-520" 
+                x1="102" 
+                y1="185" 
+                x2="800" 
                 y2="240"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
@@ -185,14 +137,62 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Wave 3: Bottom-Center Downward (from crack node 96, 350 -> 80, 850) */}
+              {/* Wave 2: Bottom-Right (from center 102, 185 -> through bottom-right to 530, 850) */}
+              <linearGradient 
+                id="outwardBeamBottomRight" 
+                gradientUnits="userSpaceOnUse"
+                x1="102" 
+                y1="185" 
+                x2="530" 
+                y2="850"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Wave 3: Top-Center Vertical (from center 102, 185 -> through top spine to 100, -360) */}
+              <linearGradient 
+                id="outwardBeamTopVertical" 
+                gradientUnits="userSpaceOnUse"
+                x1="102" 
+                y1="185" 
+                x2="100" 
+                y2="-360"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Wave 3: Mid-Left (from center 102, 185 -> through mid-left to -510, 200) */}
+              <linearGradient 
+                id="outwardBeamMidLeft" 
+                gradientUnits="userSpaceOnUse"
+                x1="102" 
+                y1="185" 
+                x2="-510" 
+                y2="200"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Wave 3: Bottom-Center Downward (from center 102, 185 -> through bottom spine to 100, 880) */}
               <linearGradient 
                 id="outwardBeamBottomDown" 
                 gradientUnits="userSpaceOnUse"
-                x1="96" 
-                y1="350" 
-                x2="80" 
-                y2="850"
+                x1="102" 
+                y1="185" 
+                x2="100" 
+                y2="880"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
@@ -248,61 +248,61 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               <g key="tap-4-cascading-light-shafts">
                 {/* --- FIRST POP (0.05s): 1 Beam -> Top-Left (Now total 3 beams) --- */}
                 <motion.polygon
-                  points="45,108 30,75 -380,-300 -480,-130"
+                  points="102,185 106,75 -380,-300 -480,-130"
                   fill="url(#outwardBeamTopLeft)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "45px 108px" }}
+                  style={{ transformOrigin: "102px 185px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
+                  animate={{ scale: [0, 1.08, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 0.05, ease: [0.1, 0.9, 0.2, 1] }}
                 />
 
                 {/* --- SECOND POP (0.55s): 2 Beams -> Mid-Right & Bottom-Right --- */}
                 <motion.polygon
-                  points="182,148 168,115 820,100 780,340"
+                  points="102,185 118,190 820,120 780,360"
                   fill="url(#outwardBeamMidRight)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "182px 148px" }}
+                  style={{ transformOrigin: "102px 185px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
+                  animate={{ scale: [0, 1.08, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 0.55, ease: [0.1, 0.9, 0.2, 1] }}
                 />
                 <motion.polygon
-                  points="126,274 155,286 640,820 420,880"
+                  points="102,185 85,250 620,820 400,880"
                   fill="url(#outwardBeamBottomRight)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "126px 274px" }}
+                  style={{ transformOrigin: "102px 185px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
+                  animate={{ scale: [0, 1.08, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 0.62, ease: [0.1, 0.9, 0.2, 1] }}
                 />
 
-                {/* --- THIRD POP (1.05s): 3 Beams -> Top-Center, Mid-Left & Bottom-Down across all sides --- */}
+                {/* --- THIRD POP (1.05s): 3 Beams -> Top-Vertical, Mid-Left & Bottom-Down across all sides --- */}
                 <motion.polygon
-                  points="104,65 135,42 -40,-380 260,-380"
+                  points="102,185 98,15 -60,-360 260,-360"
                   fill="url(#outwardBeamTopVertical)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "104px 65px" }}
+                  style={{ transformOrigin: "102px 185px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
+                  animate={{ scale: [0, 1.08, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 1.05, ease: [0.1, 0.9, 0.2, 1] }}
                 />
                 <motion.polygon
-                  points="26,172 12,188 -500,60 -520,300"
+                  points="102,185 88,125 -500,80 -520,320"
                   fill="url(#outwardBeamMidLeft)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "26px 172px" }}
+                  style={{ transformOrigin: "102px 185px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
+                  animate={{ scale: [0, 1.08, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 1.12, ease: [0.1, 0.9, 0.2, 1] }}
                 />
                 <motion.polygon
-                  points="96,350 125,375 -50,880 250,880"
+                  points="102,185 102,385 -60,880 260,880"
                   fill="url(#outwardBeamBottomDown)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "96px 350px" }}
+                  style={{ transformOrigin: "102px 185px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
+                  animate={{ scale: [0, 1.08, 1], opacity: [0, 1, 0.95] }}
                   transition={{ duration: 0.22, delay: 1.20, ease: [0.1, 0.9, 0.2, 1] }}
                 />
               </g>
