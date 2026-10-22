@@ -4,32 +4,26 @@ import { motion } from 'framer-motion';
 /**
  * LokiTimelineCrack
  * 
- * Progressive, Realistic Broken Glass Cracking:
+ * Non-Overlapping Spatial Glass Fracture System:
  * 
- * 1. Clean Single Lines:
- *    - Pure single crystalline fracture path with natural jagged geometry.
- *    - Pure emerald green light bleeds through the crack gaps.
+ * RULE: "Engha crack aaghalayo, engha space iruko angha thaan crack varanum... Crack melaye crack vara koodathu!"
  * 
- * 2. Gap Widening:
- *    - Tap 1: Single fine crack.
- *    - Tap 2: Center spine opens slightly, green light glows through.
- *    - Tap 3: Center spine opens wider, pure green aura radiates.
- *    - Tap 4: Center spine splits wide as deep cracks continuously multiply.
- * 
- * 3. Exact 4th Tap 3-Wave Sequence Requested by User:
- *    - Wave 1 (0.0s): First set of new cracks shoots outward across the card.
- *    - Wave 2 (after 0.5s): Second set of additional creeping cracks shoots and fractures deeper.
- *    - Wave 3 (after 0.5s = 1.0s): MASSIVE catastrophic primary crack fissure (periya crack) tears through the card!
- *    - Shatter (after 0.5s = 1.5s): Whole card violently shatters into flying glass shards into the portal!
+ * - Zone Division (Zero Overlap):
+ *   - Tap 1 (Zone 1 - Spine): Center vertical fracture from top to bottom (x ≈ 90..110).
+ *   - Tap 2 (Zone 2 - Left Mid & Right Mid): Secondary branches stretching only into mid-left (x: 10..75, y: 80..160) and mid-right (x: 130..195, y: 130..200).
+ *   - Tap 3 (Zone 3 - Top & Bottom Corners): Spreads into previously untouched quadrants: Top-Left (x: 0..50, y: 0..80), Top-Right (x: 150..200, y: 0..80), Bottom-Left (x: 0..70, y: 280..400), Bottom-Right (x: 130..200, y: 280..400).
+ *   - Tap 4 (Zone 4 - Pure Empty Voids in 3 Distinct Timed Waves):
+ *     - Wave 1 (0.0s): Cracks the remaining empty middle spaces (x: 50..85, y: 200..260) and (x: 115..150, y: 80..130).
+ *     - Wave 2 (0.5s): Cracks the remaining empty perimeter patches (left outer edge y: 180..270) and (right outer edge y: 210..270).
+ *     - Wave 3 (1.0s): Massive final fracture cuts across the untouched empty regions directly to card edges!
+ *     - Shatter (1.5s): Card completely explodes into slow-mo shards!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
 
-  const isFullUniverse = crackStage >= 3;
-
   // Single clean fissure stroke & gap width
-  const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : (crackStage === 3 ? 3.4 : 5.2));
-  const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 16));
+  const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.0 : (crackStage === 3 ? 2.8 : 4.0));
+  const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 3 : (crackStage === 3 ? 6 : 10));
 
   return (
     <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
@@ -37,7 +31,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ 
-          opacity: crackStage >= 4 ? 0.38 : (crackStage === 3 ? 0.25 : (crackStage === 2 ? 0.15 : 0.08)) 
+          opacity: crackStage >= 4 ? 0.35 : (crackStage === 3 ? 0.25 : (crackStage === 2 ? 0.15 : 0.08)) 
         }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="absolute inset-0 bg-black/50 pointer-events-none rounded-3xl"
@@ -68,14 +62,13 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
       >
         <defs>
           <filter id="pureGreenGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation={crackStage >= 3 ? "2.2" : "1.2"} />
+            <feGaussianBlur stdDeviation={crackStage >= 3 ? "2.0" : "1.2"} />
           </filter>
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 1: Clean SINGLE LINE Spine Fracture (Shoots down ~1.4s on 1st tap, STAYS CONSTANT!) */}
+        {/* TAP 1: ZONE 1 ONLY - Clean Center Vertical Spine (x ≈ 90..110) */}
         {/* ============================================================ */}
-        {/* Pure Emerald Light Bleeding Through Widening Spine Gap */}
         {crackStage >= 2 && (
           <motion.path
             d="M 98 0 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 400"
@@ -86,14 +79,13 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             fill="none"
             filter="url(#pureGreenGlow)"
             animate={{ 
-              strokeWidth: crackStage >= 4 ? [glowWidth, glowWidth * 1.6] : glowWidth,
+              strokeWidth: crackStage >= 4 ? [glowWidth, glowWidth * 1.4] : glowWidth,
               opacity: crackStage >= 4 ? [0.75, 1.0] : 0.75 
             }}
             transition={{ duration: 1.5 }}
           />
         )}
 
-        {/* Single crisp crystalline fracture line (No double line!) */}
         <motion.path
           d="M 98 0 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 400"
           stroke={crackStage >= 2 ? "#d1fae5" : "#ffffff"}
@@ -107,27 +99,27 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
 
         {/* ============================================================ */}
-        {/* TAP 2: Clean SINGLE LINE Branch Fractures (Creeps slowly over ~2.8s, STAYS CONSTANT!) */}
+        {/* TAP 2: ZONE 2 ONLY - Reaches into Empty Left-Mid & Right-Mid (Zero overlap with Zone 1) */}
         {/* ============================================================ */}
         {crackStage >= 2 && (
           <g key="crack-stage-2-persistent">
             {/* Emerald glow inside branch seams */}
             <motion.path
-              d="M 108 78 L 76 100 L 45 108 L 15 112 M 92 122 L 64 146 L 35 158 L 8 165 M 102 185 L 142 152 L 175 136 L 195 128 M 85 248 L 126 274 L 165 288 L 192 296 M 106 312 L 72 336 L 40 348 L 12 355"
+              d="M 108 78 L 76 95 L 45 104 L 12 110 M 92 122 L 64 142 L 35 152 L 10 158 M 102 185 L 138 155 L 170 140 L 195 132 M 85 248 L 122 268 L 158 280 L 190 286"
               stroke="#059669"
-              strokeWidth={crackStage >= 3 ? "3.2" : "2.2"}
+              strokeWidth={crackStage >= 3 ? "2.8" : "2.0"}
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={crackStage === 2 ? { pathLength: 0 } : false}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 2.8, delay: 0.05, ease: [0.12, 1, 0.28, 1] }}
+              transition={{ duration: 2.4, delay: 0.05, ease: [0.12, 1, 0.28, 1] }}
             />
 
-            {/* Single clean crystalline branch lines */}
+            {/* Single clean crystalline branch lines into empty spaces */}
             <motion.path
-              d="M 108 78 L 76 100 L 45 108 L 15 112 M 92 122 L 64 146 L 35 158 L 8 165 M 102 185 L 142 152 L 175 136 L 195 128 M 85 248 L 126 274 L 165 288 L 192 296 M 106 312 L 72 336 L 40 348 L 12 355"
+              d="M 108 78 L 76 95 L 45 104 L 12 110 M 92 122 L 64 142 L 35 152 L 10 158 M 102 185 L 138 155 L 170 140 L 195 132 M 85 248 L 122 268 L 158 280 L 190 286"
               stroke="#ffffff"
               strokeWidth="1.2"
               strokeLinecap="round"
@@ -135,33 +127,33 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="none"
               initial={crackStage === 2 ? { pathLength: 0 } : false}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 2.8, ease: [0.12, 1, 0.28, 1] }}
+              transition={{ duration: 2.4, ease: [0.12, 1, 0.28, 1] }}
             />
           </g>
         )}
 
         {/* ============================================================ */}
-        {/* TAP 3: Clean Spiderwebbing to Corners (Spreads over ~3.2s, STAYS CONSTANT!) */}
+        {/* TAP 3: ZONE 3 ONLY - Reaches into Empty Corners & Perimeter (Zero overlap with Zone 1 & 2) */}
         {/* ============================================================ */}
         {crackStage >= 3 && (
           <g key="crack-stage-3-persistent">
-            {/* Pure emerald seam glow */}
+            {/* Emerald glow into 4 empty corners */}
             <motion.path
-              d="M 76 100 L 55 55 L 25 20 L 0 5 M 108 78 L 140 45 L 175 22 L 200 8 M 64 146 L 45 108 M 102 185 L 118 162 L 142 152 M 142 152 L 165 210 L 195 240 L 200 248 M 85 248 L 78 290 L 52 350 L 20 385 L 5 400 M 126 274 L 155 330 L 180 375 L 195 400 M 72 336 L 40 348"
+              d="M 76 95 L 50 50 L 22 18 L 0 5 M 104 65 L 140 38 L 175 16 L 200 4 M 106 312 L 68 340 L 36 368 L 8 395 M 96 350 L 132 368 L 168 385 L 195 398"
               stroke="#059669"
-              strokeWidth="2.5"
+              strokeWidth="2.4"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={crackStage === 3 ? { pathLength: 0 } : false}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 3.2, delay: 0.05, ease: [0.12, 1, 0.28, 1] }}
+              transition={{ duration: 2.6, delay: 0.05, ease: [0.12, 1, 0.28, 1] }}
             />
 
-            {/* Single clean spiderweb lines reaching corners */}
+            {/* Single clean crystalline corner cracks */}
             <motion.path
-              d="M 76 100 L 55 55 L 25 20 L 0 5 M 108 78 L 140 45 L 175 22 L 200 8 M 64 146 L 45 108 M 102 185 L 118 162 L 142 152 M 142 152 L 165 210 L 195 240 L 200 248 M 85 248 L 78 290 L 52 350 L 20 385 L 5 400 M 126 274 L 155 330 L 180 375 L 195 400 M 72 336 L 40 348"
+              d="M 76 95 L 50 50 L 22 18 L 0 5 M 104 65 L 140 38 L 175 16 L 200 4 M 106 312 L 68 340 L 36 368 L 8 395 M 96 350 L 132 368 L 168 385 L 195 398"
               stroke="#ffffff"
               strokeWidth="1.1"
               strokeLinecap="round"
@@ -169,34 +161,22 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="none"
               initial={crackStage === 3 ? { pathLength: 0 } : false}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 3.2, ease: [0.12, 1, 0.28, 1] }}
-            />
-
-            {/* Impact Center Starburst Lines radiating from (102, 185) */}
-            <motion.path
-              d="M 102 185 L 90 168 M 102 185 L 116 172 M 102 185 L 112 202 M 102 185 L 88 196 M 102 185 L 100 164 M 102 185 L 120 188"
-              stroke="#ffffff"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              initial={crackStage === 3 ? { pathLength: 0 } : false}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2.0, delay: 0.1, ease: [0.12, 1, 0.28, 1] }}
+              transition={{ duration: 2.6, ease: [0.12, 1, 0.28, 1] }}
             />
           </g>
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: Exact Sequence: Wave 1 (0.0s) -> Wave 2 (0.5s) -> Massive Periya Crack (1.0s) -> Shatter (1.5s) */}
+        {/* TAP 4: ZONE 4 ONLY - Reaches Strictly Empty Untouched Voids (No overlapping existing lines!) */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-cascades">
-            {/* --- 1. First Wave Cracks (Starts instantly at 0.0s) --- */}
+            {/* --- WAVE 1 (0.0s): Cracks the remaining empty middle pockets --- */}
+            {/* Top-Right empty space (x: 130..190, y: 70..120) & Bottom-Left empty pocket (x: 15..60, y: 210..270) */}
             <motion.path
-              d="M 25 20 L 5 60 L 0 90 M 175 22 L 195 55 L 200 95 M 0 160 L 15 175 L 35 158 M 200 160 L 185 175 L 175 136 M 5 280 L 25 270 L 45 305 M 200 280 L 180 270 L 165 288 M 5 400 L 40 375 L 72 336 M 195 400 L 160 375 L 126 274"
+              d="M 140 38 L 162 70 L 195 85 M 64 142 L 38 185 L 15 220"
               stroke="#34d399"
-              strokeWidth="2.0"
+              strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
@@ -206,9 +186,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, ease: "easeOut" }}
             />
             <motion.path
-              d="M 25 20 L 5 60 L 0 90 M 175 22 L 195 55 L 200 95 M 0 160 L 15 175 L 35 158 M 200 160 L 185 175 L 175 136 M 5 280 L 25 270 L 45 305 M 200 280 L 180 270 L 165 288 M 5 400 L 40 375 L 72 336 M 195 400 L 160 375 L 126 274"
+              d="M 140 38 L 162 70 L 195 85 M 64 142 L 38 185 L 15 220"
               stroke="#ffffff"
-              strokeWidth="1.2"
+              strokeWidth="1.1"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
@@ -217,9 +197,10 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, ease: "easeOut" }}
             />
 
-            {/* --- 2. Second Wave Cracks (Starts after 0.5s) --- */}
+            {/* --- WAVE 2 (0.5s): Cracks the remaining empty lower-right & upper-left gaps --- */}
+            {/* Lower-Right empty pocket (x: 140..195, y: 190..260) & Upper-Left edge (x: 0..40, y: 60..90) */}
             <motion.path
-              d="M 5 60 L 45 108 M 195 55 L 142 152 M 15 175 L 64 146 M 185 175 L 142 152 M 25 270 L 85 248 M 180 270 L 126 274 M 40 375 L 106 312 M 160 375 L 106 312 M 15 112 L 5 160 M 195 128 L 200 160 M 8 165 L 5 280 M 192 296 L 200 280 M 55 55 L 92 122 M 140 45 L 118 162 M 78 290 L 102 185 M 155 330 L 106 312"
+              d="M 170 140 L 185 190 L 195 240 M 50 50 L 25 65 L 0 75 M 122 268 L 150 315 L 180 340 M 68 340 L 40 310 L 12 280"
               stroke="#34d399"
               strokeWidth="1.8"
               strokeLinecap="round"
@@ -231,7 +212,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
             />
             <motion.path
-              d="M 5 60 L 45 108 M 195 55 L 142 152 M 15 175 L 64 146 M 185 175 L 142 152 M 25 270 L 85 248 M 180 270 L 126 274 M 40 375 L 106 312 M 160 375 L 106 312 M 15 112 L 5 160 M 195 128 L 200 160 M 8 165 L 5 280 M 192 296 L 200 280 M 55 55 L 92 122 M 140 45 L 118 162 M 78 290 L 102 185 M 155 330 L 106 312"
+              d="M 170 140 L 185 190 L 195 240 M 50 50 L 25 65 L 0 75 M 122 268 L 150 315 L 180 340 M 68 340 L 40 310 L 12 280"
               stroke="#ffffff"
               strokeWidth="1.0"
               strokeLinecap="round"
@@ -242,12 +223,11 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
             />
 
-            {/* --- 3. Third Wave: MASSIVE PERIYA CRACK (Starts after 0.5s = 1.0s) --- */}
-            {/* Heavy glowing green under-fracture for the massive crack */}
+            {/* --- WAVE 3 (1.0s): MASSIVE CATASTROPHIC FRACTURE (Connects remaining untouched edges before shatter) --- */}
             <motion.path
-              d="M 10 30 L 58 75 L 42 140 L 102 185 L 165 230 L 140 310 L 190 380 M 195 20 L 145 80 L 102 185 L 60 260 L 15 370"
+              d="M 0 135 L 35 152 L 85 200 L 122 268 L 165 310 L 200 330"
               stroke="#10b981"
-              strokeWidth="7.0"
+              strokeWidth="5.0"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
@@ -256,11 +236,10 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               animate={{ pathLength: 1 }}
               transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
             />
-            {/* White-hot jagged giant fracture tearing right across the card diagonal */}
             <motion.path
-              d="M 10 30 L 58 75 L 42 140 L 102 185 L 165 230 L 140 310 L 190 380 M 195 20 L 145 80 L 102 185 L 60 260 L 15 370"
+              d="M 0 135 L 35 152 L 85 200 L 122 268 L 165 310 L 200 330"
               stroke="#ffffff"
-              strokeWidth="2.8"
+              strokeWidth="2.2"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
