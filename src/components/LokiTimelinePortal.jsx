@@ -36,7 +36,7 @@ export default function LokiTimelinePortal() {
         className="absolute inset-0"
         style={{
           background: 'radial-gradient(circle at 55% 50%, rgba(16,185,129,0.7) 0%, rgba(5,150,105,0.5) 35%, rgba(4,120,87,0.35) 60%, rgba(2,44,34,0.85) 90%)',
-          filter: 'blur(30px)'
+          willChange: 'transform, opacity'
         }}
       />
 
@@ -56,7 +56,7 @@ export default function LokiTimelinePortal() {
 
       {/* 2. The Organic Asymmetrical Portal Opening (Matching reference image shape) */}
       <div 
-        className="absolute inset-y-0 w-full max-w-[420px] flex items-center justify-center"
+        className="absolute inset-y-0 w-full max-w-[420px] flex items-center justify-center pointer-events-none"
         style={{ willChange: 'transform', transform: 'translateZ(0)' }}
       >
         {/* Outer illuminated cloudy rift lip */}
@@ -69,7 +69,7 @@ export default function LokiTimelinePortal() {
           className="absolute h-full w-56 sm:w-64"
           style={{
             background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.9) 0%, rgba(52,211,153,0.7) 35%, rgba(16,185,129,0.4) 65%, transparent 85%)',
-            filter: 'url(#lokiOrganicRiftEdge) blur(12px)'
+            willChange: 'transform, opacity'
           }}
         />
 
@@ -85,8 +85,8 @@ export default function LokiTimelinePortal() {
             background: 'radial-gradient(ellipse at 50% 55%, #052e24 0%, #022018 45%, #01140e 75%, transparent 100%)',
             borderLeft: '3px solid rgba(209,250,229,0.85)',
             borderRight: '3px solid rgba(209,250,229,0.85)',
-            boxShadow: '0 0 45px rgba(52,211,153,0.9), inset 0 0 35px rgba(0,0,0,0.85)',
-            filter: 'url(#lokiOrganicRiftEdge) blur(4px)'
+            boxShadow: '0 0 35px rgba(52,211,153,0.85), inset 0 0 25px rgba(0,0,0,0.85)',
+            willChange: 'transform'
           }}
         />
 
@@ -97,7 +97,8 @@ export default function LokiTimelinePortal() {
             opacity: [0.75, 1, 0.75]
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[62%] w-10 h-10 rounded-full bg-emerald-200/90 blur-md shadow-[0_0_40px_#a7f3d0,0_0_80px_#34d399]"
+          className="absolute top-[62%] w-10 h-10 rounded-full bg-emerald-200/90 shadow-[0_0_30px_#a7f3d0,0_0_60px_#34d399]"
+          style={{ willChange: 'transform, opacity' }}
         />
 
         {/* Intense white-mint core tear spine */}
@@ -110,8 +111,8 @@ export default function LokiTimelinePortal() {
           className="absolute h-full w-4 sm:w-5"
           style={{
             background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(209,250,229,0.95) 25%, #ffffff 60%, rgba(167,243,208,0.9) 85%, rgba(255,255,255,0.1) 100%)',
-            boxShadow: '0 0 25px #6ee7b7, 0 0 50px #10b981',
-            filter: 'url(#lokiOrganicRiftEdge) blur(3px)'
+            boxShadow: '0 0 20px #6ee7b7, 0 0 35px #10b981',
+            willChange: 'transform, opacity'
           }}
         />
       </div>
