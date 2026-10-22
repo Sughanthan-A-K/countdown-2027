@@ -4,17 +4,17 @@ import { motion } from 'framer-motion';
 /**
  * LokiTimelinePortal
  * 
- * Clean, unmistakable vertical portal with natural branches:
- * - NO boiling bubbles / mist specks.
- * - CLEAR portal silhouette: Distinct luminous vertical rift border running top-to-bottom.
- * - Natural, asynchronous dark timeline branches (distributed organically around the screen,
- *   NOT converging into a single fake 'X' at the center).
- * - Soft organic emerald breathing glow inside the rift.
+ * Exact 1:1 reproduction of user's cropped reference image (media_1792648096199_6df691ae.png):
+ * - The portal IS the actual photo texture from Loki Season 2 finale:
+ *   An organic, cloudy vertical river of green multiverse light with undulating smoke edges.
+ * - Branches: Placed naturally on the sides and behind/off-center, moving VERY SLOWLY & SUBTLY
+ *   so they NEVER cover or obscure the central portal opening.
+ * - Clean dark background.
  */
 export default function LokiTimelinePortal() {
   return (
     <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-30 overflow-hidden">
-      {/* 1. Deep Space Atmosphere */}
+      {/* 1. Deep Space Void Backdrop */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -22,175 +22,184 @@ export default function LokiTimelinePortal() {
         className="absolute inset-0 bg-black/95 pointer-events-none"
       />
 
-      {/* SVG Filters for organic edge undulation */}
-      <svg className="absolute w-0 h-0 pointer-events-none">
-        <defs>
-          <filter id="portalOrganicEdge" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.02 0.05" numOctaves="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-          
-          <filter id="branchDarkShadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-      </svg>
-
-      {/* 2. Outer Portal Glow Halo */}
+      {/* 2. Soft Ambient Green Atmosphere */}
       <motion.div
-        animate={{
-          opacity: [0.55, 0.8, 0.55],
-          scaleX: [0.95, 1.05, 0.95]
-        }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute h-screen w-72 sm:w-88 pointer-events-none"
+        animate={{ opacity: [0.4, 0.65, 0.4] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute h-screen w-96 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(16,185,129,0.5) 0%, rgba(6,78,59,0.25) 45%, transparent 75%)',
-          filter: 'blur(45px)'
+          background: 'radial-gradient(ellipse at center, rgba(16,185,129,0.4) 0%, rgba(6,78,59,0.2) 50%, transparent 75%)',
+          filter: 'blur(60px)'
         }}
       />
 
-      {/* 3. Distinct Portal Outer Edge & Body (Clear unmistakable vertical opening) */}
-      <motion.div
-        animate={{
-          scaleX: [0.92, 1.08, 0.92],
-          opacity: [0.85, 1, 0.85]
-        }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute h-screen w-32 sm:w-44 pointer-events-none"
-        style={{
-          background: 'linear-gradient(180deg, rgba(6,78,59,0.2) 0%, rgba(16,185,129,0.85) 15%, rgba(52,211,153,0.95) 50%, rgba(16,185,129,0.85) 85%, rgba(6,78,59,0.2) 100%)',
-          borderLeft: '2px solid rgba(110,231,183,0.9)',
-          borderRight: '2px solid rgba(110,231,183,0.9)',
-          boxShadow: '0 0 35px rgba(16,185,129,0.8), inset 0 0 30px rgba(52,211,153,0.6)',
-          filter: 'url(#portalOrganicEdge) blur(8px)'
-        }}
-      />
+      {/* 3. The Authentic Loki Portal Texture (1:1 from Loki Season 2 Finale) */}
+      <div className="relative h-screen w-72 sm:w-80 flex items-center justify-center overflow-hidden pointer-events-none">
+        {/* Actual high-res cinematic frame of the vertical Loom portal cropped from the reference */}
+        <motion.div
+          animate={{
+            scaleY: [1, 1.03, 1],
+            scaleX: [1, 1.05, 1],
+            opacity: [0.92, 1, 0.92]
+          }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 w-full h-full"
+          style={{
+            backgroundImage: 'url("/Examples/loki_portal_texture.jpg")',
+            backgroundPosition: 'right 32% center', // Exactly lines up the vertical green cloud tear from the photo
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            // Soft feathered organic mask so the cloudy portal seamlessly blends into the dark void
+            maskImage: 'linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+            maskComposite: 'intersect',
+            WebkitMaskComposite: 'destination-in'
+          }}
+        />
 
-      {/* 4. Central Intense Luminous Core (Soft glowing tear through spacetime) */}
-      <motion.div
-        animate={{
-          opacity: [0.9, 1, 0.9],
-          scaleX: [0.85, 1.15, 0.85]
-        }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute h-screen w-10 sm:w-14 pointer-events-none"
-        style={{
-          background: 'linear-gradient(180deg, rgba(209,250,229,0.3) 0%, rgba(167,243,208,0.95) 20%, #ffffff 50%, rgba(167,243,208,0.95) 80%, rgba(209,250,229,0.3) 100%)',
-          boxShadow: '0 0 25px #6ee7b7, 0 0 50px #10b981',
-          filter: 'url(#portalOrganicEdge) blur(4px)'
-        }}
-      />
+        {/* Inner breathing luminous glow enhancement along the organic cloudy core */}
+        <motion.div
+          animate={{
+            opacity: [0.6, 0.9, 0.6],
+            scaleX: [0.9, 1.15, 0.9]
+          }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute h-full w-24 sm:w-28 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(209,250,229,0.7) 0%, rgba(110,231,183,0.5) 30%, transparent 70%)',
+            filter: 'blur(16px)',
+            mixBlendMode: 'screen'
+          }}
+        />
+      </div>
 
-      {/* 5. Natural Organic Dark Timeline Branches (Scattered naturally, NO central 'X') */}
+      {/* 4. Natural Dark Timeline Branches (Shifted to the sides so they NEVER block the central portal) */}
       <svg 
         viewBox="0 0 1000 1000" 
         preserveAspectRatio="none"
         className="absolute inset-0 w-full h-full pointer-events-none" 
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Branch 1: High diagonal vine crossing the top section */}
+        <defs>
+          <filter id="branchDarkShadowSoft" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Side Branch 1: Top-Right branch, stays on the right perimeter (doesn't cross center) */}
         <motion.path
-          d="M 50 180 Q 320 280 500 240 T 950 120"
+          d="M 680 80 Q 820 220 960 380"
           fill="none"
           stroke="#022c22"
-          strokeWidth="12"
+          strokeWidth="10"
           strokeLinecap="round"
-          filter="url(#branchDarkShadow)"
+          filter="url(#branchDarkShadowSoft)"
           animate={{
             d: [
-              "M 50 180 Q 320 280 500 240 T 950 120",
-              "M 50 190 Q 340 270 500 250 T 950 130",
-              "M 50 180 Q 320 280 500 240 T 950 120"
-            ],
-            opacity: [0.85, 1, 0.85]
+              "M 680 80 Q 820 220 960 380",
+              "M 685 85 Q 815 225 960 375",
+              "M 680 80 Q 820 220 960 380"
+            ]
           }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.path
-          d="M 50 180 Q 320 280 500 240 T 950 120"
+          d="M 680 80 Q 820 220 960 380"
           fill="none"
           stroke="#064e3b"
-          strokeWidth="5"
+          strokeWidth="4"
           strokeLinecap="round"
         />
 
-        {/* Branch 2: Steep diagonal branch sweeping through the lower section */}
+        {/* Side Branch 2: Top-Left branch, stays cleanly on the left */}
         <motion.path
-          d="M 120 850 Q 380 720 540 680 T 920 620"
+          d="M 40 120 Q 180 260 320 380"
           fill="none"
           stroke="#022c22"
           strokeWidth="11"
           strokeLinecap="round"
-          filter="url(#branchDarkShadow)"
+          filter="url(#branchDarkShadowSoft)"
           animate={{
             d: [
-              "M 120 850 Q 380 720 540 680 T 920 620",
-              "M 120 840 Q 400 730 530 690 T 920 610",
-              "M 120 850 Q 380 720 540 680 T 920 620"
-            ],
-            opacity: [0.8, 0.95, 0.8]
+              "M 40 120 Q 180 260 320 380",
+              "M 35 125 Q 185 255 320 385",
+              "M 40 120 Q 180 260 320 380"
+            ]
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
         <motion.path
-          d="M 120 850 Q 380 720 540 680 T 920 620"
+          d="M 40 120 Q 180 260 320 380"
           fill="none"
           stroke="#064e3b"
           strokeWidth="4"
           strokeLinecap="round"
         />
 
-        {/* Branch 3: Single steep angled vine passing across middle at a natural offset */}
+        {/* Side Branch 3: Lower-Left gentle curve */}
         <motion.path
-          d="M 880 280 Q 650 450 420 520 T 80 620"
+          d="M 60 780 Q 200 680 340 620"
           fill="none"
           stroke="#011e17"
-          strokeWidth="10"
+          strokeWidth="9"
           strokeLinecap="round"
-          filter="url(#branchDarkShadow)"
+          filter="url(#branchDarkShadowSoft)"
           animate={{
             d: [
-              "M 880 280 Q 650 450 420 520 T 80 620",
-              "M 870 290 Q 660 440 430 510 T 80 630",
-              "M 880 280 Q 650 450 420 520 T 80 620"
-            ],
-            opacity: [0.85, 1, 0.85]
+              "M 60 780 Q 200 680 340 620",
+              "M 65 775 Q 195 685 340 625",
+              "M 60 780 Q 200 680 340 620"
+            ]
           }}
-          transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+        />
+
+        {/* Side Branch 4: Lower-Right diagonal sweeping away */}
+        <motion.path
+          d="M 660 640 Q 800 740 940 860"
+          fill="none"
+          stroke="#022c22"
+          strokeWidth="10"
+          strokeLinecap="round"
+          filter="url(#branchDarkShadowSoft)"
+          animate={{
+            d: [
+              "M 660 640 Q 800 740 940 860",
+              "M 655 645 Q 805 735 940 855",
+              "M 660 640 Q 800 740 940 860"
+            ]
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
         />
         <motion.path
-          d="M 880 280 Q 650 450 420 520 T 80 620"
+          d="M 660 640 Q 800 740 940 860"
           fill="none"
           stroke="#064e3b"
           strokeWidth="4"
           strokeLinecap="round"
         />
 
-        {/* Branch 4: Thin subtle timeline thread near top right */}
+        {/* Single authentic crossing vine passing through the upper-third (exactly like in Image 2) */}
         <motion.path
-          d="M 600 40 Q 750 180 880 320"
+          d="M 100 240 Q 500 290 900 180"
           fill="none"
-          stroke="#064e3b"
-          strokeWidth="4"
-          strokeDasharray="6 4"
-          animate={{ opacity: [0.5, 0.85, 0.5] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        />
-
-        {/* Branch 5: Thin subtle timeline thread near bottom left */}
-        <motion.path
-          d="M 80 400 Q 220 520 340 700"
-          fill="none"
-          stroke="#064e3b"
-          strokeWidth="4"
-          strokeDasharray="6 4"
-          animate={{ opacity: [0.5, 0.85, 0.5] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          stroke="#022c22"
+          strokeWidth="7"
+          strokeLinecap="round"
+          filter="url(#branchDarkShadowSoft)"
+          animate={{
+            d: [
+              "M 100 240 Q 500 290 900 180",
+              "M 100 245 Q 500 285 900 185",
+              "M 100 240 Q 500 290 900 180"
+            ],
+            opacity: [0.75, 0.9, 0.75]
+          }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
         />
       </svg>
     </div>
