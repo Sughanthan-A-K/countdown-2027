@@ -83,39 +83,69 @@ function DraggableBranch({ children, origin = "500px 300px", windConfig }) {
 export default function LokiTimelinePortal() {
   return (
     <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
-      {/* 1. Full Page Deep Emerald Atmospheric Glow & Reflection (Flooding the entire screen like in reference) */}
+      {/* 1. Full Page Deep Emerald Atmospheric Glow & Reflection (Multi-Gradient Emerald Cosmic Aurora) */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
-        className="absolute inset-0 bg-[#00140c]"
+        className="absolute inset-0 bg-[#01140e]"
       />
 
-      {/* Layer 1: Vivid Luminous Sacred Timeline Green Aurora Atmosphere */}
+      {/* Layer 1: Base Deep Forest & Pine Green Cosmic Sea */}
       <motion.div
         animate={{
           opacity: [0.85, 1, 0.85],
           scale: [1, 1.08, 1]
         }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.85) 0%, rgba(22,163,74,0.7) 35%, rgba(21,128,61,0.5) 60%, rgba(2,30,18,0.92) 90%)',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.7) 0%, rgba(5,150,105,0.6) 30%, rgba(4,120,87,0.45) 55%, rgba(6,78,59,0.7) 75%, rgba(1,20,14,0.95) 92%)',
           filter: 'blur(35px)'
         }}
       />
 
-      {/* Layer 2: Radiant Center Halo Aura (Vibrant Loki Mint & Electric Jade Glow behind the Portal) */}
+      {/* Layer 2: Electric Seafoam & Mint Green Flowing Aurora Ribbons (Upper diagonal tilt) */}
+      <motion.div
+        animate={{
+          rotate: [-4, 4, -4],
+          scale: [0.95, 1.1, 0.95],
+          opacity: [0.55, 0.85, 0.55]
+        }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -inset-24 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 35% 30%, rgba(110,231,183,0.55) 0%, rgba(52,211,153,0.4) 25%, rgba(16,185,129,0.2) 50%, transparent 75%)',
+          filter: 'blur(45px)'
+        }}
+      />
+
+      {/* Layer 3: Toxic Jade & Acid Lime Cosmic Shimmer (Lower counter diagonal tilt) */}
+      <motion.div
+        animate={{
+          rotate: [4, -4, 4],
+          scale: [1.05, 0.92, 1.05],
+          opacity: [0.45, 0.75, 0.45]
+        }}
+        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        className="absolute -inset-24 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 65% 70%, rgba(52,211,153,0.5) 0%, rgba(16,185,129,0.35) 25%, rgba(6,95,70,0.3) 55%, transparent 80%)',
+          filter: 'blur(50px)'
+        }}
+      />
+
+      {/* Layer 4: Radiant Center Halo Aura (Multi-variant Emerald, Jade, Mint & Aquamarine Core) */}
       <motion.div
         animate={{
           scale: [0.95, 1.15, 0.95],
-          opacity: [0.8, 1, 0.8]
+          opacity: [0.75, 0.95, 0.75]
         }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-[600px] h-[85vh] rounded-full pointer-events-none"
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute w-[680px] h-[90vh] rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(74,222,128,0.8) 0%, rgba(34,197,94,0.6) 40%, rgba(22,163,74,0.3) 70%, transparent 95%)',
-          filter: 'blur(45px)'
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.7) 0%, rgba(52,211,153,0.6) 22%, rgba(16,185,129,0.45) 45%, rgba(5,150,105,0.25) 70%, rgba(6,78,59,0.1) 85%, transparent 100%)',
+          filter: 'blur(40px)'
         }}
       />
 
@@ -159,7 +189,7 @@ export default function LokiTimelinePortal() {
           className="absolute h-[120vh] w-64 sm:w-80 pointer-events-none"
           style={{
             transformOrigin: "52% 48%",
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(187,247,208,0.85) 0%, rgba(74,222,128,0.65) 30%, rgba(34,197,94,0.35) 55%, transparent 75%)',
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.85) 0%, rgba(52,211,153,0.6) 30%, rgba(16,185,129,0.3) 55%, transparent 75%)',
             filter: 'blur(25px)'
           }}
         />
@@ -187,12 +217,12 @@ export default function LokiTimelinePortal() {
           className="absolute h-[115vh] w-24 sm:w-36 pointer-events-none"
           style={{
             transformOrigin: "52% 46%", // Off-center origin so width increases asymmetrically
-            background: 'radial-gradient(ellipse at 50% 55%, #052e16 0%, #022110 45%, #00140a 80%, transparent 100%)',
-            borderLeft: '4px solid #dcfce7',
-            borderRight: '4px solid #86efac',
-            borderTop: '3px solid #4ade80',
-            borderBottom: '4px solid #22c55e',
-            boxShadow: '0 0 40px #86efac, 0 0 85px #4ade80, 0 0 140px #22c55e, inset 0 0 35px rgba(22,163,74,0.35)',
+            background: 'radial-gradient(ellipse at 50% 55%, #04251c 0%, #021a13 45%, #010f0a 80%, transparent 100%)',
+            borderLeft: '4px solid #d1fae5',
+            borderRight: '4px solid #a7f3d0',
+            borderTop: '3px solid #6ee7b7',
+            borderBottom: '4px solid #34d399',
+            boxShadow: '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 110px #10b981, inset 0 0 30px rgba(0,0,0,0.9)',
             filter: 'url(#lokiOrganicRiftEdge)'
           }}
         />
@@ -204,7 +234,7 @@ export default function LokiTimelinePortal() {
             opacity: [0.85, 1, 0.85]
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[58%] w-12 h-12 rounded-full bg-green-100 blur-sm shadow-[0_0_50px_#86efac,0_0_100px_#4ade80,0_0_160px_#22c55e] pointer-events-none"
+          className="absolute top-[58%] w-12 h-12 rounded-full bg-emerald-100 blur-sm shadow-[0_0_50px_#a7f3d0,0_0_100px_#34d399,0_0_160px_#10b981] pointer-events-none"
         />
 
         {/* Intense white-mint core tear spine (Contained height with organic natural pinch at top and bottom) */}
@@ -220,8 +250,8 @@ export default function LokiTimelinePortal() {
           }}
           className="absolute h-[110vh] w-5 sm:w-6 pointer-events-none rounded-[50%]"
           style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(187,247,208,0.95) 15%, #ffffff 50%, rgba(134,239,172,0.95) 85%, transparent 100%)',
-            boxShadow: '0 0 35px #86efac, 0 0 75px #4ade80, 0 0 130px #22c55e',
+            background: 'linear-gradient(180deg, transparent 0%, rgba(209,250,229,0.9) 15%, #ffffff 50%, rgba(167,243,208,0.9) 85%, transparent 100%)',
+            boxShadow: '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 120px #10b981',
             filter: 'url(#lokiOrganicRiftEdge) blur(2.5px)'
           }}
         />
