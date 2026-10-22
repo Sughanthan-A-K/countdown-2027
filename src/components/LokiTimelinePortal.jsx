@@ -1,5 +1,73 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
+
+function DraggableBranch({ children, origin = "500px 300px", windConfig }) {
+  // Raw target offsets driven by user drag gestures
+  const targetX = useMotionValue(0);
+  const targetY = useMotionValue(0);
+
+  // Ultra-heavy damped spring: Even if user drags fast, spring moves slowly and resists speed!
+  const smoothX = useSpring(targetX, { stiffness: 18, damping: 25, mass: 2.5 });
+  const smoothY = useSpring(targetY, { stiffness: 18, damping: 25, mass: 2.5 });
+
+  const isDragging = useRef(false);
+
+  const handlePointerDown = (e) => {
+    isDragging.current = true;
+    const startClientX = e.clientX;
+    const startClientY = e.clientY;
+    const initialTargetX = targetX.get();
+    const initialTargetY = targetY.get();
+
+    const handlePointerMove = (moveEvent) => {
+      if (!isDragging.current) return;
+      const dx = moveEvent.clientX - startClientX;
+      const dy = moveEvent.clientY - startClientY;
+      
+      // Heavy friction scaling factor (0.18): Dragging mouse 100px only moves target 18px!
+      const resistanceFactor = 0.18;
+      const clampedX = Math.max(-80, Math.min(80, initialTargetX + dx * resistanceFactor));
+      const clampedY = Math.max(-60, Math.min(60, initialTargetY + dy * resistanceFactor));
+      
+      targetX.set(clampedX);
+      targetY.set(clampedY);
+    };
+
+    const handlePointerUp = () => {
+      isDragging.current = false;
+      // When released, target springs smoothly back to origin (0, 0)
+      targetX.set(0);
+      targetY.set(0);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerUp);
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
+  };
+
+  return (
+    <motion.g
+      animate={{ 
+        y: windConfig.y,
+        x: windConfig.x,
+        rotate: windConfig.rotate
+      }}
+      transition={{ duration: windConfig.duration, repeat: Infinity, ease: "easeInOut", delay: windConfig.delay || 0 }}
+      style={{ transformOrigin: origin }}
+    >
+      <motion.g
+        style={{ x: smoothX, y: smoothY, transformOrigin: origin }}
+        onPointerDown={handlePointerDown}
+        className="pointer-events-auto cursor-grab active:cursor-grabbing select-none"
+      >
+        {children}
+      </motion.g>
+    </motion.g>
+  );
+}
 
 /**
  * LokiTimelinePortal
@@ -118,303 +186,228 @@ export default function LokiTimelinePortal() {
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* Branch 1: Upper graceful arc crossing from beyond left (-150) to beyond right (1150) */}
-        <motion.g
-          animate={{ 
+        <DraggableBranch
+          origin="500px 300px"
+          windConfig={{
             y: [-14, 14, -14],
             x: [-8, 8, -8],
-            rotate: [-0.8, 0.8, -0.8]
+            rotate: [-0.8, 0.8, -0.8],
+            duration: 18,
+            delay: 0
           }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          style={{ transformOrigin: "500px 300px" }}
         >
-          <motion.g
-            drag
-            dragSnapToOrigin
-            dragElastic={0.035}
-            dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
-            dragTransition={{ 
-              power: 0,
-              timeConstant: 1800,
-              bounceStiffness: 12, 
-              bounceDamping: 22 
-            }}
-            whileDrag={{ cursor: 'grabbing' }}
-            className="pointer-events-auto cursor-grab"
-            style={{ transformOrigin: "500px 300px" }}
-          >
-            {/* Invisible extra-wide hit-area stroke for effortless grab anywhere across the branch */}
-            <path
-              d="M -150 220 Q 250 340, 500 370 T 1150 390"
-              fill="none"
-              stroke="#000000"
-              strokeOpacity="0.001"
-              strokeWidth="90"
-              strokeLinecap="round"
-            />
-            {/* Ambient drop shadow */}
-            <path
-              d="M -150 220 Q 250 340, 500 370 T 1150 390"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="16"
-              strokeLinecap="round"
-              opacity="0.95"
-            />
-            {/* Main Dark Silhouette Body */}
-            <path
-              d="M -150 220 Q 250 340, 500 370 T 1150 390"
-              fill="none"
-              stroke="#050a08"
-              strokeWidth="11"
-              strokeLinecap="round"
-            />
-            {/* Subtle Darkest Emerald Edge Glint */}
-            <path
-              d="M -150 219 Q 250 339, 500 369 T 1150 389"
-              fill="none"
-              stroke="#062d22"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              opacity="0.6"
-            />
-          </motion.g>
-        </motion.g>
+          {/* Invisible extra-wide hit-area stroke for effortless grab anywhere across the branch */}
+          <path
+            d="M -150 220 Q 250 340, 500 370 T 1150 390"
+            fill="none"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
+            strokeLinecap="round"
+          />
+          {/* Ambient drop shadow */}
+          <path
+            d="M -150 220 Q 250 340, 500 370 T 1150 390"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="16"
+            strokeLinecap="round"
+            opacity="0.95"
+          />
+          {/* Main Dark Silhouette Body */}
+          <path
+            d="M -150 220 Q 250 340, 500 370 T 1150 390"
+            fill="none"
+            stroke="#050a08"
+            strokeWidth="11"
+            strokeLinecap="round"
+          />
+          {/* Subtle Darkest Emerald Edge Glint */}
+          <path
+            d="M -150 219 Q 250 339, 500 369 T 1150 389"
+            fill="none"
+            stroke="#062d22"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            opacity="0.6"
+          />
+        </DraggableBranch>
 
         {/* Branch 2: High Sweeping gentle branch */}
-        <motion.g
-          animate={{ 
+        <DraggableBranch
+          origin="500px 150px"
+          windConfig={{
             y: [12, -12, 12],
             x: [6, -6, 6],
-            rotate: [1.0, -1.0, 1.0]
+            rotate: [1.0, -1.0, 1.0],
+            duration: 22,
+            delay: 1
           }}
-          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          style={{ transformOrigin: "500px 150px" }}
         >
-          <motion.g
-            drag
-            dragSnapToOrigin
-            dragElastic={0.035}
-            dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
-            dragTransition={{ 
-              power: 0,
-              timeConstant: 1800,
-              bounceStiffness: 12, 
-              bounceDamping: 22 
-            }}
-            whileDrag={{ cursor: 'grabbing' }}
-            className="pointer-events-auto cursor-grab"
-            style={{ transformOrigin: "500px 150px" }}
-          >
-            <path
-              d="M -120 70 Q 400 160, 680 140 T 1120 180"
-              fill="none"
-              stroke="#000000"
-              strokeOpacity="0.001"
-              strokeWidth="90"
-              strokeLinecap="round"
-            />
-            <path
-              d="M -120 70 Q 400 160, 680 140 T 1120 180"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="14"
-              strokeLinecap="round"
-              opacity="0.9"
-            />
-            <path
-              d="M -120 70 Q 400 160, 680 140 T 1120 180"
-              fill="none"
-              stroke="#050a08"
-              strokeWidth="9"
-              strokeLinecap="round"
-            />
-            <path
-              d="M -120 69 Q 400 159, 680 139 T 1120 179"
-              fill="none"
-              stroke="#062d22"
-              strokeWidth="2"
-              strokeLinecap="round"
-              opacity="0.6"
-            />
-          </motion.g>
-        </motion.g>
+          <path
+            d="M -120 70 Q 400 160, 680 140 T 1120 180"
+            fill="none"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
+            strokeLinecap="round"
+          />
+          <path
+            d="M -120 70 Q 400 160, 680 140 T 1120 180"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="14"
+            strokeLinecap="round"
+            opacity="0.9"
+          />
+          <path
+            d="M -120 70 Q 400 160, 680 140 T 1120 180"
+            fill="none"
+            stroke="#050a08"
+            strokeWidth="9"
+            strokeLinecap="round"
+          />
+          <path
+            d="M -120 69 Q 400 159, 680 139 T 1120 179"
+            fill="none"
+            stroke="#062d22"
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity="0.6"
+          />
+        </DraggableBranch>
 
         {/* Branch 3: Lower Ascending Vine (Smooth continuous bezier curve) */}
-        <motion.g
-          animate={{ 
+        <DraggableBranch
+          origin="500px 750px"
+          windConfig={{
             y: [-16, 16, -16],
             x: [-6, 6, -6],
-            rotate: [-0.9, 0.9, -0.9]
+            rotate: [-0.9, 0.9, -0.9],
+            duration: 20,
+            delay: 2
           }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          style={{ transformOrigin: "500px 750px" }}
         >
-          <motion.g
-            drag
-            dragSnapToOrigin
-            dragElastic={0.035}
-            dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
-            dragTransition={{ 
-              power: 0,
-              timeConstant: 1800,
-              bounceStiffness: 12, 
-              bounceDamping: 22 
-            }}
-            whileDrag={{ cursor: 'grabbing' }}
-            className="pointer-events-auto cursor-grab"
-            style={{ transformOrigin: "500px 750px" }}
-          >
-            <path
-              d="M -150 820 Q 200 720, 520 670 T 1150 860"
-              fill="none"
-              stroke="#000000"
-              strokeOpacity="0.001"
-              strokeWidth="90"
-              strokeLinecap="round"
-            />
-            <path
-              d="M -150 820 Q 200 720, 520 670 T 1150 860"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="16"
-              strokeLinecap="round"
-              opacity="0.95"
-            />
-            <path
-              d="M -150 820 Q 200 720, 520 670 T 1150 860"
-              fill="none"
-              stroke="#050a08"
-              strokeWidth="12"
-              strokeLinecap="round"
-            />
-            <path
-              d="M -150 819 Q 200 719, 520 669 T 1150 859"
-              fill="none"
-              stroke="#062d22"
-              strokeWidth="3"
-              strokeLinecap="round"
-              opacity="0.6"
-            />
-          </motion.g>
-        </motion.g>
+          <path
+            d="M -150 820 Q 200 720, 520 670 T 1150 860"
+            fill="none"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
+            strokeLinecap="round"
+          />
+          <path
+            d="M -150 820 Q 200 720, 520 670 T 1150 860"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="16"
+            strokeLinecap="round"
+            opacity="0.95"
+          />
+          <path
+            d="M -150 820 Q 200 720, 520 670 T 1150 860"
+            fill="none"
+            stroke="#050a08"
+            strokeWidth="12"
+            strokeLinecap="round"
+          />
+          <path
+            d="M -150 819 Q 200 719, 520 669 T 1150 859"
+            fill="none"
+            stroke="#062d22"
+            strokeWidth="3"
+            strokeLinecap="round"
+            opacity="0.6"
+          />
+        </DraggableBranch>
 
         {/* Branch 4: Long Diagonal Branch crossing gracefully through the rift */}
-        <motion.g
-          animate={{ 
+        <DraggableBranch
+          origin="500px 500px"
+          windConfig={{
             x: [-12, 12, -12],
             y: [10, -10, 10],
-            rotate: [-0.6, 0.6, -0.6]
+            rotate: [-0.6, 0.6, -0.6],
+            duration: 24,
+            delay: 0.5
           }}
-          transition={{ duration: 24, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          style={{ transformOrigin: "500px 500px" }}
         >
-          <motion.g
-            drag
-            dragSnapToOrigin
-            dragElastic={0.035}
-            dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
-            dragTransition={{ 
-              power: 0,
-              timeConstant: 1800,
-              bounceStiffness: 12, 
-              bounceDamping: 22 
-            }}
-            whileDrag={{ cursor: 'grabbing' }}
-            className="pointer-events-auto cursor-grab"
-            style={{ transformOrigin: "500px 500px" }}
-          >
-            <path
-              d="M 1150 80 Q 750 380, 450 550 T -120 880"
-              fill="none"
-              stroke="#000000"
-              strokeOpacity="0.001"
-              strokeWidth="90"
-              strokeLinecap="round"
-            />
-            <path
-              d="M 1150 80 Q 750 380, 450 550 T -120 880"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="12"
-              strokeLinecap="round"
-              opacity="0.9"
-            />
-            <path
-              d="M 1150 80 Q 750 380, 450 550 T -120 880"
-              fill="none"
-              stroke="#050a08"
-              strokeWidth="8"
-              strokeLinecap="round"
-            />
-            <path
-              d="M 1150 79 Q 750 379, 450 549 T -120 879"
-              fill="none"
-              stroke="#062d22"
-              strokeWidth="2"
-              strokeLinecap="round"
-              opacity="0.6"
-            />
-          </motion.g>
-        </motion.g>
+          <path
+            d="M 1150 80 Q 750 380, 450 550 T -120 880"
+            fill="none"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 1150 80 Q 750 380, 450 550 T -120 880"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="12"
+            strokeLinecap="round"
+            opacity="0.9"
+          />
+          <path
+            d="M 1150 80 Q 750 380, 450 550 T -120 880"
+            fill="none"
+            stroke="#050a08"
+            strokeWidth="8"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 1150 79 Q 750 379, 450 549 T -120 879"
+            fill="none"
+            stroke="#062d22"
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity="0.6"
+          />
+        </DraggableBranch>
 
         {/* Branch 5: Mid-lower gentle horizontal vine */}
-        <motion.g
-          animate={{ 
+        <DraggableBranch
+          origin="500px 520px"
+          windConfig={{
             y: [12, -12, 12],
             x: [8, -8, 8],
-            rotate: [0.7, -0.7, 0.7]
+            rotate: [0.7, -0.7, 0.7],
+            duration: 19,
+            delay: 2.5
           }}
-          transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
-          style={{ transformOrigin: "500px 520px" }}
         >
-          <motion.g
-            drag
-            dragSnapToOrigin
-            dragElastic={0.035}
-            dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
-            dragTransition={{ 
-              power: 0,
-              timeConstant: 1800,
-              bounceStiffness: 12, 
-              bounceDamping: 22 
-            }}
-            whileDrag={{ cursor: 'grabbing' }}
-            className="pointer-events-auto cursor-grab"
-            style={{ transformOrigin: "500px 520px" }}
-          >
-            <path
-              d="M -100 480 Q 300 420, 650 490 T 1150 510"
-              fill="none"
-              stroke="#000000"
-              strokeOpacity="0.001"
-              strokeWidth="90"
-              strokeLinecap="round"
-            />
-            <path
-              d="M -100 480 Q 300 420, 650 490 T 1150 510"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="12"
-              strokeLinecap="round"
-              opacity="0.9"
-            />
-            <path
-              d="M -100 480 Q 300 420, 650 490 T 1150 510"
-              fill="none"
-              stroke="#050a08"
-              strokeWidth="7.5"
-              strokeLinecap="round"
-            />
-            <path
-              d="M -100 479 Q 300 419, 650 489 T 1150 509"
-              fill="none"
-              stroke="#062d22"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              opacity="0.6"
-            />
-          </motion.g>
-        </motion.g>
+          <path
+            d="M -100 480 Q 300 420, 650 490 T 1150 510"
+            fill="none"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
+            strokeLinecap="round"
+          />
+          <path
+            d="M -100 480 Q 300 420, 650 490 T 1150 510"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="12"
+            strokeLinecap="round"
+            opacity="0.9"
+          />
+          <path
+            d="M -100 480 Q 300 420, 650 490 T 1150 510"
+            fill="none"
+            stroke="#050a08"
+            strokeWidth="7.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M -100 479 Q 300 419, 650 489 T 1150 509"
+            fill="none"
+            stroke="#062d22"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            opacity="0.6"
+          />
+        </DraggableBranch>
       </svg>
     </div>
   );
