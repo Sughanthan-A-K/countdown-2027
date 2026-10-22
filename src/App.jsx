@@ -1227,8 +1227,29 @@ function App() {
                 </button>
               )}
 
-              <button 
+              {/* Theme Toggle Button (Flies away like glass explosion on Dec 16 Stage 4) */}
+              <motion.button 
                 onClick={toggleTheme}
+                initial={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }}
+                animate={
+                  isDec16Card && lokiCrackStage >= 4 ? {
+                    opacity: 0,
+                    x: 200,
+                    y: -180,
+                    scale: 0.2,
+                    rotate: 180,
+                    transition: { duration: 1.2, ease: [0.15, 0.85, 0.35, 1] }
+                  } : {
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                    scale: 1,
+                    rotate: 0
+                  }
+                }
+                style={{
+                  pointerEvents: isDec16Card && lokiCrackStage >= 4 ? 'none' : 'auto'
+                }}
                 className={`absolute top-8 right-8 z-[50] p-3 rounded-full border-2 shadow-md ${
                   isDarkMode 
                     ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
@@ -1236,7 +1257,7 @@ function App() {
                 }`}
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
+              </motion.button>
               
               <AnimatePresence>
                 {finalHintStep === 'theme' && !showInfo && (
@@ -1260,8 +1281,29 @@ function App() {
                 )}
               </AnimatePresence>
 
-              <button 
+              {/* Info Button (Flies away like glass explosion on Dec 16 Stage 4) */}
+              <motion.button 
                 onClick={handleInfoClick}
+                initial={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }}
+                animate={
+                  isDec16Card && lokiCrackStage >= 4 ? {
+                    opacity: 0,
+                    x: -200,
+                    y: -180,
+                    scale: 0.2,
+                    rotate: -180,
+                    transition: { duration: 1.2, ease: [0.15, 0.85, 0.35, 1] }
+                  } : {
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                    scale: 1,
+                    rotate: 0
+                  }
+                }
+                style={{
+                  pointerEvents: isDec16Card && lokiCrackStage >= 4 ? 'none' : 'auto'
+                }}
                 className={`absolute top-8 left-8 z-[50] p-3 rounded-full border-2 shadow-md ${
                   isDarkMode 
                     ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
@@ -1269,7 +1311,7 @@ function App() {
                 }`}
               >
                 <Info size={20} />
-              </button>
+              </motion.button>
               
               {isDevMode && (
                 <button 
@@ -1547,7 +1589,15 @@ function App() {
                       isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
-                        setLokiCrackStage(prev => Math.min(prev + 1, 4));
+                        setLokiCrackStage(prev => {
+                          const next = Math.min(prev + 1, 4);
+                          // On 4th tap (blast into portal), automatically switch into Dark Mode!
+                          if (next >= 4) {
+                            setIsDarkMode(true);
+                            localStorage.setItem('isDarkMode', 'true');
+                          }
+                          return next;
+                        });
                       }}
                     />
                   ))
