@@ -1545,7 +1545,7 @@ function App() {
                       isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
-                        setLokiCrackStage(prev => Math.min(prev + 1, 4));
+                        setLokiCrackStage(prev => Math.min(prev + 1, 3));
                       }}
                     />
                   ))

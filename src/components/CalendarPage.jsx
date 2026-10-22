@@ -200,6 +200,12 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         left: 0,
         width: '100%',
         height: '100%',
+        x: isTop ? x : 0,
+        y: isTop ? y : 0, 
+        rotateX: isTop ? rotateX : 0,
+        rotateY: isTop ? rotateY : 0,
+        rotateZ: isTop ? rotateZ : 0,
+        scale: 1, 
         transformOrigin: 'top center',
         backfaceVisibility: 'hidden'
       }}
@@ -208,11 +214,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       dragElastic={1.2} 
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      animate={
-        isTop && isDec16Blocked && lokiCrackStage >= 4 
-          ? undefined 
-          : (isTop && !isTorn ? { x: 0, y: 0, rotate: 0 } : undefined)
-      }
+      animate={isTop && !isTorn ? { x: 0, y: 0, rotate: 0 } : undefined}
       exit={{ 
         x: exitX, 
         y: exitY, 
@@ -224,34 +226,20 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
       transition={{ type: 'spring', stiffness: 300, damping: 25, mass: 0.5 }}
       className="absolute flex items-center justify-center inset-0 select-none touch-none"
     >
-      <motion.div 
-        style={{
-          x: isTop ? x : 0,
-          y: isTop ? y : 0, 
-          rotateX: isTop ? rotateX : 0,
-          rotateY: isTop ? rotateY : 0,
-          rotateZ: isTop ? rotateZ : 0,
-          scale: 1
-        }}
-        className="relative pt-4 w-full flex justify-center"
-      >
-        {/* Top binder rings / anchor tabs (Dec 16 split pieces carry their own binder ring) */}
-        {!(isTop && isDec16Blocked && lokiCrackStage >= 4) && (
-          <>
-            <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
-              isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
-              (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
-              (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
-              `${cardBg} ${cardBorder}`))
-            }`} />
-            <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
-              isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
-              (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
-              (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
-              `${cardBg} ${cardBorder}`))
-            }`} />
-          </>
-        )}
+      <div className="relative pt-4 w-full flex justify-center">
+        {/* Top binder rings / anchor tabs */}
+        <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
+          isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
+          (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
+          (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
+          `${cardBg} ${cardBorder}`))
+        }`} />
+        <div className={`absolute top-1 right-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
+          isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
+          (isDec16Blocked && lokiCrackStage === 2 ? 'border-emerald-500/80 bg-neutral-900 shadow-[0_-2px_8px_rgba(16,185,129,0.45)]' :
+          (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/60 bg-neutral-900 shadow-[0_-1px_5px_rgba(16,185,129,0.3)]' :
+          `${cardBg} ${cardBorder}`))
+        }`} />
         
         {isTop && hasCornerStar && (
           <div className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] absolute top-4 pointer-events-none z-30">
@@ -299,43 +287,15 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           </AnimatePresence>
         )}
 
-        {/* Loki Time Portal (Emerges behind the splitting cards on stage 4) */}
-        {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
-          <LokiTimelinePortal />
-        )}
+        {/* Loki Time Portal (Temporarily removed while broke effect is completely redesigned) */}
 
-        {/* Left Card Half (On Stage 4, cleanly detaches and zero-gravity drifts away) */}
         <motion.div 
           onClick={(e) => {
             if (isTop && isDec16Blocked && onLokiCardTap) {
               onLokiCardTap();
             }
           }}
-          initial={{ x: 0, y: 0, rotateZ: 0, rotateY: 0, rotateX: 0, scale: 1, opacity: 1 }}
-          animate={
-            isTop && isDec16Blocked && lokiCrackStage >= 4 ? {
-              x: -160,
-              y: -40,
-              rotateZ: -12,
-              rotateY: -22,
-              rotateX: 8,
-              scale: 0.1,
-              opacity: 0,
-              transition: { 
-                duration: 6.0, 
-                ease: [0.16, 1, 0.3, 1] // Slow and steady cosmic zero-gravity drift
-              }
-            } : {
-              x: 0,
-              y: 0,
-              rotateZ: 0,
-              rotateY: 0,
-              rotateX: 0,
-              scale: 1,
-              opacity: 1
-            }
-          }
-          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-visible border-2 z-20 ${
+          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${
             isDec16Blocked && lokiCrackStage >= 3 ? 'bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700' :
             (isDec16Blocked && lokiCrackStage === 2 ? 'bg-neutral-900/90 border-emerald-500/70 shadow-[0_0_25px_rgba(16,185,129,0.3)] transition-all duration-500' :
             (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/50 transition-all duration-500' :
@@ -343,17 +303,11 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           }`}
           style={{
             boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : (isDec16Blocked && lokiCrackStage >= 3 ? '0 0 60px rgba(16,185,129,0.55)' : (isDec16Blocked && lokiCrackStage === 2 ? '0 0 30px rgba(16,185,129,0.35)' : dropShadow))) : '0 20px 40px -10px rgba(0,0,0,0.1)',
-            backfaceVisibility: 'hidden',
-            clipPath: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'polygon(0 0, 52% 0, 48% 100%, 0 100%)' : 'none',
-            transformOrigin: '50% 50%'
+            backfaceVisibility: 'hidden'
           }}
         >
-          {/* Attached Left Binder Anchor (Moves WITH left piece during Stage 4 float) */}
-          {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
-            <div className="absolute -top-3 left-[15%] w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-30 border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]" />
-          )}
-          {/* Dec 16 Loki Multiverse Crack (Progressive Tap Stages) */}
-          {isTop && isDec16Blocked && lokiCrackStage > 0 && lokiCrackStage < 4 && (
+          {/* Dec 16 Loki Multiverse Crack (Progressive Tap Stages 1 to 3) */}
+          {isTop && isDec16Blocked && lokiCrackStage > 0 && (
             <LokiTimelineCrack crackStage={lokiCrackStage} />
           )}
           {isTop && !isAyudhaWishActive && (
@@ -816,67 +770,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               </>
             )}
         </motion.div>
-
-        {/* Right Half of Split Card (On Stage 4, symmetrical zero-gravity drift) */}
-        {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
-          <motion.div
-            initial={{ x: 0, y: 0, rotateZ: 0, rotateY: 0, rotateX: 0, opacity: 1, scale: 1 }}
-            animate={{
-              x: 160,
-              y: -40,
-              rotateZ: 12,
-              rotateY: 22,
-              rotateX: -8,
-              scale: 0.1,
-              opacity: 0,
-              transition: { 
-                duration: 6.0, 
-                ease: [0.16, 1, 0.3, 1] // Slow and steady cosmic zero-gravity drift
-              }
-            }}
-            className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col absolute overflow-visible border-2 z-20 bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] pointer-events-none"
-            style={{
-              clipPath: 'polygon(52% 0, 100% 0, 100% 100%, 48% 100%)',
-              backfaceVisibility: 'hidden',
-              transformOrigin: '50% 50%'
-            }}
-          >
-            {/* Attached Right Binder Anchor (Moves WITH right piece during Stage 4 float) */}
-            <div className="absolute -top-3 right-[15%] w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-30 border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]" />
-            <div className="pt-8 sm:pt-10 px-8 flex flex-col items-center w-full z-10 relative">
-              <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
-                {dateText}
-              </h2>
-            </div>
-
-            <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-2">
-              <div className="w-full flex justify-start pl-8 z-20 mb-[-1rem]">
-                <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase ${textSecondary}`}>
-                  Today
-                </span>
-              </div>
-              
-              <h1 className={`text-[7.5rem] sm:text-[9.5rem] font-black leading-none tracking-tighter text-center ${textPrimary}`}>
-                {daysRemaining}
-              </h1>
-              
-              <div className="w-full flex justify-end pr-8 z-20 mt-[-1rem]">
-                <span className={`font-bold text-lg sm:text-xl italic ${textSecondary}`}>
-                  th day
-                </span>
-              </div>
-            </div>
-            
-            <div className="pb-6 sm:pb-8 flex justify-center w-full z-10 relative">
-              <div className={`px-6 py-2 rounded-full border-2 cursor-default select-none ${pillBgOutline}`}>
-                <span className={`text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
-                  To reach 2027
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
