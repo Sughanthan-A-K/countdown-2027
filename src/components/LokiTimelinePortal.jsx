@@ -135,40 +135,58 @@ export default function LokiTimelinePortal() {
 
       {/* 2. The Organic Asymmetrical Portal Opening (Contained with organic natural tapered Ends, Expanding smoothly over time) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-visible">
-        {/* Outer illuminated cloudy rift lip (Seamless soft glow around rift, NO hard boundary) */}
+        {/* Outer illuminated cloudy rift lip */}
         <motion.div
-          initial={{ scaleX: 0.35, opacity: 0.7 }}
+          initial={{ scaleX: 1.0, scaleY: 1.0, opacity: 0.85 }}
           animate={{
-            scaleX: [0.35, 1.0, 1.08, 0.98, 1.04],
-            scaleY: [0.92, 1.0, 1.02, 0.99, 1.01],
-            opacity: [0.7, 0.98, 1, 0.95, 0.98]
+            // Organic asymmetrical widening from current base shape into an uneven wider rift
+            scaleX: [1.0, 1.25, 1.45, 1.38, 1.42],
+            scaleY: [1.0, 1.02, 1.04, 1.01, 1.03],
+            borderRadius: [
+              '15% 75% 55% 35% / 70% 25% 65% 45%',
+              '25% 65% 60% 30% / 65% 35% 60% 50%',
+              '10% 80% 50% 40% / 75% 20% 70% 40%',
+              '18% 72% 56% 36% / 68% 28% 64% 46%'
+            ],
+            opacity: [0.85, 0.95, 1, 0.94, 0.98]
           }}
           transition={{
-            scaleX: { duration: 6.5, ease: [0.16, 1, 0.3, 1] },
-            scaleY: { duration: 7, ease: [0.16, 1, 0.3, 1] },
-            opacity: { duration: 4, ease: "easeOut" }
+            scaleX: { duration: 9.0, ease: [0.16, 1, 0.3, 1] },
+            scaleY: { duration: 9.5, ease: [0.16, 1, 0.3, 1] },
+            borderRadius: { duration: 10.0, ease: "easeInOut" },
+            opacity: { duration: 5, ease: "easeOut" }
           }}
-          className="absolute h-[92vh] max-h-[920px] w-64 sm:w-80 pointer-events-none rounded-[15%_75%_55%_35%/70%_25%_65%_45%]"
+          className="absolute h-[92vh] max-h-[920px] w-64 sm:w-80 pointer-events-none"
           style={{
+            transformOrigin: "52% 48%",
             background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.85) 0%, rgba(52,211,153,0.6) 30%, rgba(16,185,129,0.3) 55%, transparent 75%)',
             filter: 'blur(25px)'
           }}
         />
 
-        {/* Inner Void / Deep Spacetime Tear (Asymmetrical Top vs Bottom with CRISP, Ultra-Bright Glowing Border) */}
+        {/* Inner Void / Deep Spacetime Tear (Starts from current shape, widens organically & unevenly over time) */}
         <motion.div
-          initial={{ scaleX: 0.25 }}
+          initial={{ scaleX: 1.0, scaleY: 1.0 }}
           animate={{
-            scaleX: [0.25, 1.0, 1.06, 0.96, 1.02],
-            scaleY: [0.94, 1.0, 1.02, 0.98, 1.0]
+            // Slow organic width increase: expands unevenly (more width around mid-upper center)
+            scaleX: [1.0, 1.3, 1.6, 1.5, 1.55],
+            scaleY: [1.0, 1.02, 1.03, 1.01, 1.02],
+            // Asymmetrical borderRadius shifts dynamically as width increases so it doesn't look like a uniform box
+            borderRadius: [
+              '20% 65% 40% 60% / 65% 35% 55% 45%',
+              '35% 55% 48% 52% / 58% 42% 50% 50%',
+              '15% 75% 38% 62% / 70% 30% 58% 42%',
+              '22% 68% 42% 58% / 64% 36% 54% 46%'
+            ]
           }}
           transition={{
-            scaleX: { duration: 6.8, ease: [0.16, 1, 0.3, 1] },
-            scaleY: { duration: 7.2, ease: [0.16, 1, 0.3, 1] }
+            scaleX: { duration: 9.5, ease: [0.16, 1, 0.3, 1] },
+            scaleY: { duration: 10.0, ease: [0.16, 1, 0.3, 1] },
+            borderRadius: { duration: 10.5, ease: "easeInOut" }
           }}
-          // Top is high & pinched diagonally to left, bottom is wide & rounded to right
-          className="absolute h-[86vh] max-h-[860px] w-24 sm:w-36 pointer-events-none rounded-[20%_65%_40%_60%/65%_35%_55%_45%]"
+          className="absolute h-[86vh] max-h-[860px] w-24 sm:w-36 pointer-events-none"
           style={{
+            transformOrigin: "52% 46%", // Off-center origin so width increases asymmetrically
             background: 'radial-gradient(ellipse at 50% 55%, #04251c 0%, #021a13 45%, #010f0a 80%, transparent 100%)',
             borderLeft: '4px solid #d1fae5',
             borderRight: '4px solid #a7f3d0',
