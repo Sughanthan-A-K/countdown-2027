@@ -292,103 +292,113 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
             {/* ============================================================ */}
             {/* TAP 4: ASYMMETRIC RANDOM TIMING LIGHT BURSTS (SOLID & CLEAN) */}
-            {/* Logic: Center beam shoots first, then outer beams pop with organic delays & occasional double bursts */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- 1st BURST (0.05s): CENTER FISSURE PIERCING BEAM SHOOTS FIRST! --- */}
-                <motion.polygon
-                  points="102,185 118,162 4800,-400 4500,-1400"
-                  fill="url(#climaxCenterInfiniteBeam)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1.0, 1.0] }}
-                  transition={{ duration: 0.08, delay: 0.05 }}
-                />
-
-                {/* --- 2nd BURST (0.35s): Single Piercing Beam (Upper-Left corner) --- */}
+                {/* --- 1st POP (0.04s): Piercing Upper-Left corner --- */}
                 <motion.polygon
                   points="76,100 45,108 -3400,-2600 -2400,-3600"
                   fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.08, delay: 0.35 }}
+                  transition={{ duration: 0.08, delay: 0.04 }}
                 />
 
-                {/* --- 3rd BURST (0.68s): DOUBLE RANDOM BEAMS BURSTING TOGETHER (Mid-Right & Upper-Right)! --- */}
+                {/* --- 2nd POP (0.38s): Blade beam slicing through Mid-Right --- */}
                 <motion.polygon
                   points="165,138 182,148 4500,1800 4200,300"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 0.68 }}
+                  transition={{ duration: 0.08, delay: 0.38 }}
                 />
+
+                {/* --- 3rd POP (0.52s): Upper-Right corner gap --- */}
                 <motion.polygon
                   points="168,22 200,5 3800,-1600 3200,-2400"
                   fill="url(#microBeamTopRight)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.08, delay: 0.70 }}
+                  transition={{ duration: 0.08, delay: 0.52 }}
                 />
 
-                {/* --- 4th BURST (1.05s): Steep upward fissure shaft tilting North-North-West --- */}
+                {/* --- 4th POP (0.85s): Steep upward fissure shaft tilting North-North-West --- */}
                 <motion.polygon
                   points="104,65 108,78 400,-4200 -800,-3800"
                   fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 1.05 }}
+                  transition={{ duration: 0.08, delay: 0.85 }}
                 />
 
-                {/* --- 5th BURST (1.28s): DOUBLE RANDOM BEAMS BURSTING TOGETHER (Lower-Right & Mid-Left)! --- */}
+                {/* --- 5th POP (1.02s): Narrow oblique beam cutting through Lower-Right corner --- */}
                 <motion.polygon
                   points="85,248 126,274 3800,4200 3000,4800"
                   fill="url(#outwardBeamLowerRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 1.28 }}
+                  transition={{ duration: 0.08, delay: 1.02 }}
                 />
+
+                {/* --- 6th POP (1.18s): Sharp horizontal sliver piercing West --- */}
                 <motion.polygon
                   points="40,156 26,172 -4200,1200 -4500,200"
                   fill="url(#outwardBeamMidLeftSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 1.30 }}
+                  transition={{ duration: 0.08, delay: 1.18 }}
                 />
 
-                {/* --- 6th BURST (1.55s): Off-center vertical beam piercing South-South-East --- */}
+                {/* --- 7th POP (1.42s): Off-center vertical beam piercing South-South-East --- */}
                 <motion.polygon
                   points="96,350 102,400 1200,4500 200,4500"
                   fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 1.55 }}
+                  transition={{ duration: 0.08, delay: 1.42 }}
                 />
 
-                {/* --- 7th BURST (1.75s): Bottom-Left corner far gap --- */}
+                {/* --- 8th POP (1.58s): Bottom-Left corner far gap --- */}
                 <motion.polygon
                   points="14,382 0,400 -2600,4800 -3400,4000"
                   fill="url(#microBeamBottomCorner)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.08, delay: 1.75 }}
+                  transition={{ duration: 0.08, delay: 1.58 }}
                 />
 
-                {/* --- 8th BURST (1.92s - FINAL BURST JUST BEFORE SHATTER): Left side of Center Fissure! --- */}
+                {/* --- EXTRA CLIMAX BEAM 1 (1.75s): Left side of Center Fissure (92,122 -> 64,146) --- */}
                 <motion.polygon
-                  points="92,122 64,146 -4200,-1800 -4500,-600"
+                  points="92,122 64,146 -4500,-600 -4200,-1800"
                   fill="url(#climaxLeftInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.98, 0.98] }}
+                  animate={{ opacity: [0, 0.95, 0.95] }}
+                  transition={{ duration: 0.06, delay: 1.75 }}
+                />
+
+                {/* --- EXTRA CLIMAX BEAM (1.92s - FINAL BURST JUST BEFORE VEDIKKURA SHATTER): Blasting Straight Out from Central Hub (102, 185)! --- */}
+                {/* Seam (102,185 -> 118,162): y1=185 to 2200, y2=162 to -1400 (Clean straight cone, no twist!) */}
+                <motion.polygon
+                  points="102,185 118,162 4800,-1400 4500,1200"
+                  fill="url(#climaxCenterInfiniteBeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1.0, 1.0] }}
+                  transition={{ duration: 0.06, delay: 1.92 }}
+                />
+                  fill="url(#climaxCenterInfiniteBeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1.0, 1.0] }}
                   transition={{ duration: 0.06, delay: 1.92 }}
                 />
               </g>
@@ -450,8 +460,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           d="M 98 6 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 394"
           stroke={crackStage >= 2 ? "#d1fae5" : "#ffffff"}
           strokeWidth={spineStroke}
-          strokeLinecap="butt"
-          strokeLinejoin="miter"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           fill="none"
           initial={crackStage === 1 ? { pathLength: 0 } : false}
           animate={{ 
@@ -472,8 +482,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 108 78 L 76 100 L 45 108 M 92 122 L 64 146 L 40 156 M 102 185 L 140 152 L 165 138 M 85 248 L 126 274 L 155 286 M 106 312 L 72 336 L 44 348"
               stroke="#059669"
               strokeWidth={crackStage >= 3 ? "3.0" : "2.0"}
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={crackStage === 2 ? { pathLength: 0 } : false}
@@ -491,8 +501,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 108 78 L 76 100 L 45 108 M 92 122 L 64 146 L 40 156 M 102 185 L 140 152 L 165 138 M 85 248 L 126 274 L 155 286 M 106 312 L 72 336 L 44 348"
               stroke="#ffffff"
               strokeWidth="1.2"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={crackStage === 2 ? { pathLength: 0 } : false}
               animate={{ 
@@ -514,8 +524,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360 M 45 108 L 30 116 M 40 156 L 26 172 M 165 138 L 182 148 M 155 286 L 175 304 M 44 348 L 30 364"
               stroke="#059669"
               strokeWidth="2.4"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={crackStage === 3 ? { pathLength: 0 } : false}
@@ -533,8 +543,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360 M 45 108 L 30 116 M 40 156 L 26 172 M 165 138 L 182 148 M 155 286 L 175 304 M 44 348 L 30 364"
               stroke="#ffffff"
               strokeWidth="1.1"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={crackStage === 3 ? { pathLength: 0 } : false}
               animate={{ 
@@ -556,8 +566,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#10b981"
               strokeWidth="2.5"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
@@ -568,8 +578,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#ffffff"
               strokeWidth="1.2"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -581,8 +591,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#10b981"
               strokeWidth="2.2"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
@@ -593,8 +603,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#ffffff"
               strokeWidth="1.1"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -606,8 +616,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
               stroke="#10b981"
               strokeWidth="2.6"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
@@ -618,8 +628,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
               stroke="#ffffff"
               strokeWidth="1.3"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
