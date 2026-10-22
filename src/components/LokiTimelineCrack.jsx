@@ -16,11 +16,10 @@ import { motion } from 'framer-motion';
  *    - Tap 3: Center spine opens wider, pure green aura radiates.
  *    - Tap 4: Center spine splits wide as deep cracks continuously multiply.
  * 
- * 3. Intense Neon God Rays (Strong Piercing Laser Beams):
- *    - Not a faint wash, but strong piercing neon emerald laser shafts with white-hot cores.
- *    - Sequenced organically to reveal one by one as the cracks shoot open across the card!
- *    - Over 2.0s, each ray blasts outward piercing far across the full screen in 3D,
- *      then triggers the majestic glass shatter!
+ * 3. Outward Projecting Neon God Rays (Center-to-Outer Trajectory):
+ *    - FIXED DIRECTION: Originates at center fracture point (102, 185) and SHOOTS OUTWARD towards the screen borders!
+ *    - White-hot piercing neon light at center that blasts outwards with expanding width into the room/screen in 3D.
+ *    - Revealed sequentially as cracks spread over the 2 seconds before the final shatter!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -61,7 +60,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Stage 4: Strong, Piercing Neon Emerald God Rays Revealing One by One as Cracks Spread */}
+      {/* Stage 4: Powerful Neon Emerald Rays Shooting Directly from Center (102, 185) OUTWARD to full screen */}
       {isLightRaysCreeping && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
           <svg 
@@ -79,29 +78,13 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
 
-              {/* Strong Neon Ray Gradients: White-hot luminous core transitioning to electric emerald */}
-              <linearGradient id="strongNeonRay1" x1="0%" y1="0%" x2="100%" y2="100%">
+              {/* OUTWARD Ray Gradient: 0% is CENTER (White-hot), 100% is OUTER SCREEN (Emerald fade) */}
+              <linearGradient id="outwardRay" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="40%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="75%" stopColor="#10b981" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              <linearGradient id="strongNeonRay2" x1="50%" y1="50%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="40%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="75%" stopColor="#10b981" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              <linearGradient id="strongNeonRay3" x1="50%" y1="50%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="40%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="75%" stopColor="#10b981" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+                <stop offset="45%" stopColor="#34d399" stopOpacity="0.8" />
+                <stop offset="80%" stopColor="#10b981" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </linearGradient>
 
               {/* Tighter blur for crisp, piercing neon beams */}
@@ -120,94 +103,55 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             <motion.ellipse
               cx="102"
               cy="185"
-              rx="22"
-              ry="22"
+              rx="24"
+              ry="24"
               fill="url(#neonImpactBloom)"
-              initial={{ scale: 0.2, opacity: 0.3 }}
-              animate={{ scale: [0.3, 2.2], opacity: [0.3, 1.0] }}
+              initial={{ scale: 0.3, opacity: 0.3 }}
+              animate={{ scale: [0.4, 2.2], opacity: [0.3, 1.0] }}
               transition={{ duration: 2.0, ease: "easeIn" }}
               filter="url(#neonBeamGlow)"
             />
 
-            {/* Ray 1: Top-Right fissure shaft (reveals at 0.1s as top right crack shoots) */}
-            <motion.polygon
-              points="102,185 145,150 780,-280 560,-320"
-              fill="url(#strongNeonRay1)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
-              transition={{ duration: 1.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            {/* Ray 2: Top vertical fissure shaft (reveals at 0.2s as spine opens) */}
-            <motion.polygon
-              points="102,185 98,15 -60,-360 260,-360"
-              fill="url(#strongNeonRay3)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
-              transition={{ duration: 1.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            {/* Ray 3: Top-Left branch shaft (reveals at 0.35s as top-left crack branches) */}
-            <motion.polygon
-              points="102,185 106,75 -380,-300 -480,-130"
-              fill="url(#strongNeonRay2)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
-              transition={{ duration: 1.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            {/* Ray 4: Left horizontal fissure shaft (reveals at 0.5s as left cracks expand) */}
-            <motion.polygon
-              points="102,185 88,125 -500,80 -520,320"
-              fill="url(#strongNeonRay2)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
-              transition={{ duration: 1.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            {/* Ray 5: Right horizontal fissure shaft (reveals at 0.65s as right cracks branch) */}
-            <motion.polygon
-              points="102,185 118,190 820,120 780,360"
-              fill="url(#strongNeonRay1)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
-              transition={{ duration: 1.5, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            {/* Ray 6: Bottom-Left fissure shaft (reveals at 0.8s as lower cracks spread) */}
-            <motion.polygon
-              points="102,185 85,250 -420,840 -480,620"
-              fill="url(#strongNeonRay2)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
-              transition={{ duration: 1.4, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            {/* Ray 7: Bottom-Right fissure shaft (reveals at 0.95s as bottom-right cracks connect) */}
-            <motion.polygon
-              points="102,185 85,250 620,820 400,880"
-              fill="url(#strongNeonRay1)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
-              transition={{ duration: 1.3, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            {/* Ray 8: Downward spine fissure shaft (reveals at 1.1s as card fully splits) */}
-            <motion.polygon
-              points="102,185 102,385 -60,880 260,880"
-              fill="url(#strongNeonRay3)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: [0, 1.0], scale: [0.3, 1.0] }}
-              transition={{ duration: 1.2, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            />
+            {/* OUTWARD SHOOTING NEON LIGHT BEAMS (Centered at 102, 185 with origin-center transform) */}
+            {[
+              { angle: -65, delay: 0.1, length: '120vw', width: '90px' },
+              { angle: -25, delay: 0.25, length: '130vw', width: '110px' },
+              { angle: 15, delay: 0.4, length: '125vw', width: '85px' },
+              { angle: 60, delay: 0.55, length: '135vw', width: '120px' },
+              { angle: 115, delay: 0.7, length: '130vw', width: '95px' },
+              { angle: 155, delay: 0.85, length: '120vw', width: '100px' },
+              { angle: -120, delay: 1.0, length: '140vw', width: '115px' },
+              { angle: -160, delay: 1.15, length: '130vw', width: '90px' },
+            ].map((beam, i) => (
+              <motion.g
+                key={`outward-neon-beam-${i}`}
+                style={{
+                  transformOrigin: "102px 185px",
+                  transform: `rotate(${beam.angle}deg)`
+                }}
+              >
+                {/* 
+                  Cone Polygon projecting strictly OUTWARD from Center (102, 185):
+                  Apex starts sharp at center (102, 185) and fans wide out past the screen!
+                */}
+                <motion.polygon
+                  points="102,185 102,185 -50,-800 254,-800"
+                  fill="url(#outwardRay)"
+                  filter="url(#neonBeamGlow)"
+                  initial={{ scaleY: 0, opacity: 0 }}
+                  animate={{ 
+                    scaleY: [0, 1.3],
+                    opacity: [0, 0.95, 1.0]
+                  }}
+                  transition={{ 
+                    duration: 1.8 - i * 0.1,
+                    delay: beam.delay,
+                    ease: [0.16, 1, 0.3, 1]
+                  }}
+                  style={{ transformOrigin: "102px 185px" }}
+                />
+              </motion.g>
+            ))}
           </svg>
         </div>
       )}
@@ -340,7 +284,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: Continuous Cracks Spreading Rapidly While Rays Escalate Brightness (Exactly 2.0s) */}
+        {/* TAP 4: Continuous Cracks Spreading Rapidly (Exactly 2.0s) */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-cascades">
