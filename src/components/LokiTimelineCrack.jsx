@@ -60,6 +60,27 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
+      {/* TAP 4: Center Core White-Hot Escalation - Shifted Left & Up directly onto Spine Aperture Center (102, 185) */}
+      {crackStage >= 4 && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.4 }}
+          animate={{
+            opacity: [0, 0.4, 0.85, 1.0],
+            scale: [0.6, 1.0, 1.5, 2.0]
+          }}
+          transition={{ duration: 2.0, ease: [0.12, 0.8, 0.2, 1] }}
+          className="absolute w-44 h-44 rounded-full pointer-events-none z-[65]"
+          style={{
+            top: '46.25%',
+            left: '51%',
+            transform: 'translate(-50%, -50%)',
+            background: 'radial-gradient(circle at center, #ffffff 0%, rgba(167,243,208,0.95) 25%, rgba(52,211,153,0.7) 50%, rgba(16,185,129,0.25) 70%, transparent 85%)',
+            filter: 'blur(16px)',
+            mixBlendMode: 'screen'
+          }}
+        />
+      )}
+
       {/* ============================================================ */}
       {/* TAP 3 & TAP 4: OUTWARD 3D LIGHT BEAMS FROM CRACK SEAM SEGMENTS */}
       {/* Card-kulla irukura exact crack line/fissure-la irunthu thaan light screen-ku veliya pogum */}
