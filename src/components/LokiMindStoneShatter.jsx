@@ -44,103 +44,117 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
       className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible"
       style={{ willChange: 'transform', transform: 'translateZ(0)' }}
     >
-      {/* 0. BLINDING SUPERNOVA CENTER FLASHBURST (Natural high-impact epicenter explosion) */}
+      {/* 0. BLINDING SUPERNOVA CENTER FLASHBURST (Fast GPU radial blend) */}
       <motion.div
-        initial={{ opacity: 1, scale: 0.1 }}
+        initial={{ opacity: 1, scale: 0.2 }}
         animate={{ 
           opacity: [1, 1, 0], 
-          scale: [0.1, 3.2, 5.0] 
+          scale: [0.2, 3.0, 4.5] 
         }}
-        transition={{ duration: 0.65, ease: [0.05, 0.95, 0.2, 1] }}
-        className="absolute w-64 h-64 rounded-full bg-white blur-2xl pointer-events-none"
+        transition={{ duration: 0.55, ease: [0.05, 0.95, 0.2, 1] }}
+        className="absolute w-64 h-64 rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, #ffffff 0%, rgba(209,250,229,0.9) 40%, transparent 70%)',
+          willChange: 'transform, opacity'
+        }}
       />
       <motion.div
-        initial={{ opacity: 0.95, scale: 0.2 }}
+        initial={{ opacity: 0.9, scale: 0.3 }}
         animate={{ 
-          opacity: [0.95, 0.8, 0], 
-          scale: [0.2, 4.0, 6.5] 
+          opacity: [0.9, 0.7, 0], 
+          scale: [0.3, 3.8, 5.5] 
         }}
-        transition={{ duration: 0.85, ease: "easeOut" }}
-        className="absolute w-80 h-80 rounded-full bg-emerald-400/80 blur-3xl pointer-events-none"
+        transition={{ duration: 0.75, ease: "easeOut" }}
+        className="absolute w-80 h-80 rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(52,211,153,0.85) 0%, rgba(16,185,129,0.5) 45%, transparent 75%)',
+          willChange: 'transform, opacity'
+        }}
       />
 
-      {/* 1. Powerful Primary Emerald Shockwave Ripple Ring (Explosive blast expansion) */}
+      {/* 1. Powerful Primary Emerald Shockwave Ripple Ring (Pure GPU transform scale) */}
       <motion.div
-        initial={{ scale: 0.1, opacity: 1, borderWidth: '28px' }}
+        initial={{ scale: 0.1, opacity: 1 }}
         animate={{ 
-          scale: [0.1, 4.2], 
-          opacity: [1, 0.8, 0],
-          borderWidth: ['28px', '1px']
+          scale: [0.1, 4.5], 
+          opacity: [1, 0.7, 0]
         }}
         transition={{ 
-          duration: 1.4, 
+          duration: 1.3, 
           ease: [0.05, 0.85, 0.25, 1] 
         }}
-        className="absolute rounded-full border-white shadow-[0_0_80px_#34d399,_inset_0_0_50px_#a7f3d0] pointer-events-none"
+        className="absolute rounded-full border-4 border-white pointer-events-none"
         style={{
-          width: '320px',
-          height: '320px',
+          width: '300px',
+          height: '300px',
+          boxShadow: '0 0 40px #34d399, inset 0 0 25px #a7f3d0',
+          willChange: 'transform, opacity'
         }}
       />
 
       {/* 2. Secondary High-Speed Distortion Shockwave Ring */}
       <motion.div
-        initial={{ scale: 0.05, opacity: 1, borderWidth: '32px' }}
+        initial={{ scale: 0.05, opacity: 1 }}
         animate={{ 
-          scale: [0.05, 5.5], 
-          opacity: [1, 0.6, 0],
-          borderWidth: ['32px', '2px']
+          scale: [0.05, 5.2], 
+          opacity: [1, 0.5, 0]
         }}
         transition={{ 
-          duration: 1.6, 
-          delay: 0.05,
+          duration: 1.5, 
+          delay: 0.04,
           ease: [0.08, 0.9, 0.3, 1] 
         }}
-        className="absolute rounded-full border-teal-200 shadow-[0_0_90px_#10b981] pointer-events-none"
+        className="absolute rounded-full border-2 border-teal-200 pointer-events-none"
         style={{
-          width: '280px',
-          height: '280px',
+          width: '260px',
+          height: '260px',
+          boxShadow: '0 0 45px #10b981',
+          willChange: 'transform, opacity'
         }}
       />
 
       {/* 3. Third Atmospheric Deep Emerald Pressure Wave */}
       <motion.div
-        initial={{ scale: 0.2, opacity: 0.9 }}
+        initial={{ scale: 0.2, opacity: 0.85 }}
         animate={{ 
           scale: [0.2, 4.8], 
-          opacity: [0.9, 0] 
+          opacity: [0.85, 0] 
         }}
         transition={{ 
-          duration: 1.8, 
+          duration: 1.7, 
           delay: 0.08,
           ease: "easeOut" 
         }}
-        className="absolute rounded-full bg-radial from-emerald-300/60 via-teal-500/30 to-transparent blur-2xl pointer-events-none"
+        className="absolute rounded-full pointer-events-none"
         style={{
-          width: '360px',
-          height: '360px',
+          width: '320px',
+          height: '320px',
+          background: 'radial-gradient(circle, rgba(52,211,153,0.5) 0%, rgba(16,185,129,0.2) 50%, transparent 75%)',
+          willChange: 'transform, opacity'
         }}
       />
 
       {/* 4. Instant Impact Light Flash */}
       <motion.div
         initial={{ opacity: 1, scale: 0.8 }}
-        animate={{ opacity: 0, scale: 2.4 }}
-        transition={{ duration: 0.9, ease: "easeOut" }}
-        className="absolute w-72 h-72 rounded-full bg-white blur-3xl pointer-events-none"
+        animate={{ opacity: 0, scale: 2.2 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="absolute w-72 h-72 rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0.6) 35%, transparent 70%)',
+          willChange: 'transform, opacity'
+        }}
       />
 
-      {/* 5. 16 Realistic Polygonal Glass Shards scattering outward in slow motion */}
+      {/* 5. 16 Realistic Polygonal Glass Shards scattering outward in smooth 60fps trajectory */}
       {shards.map((s, index) => (
         <motion.div
           key={`shard-${s.id}`}
-          initial={{ x: 0, y: 0, rotateZ: 0, rotateX: 0, rotateY: 0, scale: 1, opacity: 1 }}
+          initial={{ x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 }}
           animate={{
             x: s.x,
             y: s.y,
-            rotateZ: s.rZ,
-            rotateX: s.rX,
-            rotateY: s.rY,
+            rotate: s.rZ,
             scale: s.scale,
             opacity: 0
           }}
@@ -155,27 +169,27 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
             clipPath: s.clip,
             background: 'linear-gradient(135deg, rgba(6,78,59,0.95) 0%, rgba(16,185,129,0.85) 50%, rgba(5,150,105,0.95) 100%)',
             border: '2px solid rgba(167, 243, 208, 0.95)',
-            boxShadow: '0 0 25px rgba(16,185,129,0.75)',
+            boxShadow: '0 0 20px rgba(16,185,129,0.7)',
             backfaceVisibility: 'hidden',
             willChange: 'transform, opacity'
           }}
         >
           {/* Glass Crystal Inner Refraction highlight */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/35 to-transparent pointer-events-none" />
         </motion.div>
       ))}
 
-      {/* 6. Dispersing glass dust particles riding the slow shockwave */}
-      {[...Array(24)].map((_, i) => {
-        const angle = (i / 24) * Math.PI * 2;
-        const dist = 320 + (i % 5) * 80;
+      {/* 6. Dispersing glass dust particles riding the slow shockwave (Optimized count for 60fps) */}
+      {[...Array(14)].map((_, i) => {
+        const angle = (i / 14) * Math.PI * 2;
+        const dist = 320 + (i % 4) * 70;
         const targetX = Math.cos(angle) * dist;
         const targetY = Math.sin(angle) * dist;
 
         return (
           <motion.div
             key={`glass-dust-${i}`}
-            initial={{ x: 0, y: 0, scale: 1.5, opacity: 1 }}
+            initial={{ x: 0, y: 0, scale: 1.2, opacity: 1 }}
             animate={{ 
               x: targetX, 
               y: targetY, 
@@ -183,10 +197,11 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
               opacity: 0 
             }}
             transition={{
-              duration: 1.8 + (i % 4) * 0.3,
+              duration: 1.6 + (i % 3) * 0.3,
               ease: [0.15, 0.85, 0.35, 1]
             }}
-            className="absolute w-2 h-2 rounded-full bg-white shadow-[0_0_12px_#34d399]"
+            className="absolute w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#34d399]"
+            style={{ willChange: 'transform, opacity' }}
           />
         );
       })}
