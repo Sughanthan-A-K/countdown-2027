@@ -1590,14 +1590,13 @@ function App() {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
                           const next = Math.min(prev + 1, 4);
-                          // On 4th tap (green sunbeam light rays creeping through cracks):
-                          // Switch into Dark Mode, and after 2.0s trigger Stage 5 (natural glass shatter into portal!)
+                          // On 4th tap (random light rays popping progressively across all sides, then shattering into portal):
                           if (next === 4) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 1500);
+                            }, 2200);
                           }
                           return next;
                         });
