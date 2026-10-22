@@ -52,7 +52,7 @@ export default function LokiTimelinePortal() {
       </svg>
 
       {/* 2. The Organic Asymmetrical Portal Opening (Matching reference image shape) */}
-      <div className="absolute inset-y-0 w-full max-w-[420px] flex items-center justify-center">
+      <div className="absolute inset-y-0 w-full max-w-[420px] flex items-center justify-center pointer-events-none">
         {/* Outer illuminated cloudy rift lip */}
         <motion.div
           animate={{
@@ -60,7 +60,7 @@ export default function LokiTimelinePortal() {
             opacity: [0.85, 1, 0.85]
           }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute h-full w-56 sm:w-64"
+          className="absolute h-full w-56 sm:w-64 pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.9) 0%, rgba(52,211,153,0.7) 35%, rgba(16,185,129,0.4) 65%, transparent 85%)',
             filter: 'url(#lokiOrganicRiftEdge) blur(12px)'
@@ -74,7 +74,7 @@ export default function LokiTimelinePortal() {
             scaleX: [0.95, 1.05, 0.95]
           }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute h-[110%] w-24 sm:w-32"
+          className="absolute h-[110%] w-24 sm:w-32 pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse at 50% 55%, #052e24 0%, #022018 45%, #01140e 75%, transparent 100%)',
             borderLeft: '3px solid rgba(209,250,229,0.85)',
@@ -91,7 +91,7 @@ export default function LokiTimelinePortal() {
             opacity: [0.75, 1, 0.75]
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[62%] w-10 h-10 rounded-full bg-emerald-200/90 blur-md shadow-[0_0_40px_#a7f3d0,0_0_80px_#34d399]"
+          className="absolute top-[62%] w-10 h-10 rounded-full bg-emerald-200/90 blur-md shadow-[0_0_40px_#a7f3d0,0_0_80px_#34d399] pointer-events-none"
         />
 
         {/* Intense white-mint core tear spine */}
@@ -101,7 +101,7 @@ export default function LokiTimelinePortal() {
             scaleX: [0.9, 1.2, 0.9]
           }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute h-full w-4 sm:w-5"
+          className="absolute h-full w-4 sm:w-5 pointer-events-none"
           style={{
             background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(209,250,229,0.95) 25%, #ffffff 60%, rgba(167,243,208,0.9) 85%, rgba(255,255,255,0.1) 100%)',
             boxShadow: '0 0 25px #6ee7b7, 0 0 50px #10b981',
@@ -110,11 +110,11 @@ export default function LokiTimelinePortal() {
         />
       </div>
 
-      {/* 3. Dark Multiverse Timeline Branches (Rigid, interactive draggable branches) */}
+      {/* 3. Dark Multiverse Timeline Branches (Rigid, interactive draggable branches placed in front with z-10) */}
       <svg 
         viewBox="0 0 1000 1000" 
         preserveAspectRatio="none"
-        className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" 
+        className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-10" 
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* Branch 1: Upper graceful arc crossing from beyond left (-150) to beyond right (1150) */}
