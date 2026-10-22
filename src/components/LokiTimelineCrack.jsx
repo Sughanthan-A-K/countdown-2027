@@ -61,77 +61,82 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
       )}
 
       {/* ============================================================ */}
-      {/* TAP 3: 2 3D VOLUMETRIC CONES SHOOTING FROM CENTER OUTWARDS ACROSS SCREEN */}
+      {/* TAP 3: EXACT 2 PREVIOUS ANGLE LIGHT BEAMS SHOOTING OUTWARDS FROM CENTER */}
       {/* ============================================================ */}
       {crackStage >= 3 && (
-        <div className="absolute inset-0 pointer-events-none z-50 overflow-visible flex items-center justify-center">
-          {/* BEAM 1: Anchored at center, shooting OUTWARDS towards Upper-Right onto user screen */}
-          <div 
-            className="absolute"
-            style={{
-              top: '46.25%',
-              left: '51%',
-              width: 0,
-              height: 0,
-            }}
+        <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
+          <svg 
+            viewBox="0 0 200 400" 
+            className="w-full h-full absolute inset-0 overflow-visible pointer-events-none"
+            style={{ mixBlendMode: 'screen' }}
           >
-            <motion.div
-              initial={{ scaleY: 0, scaleX: 0, opacity: 0 }}
-              animate={{ 
-                scaleY: [0, 1.2, 1], 
-                scaleX: [0, 1.1, 1], 
-                opacity: [0, 1, 0.9] 
-              }}
-              transition={{ duration: 0.22, ease: [0.1, 0.9, 0.2, 1] }}
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: '-35px',
-                width: '70px',
-                height: '140vh',
-                transformOrigin: 'bottom center',
-                transform: 'rotate(52deg)',
-                clipPath: 'polygon(50% 100%, 0% 0%, 100% 0%)',
-                background: 'linear-gradient(to top, #ffffff 0%, rgba(167,243,208,0.95) 12%, rgba(52,211,153,0.8) 35%, rgba(16,185,129,0.4) 65%, transparent 100%)',
-                filter: 'drop-shadow(0 0 18px #34d399) blur(4px)',
-                mixBlendMode: 'screen'
-              }}
-            />
-          </div>
+            <defs>
+              {/* Beam 1: Origin at center (102, 185) -> shoots out towards Top-Right (780, -280) */}
+              <linearGradient 
+                id="outwardBeam1" 
+                gradientUnits="userSpaceOnUse"
+                x1="102" 
+                y1="185" 
+                x2="670" 
+                y2="-300"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
 
-          {/* BEAM 2: Anchored at center, shooting OUTWARDS towards Bottom-Left onto user screen */}
-          <div 
-            className="absolute"
-            style={{
-              top: '46.25%',
-              left: '51%',
-              width: 0,
-              height: 0,
-            }}
-          >
-            <motion.div
-              initial={{ scaleY: 0, scaleX: 0, opacity: 0 }}
-              animate={{ 
-                scaleY: [0, 1.2, 1], 
-                scaleX: [0, 1.1, 1], 
-                opacity: [0, 1, 0.9] 
-              }}
-              transition={{ duration: 0.24, delay: 0.03, ease: [0.1, 0.9, 0.2, 1] }}
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: '-32px',
-                width: '65px',
-                height: '140vh',
-                transformOrigin: 'bottom center',
-                transform: 'rotate(-138deg)',
-                clipPath: 'polygon(50% 100%, 0% 0%, 100% 0%)',
-                background: 'linear-gradient(to top, #ffffff 0%, rgba(167,243,208,0.95) 12%, rgba(52,211,153,0.8) 35%, rgba(16,185,129,0.4) 65%, transparent 100%)',
-                filter: 'drop-shadow(0 0 18px #34d399) blur(4px)',
-                mixBlendMode: 'screen'
-              }}
+              {/* Beam 2: Origin at center (102, 185) -> shoots out towards Bottom-Left (-450, 730) */}
+              <linearGradient 
+                id="outwardBeam2" 
+                gradientUnits="userSpaceOnUse"
+                x1="102" 
+                y1="185" 
+                x2="-450" 
+                y2="730"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Crisp piercing beam glow */}
+              <filter id="outwardBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3.5" result="blur1" />
+                <feGaussianBlur stdDeviation="9" result="blur2" />
+                <feMerge>
+                  <feMergeNode in="blur2" />
+                  <feMergeNode in="blur1" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Beam 1: Exact previous angle - Top-Right fissure shaft radiating outward from center (102, 185) */}
+            <motion.polygon
+              points="102,185 145,150 780,-280 560,-320"
+              fill="url(#outwardBeam1)"
+              filter="url(#outwardBeamGlow)"
+              style={{ transformOrigin: "102px 185px" }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 1.08, 1], opacity: [0, 1, 0.95] }}
+              transition={{ duration: 0.22, ease: [0.1, 0.9, 0.2, 1] }}
             />
-          </div>
+
+            {/* Beam 2: Exact previous angle - Bottom-Left fissure shaft radiating outward from center (102, 185) */}
+            <motion.polygon
+              points="102,185 85,250 -420,840 -480,620"
+              fill="url(#outwardBeam2)"
+              filter="url(#outwardBeamGlow)"
+              style={{ transformOrigin: "102px 185px" }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 1.08, 1], opacity: [0, 1, 0.95] }}
+              transition={{ duration: 0.24, delay: 0.03, ease: [0.1, 0.9, 0.2, 1] }}
+            />
+          </svg>
         </div>
       )}
 
