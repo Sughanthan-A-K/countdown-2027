@@ -156,7 +156,7 @@ export default function LokiTimelinePortal() {
             borderRadius: { duration: 10.0, ease: "easeInOut" },
             opacity: { duration: 5, ease: "easeOut" }
           }}
-          className="absolute h-[106vh] w-64 sm:w-80 pointer-events-none"
+          className="absolute h-[120vh] w-64 sm:w-80 pointer-events-none"
           style={{
             transformOrigin: "52% 48%",
             background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.85) 0%, rgba(52,211,153,0.6) 30%, rgba(16,185,129,0.3) 55%, transparent 75%)',
@@ -184,7 +184,7 @@ export default function LokiTimelinePortal() {
             scaleY: { duration: 10.0, ease: [0.16, 1, 0.3, 1] },
             borderRadius: { duration: 10.5, ease: "easeInOut" }
           }}
-          className="absolute h-[100vh] w-24 sm:w-36 pointer-events-none"
+          className="absolute h-[115vh] w-24 sm:w-36 pointer-events-none"
           style={{
             transformOrigin: "52% 46%", // Off-center origin so width increases asymmetrically
             background: 'radial-gradient(ellipse at 50% 55%, #04251c 0%, #021a13 45%, #010f0a 80%, transparent 100%)',
@@ -218,7 +218,7 @@ export default function LokiTimelinePortal() {
             scaleX: { duration: 6.0, ease: [0.16, 1, 0.3, 1] },
             opacity: { duration: 5, repeat: Infinity, ease: "easeInOut" }
           }}
-          className="absolute h-[96vh] w-5 sm:w-6 pointer-events-none rounded-[50%]"
+          className="absolute h-[110vh] w-5 sm:w-6 pointer-events-none rounded-[50%]"
           style={{
             background: 'linear-gradient(180deg, transparent 0%, rgba(209,250,229,0.9) 15%, #ffffff 50%, rgba(167,243,208,0.9) 85%, transparent 100%)',
             boxShadow: '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 120px #10b981',
