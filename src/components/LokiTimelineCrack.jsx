@@ -231,8 +231,26 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Climax Center Infinite Beam: Origin at center fracture (102, 185) -> blasting East-South-East to infinity */}
-              <linearGradient id="climaxCenterInfiniteBeam" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="4500" y2="-600">
+              {/* Climax Center Infinite Beam 1 (Left): Origin at Center-Left Spine Fissure (92, 122) -> (64, 146) */}
+              <linearGradient id="climaxLeftInfiniteBeam" gradientUnits="userSpaceOnUse" x1="78" y1="134" x2="-4500" y2="-600">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Climax Center Infinite Beam 2 (Left adjacent): Origin at Center-Left Hub (92, 122) -> (102, 185) */}
+              <linearGradient id="climaxLeftAdjacentBeam" gradientUnits="userSpaceOnUse" x1="97" y1="153" x2="-3800" y2="1800">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Climax Final Infinite Beam 3 (Center Aperture Core): Origin at Center Hub (102, 185) -> blasting East-South-East */}
+              <linearGradient id="climaxCenterInfiniteBeam" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="4800" y2="-400">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
                 <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
@@ -357,14 +375,34 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.58 }}
                 />
 
-                {/* --- 9th CLIMAX POP (1.82s): Extra Infinite Light Shaft Blasting Directly from Center Fracture (102, 185) Just Before Shatter! --- */}
+                {/* --- EXTRA CLIMAX BEAM 1 (1.75s): Left side of Center Fissure (92,122 -> 64,146) --- */}
+                <motion.polygon
+                  points="92,122 64,146 -4500,-600 -4200,-1800"
+                  fill="url(#climaxLeftInfiniteBeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.95, 0.95] }}
+                  transition={{ duration: 0.06, delay: 1.75 }}
+                />
+
+                {/* --- EXTRA CLIMAX BEAM 2 (1.78s): Adjacent Left Fissure (92,122 -> 102,185) shooting together with Beam 1 --- */}
+                <motion.polygon
+                  points="92,122 102,185 -3800,2000 -4200,800"
+                  fill="url(#climaxLeftAdjacentBeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.95, 0.95] }}
+                  transition={{ duration: 0.06, delay: 1.78 }}
+                />
+
+                {/* --- EXTRA CLIMAX BEAM 3 (1.92s - FINAL BURST JUST BEFORE VEDIKKURA SHATTER): Blasting Directly from Central Hub (102, 185)! --- */}
                 <motion.polygon
                   points="102,185 118,162 4800,-400 4500,-1400"
                   fill="url(#climaxCenterInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 1.0, 1.0] }}
-                  transition={{ duration: 0.06, delay: 1.82 }}
+                  transition={{ duration: 0.06, delay: 1.92 }}
                 />
               </g>
             )}
