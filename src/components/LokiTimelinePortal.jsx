@@ -88,10 +88,10 @@ export default function LokiTimelinePortal() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
-        className="absolute inset-0 bg-[#01140e]"
+        className="absolute inset-0 bg-[#00140c]"
       />
 
-      {/* Layer 1: Vivid Luminous Emerald Aurora Atmosphere */}
+      {/* Layer 1: Vivid Luminous Sacred Timeline Green Aurora Atmosphere */}
       <motion.div
         animate={{
           opacity: [0.85, 1, 0.85],
@@ -100,21 +100,21 @@ export default function LokiTimelinePortal() {
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.7) 35%, rgba(4,120,87,0.5) 60%, rgba(1,25,18,0.92) 90%)',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.85) 0%, rgba(22,163,74,0.7) 35%, rgba(21,128,61,0.5) 60%, rgba(2,30,18,0.92) 90%)',
           filter: 'blur(35px)'
         }}
       />
 
-      {/* Layer 2: Radiant Center Halo Aura (Vibrant Bright Mint & Emerald Glow behind the Portal) */}
+      {/* Layer 2: Radiant Center Halo Aura (Vibrant Loki Mint & Electric Jade Glow behind the Portal) */}
       <motion.div
         animate={{
           scale: [0.95, 1.15, 0.95],
-          opacity: [0.75, 0.95, 0.75]
+          opacity: [0.8, 1, 0.8]
         }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         className="absolute w-[600px] h-[85vh] rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(52,211,153,0.75) 0%, rgba(16,185,129,0.55) 40%, rgba(5,150,105,0.25) 70%, transparent 95%)',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(74,222,128,0.8) 0%, rgba(34,197,94,0.6) 40%, rgba(22,163,74,0.3) 70%, transparent 95%)',
           filter: 'blur(45px)'
         }}
       />
@@ -159,7 +159,7 @@ export default function LokiTimelinePortal() {
           className="absolute h-[120vh] w-64 sm:w-80 pointer-events-none"
           style={{
             transformOrigin: "52% 48%",
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.85) 0%, rgba(52,211,153,0.6) 30%, rgba(16,185,129,0.3) 55%, transparent 75%)',
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(187,247,208,0.85) 0%, rgba(74,222,128,0.65) 30%, rgba(34,197,94,0.35) 55%, transparent 75%)',
             filter: 'blur(25px)'
           }}
         />
@@ -187,12 +187,12 @@ export default function LokiTimelinePortal() {
           className="absolute h-[115vh] w-24 sm:w-36 pointer-events-none"
           style={{
             transformOrigin: "52% 46%", // Off-center origin so width increases asymmetrically
-            background: 'radial-gradient(ellipse at 50% 55%, #04251c 0%, #021a13 45%, #010f0a 80%, transparent 100%)',
-            borderLeft: '4px solid #d1fae5',
-            borderRight: '4px solid #a7f3d0',
-            borderTop: '3px solid #6ee7b7',
-            borderBottom: '4px solid #34d399',
-            boxShadow: '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 110px #10b981, inset 0 0 30px rgba(0,0,0,0.9)',
+            background: 'radial-gradient(ellipse at 50% 55%, #022619 0%, #011c12 45%, #00120b 80%, transparent 100%)',
+            borderLeft: '4px solid #bbf7d0',
+            borderRight: '4px solid #86efac',
+            borderTop: '3px solid #4ade80',
+            borderBottom: '4px solid #22c55e',
+            boxShadow: '0 0 35px #86efac, 0 0 75px #4ade80, 0 0 120px #22c55e, inset 0 0 30px rgba(0,0,0,0.9)',
             filter: 'url(#lokiOrganicRiftEdge)'
           }}
         />
