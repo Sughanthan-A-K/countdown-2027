@@ -395,16 +395,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 0.88 }}
                 />
 
-                {/* Red Line 3: Upper-Right Branch (1.02s) */}
-                <motion.polygon
-                  points="140,45 3200,-3600 4000,-2800 175,22"
-                  fill="url(#beamRedLine3)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 1.02 }}
-                />
-
                 {/* Steep upward fissure shaft (1.15s) */}
                 <motion.polygon
                   points="104,65 108,78 400,-4200 -800,-3800"
@@ -415,16 +405,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.15 }}
                 />
 
-                {/* Red Line 4: Mid-Left Branch (1.28s) */}
-                <motion.polygon
-                  points="64,146 -4200,1800 -4500,2800 40,156"
-                  fill="url(#beamRedLine4)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 1.28 }}
-                />
-
                 {/* Lower-Right corner beam (1.38s) */}
                 <motion.polygon
                   points="85,248 126,274 3800,4200 3000,4800"
@@ -433,16 +413,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.88 }}
                   transition={{ duration: 0.08, delay: 1.38 }}
-                />
-
-                {/* Sharp horizontal sliver piercing West (1.48s) */}
-                <motion.polygon
-                  points="40,156 26,172 -4200,1200 -4500,200"
-                  fill="url(#outwardBeamMidLeftSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 1.48 }}
                 />
 
                 {/* Bottom-Left corner far gap (1.58s) */}
