@@ -229,7 +229,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     >
       <div className="relative pt-4 w-full flex justify-center">
         {/* Top binder rings / anchor tabs */}
-        {!(isTop && isDec16Blocked && lokiCrackStage >= 4) && (
+        {!(isTop && isDec16Blocked && lokiCrackStage >= 5) && (
           <>
             <div className={`absolute top-1 left-[15%] ${diwaliPhase === 1 ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'} w-12 h-4 rounded-t-lg border-t-2 border-l-2 border-r-2 z-10 transition-colors duration-500 ${
               isDec16Blocked && lokiCrackStage >= 3 ? 'border-emerald-400 bg-neutral-900 shadow-[0_-2px_14px_rgba(16,185,129,0.75)]' :
@@ -293,12 +293,12 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         )}
 
         {/* Loki Time Portal (Revealed as Mind Stone Blast disintegrates the Dec 16 card) */}
-        {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
+        {isTop && isDec16Blocked && lokiCrackStage >= 5 && (
           <LokiTimelinePortal />
         )}
 
-        {/* Loki / Wanda Mind Stone Explosive Glass Shatter Effect (Stage 4) */}
-        {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
+        {/* Loki / Wanda Mind Stone Explosive Glass Shatter Effect (Stage 5) */}
+        {isTop && isDec16Blocked && lokiCrackStage >= 5 && (
           <LokiMindStoneShatter />
         )}
 
@@ -309,7 +309,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             }
           }}
           animate={
-            isTop && isDec16Blocked && lokiCrackStage >= 4 ? {
+            isTop && isDec16Blocked && lokiCrackStage >= 5 ? {
               opacity: 0,
               scale: 0.8,
               transition: { duration: 0.1 } // Instantly disappears as it shatters into pieces
@@ -318,7 +318,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               scale: 1
             }
           }
-          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-hidden border-2 z-20 ${
+          className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-visible border-2 z-20 ${
             isDec16Blocked && lokiCrackStage >= 3 ? 'bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700' :
             (isDec16Blocked && lokiCrackStage === 2 ? 'bg-neutral-900/90 border-emerald-500/70 shadow-[0_0_25px_rgba(16,185,129,0.3)] transition-all duration-500' :
             (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/50 transition-all duration-500' :
@@ -327,10 +327,10 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           style={{
             boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : (isDec16Blocked && lokiCrackStage >= 3 ? '0 0 60px rgba(16,185,129,0.55)' : (isDec16Blocked && lokiCrackStage === 2 ? '0 0 30px rgba(16,185,129,0.35)' : dropShadow))) : '0 20px 40px -10px rgba(0,0,0,0.1)',
             backfaceVisibility: 'hidden',
-            display: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'none' : 'flex'
+            display: isTop && isDec16Blocked && lokiCrackStage >= 5 ? 'none' : 'flex'
           }}
         >
-          {/* Dec 16 Loki Multiverse Crack (Progressive Tap Stages 1 to 3) */}
+          {/* Dec 16 Loki Multiverse Crack (Progressive Tap Stages 1 to 4) */}
           {isTop && isDec16Blocked && lokiCrackStage > 0 && (
             <LokiTimelineCrack crackStage={lokiCrackStage} />
           )}

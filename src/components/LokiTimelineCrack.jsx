@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 /**
  * LokiTimelineCrack
@@ -8,21 +8,25 @@ import { motion, AnimatePresence } from 'framer-motion';
  * - crackStage 0: 100% hidden, completely normal card.
  * - crackStage 1: Subtle initial fissure drawing across the card.
  * - crackStage 2: Deeper electrical branching with green glow bleeding through.
- * - crackStage 3: Full cosmic breach: universe nebula & stars visible, glowing border, reality torn open!
+ * - crackStage 3: Full cosmic breach: universe nebula & stars visible.
+ * - crackStage 4 (Creep & Sunbeam Light Rays Phase):
+ *   Crack widens massively with piercing volumetric green light rays (like sunbeams breaking through clouds)
+ *   radiating across the screen for 2 seconds before the final glass shatter!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
 
   const isFullUniverse = crackStage >= 3;
+  const isLightRaysCreeping = crackStage >= 4;
 
   return (
-    <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl">
+    <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
       {/* Background Dim & Cosmic Glow inside the card */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: isFullUniverse ? 0.95 : (crackStage === 2 ? 0.75 : 0.45) }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="absolute inset-0 bg-black/80 pointer-events-none"
+        className="absolute inset-0 bg-black/80 pointer-events-none rounded-3xl"
       />
 
       {/* Cosmic Nebula & Stars behind the crack (revealed on stage 2 & 3) */}
@@ -47,71 +51,87 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Cosmic star specks inside the breach */}
-      {isFullUniverse && (
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(14)].map((_, i) => (
+      {/* Volumetric Sunbeam Light Rays breaking through the cracks on 4th tap (like sunlight breaking through dark clouds) */}
+      {isLightRaysCreeping && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible">
+          {/* Intense central emerald flare pulse */}
+          <motion.div
+            initial={{ scale: 0.3, opacity: 0 }}
+            animate={{ scale: [0.5, 2.8], opacity: [0.2, 1, 0.85] }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
+            className="absolute w-48 h-48 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-200 to-white blur-2xl"
+          />
+
+          {/* 8 Piercing Volumetric Light Shafts / Sunbeams shooting out through the fractures across the screen */}
+          {[
+            { angle: -65, length: '120vw', width: '38px', delay: 0 },
+            { angle: -25, length: '140vw', width: '45px', delay: 0.1 },
+            { angle: 15, length: '130vw', width: '35px', delay: 0.05 },
+            { angle: 60, length: '125vw', width: '50px', delay: 0.15 },
+            { angle: 115, length: '135vw', width: '40px', delay: 0.08 },
+            { angle: 155, length: '120vw', width: '48px', delay: 0.12 },
+            { angle: -120, length: '140vw', width: '42px', delay: 0.18 },
+            { angle: -160, length: '130vw', width: '36px', delay: 0.06 }
+          ].map((beam, i) => (
             <motion.div
-              key={i}
-              initial={{ opacity: 0 }}
+              key={`sunbeam-${i}`}
+              initial={{ scaleY: 0, opacity: 0 }}
               animate={{ 
-                opacity: [0.2, 1, 0.2],
-                scale: [0.6, 1.4, 0.6]
+                scaleY: [0, 1.2, 1],
+                opacity: [0, 0.9, 0.75]
               }}
               transition={{
-                duration: 1.4 + (i % 3) * 0.7,
-                repeat: Infinity,
-                delay: i * 0.12,
-                ease: "easeInOut"
+                duration: 1.8,
+                delay: beam.delay,
+                ease: [0.16, 1, 0.3, 1]
               }}
-              className="absolute rounded-full bg-emerald-200 shadow-[0_0_8px_#34d399]"
+              className="absolute pointer-events-none origin-bottom"
               style={{
-                width: `${(i % 3) + 2}px`,
-                height: `${(i % 3) + 2}px`,
-                top: `${20 + (i * 6) % 60}%`,
-                left: `${25 + (i * 7) % 50}%`
+                width: beam.width,
+                height: beam.length,
+                transform: `rotate(${beam.angle}deg)`,
+                background: 'linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(110,231,183,0.85) 25%, rgba(16,185,129,0.5) 60%, transparent 100%)',
+                filter: 'blur(6px)',
+                mixBlendMode: 'screen'
               }}
             />
           ))}
         </div>
       )}
 
-      {/* Central Loki Emerald Crack / Rift (SVG Vector with organic branching) */}
+      {/* SVG Lightning Fissure Paths */}
       <svg 
         viewBox="0 0 200 400" 
-        className="relative w-52 h-84 pointer-events-none filter drop-shadow-[0_0_18px_rgba(52,211,153,0.95)]"
+        className="w-full h-full absolute inset-0 pointer-events-none z-10"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
           <linearGradient id="lokiGreenGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#a7f3d0" />
-            <stop offset="30%" stopColor="#34d399" />
-            <stop offset="70%" stopColor="#10b981" />
-            <stop offset="100%" stopColor="#047857" />
+            <stop offset="0%" stopColor="#34d399" />
+            <stop offset="50%" stopColor="#10b981" />
+            <stop offset="100%" stopColor="#059669" />
           </linearGradient>
-          
-          <filter id="emeraldGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+          <filter id="fissureGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation={isLightRaysCreeping ? "9" : (isFullUniverse ? "5" : "2.5")} result="glow" />
             <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="blur" />
+              <feMergeNode in="glow" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>
 
-        {/* Central Glowing Rift Outer Bleed */}
+        {/* Outer Deep Glow Fissure */}
         <motion.path
           d="M 100 20 L 105 80 L 92 130 L 112 180 L 88 240 L 106 310 L 98 380"
           stroke="#10b981"
-          strokeWidth={isFullUniverse ? "20" : (crackStage === 2 ? "12" : "6")}
+          strokeWidth={isLightRaysCreeping ? "24" : (isFullUniverse ? "14" : (crackStage === 2 ? "8" : "4"))}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
-          opacity="0.6"
-          filter="url(#emeraldGlow)"
+          filter="url(#fissureGlow)"
+          opacity={isLightRaysCreeping ? 1 : (isFullUniverse ? 0.9 : 0.6)}
           animate={{
-            strokeWidth: isFullUniverse ? [18, 26, 18] : [10, 14, 10],
-            opacity: [0.5, 0.85, 0.5]
+            strokeWidth: isLightRaysCreeping ? [16, 26, 22] : (isFullUniverse ? [12, 16, 12] : [6, 9, 6])
           }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -120,7 +140,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         <motion.path
           d="M 100 20 L 105 80 L 92 130 L 112 180 L 88 240 L 106 310 L 98 380"
           stroke="url(#lokiGreenGradient)"
-          strokeWidth={isFullUniverse ? "9" : (crackStage === 2 ? "5" : "2.5")}
+          strokeWidth={isLightRaysCreeping ? "14" : (isFullUniverse ? "9" : (crackStage === 2 ? "5" : "2.5"))}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
@@ -133,7 +153,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         <motion.path
           d="M 100 20 L 105 80 L 92 130 L 112 180 L 88 240 L 106 310 L 98 380"
           stroke="#f0fdf4"
-          strokeWidth={isFullUniverse ? "3.5" : "1.5"}
+          strokeWidth={isLightRaysCreeping ? "6" : (isFullUniverse ? "3.5" : "1.5")}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
@@ -141,12 +161,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Branch Cracks Left & Right (Stage 2 and Stage 3) */}
+        {/* Branch Cracks Left & Right */}
         {crackStage >= 2 && (
           <motion.path
             d="M 105 80 L 75 110 M 92 130 L 60 155 M 112 180 L 140 160 M 88 240 L 125 265 M 106 310 L 70 335"
             stroke="#34d399"
-            strokeWidth={isFullUniverse ? "3" : "1.8"}
+            strokeWidth={isLightRaysCreeping ? "5" : (isFullUniverse ? "3" : "1.8")}
             strokeLinecap="round"
             strokeLinejoin="round"
             fill="none"
@@ -156,12 +176,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           />
         )}
 
-        {/* Deep Wild Secondary Branches (Stage 3 Full Universe) */}
+        {/* Deep Wild Secondary Branches */}
         {isFullUniverse && (
           <motion.path
             d="M 75 110 L 45 105 M 60 155 L 35 180 M 140 160 L 175 175 M 125 265 L 160 280 M 70 335 L 40 350"
             stroke="#6ee7b7"
-            strokeWidth="2"
+            strokeWidth={isLightRaysCreeping ? "4" : "2"}
             strokeLinecap="round"
             strokeLinejoin="round"
             fill="none"
