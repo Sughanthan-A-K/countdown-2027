@@ -16,21 +16,20 @@ import { motion } from 'framer-motion';
  *    - Tap 3: Center spine opens wider, pure green aura radiates.
  *    - Tap 4: Center spine splits wide as deep cracks continuously multiply.
  * 
- * 3. Intense Neon God Rays (Strong Piercing Laser Beams):
- *    - Not a faint wash, but strong piercing neon emerald laser shafts with white-hot cores.
- *    - Sequenced organically to reveal one by one as the cracks shoot open across the card!
- *    - Over 2.0s, each ray blasts outward piercing far across the full screen in 3D,
- *      then triggers the majestic glass shatter!
+ * 3. Exact 4th Tap 3-Wave Sequence Requested by User:
+ *    - Wave 1 (0.0s): First set of new cracks shoots outward across the card.
+ *    - Wave 2 (after 0.5s): Second set of additional creeping cracks shoots and fractures deeper.
+ *    - Wave 3 (after 0.5s = 1.0s): MASSIVE catastrophic primary crack fissure (periya crack) tears through the card!
+ *    - Shatter (after 0.5s = 1.5s): Whole card violently shatters into flying glass shards into the portal!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
 
   const isFullUniverse = crackStage >= 3;
-  const isLightRaysCreeping = crackStage >= 4;
 
   // Single clean fissure stroke & gap width
-  const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : (crackStage === 3 ? 3.4 : 5.0));
-  const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 14));
+  const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : (crackStage === 3 ? 3.4 : 5.2));
+  const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 16));
 
   return (
     <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
@@ -38,7 +37,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ 
-          opacity: crackStage >= 4 ? 0.35 : (crackStage === 3 ? 0.25 : (crackStage === 2 ? 0.15 : 0.08)) 
+          opacity: crackStage >= 4 ? 0.38 : (crackStage === 3 ? 0.25 : (crackStage === 2 ? 0.15 : 0.08)) 
         }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="absolute inset-0 bg-black/50 pointer-events-none rounded-3xl"
@@ -52,7 +51,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             opacity: crackStage >= 4 ? 0.95 : (crackStage === 3 ? 0.8 : 0.45),
             scale: crackStage >= 4 ? 1.35 : (crackStage === 3 ? 1.2 : 1.0),
           }}
-          transition={{ duration: 1.0, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="absolute w-80 h-96 rounded-full pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse at 50% 45%, rgba(16,185,129,0.6) 0%, rgba(5,150,105,0.3) 50%, transparent 75%)',
@@ -60,8 +59,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           }}
         />
       )}
-
-      {/* (Light rays traveling through glass gaps archived in memory and safely removed) */}
 
       {/* NATURAL BROKEN GLASS FRACTURE SVG */}
       <svg 
@@ -89,10 +86,10 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             fill="none"
             filter="url(#pureGreenGlow)"
             animate={{ 
-              strokeWidth: crackStage >= 4 ? [glowWidth, glowWidth * 1.5] : glowWidth,
-              opacity: crackStage >= 4 ? [0.7, 1.0] : 0.75 
+              strokeWidth: crackStage >= 4 ? [glowWidth, glowWidth * 1.6] : glowWidth,
+              opacity: crackStage >= 4 ? [0.75, 1.0] : 0.75 
             }}
-            transition={{ duration: 2.0 }}
+            transition={{ duration: 1.5 }}
           />
         )}
 
@@ -191,13 +188,13 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: Continuous Cracks Spreading Rapidly While Rays Escalate Brightness (Exactly 2.0s) */}
+        {/* TAP 4: Exact Sequence: Wave 1 (0.0s) -> Wave 2 (0.5s) -> Massive Periya Crack (1.0s) -> Shatter (1.5s) */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-cascades">
-            {/* Wave 1 (0.0s - 1.0s): Secondary radial cracks continuously spreading */}
+            {/* --- 1. First Wave Cracks (Starts instantly at 0.0s) --- */}
             <motion.path
-              d="M 25 20 L 5 60 L 0 90 M 175 22 L 195 55 L 200 95 M 0 160 L 15 175 L 35 158 M 200 160 L 185 175 L 175 136 M 5 280 L 25 270 L 45 305 M 200 280 L 180 270 L 165 288 M 5 400 L 40 375 L 72 336 M 195 400 L 160 375 L 126 274 M 55 55 L 92 122 M 140 45 L 118 162 M 78 290 L 102 185 M 155 330 L 106 312"
+              d="M 25 20 L 5 60 L 0 90 M 175 22 L 195 55 L 200 95 M 0 160 L 15 175 L 35 158 M 200 160 L 185 175 L 175 136 M 5 280 L 25 270 L 45 305 M 200 280 L 180 270 L 165 288 M 5 400 L 40 375 L 72 336 M 195 400 L 160 375 L 126 274"
               stroke="#34d399"
               strokeWidth="2.0"
               strokeLinecap="round"
@@ -206,10 +203,10 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
             />
             <motion.path
-              d="M 25 20 L 5 60 L 0 90 M 175 22 L 195 55 L 200 95 M 0 160 L 15 175 L 35 158 M 200 160 L 185 175 L 175 136 M 5 280 L 25 270 L 45 305 M 200 280 L 180 270 L 165 288 M 5 400 L 40 375 L 72 336 M 195 400 L 160 375 L 126 274 M 55 55 L 92 122 M 140 45 L 118 162 M 78 290 L 102 185 M 155 330 L 106 312"
+              d="M 25 20 L 5 60 L 0 90 M 175 22 L 195 55 L 200 95 M 0 160 L 15 175 L 35 158 M 200 160 L 185 175 L 175 136 M 5 280 L 25 270 L 45 305 M 200 280 L 180 270 L 165 288 M 5 400 L 40 375 L 72 336 M 195 400 L 160 375 L 126 274"
               stroke="#ffffff"
               strokeWidth="1.2"
               strokeLinecap="round"
@@ -217,12 +214,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
             />
 
-            {/* Wave 2 (0.8s - 1.8s): Micro-fissures continuously cracking through all shards */}
+            {/* --- 2. Second Wave Cracks (Starts after 0.5s) --- */}
             <motion.path
-              d="M 5 60 L 45 108 M 195 55 L 142 152 M 15 175 L 64 146 M 185 175 L 142 152 M 25 270 L 85 248 M 180 270 L 126 274 M 40 375 L 106 312 M 160 375 L 106 312 M 15 112 L 5 160 M 195 128 L 200 160 M 8 165 L 5 280 M 192 296 L 200 280"
+              d="M 5 60 L 45 108 M 195 55 L 142 152 M 15 175 L 64 146 M 185 175 L 142 152 M 25 270 L 85 248 M 180 270 L 126 274 M 40 375 L 106 312 M 160 375 L 106 312 M 15 112 L 5 160 M 195 128 L 200 160 M 8 165 L 5 280 M 192 296 L 200 280 M 55 55 L 92 122 M 140 45 L 118 162 M 78 290 L 102 185 M 155 330 L 106 312"
               stroke="#34d399"
               strokeWidth="1.8"
               strokeLinecap="round"
@@ -231,18 +228,45 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 1.0, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
             />
             <motion.path
-              d="M 5 60 L 45 108 M 195 55 L 142 152 M 15 175 L 64 146 M 185 175 L 142 152 M 25 270 L 85 248 M 180 270 L 126 274 M 40 375 L 106 312 M 160 375 L 106 312 M 15 112 L 5 160 M 195 128 L 200 160 M 8 165 L 5 280 M 192 296 L 200 280"
+              d="M 5 60 L 45 108 M 195 55 L 142 152 M 15 175 L 64 146 M 185 175 L 142 152 M 25 270 L 85 248 M 180 270 L 126 274 M 40 375 L 106 312 M 160 375 L 106 312 M 15 112 L 5 160 M 195 128 L 200 160 M 8 165 L 5 280 M 192 296 L 200 280 M 55 55 L 92 122 M 140 45 L 118 162 M 78 290 L 102 185 M 155 330 L 106 312"
               stroke="#ffffff"
-              strokeWidth="0.95"
+              strokeWidth="1.0"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 1.0, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
+            />
+
+            {/* --- 3. Third Wave: MASSIVE PERIYA CRACK (Starts after 0.5s = 1.0s) --- */}
+            {/* Heavy glowing green under-fracture for the massive crack */}
+            <motion.path
+              d="M 10 30 L 58 75 L 42 140 L 102 185 L 165 230 L 140 310 L 190 380 M 195 20 L 145 80 L 102 185 L 60 260 L 15 370"
+              stroke="#10b981"
+              strokeWidth="7.0"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              filter="url(#pureGreenGlow)"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
+            />
+            {/* White-hot jagged giant fracture tearing right across the card diagonal */}
+            <motion.path
+              d="M 10 30 L 58 75 L 42 140 L 102 185 L 165 230 L 140 310 L 190 380 M 195 20 L 145 80 L 102 185 L 60 260 L 15 370"
+              stroke="#ffffff"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
             />
           </g>
         )}
