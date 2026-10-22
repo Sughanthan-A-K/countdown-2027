@@ -1,155 +1,81 @@
 import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-function WovenLifePowerStrands({ pathData, forwardPath, backwardPath }) {
+function WovenLifePowerStrands({ pathData }) {
   return (
     <g>
-      {/* 1. Deep Celestial Aura Bloom (Outer magical glow) */}
+      {/* 1. Deep Celestial Emerald Radial Bloom */}
       <motion.path
-        d={forwardPath}
+        d={pathData}
         fill="none"
         stroke="#10b981"
-        strokeWidth="18"
+        strokeWidth="16"
         strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.9 }}
-        transition={{ duration: 3.2, ease: "easeOut" }}
-      />
-      <motion.path
-        d={backwardPath}
-        fill="none"
-        stroke="#10b981"
-        strokeWidth="18"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.9 }}
-        transition={{ duration: 3.2, ease: "easeOut" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0.8, 1, 0.8] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* 2. Primary Vibrant Emerald Vine Core (Loki's signature deep green power) */}
+      {/* 2. Main Glowing Emerald Conduit */}
       <motion.path
-        d={forwardPath}
+        d={pathData}
         fill="none"
         stroke="#059669"
-        strokeWidth="10"
+        strokeWidth="11"
         strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.95 }}
-        transition={{ duration: 2.9, ease: "easeOut" }}
-      />
-      <motion.path
-        d={backwardPath}
-        fill="none"
-        stroke="#059669"
-        strokeWidth="10"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.95 }}
-        transition={{ duration: 2.9, ease: "easeOut" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.95 }}
+        transition={{ duration: 0.4 }}
       />
 
-      {/* 3. Luminous Golden-Yellow Braided Strand (The distinct warm gold magical vine from Loki Season 2) */}
+      {/* 3. Braided Warm Golden-Yellow Magic Strand (Continuously weaving along the branch) */}
       <motion.path
-        d={forwardPath}
+        d={pathData}
         fill="none"
         stroke="#eab308"
-        strokeWidth="4"
-        strokeDasharray="16 12"
+        strokeWidth="3.8"
+        strokeDasharray="16 14"
         strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
+        initial={{ opacity: 0 }}
         animate={{ 
-          pathLength: 1, 
           opacity: 0.95,
-          strokeDashoffset: [-80, 80]
+          strokeDashoffset: [-120, 120]
         }}
         transition={{ 
-          pathLength: { duration: 2.8, ease: "easeOut" },
-          strokeDashoffset: { duration: 2.4, repeat: Infinity, ease: "linear" }
-        }}
-      />
-      <motion.path
-        d={backwardPath}
-        fill="none"
-        stroke="#eab308"
-        strokeWidth="4"
-        strokeDasharray="16 12"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ 
-          pathLength: 1, 
-          opacity: 0.95,
-          strokeDashoffset: [80, -80]
-        }}
-        transition={{ 
-          pathLength: { duration: 2.8, ease: "easeOut" },
+          opacity: { duration: 0.3 },
           strokeDashoffset: { duration: 2.4, repeat: Infinity, ease: "linear" }
         }}
       />
 
-      {/* 4. Electric Lime-Green Woven Strand (Twisting and spiraling along the branch) */}
+      {/* 4. Braided Lime-Green Electric Fiber (Counter-twisting helix pattern) */}
       <motion.path
-        d={forwardPath}
+        d={pathData}
         fill="none"
         stroke="#84cc16"
-        strokeWidth="3.5"
-        strokeDasharray="12 14"
+        strokeWidth="3.2"
+        strokeDasharray="12 16"
         strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
+        initial={{ opacity: 0 }}
         animate={{ 
-          pathLength: 1, 
           opacity: 1,
-          strokeDashoffset: [60, -60]
+          strokeDashoffset: [120, -120]
         }}
         transition={{ 
-          pathLength: { duration: 2.6, ease: "easeOut" },
-          strokeDashoffset: { duration: 2.0, repeat: Infinity, ease: "linear" }
-        }}
-      />
-      <motion.path
-        d={backwardPath}
-        fill="none"
-        stroke="#84cc16"
-        strokeWidth="3.5"
-        strokeDasharray="12 14"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ 
-          pathLength: 1, 
-          opacity: 1,
-          strokeDashoffset: [-60, 60]
-        }}
-        transition={{ 
-          pathLength: { duration: 2.6, ease: "easeOut" },
+          opacity: { duration: 0.3 },
           strokeDashoffset: { duration: 2.0, repeat: Infinity, ease: "linear" }
         }}
       />
 
-      {/* 5. Pure White-Mint Filament (High-voltage crackling magic core like in the screenshot) */}
+      {/* 5. Pure White-Mint Crackling Core Filament */}
       <motion.path
-        d={forwardPath}
+        d={pathData}
         fill="none"
         stroke="#f0fdf4"
-        strokeWidth="2.2"
+        strokeWidth="2.0"
         strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0.9, 1, 0.9] }}
-        transition={{ 
-          pathLength: { duration: 2.4, ease: "easeOut" },
-          opacity: { duration: 1.8, repeat: Infinity, ease: "easeInOut" }
-        }}
-      />
-      <motion.path
-        d={backwardPath}
-        fill="none"
-        stroke="#f0fdf4"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0.9, 1, 0.9] }}
-        transition={{ 
-          pathLength: { duration: 2.4, ease: "easeOut" },
-          opacity: { duration: 1.8, repeat: Infinity, ease: "easeInOut" }
-        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0.85, 1, 0.85] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
       />
     </g>
   );
@@ -184,7 +110,18 @@ function DraggableBranch({
 
     // Trigger Loki God of Stories life magic power flow starting exactly from touch point!
     if (onEnergize) {
-      onEnergize(id);
+      const svg = e.currentTarget.closest('svg');
+      let clickX = 500;
+      let clickY = 500;
+      if (svg) {
+        const pt = svg.createSVGPoint();
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+        clickX = svgP.x;
+        clickY = svgP.y;
+      }
+      onEnergize(id, clickX, clickY);
     }
 
     const handlePointerMove = (moveEvent) => {
@@ -233,12 +170,11 @@ function DraggableBranch({
         {children}
 
         {/* --- LOKI GOD OF STORIES MAGIC LIFE POWER FLOW OVERLAY --- */}
-        {/* Multicolored woven braided currents (Emerald, Gold, Lime, Electric Mint) expanding from tap point */}
+        {/* Seamless woven braided currents spreading organically outwards from tap point */}
         {energizedData && (
-          <WovenLifePowerStrands
-            forwardPath={forwardPath || pathData}
-            backwardPath={backwardPath || pathData}
-          />
+          <g clipPath={`url(#power-reveal-${id})`}>
+            <WovenLifePowerStrands pathData={pathData} />
+          </g>
         )}
       </motion.g>
     </motion.g>
@@ -260,12 +196,13 @@ export default function LokiTimelinePortal() {
   // Track which branches have been energized with Loki's life magic
   const [energizedBranches, setEnergizedBranches] = useState({});
 
-  const handleBranchEnergize = (id, clickRatio) => {
+  const handleBranchEnergize = (id, clickX, clickY) => {
     setEnergizedBranches(prev => ({
       ...prev,
       [id]: {
         active: true,
-        ratio: clickRatio,
+        x: clickX,
+        y: clickY,
         timestamp: Date.now()
       }
     }));
@@ -430,6 +367,27 @@ export default function LokiTimelinePortal() {
         className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-10" 
         xmlns="http://www.w3.org/2000/svg"
       >
+        <defs>
+          {/* Dynamic Expanding Circular Clip-Paths for Each Branch Centered at User Tap Point */}
+          {['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'].map(bId => {
+            const data = energizedBranches[bId];
+            return (
+              <clipPath id={`power-reveal-${bId}`} key={`clip-${bId}`}>
+                {data ? (
+                  <motion.circle
+                    cx={data.x || 500}
+                    cy={data.y || 500}
+                    initial={{ r: 0 }}
+                    animate={{ r: 1600 }}
+                    transition={{ duration: 2.8, ease: "easeOut" }}
+                  />
+                ) : (
+                  <circle cx="500" cy="500" r="0" />
+                )}
+              </clipPath>
+            );
+          })}
+        </defs>
         {/* Branch 1: Upper graceful arc crossing from beyond left (-150) to beyond right (1150) */}
         <DraggableBranch
           id="branch-1"
