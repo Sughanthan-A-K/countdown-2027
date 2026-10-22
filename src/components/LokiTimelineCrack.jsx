@@ -12,11 +12,12 @@ import { motion } from 'framer-motion';
  * - TAP 2 (Spreading into Inner Empty Space):
  *   Cracks branch slowly from the spine out into inner empty space.
  * 
- * - TAP 3 (THE 3D LIGHT BURST REQUESTED BY USER):
- *   "3rd time tap pannum pothu etho oru side la iruthu oru light mattume takkunu therikuthu...
- *   slow ah varala takkunu therikuthu athu card center la irunthu 3D maathiri screen la adikuthu"
- *   -> Instant, high-speed piercing 3D volumetric emerald beam bursting directly out of the center
- *      puncture aperture towards one side across the user's screen!
+ * - TAP 3 (THE 2-BEAM 3D LIGHT BURST REQUESTED BY USER):
+ *   - REMOVED the starburst lines / jolikkuradhu at center (clean, pure fracture gap).
+ *   - NOW 2 POWERFUL 3D BEAMS (oru 2ndu vachiko):
+ *     1. Beam 1: Blasts piercing out from center (102, 185) toward upper-right across full screen!
+ *     2. Beam 2: Blasts piercing out from center (102, 185) toward bottom-left across full screen!
+ *     Natural 3D perspective projection directly from the center aperture.
  * 
  * - TAP 4 (Spreading into remaining gaps & shatter):
  *   - 0.0s: Cracks creep into top corners.
@@ -61,7 +62,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
       )}
 
       {/* ============================================================ */}
-      {/* TAP 3: INSTANT 3D LIGHT BURST FROM CENTER (Takkunu therikkira beam) */}
+      {/* TAP 3: 2 POWERFUL 3D LIGHT BEAMS FROM CENTER (No jolikkuradhu / No starburst) */}
       {/* ============================================================ */}
       {crackStage >= 3 && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
@@ -71,24 +72,25 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             style={{ mixBlendMode: 'screen' }}
           >
             <defs>
-              <linearGradient id="instant3DBeamGrad" x1="0%" y1="50%" x2="100%" y2="0%">
+              <linearGradient id="beam1Grad" x1="0%" y1="50%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="38%" stopColor="#34d399" stopOpacity="0.85" />
                 <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              <radialGradient id="centerInstantBloom" cx="50%" cy="50%" r="50%">
+              <linearGradient id="beam2Grad" x1="100%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.9" />
-                <stop offset="65%" stopColor="#10b981" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </radialGradient>
+                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="38%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
 
-              <filter id="beamTakkunuGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3.5" result="sharp" />
-                <feGaussianBlur stdDeviation="10" result="soft" />
+              <filter id="pure3DBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" result="sharp" />
+                <feGaussianBlur stdDeviation="9" result="soft" />
                 <feMerge>
                   <feMergeNode in="soft" />
                   <feMergeNode in="sharp" />
@@ -97,32 +99,37 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               </filter>
             </defs>
 
-            {/* Instant white-hot flash point at center aperture (102, 185) */}
-            <motion.ellipse
-              cx="102"
-              cy="185"
-              rx="20"
-              ry="20"
-              fill="url(#centerInstantBloom)"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.8, 1.3], opacity: [0, 1, 0.9] }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              filter="url(#beamTakkunuGlow)"
-            />
-
-            {/* Single Powerful 3D Light Shaft: Blasts instantly out from center (102, 185) toward upper-right across full screen! */}
+            {/* Beam 1: Blasts from center (102, 185) towards upper-right across full screen! */}
             <motion.polygon
               points="102,185 116,180 820,-240 560,-320"
-              fill="url(#instant3DBeamGrad)"
-              filter="url(#beamTakkunuGlow)"
+              fill="url(#beam1Grad)"
+              filter="url(#pure3DBeamGlow)"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ 
                 scale: 1,
-                opacity: [0, 1, 0.85]
+                opacity: [0, 1, 0.88]
               }}
               style={{ transformOrigin: "102px 185px" }}
               transition={{ 
-                duration: 0.18, // Instant "takkunu" burst
+                duration: 0.18,
+                ease: [0.08, 0.82, 0.17, 1] 
+              }}
+            />
+
+            {/* Beam 2: Blasts from center (102, 185) towards bottom-left across full screen! */}
+            <motion.polygon
+              points="102,185 90,192 -480,780 -260,860"
+              fill="url(#beam2Grad)"
+              filter="url(#pure3DBeamGlow)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ 
+                scale: 1,
+                opacity: [0, 1, 0.88]
+              }}
+              style={{ transformOrigin: "102px 185px" }}
+              transition={{ 
+                duration: 0.22,
+                delay: 0.04,
                 ease: [0.08, 0.82, 0.17, 1] 
               }}
             />
@@ -211,7 +218,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 3: Spreading further outward into Mid-Outer Empty Space */}
+        {/* TAP 3: Spreading further outward into Mid-Outer Empty Space (NO JOLIKKURADHU) */}
         {/* ============================================================ */}
         {crackStage >= 3 && (
           <g key="crack-stage-3-persistent">
@@ -240,19 +247,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               initial={crackStage === 3 ? { pathLength: 0 } : false}
               animate={{ pathLength: 1 }}
               transition={{ duration: 2.8, ease: [0.12, 1, 0.28, 1] }}
-            />
-
-            {/* Impact Center Starburst Lines radiating from (102, 185) */}
-            <motion.path
-              d="M 102 185 L 90 168 M 102 185 L 116 172 M 102 185 L 112 202 M 102 185 L 88 196 M 102 185 L 100 164 M 102 185 L 120 188"
-              stroke="#ffffff"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              initial={crackStage === 3 ? { pathLength: 0 } : false}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 1.8, delay: 0.1, ease: [0.12, 1, 0.28, 1] }}
             />
           </g>
         )}
@@ -287,7 +281,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, ease: "easeOut" }}
             />
 
-            {/* --- WAVE 2 (after 0.5s): Spreading into Mid-Left & Mid-Right Empty Spaces --- */}
+            {/* --- WAVE 2 (after 0.5s): Spreading into Mid-Left (Behind "TODAY") & Mid-Right (Behind "th day") Empty Spaces --- */}
             <motion.path
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#10b981"
