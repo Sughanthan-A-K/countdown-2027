@@ -135,7 +135,7 @@ export default function LokiTimelinePortal() {
 
       {/* 2. The Organic Asymmetrical Portal Opening (Contained with organic natural tapered Ends, Expanding smoothly over time) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-visible">
-        {/* Outer illuminated cloudy rift lip */}
+        {/* Outer illuminated cloudy rift lip (Seamless soft glow around rift, NO hard boundary) */}
         <motion.div
           initial={{ scaleX: 0.35, opacity: 0.7 }}
           animate={{
@@ -148,12 +148,10 @@ export default function LokiTimelinePortal() {
             scaleY: { duration: 7, ease: [0.16, 1, 0.3, 1] },
             opacity: { duration: 4, ease: "easeOut" }
           }}
-          // Top tapered sharp, bottom rounded bulbous cloud tear (distinct top vs bottom)
           className="absolute h-[92vh] max-h-[920px] w-64 sm:w-80 pointer-events-none rounded-[15%_75%_55%_35%/70%_25%_65%_45%]"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,1) 0%, rgba(52,211,153,0.92) 35%, rgba(16,185,129,0.7) 60%, rgba(5,150,105,0.3) 80%, transparent 95%)',
-            boxShadow: '0 0 100px rgba(52,211,153,0.7), 0 0 180px rgba(16,185,129,0.5)',
-            filter: 'url(#lokiOrganicRiftEdge)'
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.85) 0%, rgba(52,211,153,0.6) 30%, rgba(16,185,129,0.3) 55%, transparent 75%)',
+            filter: 'blur(25px)'
           }}
         />
 
