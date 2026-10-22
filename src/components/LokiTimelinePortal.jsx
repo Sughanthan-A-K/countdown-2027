@@ -12,8 +12,8 @@ function WovenLifePowerStrands({ pathData }) {
         strokeWidth="16"
         strokeLinecap="round"
         initial={{ opacity: 0 }}
-        animate={{ opacity: [0.8, 1, 0.8] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ opacity: [0.75, 1, 0.75] }}
+        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* 2. Main Glowing Emerald Conduit */}
@@ -25,7 +25,7 @@ function WovenLifePowerStrands({ pathData }) {
         strokeLinecap="round"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.95 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 1.2, ease: "easeInOut" }}
       />
 
       {/* 3. Braided Warm Golden-Yellow Magic Strand (Continuously weaving along the branch) */}
@@ -42,8 +42,8 @@ function WovenLifePowerStrands({ pathData }) {
           strokeDashoffset: [-120, 120]
         }}
         transition={{ 
-          opacity: { duration: 0.3 },
-          strokeDashoffset: { duration: 2.4, repeat: Infinity, ease: "linear" }
+          opacity: { duration: 1.2, ease: "easeInOut" },
+          strokeDashoffset: { duration: 4.5, repeat: Infinity, ease: "linear" }
         }}
       />
 
@@ -61,8 +61,8 @@ function WovenLifePowerStrands({ pathData }) {
           strokeDashoffset: [120, -120]
         }}
         transition={{ 
-          opacity: { duration: 0.3 },
-          strokeDashoffset: { duration: 2.0, repeat: Infinity, ease: "linear" }
+          opacity: { duration: 1.2, ease: "easeInOut" },
+          strokeDashoffset: { duration: 3.8, repeat: Infinity, ease: "linear" }
         }}
       />
 
@@ -75,7 +75,7 @@ function WovenLifePowerStrands({ pathData }) {
         strokeLinecap="round"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.85, 1, 0.85] }}
-        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
       />
     </g>
   );
@@ -379,7 +379,8 @@ export default function LokiTimelinePortal() {
                     cy={data.y || 500}
                     initial={{ r: 0 }}
                     animate={{ r: 1600 }}
-                    transition={{ duration: 2.8, ease: "easeOut" }}
+                    // Slow, smooth cinematic energy wave travelling out like water ripple
+                    transition={{ duration: 5.5, ease: [0.12, 0.8, 0.25, 1] }}
                   />
                 ) : (
                   <circle cx="500" cy="500" r="0" />
