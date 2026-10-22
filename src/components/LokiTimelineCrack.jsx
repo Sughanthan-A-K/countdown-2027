@@ -249,8 +249,18 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="url(#outwardBeam1)"
               filter="url(#outwardBeamGlow)"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.1, ease: "easeOut" }}
+              animate={{ 
+                opacity: [0, 1, 0.88, 1, 0.92, 1],
+              }}
+              transition={{ 
+                opacity: {
+                  times: [0, 0.1, 0.35, 0.6, 0.8, 1],
+                  duration: 0.9,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "easeInOut"
+                }
+              }}
             />
 
             {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
@@ -259,167 +269,206 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="url(#outwardBeam2)"
               filter="url(#outwardBeamGlow)"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
+              animate={{ 
+                opacity: [0, 1, 0.9, 1, 0.85, 1],
+              }}
+              transition={{ 
+                opacity: {
+                  delay: 0.05,
+                  times: [0, 0.1, 0.4, 0.65, 0.85, 1],
+                  duration: 0.85,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "easeInOut"
+                }
+              }}
             />
 
             {/* ============================================================ */}
-            {/* TAP 4: RANDOM OUTWARD LIGHT BURSTS (INFINITELY PROJECTING ACROSS ALL SCREENS) */}
+            {/* TAP 4: ASYMMETRIC RANDOM TIMING & SHIMMERING (JOLIKKURA) LIGHT BURSTS */}
+            {/* Realistic unpredictable delays + luminous electric shimmer */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- 1st POP (0.04s): Piercing Upper-Left corner to infinity --- */}
+                {/* --- 1st POP (0.04s): Piercing Upper-Left corner --- */}
                 <motion.polygon
                   points="76,100 45,108 -3400,-2600 -2400,-3600"
                   fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.08, delay: 0.04 }}
+                  animate={{ 
+                    opacity: [0, 1, 0.82, 1, 0.9, 1] 
+                  }}
+                  transition={{ 
+                    opacity: {
+                      delay: 0.04,
+                      duration: 0.7,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
                 />
 
-                {/* --- 2nd POP (0.22s): Blade beam slicing through Mid-Right to infinity --- */}
+                {/* --- 2nd POP (0.38s): Blade beam slicing through Mid-Right --- */}
                 <motion.polygon
                   points="165,138 182,148 4500,1800 4200,300"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 0.22 }}
+                  animate={{ 
+                    opacity: [0, 0.95, 0.8, 1, 0.85, 0.95] 
+                  }}
+                  transition={{ 
+                    opacity: {
+                      delay: 0.38,
+                      duration: 0.75,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
                 />
 
-                {/* --- 3rd POP (0.42s): Upper-Right corner gap to infinity --- */}
+                {/* --- 3rd POP (0.52s): Upper-Right corner gap --- */}
                 <motion.polygon
                   points="168,22 200,5 3800,-1600 3200,-2400"
                   fill="url(#microBeamTopRight)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.08, delay: 0.42 }}
+                  animate={{ 
+                    opacity: [0, 0.9, 0.75, 0.95, 0.8, 0.9] 
+                  }}
+                  transition={{ 
+                    opacity: {
+                      delay: 0.52,
+                      duration: 0.65,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
                 />
 
-                {/* --- 4th POP (0.60s): Steep upward fissure shaft to infinity --- */}
+                {/* --- 4th POP (0.85s): Steep upward fissure shaft tilting North-North-West --- */}
                 <motion.polygon
                   points="104,65 108,78 400,-4200 -800,-3800"
                   fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 0.60 }}
+                  animate={{ 
+                    opacity: [0, 1, 0.84, 1, 0.88, 1] 
+                  }}
+                  transition={{ 
+                    opacity: {
+                      delay: 0.85,
+                      duration: 0.8,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
                 />
 
-                {/* --- 5th POP (0.80s): Narrow oblique beam cutting through Lower-Right to infinity --- */}
+                {/* --- 5th POP (1.02s): Narrow oblique beam cutting through Lower-Right corner --- */}
                 <motion.polygon
                   points="85,248 126,274 3800,4200 3000,4800"
                   fill="url(#outwardBeamLowerRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 0.80 }}
+                  animate={{ 
+                    opacity: [0, 0.95, 0.78, 1, 0.85, 0.95] 
+                  }}
+                  transition={{ 
+                    opacity: {
+                      delay: 1.02,
+                      duration: 0.7,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
                 />
 
-                {/* --- 6th POP (1.00s): Sharp horizontal sliver piercing West to infinity --- */}
+                {/* --- 6th POP (1.18s): Sharp horizontal sliver piercing West --- */}
                 <motion.polygon
                   points="40,156 26,172 -4200,1200 -4500,200"
                   fill="url(#outwardBeamMidLeftSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 1.00 }}
+                  animate={{ 
+                    opacity: [0, 0.95, 0.8, 0.95, 0.78, 0.95] 
+                  }}
+                  transition={{ 
+                    opacity: {
+                      delay: 1.18,
+                      duration: 0.75,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
                 />
 
-                {/* --- 7th POP (1.15s): Right edge gap behind 'th day' to infinity --- */}
+                {/* --- 7th POP (1.35s): Right edge gap behind 'th day' --- */}
                 <motion.polygon
                   points="155,210 180,235 4400,3200 3800,1200"
                   fill="url(#microBeamRightEdge)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.08, delay: 1.15 }}
+                  animate={{ 
+                    opacity: [0, 0.9, 0.72, 0.95, 0.82, 0.9] 
+                  }}
+                  transition={{ 
+                    opacity: {
+                      delay: 1.35,
+                      duration: 0.65,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
                 />
 
-                {/* --- 8th POP (1.30s): Off-center vertical beam piercing South-South-East to infinity --- */}
+                {/* --- 8th POP (1.42s): Off-center vertical beam piercing South-South-East --- */}
                 <motion.polygon
                   points="96,350 102,400 1200,4500 200,4500"
                   fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 1.30 }}
+                  animate={{ 
+                    opacity: [0, 1, 0.85, 1, 0.88, 1] 
+                  }}
+                  transition={{ 
+                    opacity: {
+                      delay: 1.42,
+                      duration: 0.8,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
                 />
 
-                {/* --- 9th POP (1.45s): Bottom-Left corner far gap to infinity --- */}
+                {/* --- 9th POP (1.58s): Bottom-Left corner far gap --- */}
                 <motion.polygon
                   points="14,382 0,400 -2600,4800 -3400,4000"
                   fill="url(#microBeamBottomCorner)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.08, delay: 1.45 }}
-                />
-              </g>
-            )}
-
-            {/* ============================================================ */}
-            {/* LUMINOUS COSMIC PARTICLES STRICTLY INSIDE THE LIGHT BEAMS */}
-            {/* Light shaft-oda centerline kulla mattum thaan slow-ah travel aagum */}
-            {/* ============================================================ */}
-            {crackStage >= 3 && (
-              <g key="crack-light-particles">
-                {[
-                  // Stream along Beam 1 (Top-Right): Centerline from (121, 168) -> (3700, -1900)
-                  { x0: 121, y0: 168, x1: 2200, y1: -1100, r: 2.2, d: 0.1, dur: 3.4 },
-                  { x0: 125, y0: 165, x1: 2400, y1: -1250, r: 1.6, d: 1.2, dur: 3.6 },
-                  { x0: 118, y0: 170, x1: 2000, y1: -950, r: 1.9, d: 2.1, dur: 3.8 },
-
-                  // Stream along Beam 2 (Bottom-Left): Centerline from (93, 216) -> (-2900, 4150)
-                  { x0: 93, y0: 216, x1: -1800, y1: 2600, r: 2.2, d: 0.2, dur: 3.5 },
-                  { x0: 90, y0: 220, x1: -2000, y1: 2900, r: 1.6, d: 1.4, dur: 3.7 },
-                  { x0: 96, y0: 212, x1: -1600, y1: 2300, r: 1.8, d: 2.3, dur: 3.9 },
-
-                  // Tap 4 extra streams - Strictly along beam centerlines:
-                  ...(crackStage >= 4 ? [
-                    // Top-Left beam (76,100 -> 45,108): Centerline towards (-2900, -3100)
-                    { x0: 60, y0: 104, x1: -1800, y1: -1900, r: 2.0, d: 0.3, dur: 3.3 },
-                    { x0: 55, y0: 106, x1: -1600, y1: -1700, r: 1.5, d: 1.5, dur: 3.6 },
-
-                    // Mid-Right beam (165,138 -> 182,148): Centerline towards (4350, 1050)
-                    { x0: 173, y0: 143, x1: 2500, y1: 600, r: 1.9, d: 0.4, dur: 3.4 },
-
-                    // Top-Spine beam (104,65 -> 108,78): Centerline straight UP towards (-200, -4000)
-                    { x0: 106, y0: 71, x1: -100, y1: -2500, r: 2.1, d: 0.6, dur: 3.2 },
-
-                    // Lower-Right beam (85,248 -> 126,274): Centerline towards (3400, 4500)
-                    { x0: 105, y0: 261, x1: 2100, y1: 2800, r: 2.0, d: 0.8, dur: 3.5 },
-
-                    // Mid-Left beam (40,156 -> 26,172): Centerline towards (-4350, 700)
-                    { x0: 33, y0: 164, x1: -2400, y1: 400, r: 1.9, d: 1.0, dur: 3.4 },
-
-                    // Bottom-Spine beam (96,350 -> 102,400): Centerline straight DOWN towards (700, 4500)
-                    { x0: 99, y0: 375, x1: 450, y1: 2800, r: 2.1, d: 1.2, dur: 3.3 }
-                  ] : [])
-                ].map((p, idx) => (
-                  <motion.circle
-                    key={`light-particle-${idx}`}
-                    r={p.r}
-                    fill="#ffffff"
-                    filter="url(#outwardBeamGlow)"
-                    initial={{ cx: p.x0, cy: p.y0, opacity: 0, scale: 0.5 }}
-                    animate={{ 
-                      cx: [p.x0, p.x0 + (p.x1 - p.x0) * 0.35, p.x1],
-                      cy: [p.y0, p.y0 + (p.y1 - p.y0) * 0.35, p.y1],
-                      opacity: [0, 0.95, 0.85, 0],
-                      scale: [0.5, 1.2, 1.0, 0.3]
-                    }}
-                    transition={{
-                      duration: p.dur,
-                      delay: p.d,
+                  animate={{ 
+                    opacity: [0, 0.9, 0.75, 0.95, 0.8, 0.9] 
+                  }}
+                  transition={{ 
+                    opacity: {
+                      delay: 1.58,
+                      duration: 0.7,
                       repeat: Infinity,
-                      repeatDelay: 0.4,
-                      ease: "linear"
-                    }}
-                  />
-                ))}
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }
+                  }}
+                />
               </g>
             )}
           </svg>
