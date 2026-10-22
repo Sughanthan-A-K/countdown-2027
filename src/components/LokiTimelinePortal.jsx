@@ -187,12 +187,12 @@ export default function LokiTimelinePortal() {
           className="absolute h-[115vh] w-24 sm:w-36 pointer-events-none"
           style={{
             transformOrigin: "52% 46%", // Off-center origin so width increases asymmetrically
-            background: 'radial-gradient(ellipse at 50% 55%, #022619 0%, #011c12 45%, #00120b 80%, transparent 100%)',
-            borderLeft: '4px solid #bbf7d0',
+            background: 'radial-gradient(ellipse at 50% 55%, #052e16 0%, #022110 45%, #00140a 80%, transparent 100%)',
+            borderLeft: '4px solid #dcfce7',
             borderRight: '4px solid #86efac',
             borderTop: '3px solid #4ade80',
             borderBottom: '4px solid #22c55e',
-            boxShadow: '0 0 35px #86efac, 0 0 75px #4ade80, 0 0 120px #22c55e, inset 0 0 30px rgba(0,0,0,0.9)',
+            boxShadow: '0 0 40px #86efac, 0 0 85px #4ade80, 0 0 140px #22c55e, inset 0 0 35px rgba(22,163,74,0.35)',
             filter: 'url(#lokiOrganicRiftEdge)'
           }}
         />
@@ -204,7 +204,7 @@ export default function LokiTimelinePortal() {
             opacity: [0.85, 1, 0.85]
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[58%] w-12 h-12 rounded-full bg-emerald-100 blur-sm shadow-[0_0_50px_#a7f3d0,0_0_100px_#34d399,0_0_160px_#10b981] pointer-events-none"
+          className="absolute top-[58%] w-12 h-12 rounded-full bg-green-100 blur-sm shadow-[0_0_50px_#86efac,0_0_100px_#4ade80,0_0_160px_#22c55e] pointer-events-none"
         />
 
         {/* Intense white-mint core tear spine (Contained height with organic natural pinch at top and bottom) */}
@@ -220,8 +220,8 @@ export default function LokiTimelinePortal() {
           }}
           className="absolute h-[110vh] w-5 sm:w-6 pointer-events-none rounded-[50%]"
           style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(209,250,229,0.9) 15%, #ffffff 50%, rgba(167,243,208,0.9) 85%, transparent 100%)',
-            boxShadow: '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 120px #10b981',
+            background: 'linear-gradient(180deg, transparent 0%, rgba(187,247,208,0.95) 15%, #ffffff 50%, rgba(134,239,172,0.95) 85%, transparent 100%)',
+            boxShadow: '0 0 35px #86efac, 0 0 75px #4ade80, 0 0 130px #22c55e',
             filter: 'url(#lokiOrganicRiftEdge) blur(2.5px)'
           }}
         />
