@@ -9,7 +9,8 @@ import { motion } from 'framer-motion';
  * - Central vertical opening is an organic, irregular portal rift with rugged, frayed, torn cloud-like borders
  *   (exactly like the rift in the Loki Season 2 finale screenshot where the loom fabric tears open).
  * - A distant celestial cosmic void visible inside the rift with a soft focal light origin.
- * - Organic dark timeline branches/vines weaving through the scene, animated with very slow, gentle, hypnotic drift (no artificial dashed lines).
+ * - Organic dark timeline branches/vines spanning FULLY OUT OF THE SCREEN (from negative coordinates < -100 to > 1100),
+ *   never stopping inside the screen bounds, animated with very slow, gentle, hypnotic drift (no dashed lines).
  */
 export default function LokiTimelinePortal() {
   return (
@@ -45,7 +46,7 @@ export default function LokiTimelinePortal() {
           </filter>
 
           <filter id="branchDeepShadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -113,82 +114,49 @@ export default function LokiTimelinePortal() {
         />
       </div>
 
-      {/* 3. Dark Multiverse Timeline Branches (Completely solid, organic vine curves - ZERO dashed lines, hypnotic slow natural sway) */}
+      {/* 3. Dark Multiverse Timeline Branches (Flowing completely OUT OF SCREEN, continuous organic vines with slow natural sway) */}
       <svg 
         viewBox="0 0 1000 1000" 
         preserveAspectRatio="none"
-        className="absolute inset-0 w-full h-full pointer-events-none" 
+        className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" 
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Branch 1: Natural heavy arc crossing upper left down toward right */}
+        {/* Branch 1: Main Upper Heavy Vine (Extends completely from -150 beyond left edge to 1150 beyond right edge) */}
         <motion.path
-          d="M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410"
+          d="M -150 200 C 180 270, 380 320, 520 420 C 650 510, 840 460, 1150 380"
           fill="none"
           stroke="#021c15"
-          strokeWidth="12"
+          strokeWidth="14"
           strokeLinecap="round"
           filter="url(#branchDeepShadow)"
           animate={{
             d: [
-              "M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410",
-              "M 40 240 C 230 265, 395 340, 520 405 C 640 525, 770 495, 960 430",
-              "M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410"
+              "M -150 200 C 180 270, 380 320, 520 420 C 650 510, 840 460, 1150 380",
+              "M -150 220 C 190 250, 395 345, 520 405 C 640 525, 830 480, 1150 405",
+              "M -150 200 C 180 270, 380 320, 520 420 C 650 510, 840 460, 1150 380"
             ]
           }}
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.path
-          d="M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410"
+          d="M -150 200 C 180 270, 380 320, 520 420 C 650 510, 840 460, 1150 380"
           fill="none"
           stroke="#043828"
-          strokeWidth="4.5"
+          strokeWidth="5"
           strokeLinecap="round"
           animate={{
             d: [
-              "M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410",
-              "M 40 240 C 230 265, 395 340, 520 405 C 640 525, 770 495, 960 430",
-              "M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410"
+              "M -150 200 C 180 270, 380 320, 520 420 C 650 510, 840 460, 1150 380",
+              "M -150 220 C 190 250, 395 345, 520 405 C 640 525, 830 480, 1150 405",
+              "M -150 200 C 180 270, 380 320, 520 420 C 650 510, 840 460, 1150 380"
             ]
           }}
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Branch 2: High sweeping branch crossing the upper void */}
+        {/* Branch 2: High Sweeping Vine (Extends completely from -120 beyond left edge to 1120 beyond right edge) */}
         <motion.path
-          d="M 120 80 C 350 150, 620 120, 880 210"
-          fill="none"
-          stroke="#021c15"
-          strokeWidth="10"
-          strokeLinecap="round"
-          filter="url(#branchDeepShadow)"
-          animate={{
-            d: [
-              "M 120 80 C 350 150, 620 120, 880 210",
-              "M 120 105 C 335 135, 635 145, 880 190",
-              "M 120 80 C 350 150, 620 120, 880 210"
-            ]
-          }}
-          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-        <motion.path
-          d="M 120 80 C 350 150, 620 120, 880 210"
-          fill="none"
-          stroke="#043828"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          animate={{
-            d: [
-              "M 120 80 C 350 150, 620 120, 880 210",
-              "M 120 105 C 335 135, 635 145, 880 190",
-              "M 120 80 C 350 150, 620 120, 880 210"
-            ]
-          }}
-          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-
-        {/* Branch 3: Lower sweeping tendril ascending across center */}
-        <motion.path
-          d="M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860"
+          d="M -120 40 C 300 140, 620 110, 1120 190"
           fill="none"
           stroke="#021c15"
           strokeWidth="11"
@@ -196,61 +164,111 @@ export default function LokiTimelinePortal() {
           filter="url(#branchDeepShadow)"
           animate={{
             d: [
-              "M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860",
-              "M 80 760 C 275 755, 465 640, 640 650 C 765 730, 875 790, 940 840",
-              "M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860"
+              "M -120 40 C 300 140, 620 110, 1120 190",
+              "M -120 65 C 285 125, 635 135, 1120 170",
+              "M -120 40 C 300 140, 620 110, 1120 190"
             ]
           }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
         <motion.path
-          d="M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860"
+          d="M -120 40 C 300 140, 620 110, 1120 190"
           fill="none"
           stroke="#043828"
           strokeWidth="4"
           strokeLinecap="round"
           animate={{
             d: [
-              "M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860",
-              "M 80 760 C 275 755, 465 640, 640 650 C 765 730, 875 790, 940 840",
-              "M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860"
+              "M -120 40 C 300 140, 620 110, 1120 190",
+              "M -120 65 C 285 125, 635 135, 1120 170",
+              "M -120 40 C 300 140, 620 110, 1120 190"
+            ]
+          }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+
+        {/* Branch 3: Lower Ascending Heavy Vine (Extends from -150 beyond bottom-left to 1150 beyond bottom-right) */}
+        <motion.path
+          d="M -150 820 C 180 760, 480 620, 640 670 C 780 710, 920 840, 1150 890"
+          fill="none"
+          stroke="#021c15"
+          strokeWidth="13"
+          strokeLinecap="round"
+          filter="url(#branchDeepShadow)"
+          animate={{
+            d: [
+              "M -150 820 C 180 760, 480 620, 640 670 C 780 710, 920 840, 1150 890",
+              "M -150 800 C 195 775, 465 640, 640 650 C 765 730, 935 820, 1150 870",
+              "M -150 820 C 180 760, 480 620, 640 670 C 780 710, 920 840, 1150 890"
+            ]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+        <motion.path
+          d="M -150 820 C 180 760, 480 620, 640 670 C 780 710, 920 840, 1150 890"
+          fill="none"
+          stroke="#043828"
+          strokeWidth="4.5"
+          strokeLinecap="round"
+          animate={{
+            d: [
+              "M -150 820 C 180 760, 480 620, 640 670 C 780 710, 920 840, 1150 890",
+              "M -150 800 C 195 775, 465 640, 640 650 C 765 730, 935 820, 1150 870",
+              "M -150 820 C 180 760, 480 620, 640 670 C 780 710, 920 840, 1150 890"
             ]
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
 
-        {/* Branch 4: Thin organic solid secondary tendrils (NO dashed lines) */}
+        {/* Branch 4: Diagonal Weaving Vine (Crosses continuously from top-right beyond screen to bottom-left beyond screen) */}
         <motion.path
-          d="M 280 340 C 420 460, 560 520, 740 620"
+          d="M 1150 80 C 850 280, 550 480, 180 680 C 40 760, -60 840, -120 920"
           fill="none"
           stroke="#021c15"
-          strokeWidth="5"
+          strokeWidth="9"
           strokeLinecap="round"
           filter="url(#branchDeepShadow)"
           animate={{
             d: [
-              "M 280 340 C 420 460, 560 520, 740 620",
-              "M 280 355 C 430 450, 550 535, 740 610",
-              "M 280 340 C 420 460, 560 520, 740 620"
+              "M 1150 80 C 850 280, 550 480, 180 680 C 40 760, -60 840, -120 920",
+              "M 1150 100 C 835 270, 565 495, 180 670 C 30 775, -50 830, -120 910",
+              "M 1150 80 C 850 280, 550 480, 180 680 C 40 760, -60 840, -120 920"
             ]
           }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         />
         <motion.path
-          d="M 720 180 C 580 320, 440 480, 260 580"
+          d="M 1150 80 C 850 280, 550 480, 180 680 C 40 760, -60 840, -120 920"
           fill="none"
-          stroke="#032b1f"
-          strokeWidth="4"
+          stroke="#043828"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          animate={{
+            d: [
+              "M 1150 80 C 850 280, 550 480, 180 680 C 40 760, -60 840, -120 920",
+              "M 1150 100 C 835 270, 565 495, 180 670 C 30 775, -50 830, -120 910",
+              "M 1150 80 C 850 280, 550 480, 180 680 C 40 760, -60 840, -120 920"
+            ]
+          }}
+          transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+        />
+
+        {/* Branch 5: Secondary Ascending Vine (Spanning from -100 left edge up to 1100 right edge) */}
+        <motion.path
+          d="M -100 480 C 220 380, 560 480, 820 540 C 960 570, 1050 560, 1150 520"
+          fill="none"
+          stroke="#021c15"
+          strokeWidth="8"
           strokeLinecap="round"
           filter="url(#branchDeepShadow)"
           animate={{
             d: [
-              "M 720 180 C 580 320, 440 480, 260 580",
-              "M 720 195 C 570 310, 450 495, 260 570",
-              "M 720 180 C 580 320, 440 480, 260 580"
+              "M -100 480 C 220 380, 560 480, 820 540 C 960 570, 1050 560, 1150 520",
+              "M -100 495 C 235 365, 550 495, 820 530 C 950 585, 1060 550, 1150 535",
+              "M -100 480 C 220 380, 560 480, 820 540 C 960 570, 1050 560, 1150 520"
             ]
           }}
-          transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+          transition={{ duration: 17, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
         />
       </svg>
     </div>
