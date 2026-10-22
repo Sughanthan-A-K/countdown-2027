@@ -130,27 +130,27 @@ export default function LokiTimelinePortal() {
           <path
             d="M -150 220 Q 250 340, 500 370 T 1150 390"
             fill="none"
-            stroke="#010c08"
+            stroke="#000000"
             strokeWidth="16"
             strokeLinecap="round"
-            opacity="0.8"
+            opacity="0.95"
           />
-          {/* Main Dark Body */}
+          {/* Main Dark Silhouette Body */}
           <path
             d="M -150 220 Q 250 340, 500 370 T 1150 390"
             fill="none"
-            stroke="#021c15"
+            stroke="#050a08"
             strokeWidth="11"
             strokeLinecap="round"
           />
-          {/* Top Subtle Emerald Highlight */}
+          {/* Subtle Darkest Emerald Edge Glint */}
           <path
             d="M -150 219 Q 250 339, 500 369 T 1150 389"
             fill="none"
-            stroke="#064e3b"
-            strokeWidth="3"
+            stroke="#062d22"
+            strokeWidth="2.5"
             strokeLinecap="round"
-            opacity="0.85"
+            opacity="0.6"
           />
         </motion.g>
 
@@ -166,25 +166,25 @@ export default function LokiTimelinePortal() {
           <path
             d="M -120 70 Q 400 160, 680 140 T 1120 180"
             fill="none"
-            stroke="#010c08"
+            stroke="#000000"
             strokeWidth="14"
             strokeLinecap="round"
-            opacity="0.75"
+            opacity="0.9"
           />
           <path
             d="M -120 70 Q 400 160, 680 140 T 1120 180"
             fill="none"
-            stroke="#021c15"
+            stroke="#050a08"
             strokeWidth="9"
             strokeLinecap="round"
           />
           <path
             d="M -120 69 Q 400 159, 680 139 T 1120 179"
             fill="none"
-            stroke="#064e3b"
-            strokeWidth="2.5"
+            stroke="#062d22"
+            strokeWidth="2"
             strokeLinecap="round"
-            opacity="0.8"
+            opacity="0.6"
           />
         </motion.g>
 
@@ -200,25 +200,25 @@ export default function LokiTimelinePortal() {
           <path
             d="M -150 820 Q 200 720, 520 670 T 1150 860"
             fill="none"
-            stroke="#010c08"
+            stroke="#000000"
             strokeWidth="16"
             strokeLinecap="round"
-            opacity="0.8"
+            opacity="0.95"
           />
           <path
             d="M -150 820 Q 200 720, 520 670 T 1150 860"
             fill="none"
-            stroke="#021c15"
+            stroke="#050a08"
             strokeWidth="12"
             strokeLinecap="round"
           />
           <path
             d="M -150 819 Q 200 719, 520 669 T 1150 859"
             fill="none"
-            stroke="#064e3b"
-            strokeWidth="3.5"
+            stroke="#062d22"
+            strokeWidth="3"
             strokeLinecap="round"
-            opacity="0.8"
+            opacity="0.6"
           />
         </motion.g>
 
@@ -234,25 +234,25 @@ export default function LokiTimelinePortal() {
           <path
             d="M 1150 80 Q 750 380, 450 550 T -120 880"
             fill="none"
-            stroke="#010c08"
+            stroke="#000000"
             strokeWidth="12"
             strokeLinecap="round"
-            opacity="0.7"
+            opacity="0.9"
           />
           <path
             d="M 1150 80 Q 750 380, 450 550 T -120 880"
             fill="none"
-            stroke="#021c15"
+            stroke="#050a08"
             strokeWidth="8"
             strokeLinecap="round"
           />
           <path
             d="M 1150 79 Q 750 379, 450 549 T -120 879"
             fill="none"
-            stroke="#064e3b"
-            strokeWidth="2.5"
+            stroke="#062d22"
+            strokeWidth="2"
             strokeLinecap="round"
-            opacity="0.75"
+            opacity="0.6"
           />
         </motion.g>
 
@@ -268,25 +268,25 @@ export default function LokiTimelinePortal() {
           <path
             d="M -100 480 Q 300 420, 650 490 T 1150 510"
             fill="none"
-            stroke="#010c08"
+            stroke="#000000"
             strokeWidth="12"
             strokeLinecap="round"
-            opacity="0.7"
+            opacity="0.9"
           />
           <path
             d="M -100 480 Q 300 420, 650 490 T 1150 510"
             fill="none"
-            stroke="#021c15"
+            stroke="#050a08"
             strokeWidth="7.5"
             strokeLinecap="round"
           />
           <path
             d="M -100 479 Q 300 419, 650 489 T 1150 509"
             fill="none"
-            stroke="#064e3b"
-            strokeWidth="2"
+            stroke="#062d22"
+            strokeWidth="1.8"
             strokeLinecap="round"
-            opacity="0.75"
+            opacity="0.6"
           />
         </motion.g>
       </svg>
