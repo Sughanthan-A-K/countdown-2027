@@ -249,6 +249,52 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
+              {/* --- 5 NEW CRACK LIGHT GRADIENTS (From user red-marked fissures) --- */}
+              {/* Red Line 1: Center-Left Spine segment (92, 122 -> 102, 185) -> shooting West-South-West */}
+              <linearGradient id="beamRedLine1" gradientUnits="userSpaceOnUse" x1="97" y1="153" x2="-4500" y2="1200">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Red Line 2: Upper Spine segment (108, 78 -> 92, 122) -> shooting West-North-West */}
+              <linearGradient id="beamRedLine2" gradientUnits="userSpaceOnUse" x1="100" y1="100" x2="-4000" y2="-2200">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Red Line 3: Upper-Right branch segment (140, 45 -> 175, 22) -> shooting North-East */}
+              <linearGradient id="beamRedLine3" gradientUnits="userSpaceOnUse" x1="157" y1="33" x2="3800" y2="-3200">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Red Line 4: Mid-Left branch segment (64, 146 -> 40, 156) -> shooting South-West */}
+              <linearGradient id="beamRedLine4" gradientUnits="userSpaceOnUse" x1="52" y1="151" x2="-4500" y2="2400">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Red Line 5: Lower-Right Center branch (140, 152 -> 165, 138 & 155, 210) -> shooting East-South-East */}
+              <linearGradient id="beamRedLine5" gradientUnits="userSpaceOnUse" x1="155" y1="210" x2="4500" y2="3400">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
               {/* Crisp piercing beam glow */}
               <filter id="outwardBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="3.5" result="blur1" />
@@ -296,9 +342,10 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 0.04 }}
                 />
 
-                {/* --- 2nd POP (0.38s): Blade beam slicing through Mid-Right --- */}
+                {/* --- 2nd POP (0.38s): Blade beam slicing through Mid-Right (CLEAN STRAIGHT CONE, NO TWIST!) --- */}
+                {/* Seam (165,138 -> 182,148): Upper pt (165,138) to Upper outer (4200, 300); Lower pt (182,148) to Lower outer (4500, 1800) */}
                 <motion.polygon
-                  points="165,138 182,148 4500,1800 4200,300"
+                  points="165,138 4200,300 4500,1800 182,148"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
@@ -364,6 +411,57 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.85 }}
                   transition={{ duration: 0.08, delay: 1.58 }}
+                />
+
+                {/* --- 5 NEW CRACK LIGHT BEAMS (FROM USER'S RED LINES) --- */}
+                {/* Red Line 1 (0.45s): Center-Left Spine Fissure (92, 122 -> 102, 185) */}
+                <motion.polygon
+                  points="92,122 -4500,600 -4500,1800 102,185"
+                  fill="url(#beamRedLine1)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 0.45 }}
+                />
+
+                {/* Red Line 2 (0.72s): Upper Spine Fissure (108, 78 -> 92, 122) */}
+                <motion.polygon
+                  points="108,78 -3800,-3200 -4200,-1800 92,122"
+                  fill="url(#beamRedLine2)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 0.72 }}
+                />
+
+                {/* Red Line 3 (0.92s): Upper-Right Branch Fissure (140, 45 -> 175, 22) */}
+                <motion.polygon
+                  points="140,45 3200,-3600 4000,-2800 175,22"
+                  fill="url(#beamRedLine3)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 0.92 }}
+                />
+
+                {/* Red Line 4 (1.10s): Mid-Left Branch Fissure (64, 146 -> 40, 156) */}
+                <motion.polygon
+                  points="64,146 -4200,1800 -4500,2800 40,156"
+                  fill="url(#beamRedLine4)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 1.10 }}
+                />
+
+                {/* Red Line 5 (1.30s): Lower-Right Center Fissures (140, 152 -> 165, 138 & 155, 210) */}
+                <motion.polygon
+                  points="140,152 4200,2400 4500,3800 155,210"
+                  fill="url(#beamRedLine5)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 1.30 }}
                 />
 
                 {/* --- EXTRA CLIMAX BEAM 1 (1.75s): Left side Center Fissure (Single clean beam on Left) --- */}
