@@ -32,7 +32,10 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
   const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 14));
 
   return (
-    <div className="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
+    <div 
+      className="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none overflow-visible rounded-3xl"
+      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+    >
       {/* Background Dimming as glass is damaged */}
       <motion.div 
         initial={{ opacity: 0 }}
@@ -295,13 +298,11 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Crisp piercing beam glow */}
-              <filter id="outwardBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3.5" result="blur1" />
-                <feGaussianBlur stdDeviation="9" result="blur2" />
+              {/* Crisp piercing beam glow - optimized for mobile GPU */}
+              <filter id="outwardBeamGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3.5" result="blur" />
                 <feMerge>
-                  <feMergeNode in="blur2" />
-                  <feMergeNode in="blur1" />
+                  <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>

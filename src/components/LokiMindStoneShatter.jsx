@@ -40,7 +40,10 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
   ];
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible">
+    <div 
+      className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible"
+      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+    >
       {/* 0. BLINDING SUPERNOVA CENTER FLASHBURST (Natural high-impact epicenter explosion) */}
       <motion.div
         initial={{ opacity: 1, scale: 0.1 }}
@@ -152,8 +155,9 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
             clipPath: s.clip,
             background: 'linear-gradient(135deg, rgba(6,78,59,0.95) 0%, rgba(16,185,129,0.85) 50%, rgba(5,150,105,0.95) 100%)',
             border: '2px solid rgba(167, 243, 208, 0.95)',
-            boxShadow: '0 0 35px rgba(16,185,129,0.85), inset 0 0 20px rgba(110,231,183,0.6)',
-            backfaceVisibility: 'hidden'
+            boxShadow: '0 0 25px rgba(16,185,129,0.75)',
+            backfaceVisibility: 'hidden',
+            willChange: 'transform, opacity'
           }}
         >
           {/* Glass Crystal Inner Refraction highlight */}

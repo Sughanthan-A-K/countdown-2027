@@ -14,7 +14,10 @@ import { motion } from 'framer-motion';
  */
 export default function LokiTimelinePortal() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-30 overflow-hidden">
+    <div 
+      className="fixed inset-0 flex items-center justify-center pointer-events-none z-30 overflow-hidden"
+      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+    >
       {/* 1. Full Page Deep Emerald Atmospheric Glow & Reflection (Flooding the entire screen like in reference) */}
       <motion.div 
         initial={{ opacity: 0 }}
@@ -40,13 +43,13 @@ export default function LokiTimelinePortal() {
       {/* SVG Organic Distortion Filters for the irregular jagged portal border ONLY */}
       <svg className="absolute w-0 h-0 pointer-events-none">
         <defs>
-          <filter id="lokiOrganicRiftEdge" x="-30%" y="-30%" width="160%" height="160%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="4" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" />
+          <filter id="lokiOrganicRiftEdge" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="24" xChannelSelector="R" yChannelSelector="G" />
           </filter>
 
-          <filter id="smoothBranchGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#010f0b" floodOpacity="0.9" />
+          <filter id="smoothBranchGlow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#010f0b" floodOpacity="0.8" />
           </filter>
         </defs>
       </svg>
