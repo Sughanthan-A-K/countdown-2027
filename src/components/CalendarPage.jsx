@@ -311,7 +311,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               onLokiCardTap();
             }
           }}
-          initial={false}
+          initial={{ x: 0, y: 0, rotateZ: 0, rotateY: 0, rotateX: 0, scale: 1, opacity: 1 }}
           animate={
             isTop && isDec16Blocked && lokiCrackStage >= 4 ? {
               x: -160,
@@ -322,8 +322,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               scale: 0.1,
               opacity: 0,
               transition: { 
-                duration: 4.8, 
-                ease: [0.22, 0.61, 0.36, 1] // Natural zero-gravity deceleration (leisurely drift)
+                duration: 6.0, 
+                ease: [0.16, 1, 0.3, 1] // Slow and steady cosmic zero-gravity drift
               }
             } : {
               x: 0,
@@ -830,8 +830,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               scale: 0.1,
               opacity: 0,
               transition: { 
-                duration: 4.8, 
-                ease: [0.22, 0.61, 0.36, 1] // Natural zero-gravity deceleration (leisurely drift)
+                duration: 6.0, 
+                ease: [0.16, 1, 0.3, 1] // Slow and steady cosmic zero-gravity drift
               }
             }}
             className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col absolute overflow-visible border-2 z-20 bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] pointer-events-none"
