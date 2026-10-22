@@ -397,18 +397,36 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 1: Center Spine Fracture (Realistic Natural Broken Glass) */}
-        {/* Natural high-frequency jagged fissures, organic micro-facets, sharp edges */}
+        {/* TAP 1: Center Spine Fracture (Shoots down on 1st tap, STAYS CONSTANT!) */}
+        {/* Extends cleanly right up to the card edges without crossing outside */}
         {/* ============================================================ */}
 
-        {/* Natural crystalline fracture line touching card edges with razor sharp corners */}
+        {/* TAP 4 FINALE: Controlled piercing emerald light bleeding outward through center spine */}
+        {crackStage >= 4 && (
+          <motion.path
+            d="M 98 6 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 394"
+            stroke="#34d399"
+            strokeWidth="8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+            filter="url(#pureGreenGlow)"
+            initial={{ opacity: 0 }}
+            animate={{ 
+              opacity: [0, 0.6, 0.95],
+              strokeWidth: [4, 9, 13]
+            }}
+            transition={{ duration: 1.6, delay: 0.3, ease: "easeOut" }}
+          />
+        )}
+
+        {/* Single crisp crystalline fracture line touching card edges (y: 6 to y: 394) */}
         <motion.path
-          d="M 97 6 L 99 28 L 96 48 L 103 62 L 101 74 L 107 88 L 94 115 L 91 138 L 104 165 L 101 185 L 98 212 L 84 242 L 87 268 L 105 305 L 101 328 L 94 352 L 98 374 L 97 394"
+          d="M 98 6 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 394"
           stroke={crackStage >= 2 ? "#d1fae5" : "#ffffff"}
           strokeWidth={spineStroke}
-          strokeLinecap="square"
-          strokeLinejoin="miter"
-          strokeMiterlimit="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           fill="none"
           initial={crackStage === 1 ? { pathLength: 0 } : false}
           animate={{ 
@@ -416,23 +434,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             stroke: crackStage >= 4 ? ["#d1fae5", "#ffffff"] : (crackStage >= 2 ? "#d1fae5" : "#ffffff"),
             strokeWidth: crackStage >= 4 ? [spineStroke, spineStroke * 1.5] : spineStroke
           }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
         />
-
-        {/* Natural Micro-faceting splinters along the spine (Glass fracture characteristics) */}
-        {crackStage >= 1 && (
-          <motion.path
-            d="M 103 62 L 108 55 M 94 115 L 89 122 M 104 165 L 110 160 M 84 242 L 80 250 M 105 305 L 111 312 M 94 352 L 89 360"
-            stroke={crackStage >= 2 ? "#d1fae5" : "#ffffff"}
-            strokeWidth={crackStage === 1 ? 0.9 : 1.2}
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-            fill="none"
-            initial={crackStage === 1 ? { pathLength: 0 } : false}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 0.9, delay: 0.1, ease: "easeOut" }}
-          />
-        )}
 
         {/* ============================================================ */}
         {/* TAP 2: Spreading from Center into Inner-Mid Empty Space */}
@@ -444,8 +447,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 108 78 L 76 100 L 45 108 M 92 122 L 64 146 L 40 156 M 102 185 L 140 152 L 165 138 M 85 248 L 126 274 L 155 286 M 106 312 L 72 336 L 44 348"
               stroke="#059669"
               strokeWidth={crackStage >= 3 ? "3.0" : "2.0"}
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={crackStage === 2 ? { pathLength: 0 } : false}
@@ -463,8 +466,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 108 78 L 76 100 L 45 108 M 92 122 L 64 146 L 40 156 M 102 185 L 140 152 L 165 138 M 85 248 L 126 274 L 155 286 M 106 312 L 72 336 L 44 348"
               stroke="#ffffff"
               strokeWidth="1.2"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={crackStage === 2 ? { pathLength: 0 } : false}
               animate={{ 
@@ -486,8 +489,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360 M 45 108 L 30 116 M 40 156 L 26 172 M 165 138 L 182 148 M 155 286 L 175 304 M 44 348 L 30 364"
               stroke="#059669"
               strokeWidth="2.4"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={crackStage === 3 ? { pathLength: 0 } : false}
@@ -505,8 +508,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360 M 45 108 L 30 116 M 40 156 L 26 172 M 165 138 L 182 148 M 155 286 L 175 304 M 44 348 L 30 364"
               stroke="#ffffff"
               strokeWidth="1.1"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={crackStage === 3 ? { pathLength: 0 } : false}
               animate={{ 
@@ -528,8 +531,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#10b981"
               strokeWidth="2.5"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
@@ -540,8 +543,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#ffffff"
               strokeWidth="1.2"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -553,8 +556,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#10b981"
               strokeWidth="2.2"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
@@ -565,8 +568,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#ffffff"
               strokeWidth="1.1"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -578,8 +581,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
               stroke="#10b981"
               strokeWidth="2.6"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
@@ -590,8 +593,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
               stroke="#ffffff"
               strokeWidth="1.3"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
