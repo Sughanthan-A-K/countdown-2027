@@ -398,29 +398,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
         {/* ============================================================ */}
         {/* TAP 1: Center Spine Fracture (Shoots down on 1st tap, STAYS CONSTANT!) */}
-        {/* Strictly contained within card borders (y: 10 to y: 390) so glow doesn't bleed out */}
+        {/* Strictly contained inside card borders (y: 20 to y: 380) */}
         {/* ============================================================ */}
-        {/* Pure Emerald Light Bleeding Through Widening Spine Gap */}
-        {crackStage >= 2 && (
-          <motion.path
-            d="M 98 12 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 388"
-            stroke="#10b981"
-            strokeWidth={glowWidth}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-            filter="url(#pureGreenGlow)"
-            animate={{ 
-              strokeWidth: crackStage >= 4 ? [glowWidth, glowWidth * 2.8] : glowWidth,
-              opacity: crackStage >= 4 ? [0.75, 1.0] : 0.75 
-            }}
-            transition={{ duration: 1.8 }}
-          />
-        )}
 
-        {/* Single crisp crystalline fracture line cutting across card */}
+        {/* Single crisp crystalline fracture line cutting across card (Strictly inside card: y 20 to 380) */}
         <motion.path
-          d="M 98 0 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 400"
+          d="M 98 20 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 380"
           stroke={crackStage >= 2 ? "#d1fae5" : "#ffffff"}
           strokeWidth={spineStroke}
           strokeLinecap="round"
@@ -430,7 +413,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           animate={{ 
             pathLength: 1,
             stroke: crackStage >= 4 ? ["#d1fae5", "#ffffff"] : (crackStage >= 2 ? "#d1fae5" : "#ffffff"),
-            strokeWidth: crackStage >= 4 ? [spineStroke, spineStroke * 1.8] : spineStroke
+            strokeWidth: crackStage >= 4 ? [spineStroke, spineStroke * 1.5] : spineStroke
           }}
           transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
         />
