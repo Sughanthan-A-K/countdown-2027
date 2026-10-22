@@ -29,7 +29,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
   const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 14));
 
   return (
-    <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
+    <div className="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
       {/* Background Dimming as glass is damaged */}
       <motion.div 
         initial={{ opacity: 0 }}
