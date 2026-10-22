@@ -6,20 +6,26 @@ import { motion } from 'framer-motion';
  * 
  * Progressive, Realistic Broken Glass Cracking:
  * 
- * RULES IMPLEMENTED:
- * 1. NO OVERLAPPING / NO CRACK MELAYE CRACK:
- *    - Each tap cracks ONLY in uncracked EMPTY space.
- *    - Existing cracks never get drawn over.
+ * CONCEPT: "Tap panna tap panna virisal center la irunthu space irukura edathukku spread aaganum"
  * 
- * 2. REALISTIC EMPTY SPACE FILLING (Matching User's Yellow Arrows):
- *    - Tap 1: Center spine crack.
- *    - Tap 2: Inner-mid branches shooting from the spine.
- *    - Tap 3: Spiderwebbing bridging between spine and inner branches.
- *    - Tap 4: 
- *      - Wave 1 (0.0s): Top-left and Top-right EMPTY corner regions fracture outwards.
- *      - Wave 2 (after 0.5s): Mid-left (around "TODAY") and Mid-right empty space cracks organically.
- *      - Wave 3 (after 0.5s = 1.0s): Bottom-left and Bottom-right EMPTY corners completely fracture to the edges!
- *      - Shatter (after 0.5s = 1.5s): The entire pane shatters into glass pieces into the portal!
+ * - TAP 1:
+ *   Spine crack shooting down the center from (98, 0) to (102, 400).
+ * 
+ * - TAP 2 (Spreading into Inner Empty Space):
+ *   Cracks branch slowly from the spine out into the immediate empty spaces
+ *   around the 16 number and middle zones.
+ * 
+ * - TAP 3 (Spreading into Mid-Outer Empty Space):
+ *   From those branch points, cracks creep outwards into the mid-left (around "TODAY"),
+ *   mid-right (around "th day"), upper-left, and lower-center uncracked areas.
+ * 
+ * - TAP 4 (Spreading into all remaining corner & perimeter gaps across 3 quick bursts):
+ *   - 0.0s: Cracks creep from mid-points into top-left and top-right uncracked corners.
+ *   - 0.5s: Cracks branch into the open gaps around the pill button and side edges.
+ *   - 1.0s: Final perimeter cracks reach the 4 extreme outer corners (0,0), (200,0), (0,400), (200,400).
+ *   - 1.5s: Glass completely shatters into the portal!
+ * 
+ * All cracks are on z-[70] so they cut cleanly over the top of the "16" date number.
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -70,7 +76,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 1: Primary Spine Fracture (Shoots down on 1st tap, STAYS CONSTANT!) */}
+        {/* TAP 1: Center Spine Fracture (Shoots down on 1st tap, STAYS CONSTANT!) */}
         {/* ============================================================ */}
         {/* Pure Emerald Light Bleeding Through Widening Spine Gap */}
         {crackStage >= 2 && (
@@ -90,7 +96,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           />
         )}
 
-        {/* Single crisp crystalline fracture line */}
+        {/* Single crisp crystalline fracture line cutting across card */}
         <motion.path
           d="M 98 0 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 400"
           stroke={crackStage >= 2 ? "#d1fae5" : "#ffffff"}
@@ -104,7 +110,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
 
         {/* ============================================================ */}
-        {/* TAP 2: Inner-Mid Branch Fractures (Spreads into inner space, STAYS CONSTANT!) */}
+        {/* TAP 2: Spreading from Center into Inner-Mid Empty Space */}
         {/* ============================================================ */}
         {crackStage >= 2 && (
           <g key="crack-stage-2-persistent">
@@ -122,7 +128,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 2.5, delay: 0.05, ease: [0.12, 1, 0.28, 1] }}
             />
 
-            {/* Single clean crystalline branch lines */}
+            {/* Natural crystalline branches spreading outwards from spine */}
             <motion.path
               d="M 108 78 L 76 100 L 45 108 M 92 122 L 64 146 L 40 156 M 102 185 L 140 152 L 165 138 M 85 248 L 126 274 L 155 286 M 106 312 L 72 336 L 44 348"
               stroke="#ffffff"
@@ -138,13 +144,13 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 3: Spiderwebbing bridging between spine & inner branches (STAYS CONSTANT!) */}
+        {/* TAP 3: Spreading further outward into Mid-Outer Empty Space */}
         {/* ============================================================ */}
         {crackStage >= 3 && (
           <g key="crack-stage-3-persistent">
             {/* Pure emerald seam glow */}
             <motion.path
-              d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360"
+              d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360 M 45 108 L 30 116 M 40 156 L 26 172 M 165 138 L 182 148 M 155 286 L 175 304 M 44 348 L 30 364"
               stroke="#059669"
               strokeWidth="2.4"
               strokeLinecap="round"
@@ -156,9 +162,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 2.8, delay: 0.05, ease: [0.12, 1, 0.28, 1] }}
             />
 
-            {/* Single clean spiderweb lines */}
+            {/* Single clean spiderweb lines advancing toward the outer gaps */}
             <motion.path
-              d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360"
+              d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360 M 45 108 L 30 116 M 40 156 L 26 172 M 165 138 L 182 148 M 155 286 L 175 304 M 44 348 L 30 364"
               stroke="#ffffff"
               strokeWidth="1.1"
               strokeLinecap="round"
@@ -185,14 +191,13 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: TARGETING ONLY EMPTY UNCRACKED SPACES (Matching Yellow Arrows) */}
+        {/* TAP 4: SPREADING TO ALL REMAINING CORNERS & EMPTY EDGE SPACES */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-empty-spaces">
-            {/* --- WAVE 1 (0.0s): Top-Left & Top-Right Empty Space Fractures --- */}
-            {/* Spreading into top-left empty corner (0..45, 0..75) and top-right empty corner (140..200, 0..80) */}
+            {/* --- WAVE 1 (0.0s): Spreading into Upper-Left & Upper-Right Empty Spaces --- */}
             <motion.path
-              d="M 45 108 L 30 75 L 12 40 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 170 20 L 200 5 M 140 152 L 168 115 L 188 80 L 200 60"
+              d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#10b981"
               strokeWidth="2.5"
               strokeLinecap="round"
@@ -204,7 +209,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, ease: "easeOut" }}
             />
             <motion.path
-              d="M 45 108 L 30 75 L 12 40 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 170 20 L 200 5 M 140 152 L 168 115 L 188 80 L 200 60"
+              d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#ffffff"
               strokeWidth="1.2"
               strokeLinecap="round"
@@ -215,10 +220,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, ease: "easeOut" }}
             />
 
-            {/* --- WAVE 2 (after 0.5s): Mid-Left (Around "TODAY") & Mid-Right Empty Space Fractures --- */}
-            {/* Spreading into mid-left empty area (0..40, 150..250) and mid-right empty area (165..200, 140..260) */}
+            {/* --- WAVE 2 (after 0.5s): Spreading into Mid-Left (Behind "TODAY") & Mid-Right (Behind "th day") Empty Spaces --- */}
             <motion.path
-              d="M 40 156 L 22 170 L 8 190 L 0 205 M 22 170 L 5 155 M 165 138 L 185 160 L 195 190 L 200 215 M 155 210 L 180 235 L 200 250"
+              d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#10b981"
               strokeWidth="2.2"
               strokeLinecap="round"
@@ -230,7 +234,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
             />
             <motion.path
-              d="M 40 156 L 22 170 L 8 190 L 0 205 M 22 170 L 5 155 M 165 138 L 185 160 L 195 190 L 200 215 M 155 210 L 180 235 L 200 250"
+              d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#ffffff"
               strokeWidth="1.1"
               strokeLinecap="round"
@@ -241,12 +245,11 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
             />
 
-            {/* --- WAVE 3 (after 0.5s = 1.0s): Bottom-Left & Bottom-Right Empty Corner Fractures --- */}
-            {/* Spreading into bottom-left empty corner (0..44, 250..400) and bottom-right empty corner (155..200, 280..400) */}
+            {/* --- WAVE 3 (after 0.5s = 1.0s): Spreading into Bottom-Left & Bottom-Right Empty Corner Spaces --- */}
             <motion.path
-              d="M 44 348 L 25 365 L 10 385 L 0 400 M 25 365 L 5 330 L 0 310 M 155 286 L 180 320 L 192 360 L 200 390 M 180 320 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400"
+              d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
               stroke="#10b981"
-              strokeWidth="2.8"
+              strokeWidth="2.6"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
@@ -256,9 +259,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
             />
             <motion.path
-              d="M 44 348 L 25 365 L 10 385 L 0 400 M 25 365 L 5 330 L 0 310 M 155 286 L 180 320 L 192 360 L 200 390 M 180 320 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400"
+              d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
               stroke="#ffffff"
-              strokeWidth="1.4"
+              strokeWidth="1.3"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
