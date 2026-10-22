@@ -4,15 +4,16 @@ import { motion } from 'framer-motion';
 /**
  * LokiTimelineCrack
  * 
- * Progressive, Realistic Broken Glass Cracking with 3D Projected God Rays:
- * - Every tap draws SLOWLY and naturally as real glass tension releases.
+ * Progressive, Realistic Broken Glass Cracking:
+ * - Dynamic key={crackStage} ensures Framer Motion executes the full slow drawing animation
+ *   freshly on EVERY tap without snapping or skipping!
  * 
- * - Tap 1: Single vertical glass fracture drawing slowly (~1.6s).
- * - Tap 2: Branch fissures creeping outward slowly (~2.2s).
- * - Tap 3: Spiderwebbing, interconnecting polygonal cracks & impact starburst drawing slowly (~2.4s).
- * - Tap 4: High density crazing spreading slowly (~2.8s) while 3D Volumetric Crepuscular God Rays
- *   blast WAY BEYOND the card, beaming across the entire screen like real 3D light breaking out,
- *   holding for 3 seconds before slow-mo glass shatter!
+ * - Tap 1: Single vertical glass fracture slowly crawling down (duration: 1.8s).
+ * - Tap 2: Multiple branch fractures creeping slowly outward from the center (duration: 2.2s).
+ * - Tap 3: Extensive spiderweb fissures slowly interconnecting across the card (duration: 2.5s).
+ * - Tap 4: HEAVILY SHATTERED GLASS COVERAGE! Hundreds of dense micro-fractures slowly multiplying
+ *   and crawling across the entire card (duration: 3.0s).
+ * - 3D God Rays: Emerge from the crack center (scale 0 -> 1) and shoot OUTWARD towards the viewer and edges!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -21,9 +22,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
   const isLightRaysCreeping = crackStage >= 4;
 
   return (
-    <>
+    <div key={`loki-crack-stage-${crackStage}`} className="absolute inset-0 pointer-events-none">
       {/* ============================================================ */}
-      {/* 3D PROJECTED GOD RAYS (OVERFLOW-VISIBLE, EXTENDING WAY BEYOND THE CARD) */}
+      {/* 3D PROJECTED GOD RAYS (SHOOTING OUTWARD FROM GLASS HOLE TOWARDS THE SCREEN) */}
       {/* ============================================================ */}
       {isLightRaysCreeping && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible flex items-center justify-center">
@@ -33,124 +34,142 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             style={{ mixBlendMode: 'screen' }}
           >
             <defs>
-              <radialGradient id="glassImpactBloom" cx="50%" cy="50%" r="50%">
+              {/* Radial gradient: Pure hot white-mint at crack hole (cx, cy) = (102, 185), fading outwards */}
+              <radialGradient id="outwardBurst" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.85" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="20%" stopColor="#a7f3d0" stopOpacity="0.9" />
+                <stop offset="55%" stopColor="#10b981" stopOpacity="0.5" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
 
-              <linearGradient id="glassRay1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="20%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              <linearGradient id="glassRay2" x1="50%" y1="50%" x2="0%" y2="100%">
+              {/* Linear gradients pointing strictly from inside crack (0%) towards screen outer edges (100%) */}
+              <linearGradient id="rayOutward1" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
                 <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.85" />
-                <stop offset="55%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="50%" stopColor="#10b981" stopOpacity="0.4" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </linearGradient>
 
-              <linearGradient id="glassRay3" x1="50%" y1="50%" x2="100%" y2="0%">
+              <linearGradient id="rayOutward2" x1="100%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="18%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+                <stop offset="15%" stopColor="#6ee7b7" stopOpacity="0.85" />
+                <stop offset="50%" stopColor="#10b981" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </linearGradient>
 
-              <filter id="glassRayBlur3D" x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur stdDeviation="9" />
+              <linearGradient id="rayOutwardUp" x1="50%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.85" />
+                <stop offset="50%" stopColor="#10b981" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+              </linearGradient>
+
+              <linearGradient id="rayOutwardDown" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.85" />
+                <stop offset="50%" stopColor="#10b981" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+              </linearGradient>
+
+              <filter id="godRaySoftBlur" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="8" />
               </filter>
             </defs>
 
-            {/* Impact Center Point 3D Light Burst */}
+            {/* Central Crack Light Bloom (Expanding outward from 0) */}
             <motion.ellipse
               cx="102"
               cy="185"
-              rx="30"
-              ry="30"
-              fill="url(#glassImpactBloom)"
-              initial={{ scale: 0.1, opacity: 0 }}
-              animate={{ scale: [0.3, 1.8, 1.5], opacity: [0, 1, 0.95] }}
+              rx="35"
+              ry="35"
+              fill="url(#outwardBurst)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 1.8, 1.6], opacity: [0, 1, 0.95] }}
               transition={{ duration: 2.2, ease: "easeOut" }}
-              filter="url(#glassRayBlur3D)"
+              filter="url(#godRaySoftBlur)"
+              style={{ transformOrigin: "102px 185px" }}
             />
 
-            {/* 3D Volumetric Rays Projecting Far Beyond The Card Across Entire Screen */}
-            {/* Top-Right Ray */}
+            {/* Beams shooting OUTWARD from crack (102, 185) towards outside */}
+            {/* 1. Outward Top-Right */}
             <motion.polygon
-              points="102,185 145,150 700,-350 450,-400"
-              fill="url(#glassRay1)"
-              filter="url(#glassRayBlur3D)"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: [0, 0.95, 0.8], scale: 1 }}
+              points="102,185 135,160 650,-350 420,-420"
+              fill="url(#rayOutward1)"
+              filter="url(#godRaySoftBlur)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: [0, 0.95, 0.8] }}
               transition={{ duration: 2.2, delay: 0.05, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
             />
-            {/* Right Horizontal Beam */}
+            {/* 2. Outward Right */}
             <motion.polygon
-              points="102,185 118,190 750,80 720,320"
-              fill="url(#glassRay1)"
-              filter="url(#glassRayBlur3D)"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: [0, 0.9, 0.75], scale: 1 }}
-              transition={{ duration: 2.3, delay: 0.15, ease: "easeOut" }}
-            />
-            {/* Bottom-Right Ray */}
-            <motion.polygon
-              points="102,185 85,250 650,850 420,920"
-              fill="url(#glassRay1)"
-              filter="url(#glassRayBlur3D)"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: [0, 0.95, 0.8], scale: 1 }}
-              transition={{ duration: 2.4, delay: 0.1, ease: "easeOut" }}
-            />
-            {/* Bottom-Left Ray */}
-            <motion.polygon
-              points="102,185 85,250 -450,880 -550,700"
-              fill="url(#glassRay2)"
-              filter="url(#glassRayBlur3D)"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: [0, 0.9, 0.75], scale: 1 }}
-              transition={{ duration: 2.2, delay: 0.08, ease: "easeOut" }}
-            />
-            {/* Left Horizontal Beam */}
-            <motion.polygon
-              points="102,185 88,125 -550,50 -580,260"
-              fill="url(#glassRay2)"
-              filter="url(#glassRayBlur3D)"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: [0, 0.95, 0.8], scale: 1 }}
+              points="102,185 115,195 720,100 690,300"
+              fill="url(#rayOutward1)"
+              filter="url(#godRaySoftBlur)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: [0, 0.9, 0.75] }}
               transition={{ duration: 2.3, delay: 0.12, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
             />
-            {/* Top-Left Ray */}
+            {/* 3. Outward Bottom-Right */}
             <motion.polygon
-              points="102,185 106,75 -350,-300 -500,-180"
-              fill="url(#glassRay2)"
-              filter="url(#glassRayBlur3D)"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: [0, 0.9, 0.75], scale: 1 }}
-              transition={{ duration: 2.4, delay: 0.02, ease: "easeOut" }}
+              points="102,185 90,230 620,820 400,890"
+              fill="url(#rayOutward1)"
+              filter="url(#godRaySoftBlur)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: [0, 0.95, 0.8] }}
+              transition={{ duration: 2.4, delay: 0.08, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
             />
-            {/* Direct Upward Shaft */}
+            {/* 4. Outward Bottom-Left */}
             <motion.polygon
-              points="102,185 98,15 -100,-450 300,-450"
-              fill="url(#glassRay3)"
-              filter="url(#glassRayBlur3D)"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: [0, 1, 0.85], scale: 1 }}
-              transition={{ duration: 2.2, delay: 0.06, ease: "easeOut" }}
+              points="102,185 90,230 -420,850 -520,680"
+              fill="url(#rayOutward2)"
+              filter="url(#godRaySoftBlur)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: [0, 0.9, 0.75] }}
+              transition={{ duration: 2.2, delay: 0.1, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
             />
-            {/* Direct Downward Shaft */}
+            {/* 5. Outward Left */}
             <motion.polygon
-              points="102,185 102,385 -100,950 300,950"
-              fill="url(#glassRay3)"
-              filter="url(#glassRayBlur3D)"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: [0, 0.95, 0.8], scale: 1 }}
+              points="102,185 90,130 -520,70 -540,250"
+              fill="url(#rayOutward2)"
+              filter="url(#godRaySoftBlur)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: [0, 0.95, 0.8] }}
               transition={{ duration: 2.3, delay: 0.14, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
+            />
+            {/* 6. Outward Top-Left */}
+            <motion.polygon
+              points="102,185 106,85 -320,-280 -480,-160"
+              fill="url(#rayOutward2)"
+              filter="url(#godRaySoftBlur)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: [0, 0.9, 0.75] }}
+              transition={{ duration: 2.4, delay: 0.03, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
+            />
+            {/* 7. Outward Direct Up */}
+            <motion.polygon
+              points="102,185 98,20 -80,-420 280,-420"
+              fill="url(#rayOutwardUp)"
+              filter="url(#godRaySoftBlur)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: [0, 1, 0.85] }}
+              transition={{ duration: 2.2, delay: 0.06, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
+            />
+            {/* 8. Outward Direct Down */}
+            <motion.polygon
+              points="102,185 102,380 -80,920 280,920"
+              fill="url(#rayOutwardDown)"
+              filter="url(#godRaySoftBlur)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: [0, 0.95, 0.8] }}
+              transition={{ duration: 2.3, delay: 0.15, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
             />
           </svg>
         </div>
@@ -166,7 +185,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           animate={{ 
             opacity: crackStage >= 4 ? 0.88 : (crackStage === 3 ? 0.7 : (crackStage === 2 ? 0.45 : 0.2)) 
           }}
-          transition={{ duration: 1.0, ease: "easeOut" }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
           className="absolute inset-0 bg-black/80 pointer-events-none rounded-3xl"
         />
 
@@ -203,7 +222,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           </defs>
 
           {/* ============================================================ */}
-          {/* TAP 1: Clean Primary Spine Fracture (Shoots slowly down ~1.8s) */}
+          {/* TAP 1: Clean Primary Spine Fracture (Slow drawing ~1.8s) */}
           {/* ============================================================ */}
           {/* Shadow seam behind spine */}
           <motion.path
@@ -245,7 +264,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           />
 
           {/* ============================================================ */}
-          {/* TAP 2: Natural Secondary Branch Fractures (Spreading slowly outward ~2.2s) */}
+          {/* TAP 2: Natural Secondary Branch Fractures (Slow drawing ~2.2s) */}
           {/* ============================================================ */}
           {crackStage >= 2 && (
             <g>
@@ -292,7 +311,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           )}
 
           {/* ============================================================ */}
-          {/* TAP 3: Extensive Spiderwebbing & Shard Polygonal Fractures (Slow & creeping ~2.4s) */}
+          {/* TAP 3: Extensive Spiderwebbing & Shard Polygonal Fractures (Slow drawing ~2.5s) */}
           {/* ============================================================ */}
           {crackStage >= 3 && (
             <g>
@@ -306,7 +325,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 fill="none"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
-                transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1] }}
               />
 
               {/* Impact Center Starburst Lines radiating from (102, 185) */}
@@ -319,7 +338,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 fill="none"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
-                transition={{ duration: 1.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 2.0, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               />
 
               {/* Emerald refraction along the spiderweb fissures */}
@@ -332,32 +351,45 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 fill="none"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
-                transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1] }}
               />
             </g>
           )}
 
           {/* ============================================================ */}
-          {/* TAP 4: Dense Glass Shatter Breakdown (Slowly multiplying cracks ~2.8s) */}
+          {/* TAP 4: MASSIVE DENSE GLASS SHATTER BREAKDOWN (DENSE CRACK COVERAGE ~3.0s) */}
           {/* ============================================================ */}
           {crackStage >= 4 && (
             <g>
-              {/* Additional Dense Shatter Network: Slowly multiplying micro-cracks breaking through every zone */}
+              {/* Tier 1: Dense secondary fissures across every single zone */}
               <motion.path
-                d="M 52 108 L 30 114 M 46 158 L 24 165 M 168 138 L 188 128 M 152 284 L 182 294 M 48 346 L 26 354 M 98 15 L 68 40 M 104 65 L 132 45 M 92 122 L 122 110 M 88 180 L 68 215 M 110 200 L 138 230 M 85 248 L 54 260 M 106 312 L 136 335 M 96 350 L 64 375"
+                d="M 52 108 L 26 114 M 46 158 L 18 165 M 168 138 L 192 128 M 152 284 L 188 296 M 48 346 L 20 354 M 98 15 L 62 42 M 104 65 L 140 45 M 92 122 L 130 110 M 88 180 L 58 215 M 110 200 L 148 230 M 85 248 L 48 262 M 106 312 L 144 338 M 96 350 L 58 376 M 102 385 L 140 375"
                 stroke="#ffffff"
-                strokeWidth="1.1"
+                strokeWidth="1.3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 fill="none"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
-                transition={{ duration: 2.6, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 2.8, ease: [0.16, 1, 0.3, 1] }}
               />
 
-              {/* Cross-fissure micro stress web */}
+              {/* Tier 2: Micro stress craze lines spreading throughout each shard block */}
               <motion.path
-                d="M 68 40 L 52 108 M 132 45 L 142 152 M 68 215 L 82 284 M 138 230 L 124 272 M 54 260 L 48 346 M 136 335 L 102 385"
+                d="M 62 42 L 52 108 M 140 45 L 142 152 M 58 215 L 82 284 M 148 230 L 124 272 M 48 262 L 48 346 M 144 338 L 102 385 M 26 114 L 46 158 M 192 128 L 168 200 M 168 200 L 188 296 M 18 165 L 48 262 M 58 376 L 96 350 M 130 110 L 118 162 M 76 100 L 104 65 M 124 272 L 144 338 M 108 78 L 130 110"
+                stroke="rgba(255, 255, 255, 0.95)"
+                strokeWidth="1.0"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="none"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 3.0, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              />
+
+              {/* Tier 3: High-density spiderweb micro-fissures (Screen crawling with cracks) */}
+              <motion.path
+                d="M 62 42 L 80 25 M 140 45 L 165 25 M 26 114 L 15 85 M 192 128 L 185 85 M 18 165 L 10 215 M 188 296 L 195 240 M 48 346 L 15 315 M 144 338 L 190 355 M 58 376 L 30 390 M 140 375 L 170 390"
                 stroke="rgba(167, 243, 208, 0.9)"
                 strokeWidth="0.8"
                 strokeLinecap="round"
@@ -365,14 +397,14 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 fill="none"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
-                transition={{ duration: 2.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 3.0, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               />
 
               {/* Glowing hot white-mint edges before final shatter */}
               <motion.path
                 d="M 98 15 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 385 M 108 78 L 76 100 L 52 108 M 92 122 L 64 146 M 102 185 L 142 152 M 85 248 L 124 272 M 106 312 L 72 336"
                 stroke="#ffffff"
-                strokeWidth="1.8"
+                strokeWidth="2.0"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 fill="none"
@@ -383,6 +415,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           )}
         </svg>
       </div>
-    </>
+    </div>
   );
 }
