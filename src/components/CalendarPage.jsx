@@ -304,24 +304,26 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           <LokiTimelinePortal />
         )}
 
+        {/* Left Card Half (On Stage 4, cleanly detaches and zero-gravity drifts away) */}
         <motion.div 
           onClick={(e) => {
             if (isTop && isDec16Blocked && onLokiCardTap) {
               onLokiCardTap();
             }
           }}
+          initial={false}
           animate={
             isTop && isDec16Blocked && lokiCrackStage >= 4 ? {
-              x: -220,
-              y: -80,
-              rotateZ: -28,
-              rotateY: -35,
-              rotateX: 15,
-              scale: 0.05,
+              x: -160,
+              y: -40,
+              rotateZ: -12,
+              rotateY: -22,
+              rotateX: 8,
+              scale: 0.1,
               opacity: 0,
               transition: { 
-                duration: 4.0, 
-                ease: [0.16, 1, 0.3, 1] // True cosmic zero-gravity drift: starts moving steadily then floats forever into deep distance
+                duration: 4.8, 
+                ease: [0.22, 0.61, 0.36, 1] // Natural zero-gravity deceleration (leisurely drift)
               }
             } : {
               x: 0,
@@ -342,7 +344,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           style={{
             boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : (isDec16Blocked && lokiCrackStage >= 3 ? '0 0 60px rgba(16,185,129,0.55)' : (isDec16Blocked && lokiCrackStage === 2 ? '0 0 30px rgba(16,185,129,0.35)' : dropShadow))) : '0 20px 40px -10px rgba(0,0,0,0.1)',
             backfaceVisibility: 'hidden',
-            clipPath: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'polygon(0 0, 52% 0, 48% 100%, 0 100%)' : 'none'
+            clipPath: isTop && isDec16Blocked && lokiCrackStage >= 4 ? 'polygon(0 0, 52% 0, 48% 100%, 0 100%)' : 'none',
+            transformOrigin: '50% 50%'
           }}
         >
           {/* Attached Left Binder Anchor (Moves WITH left piece during Stage 4 float) */}
@@ -814,27 +817,28 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             )}
         </motion.div>
 
-        {/* Right Half of Split Card (Stage 4) */}
+        {/* Right Half of Split Card (On Stage 4, symmetrical zero-gravity drift) */}
         {isTop && isDec16Blocked && lokiCrackStage >= 4 && (
           <motion.div
             initial={{ x: 0, y: 0, rotateZ: 0, rotateY: 0, rotateX: 0, opacity: 1, scale: 1 }}
             animate={{
-              x: 220,
-              y: -80,
-              rotateZ: 28,
-              rotateY: 35,
-              rotateX: -15,
-              scale: 0.05,
+              x: 160,
+              y: -40,
+              rotateZ: 12,
+              rotateY: 22,
+              rotateX: -8,
+              scale: 0.1,
               opacity: 0,
               transition: { 
-                duration: 4.0, 
-                ease: [0.16, 1, 0.3, 1] // Cosmic zero-gravity smooth float into distance
+                duration: 4.8, 
+                ease: [0.22, 0.61, 0.36, 1] // Natural zero-gravity deceleration (leisurely drift)
               }
             }}
             className="w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col absolute overflow-visible border-2 z-20 bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] pointer-events-none"
             style={{
               clipPath: 'polygon(52% 0, 100% 0, 100% 100%, 48% 100%)',
-              backfaceVisibility: 'hidden'
+              backfaceVisibility: 'hidden',
+              transformOrigin: '50% 50%'
             }}
           >
             {/* Attached Right Binder Anchor (Moves WITH right piece during Stage 4 float) */}
