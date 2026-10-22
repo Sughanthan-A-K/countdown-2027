@@ -1597,7 +1597,7 @@ function App() {
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 3800);
+                            }, 4000);
                           }
                           return next;
                         });
