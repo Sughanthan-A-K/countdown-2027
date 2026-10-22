@@ -1,15 +1,169 @@
 import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
+function WovenLifePowerStrands({ pathData, forwardPath, backwardPath }) {
+  return (
+    <g>
+      {/* 1. Deep Celestial Aura Bloom (Outer magical glow) */}
+      <motion.path
+        d={forwardPath}
+        fill="none"
+        stroke="#10b981"
+        strokeWidth="18"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.9 }}
+        transition={{ duration: 3.2, ease: "easeOut" }}
+      />
+      <motion.path
+        d={backwardPath}
+        fill="none"
+        stroke="#10b981"
+        strokeWidth="18"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.9 }}
+        transition={{ duration: 3.2, ease: "easeOut" }}
+      />
+
+      {/* 2. Primary Vibrant Emerald Vine Core (Loki's signature deep green power) */}
+      <motion.path
+        d={forwardPath}
+        fill="none"
+        stroke="#059669"
+        strokeWidth="10"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.95 }}
+        transition={{ duration: 2.9, ease: "easeOut" }}
+      />
+      <motion.path
+        d={backwardPath}
+        fill="none"
+        stroke="#059669"
+        strokeWidth="10"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.95 }}
+        transition={{ duration: 2.9, ease: "easeOut" }}
+      />
+
+      {/* 3. Luminous Golden-Yellow Braided Strand (The distinct warm gold magical vine from Loki Season 2) */}
+      <motion.path
+        d={forwardPath}
+        fill="none"
+        stroke="#eab308"
+        strokeWidth="4"
+        strokeDasharray="16 12"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ 
+          pathLength: 1, 
+          opacity: 0.95,
+          strokeDashoffset: [-80, 80]
+        }}
+        transition={{ 
+          pathLength: { duration: 2.8, ease: "easeOut" },
+          strokeDashoffset: { duration: 2.4, repeat: Infinity, ease: "linear" }
+        }}
+      />
+      <motion.path
+        d={backwardPath}
+        fill="none"
+        stroke="#eab308"
+        strokeWidth="4"
+        strokeDasharray="16 12"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ 
+          pathLength: 1, 
+          opacity: 0.95,
+          strokeDashoffset: [80, -80]
+        }}
+        transition={{ 
+          pathLength: { duration: 2.8, ease: "easeOut" },
+          strokeDashoffset: { duration: 2.4, repeat: Infinity, ease: "linear" }
+        }}
+      />
+
+      {/* 4. Electric Lime-Green Woven Strand (Twisting and spiraling along the branch) */}
+      <motion.path
+        d={forwardPath}
+        fill="none"
+        stroke="#84cc16"
+        strokeWidth="3.5"
+        strokeDasharray="12 14"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ 
+          pathLength: 1, 
+          opacity: 1,
+          strokeDashoffset: [60, -60]
+        }}
+        transition={{ 
+          pathLength: { duration: 2.6, ease: "easeOut" },
+          strokeDashoffset: { duration: 2.0, repeat: Infinity, ease: "linear" }
+        }}
+      />
+      <motion.path
+        d={backwardPath}
+        fill="none"
+        stroke="#84cc16"
+        strokeWidth="3.5"
+        strokeDasharray="12 14"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ 
+          pathLength: 1, 
+          opacity: 1,
+          strokeDashoffset: [-60, 60]
+        }}
+        transition={{ 
+          pathLength: { duration: 2.6, ease: "easeOut" },
+          strokeDashoffset: { duration: 2.0, repeat: Infinity, ease: "linear" }
+        }}
+      />
+
+      {/* 5. Pure White-Mint Filament (High-voltage crackling magic core like in the screenshot) */}
+      <motion.path
+        d={forwardPath}
+        fill="none"
+        stroke="#f0fdf4"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: [0.9, 1, 0.9] }}
+        transition={{ 
+          pathLength: { duration: 2.4, ease: "easeOut" },
+          opacity: { duration: 1.8, repeat: Infinity, ease: "easeInOut" }
+        }}
+      />
+      <motion.path
+        d={backwardPath}
+        fill="none"
+        stroke="#f0fdf4"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: [0.9, 1, 0.9] }}
+        transition={{ 
+          pathLength: { duration: 2.4, ease: "easeOut" },
+          opacity: { duration: 1.8, repeat: Infinity, ease: "easeInOut" }
+        }}
+      />
+    </g>
+  );
+}
 function DraggableBranch({ 
   id,
   children, 
   origin = "500px 300px", 
   windConfig,
   pathData,
+  forwardPath,
+  backwardPath,
   onEnergize,
-  isEnergized,
-  touchProgress
+  energizedData
 }) {
   // Raw target offsets driven by user drag gestures
   const targetX = useMotionValue(0);
@@ -20,25 +174,17 @@ function DraggableBranch({
   const smoothY = useSpring(targetY, { stiffness: 18, damping: 25, mass: 2.5 });
 
   const isDragging = useRef(false);
-  const pointerStartPos = useRef({ x: 0, y: 0 });
 
   const handlePointerDown = (e) => {
     isDragging.current = true;
-    pointerStartPos.current = { x: e.clientX, y: e.clientY };
     const startClientX = e.clientX;
     const startClientY = e.clientY;
     const initialTargetX = targetX.get();
     const initialTargetY = targetY.get();
 
-    // Trigger Loki God of Stories magic life power flow along this branch if not already energized
+    // Trigger Loki God of Stories life magic power flow starting exactly from touch point!
     if (onEnergize) {
-      // Calculate normalized click percentage along the SVG width to shoot power left & right
-      const svgRect = e.currentTarget.closest('svg')?.getBoundingClientRect();
-      let clickRatio = 0.5;
-      if (svgRect && svgRect.width > 0) {
-        clickRatio = Math.max(0.1, Math.min(0.9, (e.clientX - svgRect.left) / svgRect.width));
-      }
-      onEnergize(id, clickRatio);
+      onEnergize(id);
     }
 
     const handlePointerMove = (moveEvent) => {
@@ -57,7 +203,6 @@ function DraggableBranch({
 
     const handlePointerUp = () => {
       isDragging.current = false;
-      // When released, target springs smoothly back to origin (0, 0)
       targetX.set(0);
       targetY.set(0);
       window.removeEventListener('pointermove', handlePointerMove);
@@ -88,52 +233,12 @@ function DraggableBranch({
         {children}
 
         {/* --- LOKI GOD OF STORIES MAGIC LIFE POWER FLOW OVERLAY --- */}
-        {/* Pulsing, woven radiant emerald & gold-green cosmic power streams traveling left & right */}
-        {isEnergized && (
-          <g key={`energized-power-${id}`}>
-            {/* Broad radiant power aura glow */}
-            <motion.path
-              d={pathData}
-              fill="none"
-              stroke="#10b981"
-              strokeWidth="16"
-              strokeLinecap="round"
-              filter="url(#pureGreenGlow)"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: [0.85, 1, 0.85] }}
-              transition={{ duration: 3.5, ease: "easeOut" }}
-            />
-            {/* Luminous yellow-green vibrant woven electrical magic strand */}
-            <motion.path
-              d={pathData}
-              fill="none"
-              stroke="#a3e635"
-              strokeWidth="5"
-              strokeDasharray="14 10"
-              strokeLinecap="round"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ 
-                pathLength: 1, 
-                opacity: 0.95,
-                strokeDashoffset: [-60, 60]
-              }}
-              transition={{ 
-                pathLength: { duration: 3.2, ease: "easeOut" },
-                strokeDashoffset: { duration: 2.2, repeat: Infinity, ease: "linear" }
-              }}
-            />
-            {/* High-voltage bright mint core energy conduit */}
-            <motion.path
-              d={pathData}
-              fill="none"
-              stroke="#ecfdf5"
-              strokeWidth="3.2"
-              strokeLinecap="round"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ duration: 3.0, ease: "easeOut" }}
-            />
-          </g>
+        {/* Multicolored woven braided currents (Emerald, Gold, Lime, Electric Mint) expanding from tap point */}
+        {energizedData && (
+          <WovenLifePowerStrands
+            forwardPath={forwardPath || pathData}
+            backwardPath={backwardPath || pathData}
+          />
         )}
       </motion.g>
     </motion.g>
@@ -329,9 +434,11 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-1"
           pathData="M -150 220 Q 250 340, 500 370 T 1150 390"
+          forwardPath="M 500 370 T 1150 390"
+          backwardPath="M 500 370 Q 250 340, -150 220"
           origin="500px 300px"
           onEnergize={handleBranchEnergize}
-          isEnergized={!!energizedBranches['branch-1']}
+          energizedData={energizedBranches['branch-1']}
           windConfig={{
             y: [-14, 14, -14],
             x: [-8, 8, -8],
@@ -381,9 +488,11 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-2"
           pathData="M -120 70 Q 400 160, 680 140 T 1120 180"
+          forwardPath="M 500 150 Q 680 140, 1120 180"
+          backwardPath="M 500 150 Q 400 160, -120 70"
           origin="500px 150px"
           onEnergize={handleBranchEnergize}
-          isEnergized={!!energizedBranches['branch-2']}
+          energizedData={energizedBranches['branch-2']}
           windConfig={{
             y: [12, -12, 12],
             x: [6, -6, 6],
@@ -429,9 +538,11 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-3"
           pathData="M -150 820 Q 200 720, 520 670 T 1150 860"
+          forwardPath="M 520 670 T 1150 860"
+          backwardPath="M 520 670 Q 200 720, -150 820"
           origin="500px 750px"
           onEnergize={handleBranchEnergize}
-          isEnergized={!!energizedBranches['branch-3']}
+          energizedData={energizedBranches['branch-3']}
           windConfig={{
             y: [-16, 16, -16],
             x: [-6, 6, -6],
@@ -477,9 +588,11 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-4"
           pathData="M 1150 80 Q 750 380, 450 550 T -120 880"
+          forwardPath="M 450 550 T -120 880"
+          backwardPath="M 450 550 Q 750 380, 1150 80"
           origin="500px 500px"
           onEnergize={handleBranchEnergize}
-          isEnergized={!!energizedBranches['branch-4']}
+          energizedData={energizedBranches['branch-4']}
           windConfig={{
             x: [-12, 12, -12],
             y: [10, -10, 10],
@@ -525,9 +638,11 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-5"
           pathData="M -100 480 Q 300 420, 650 490 T 1150 510"
+          forwardPath="M 500 455 Q 650 490, 1150 510"
+          backwardPath="M 500 455 Q 300 420, -100 480"
           origin="500px 520px"
           onEnergize={handleBranchEnergize}
-          isEnergized={!!energizedBranches['branch-5']}
+          energizedData={energizedBranches['branch-5']}
           windConfig={{
             y: [12, -12, 12],
             x: [8, -8, 8],
