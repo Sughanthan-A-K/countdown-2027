@@ -4,12 +4,12 @@ import { motion } from 'framer-motion';
 /**
  * LokiTimelinePortal
  * 
- * Exact 1:1 match with user's reference image (media_1792649246229_06f93ec7.jpg):
+ * Exact 1:1 match with user's reference image:
  * - Screen completely flooded with ethereal, atmospheric emerald aurora glow and reflections.
  * - Central vertical opening is an organic, irregular portal rift with rugged, frayed, torn cloud-like borders
  *   (exactly like the rift in the Loki Season 2 finale screenshot where the loom fabric tears open).
  * - A distant celestial cosmic void visible inside the rift with a soft focal light origin.
- * - Organic dark timeline branches/vines weaving through the scene, animated with very slow, gentle, hypnotic drift.
+ * - Organic dark timeline branches/vines weaving through the scene, animated with very slow, gentle, hypnotic drift (no artificial dashed lines).
  */
 export default function LokiTimelinePortal() {
   return (
@@ -113,7 +113,7 @@ export default function LokiTimelinePortal() {
         />
       </div>
 
-      {/* 3. Dark Multiverse Timeline Branches (Scattered organically & very slowly undulating) */}
+      {/* 3. Dark Multiverse Timeline Branches (Completely solid, organic vine curves - ZERO dashed lines, hypnotic slow natural sway) */}
       <svg 
         viewBox="0 0 1000 1000" 
         preserveAspectRatio="none"
@@ -125,24 +125,32 @@ export default function LokiTimelinePortal() {
           d="M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410"
           fill="none"
           stroke="#021c15"
-          strokeWidth="11"
+          strokeWidth="12"
           strokeLinecap="round"
           filter="url(#branchDeepShadow)"
           animate={{
             d: [
               "M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410",
-              "M 40 235 C 225 270, 390 335, 520 410 C 645 525, 775 490, 960 425",
+              "M 40 240 C 230 265, 395 340, 520 405 C 640 525, 770 495, 960 430",
               "M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410"
             ]
           }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.path
           d="M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410"
           fill="none"
           stroke="#043828"
-          strokeWidth="4"
+          strokeWidth="4.5"
           strokeLinecap="round"
+          animate={{
+            d: [
+              "M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410",
+              "M 40 240 C 230 265, 395 340, 520 405 C 640 525, 770 495, 960 430",
+              "M 40 220 C 220 280, 380 320, 520 420 C 650 510, 780 480, 960 410"
+            ]
+          }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
 
         {/* Branch 2: High sweeping branch crossing the upper void */}
@@ -150,17 +158,32 @@ export default function LokiTimelinePortal() {
           d="M 120 80 C 350 150, 620 120, 880 210"
           fill="none"
           stroke="#021c15"
-          strokeWidth="9"
+          strokeWidth="10"
           strokeLinecap="round"
           filter="url(#branchDeepShadow)"
           animate={{
             d: [
               "M 120 80 C 350 150, 620 120, 880 210",
-              "M 120 95 C 340 140, 630 135, 880 195",
+              "M 120 105 C 335 135, 635 145, 880 190",
               "M 120 80 C 350 150, 620 120, 880 210"
             ]
           }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        <motion.path
+          d="M 120 80 C 350 150, 620 120, 880 210"
+          fill="none"
+          stroke="#043828"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          animate={{
+            d: [
+              "M 120 80 C 350 150, 620 120, 880 210",
+              "M 120 105 C 335 135, 635 145, 880 190",
+              "M 120 80 C 350 150, 620 120, 880 210"
+            ]
+          }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
 
         {/* Branch 3: Lower sweeping tendril ascending across center */}
@@ -168,17 +191,17 @@ export default function LokiTimelinePortal() {
           d="M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860"
           fill="none"
           stroke="#021c15"
-          strokeWidth="10"
+          strokeWidth="11"
           strokeLinecap="round"
           filter="url(#branchDeepShadow)"
           animate={{
             d: [
               "M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860",
-              "M 80 765 C 270 750, 470 635, 640 655 C 770 725, 870 795, 940 845",
+              "M 80 760 C 275 755, 465 640, 640 650 C 765 730, 875 790, 940 840",
               "M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860"
             ]
           }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
         <motion.path
           d="M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860"
@@ -186,26 +209,48 @@ export default function LokiTimelinePortal() {
           stroke="#043828"
           strokeWidth="4"
           strokeLinecap="round"
+          animate={{
+            d: [
+              "M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860",
+              "M 80 760 C 275 755, 465 640, 640 650 C 765 730, 875 790, 940 840",
+              "M 80 780 C 260 740, 480 620, 640 670 C 780 710, 860 810, 940 860"
+            ]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
 
-        {/* Branch 4: Thin organic fibrous threads (weaving subtly like timeline strands) */}
+        {/* Branch 4: Thin organic solid secondary tendrils (NO dashed lines) */}
         <motion.path
           d="M 280 340 C 420 460, 560 520, 740 620"
           fill="none"
-          stroke="#064e3b"
-          strokeWidth="3"
-          strokeDasharray="6 4"
-          animate={{ opacity: [0.4, 0.75, 0.4] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          stroke="#021c15"
+          strokeWidth="5"
+          strokeLinecap="round"
+          filter="url(#branchDeepShadow)"
+          animate={{
+            d: [
+              "M 280 340 C 420 460, 560 520, 740 620",
+              "M 280 355 C 430 450, 550 535, 740 610",
+              "M 280 340 C 420 460, 560 520, 740 620"
+            ]
+          }}
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
         />
         <motion.path
           d="M 720 180 C 580 320, 440 480, 260 580"
           fill="none"
-          stroke="#064e3b"
-          strokeWidth="2.5"
-          strokeDasharray="8 6"
-          animate={{ opacity: [0.35, 0.7, 0.35] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+          stroke="#032b1f"
+          strokeWidth="4"
+          strokeLinecap="round"
+          filter="url(#branchDeepShadow)"
+          animate={{
+            d: [
+              "M 720 180 C 580 320, 440 480, 260 580",
+              "M 720 195 C 570 310, 450 495, 260 570",
+              "M 720 180 C 580 320, 440 480, 260 580"
+            ]
+          }}
+          transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
         />
       </svg>
     </div>
