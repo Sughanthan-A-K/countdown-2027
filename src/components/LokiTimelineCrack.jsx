@@ -401,13 +401,15 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         {/* Extends cleanly right up to the card edges without crossing outside */}
         {/* ============================================================ */}
 
-        {/* Natural Jagged Broken Glass Spine with realistic crystalline micro-fractures */}
+        {/* Single crisp crystalline fracture line touching card edges (y: 6 to y: 394) */}
+        {/* Natural high-detail fractured glass spine with realistic jagged facets & butt end caps */}
         <motion.path
-          d="M 98 6 L 99 28 L 96 48 L 102 65 L 100 78 L 106 95 L 94 118 L 96 138 L 91 162 L 102 185 L 98 208 L 104 228 L 86 248 L 89 272 L 82 292 L 106 312 L 102 332 L 95 350 L 98 372 L 101 394"
+          d="M 98 6 L 99 28 L 96 48 L 104 65 L 102 72 L 108 78 L 103 98 L 92 122 L 95 148 L 91 168 L 102 185 L 96 218 L 85 248 L 89 278 L 106 312 L 101 332 L 96 350 L 99 374 L 102 394"
           stroke={crackStage >= 2 ? "#d1fae5" : "#ffffff"}
           strokeWidth={spineStroke}
-          strokeLinecap="round"
-          strokeLinejoin="bevel"
+          strokeLinecap="butt"
+          strokeLinejoin="miter"
+          strokeMiterlimit="3"
           fill="none"
           initial={crackStage === 1 ? { pathLength: 0 } : false}
           animate={{ 
@@ -415,19 +417,20 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             stroke: crackStage >= 4 ? ["#d1fae5", "#ffffff"] : (crackStage >= 2 ? "#d1fae5" : "#ffffff"),
             strokeWidth: crackStage >= 4 ? [spineStroke, spineStroke * 1.5] : spineStroke
           }}
-          transition={{ duration: 0.35, ease: [0.12, 0.95, 0.2, 1] }}
+          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        {/* Realistic High-Tension Micro Tendrils radiating off the main spine */}
+        {/* Natural Micro-Splinter Fissure Hairlines along Spine on Tap 1 */}
         <motion.path
-          d="M 102 65 L 110 58 M 94 118 L 86 126 M 102 185 L 112 180 M 86 248 L 78 242 M 106 312 L 114 318 M 95 350 L 88 356"
+          d="M 104 65 L 108 55 M 92 122 L 87 132 M 102 185 L 109 194 M 85 248 L 80 238 M 106 312 L 112 304"
           stroke="#ffffff"
           strokeWidth="0.8"
-          strokeLinecap="round"
+          strokeLinecap="butt"
+          strokeLinejoin="miter"
           fill="none"
-          initial={crackStage === 1 ? { pathLength: 0, opacity: 0 } : false}
-          animate={{ pathLength: 1, opacity: 0.8 }}
-          transition={{ duration: 0.28, delay: 0.08, ease: "easeOut" }}
+          initial={crackStage === 1 ? { pathLength: 0 } : false}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.2, delay: 0.15, ease: "easeOut" }}
         />
 
         {/* ============================================================ */}
