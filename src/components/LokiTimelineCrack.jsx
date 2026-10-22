@@ -243,73 +243,75 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             />
 
             {/* ============================================================ */}
-            {/* TAP 4: RANDOM OUTWARD LIGHT BURSTS FROM EXACT CRACK SEAMS */}
+            {/* TAP 4: ASYMMETRIC, NATURAL CRACK LIGHT BURSTS (TAKKU TAKKUNU POPPING) */}
+            {/* Organic, random angles breaking the symmetrical circular pattern */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- FIRST POP (0.05s): Seam 4 (76,100 -> 45,108) Upper-Left crack seam --- */}
+                {/* --- 1st POP (0.04s): Razor-thin sharp beam piercing Upper-Left corner --- */}
                 <motion.polygon
-                  points="76,100 45,108 -480,-130 -380,-300"
+                  points="76,100 45,108 -340,-260 -240,-360"
                   fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
                   style={{ transformOrigin: "60px 104px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
-                  transition={{ duration: 0.22, delay: 0.05, ease: [0.1, 0.9, 0.2, 1] }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.9] }}
+                  transition={{ duration: 0.14, delay: 0.04, ease: [0.05, 0.95, 0.1, 1] }}
                 />
 
-                {/* --- SECOND POP (0.55s): Seam 6 & Seam 7 Right side crack seams --- */}
-                {/* Seam 6: (165,138 -> 182,148) Mid-Right crack line */}
+                {/* --- 2nd POP (0.28s): Angular blade beam slicing through Mid-Right --- */}
                 <motion.polygon
-                  points="165,138 182,148 780,260 780,20"
+                  points="165,138 182,148 760,110 680,240"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   style={{ transformOrigin: "173px 143px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
-                  transition={{ duration: 0.22, delay: 0.55, ease: [0.1, 0.9, 0.2, 1] }}
-                />
-                {/* Seam 7: (85,248 -> 126,274) Lower-Right crack line */}
-                <motion.polygon
-                  points="85,248 126,274 680,820 420,890"
-                  fill="url(#outwardBeamLowerRightSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "105px 261px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
-                  transition={{ duration: 0.22, delay: 0.62, ease: [0.1, 0.9, 0.2, 1] }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.88] }}
+                  transition={{ duration: 0.14, delay: 0.28, ease: [0.05, 0.95, 0.1, 1] }}
                 />
 
-                {/* --- THIRD POP (1.05s): Seam 3, Seam 5, Seam 8 across all crack lines --- */}
-                {/* Seam 3: (104,65 -> 108,78) Top Spine crack line -> expanding out Top screen */}
+                {/* --- 3rd POP (0.55s): Steep upward fissure shaft tilting North-North-West --- */}
                 <motion.polygon
-                  points="104,65 108,78 260,-360 -60,-360"
+                  points="104,65 108,78 40,-420 -80,-380"
                   fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
                   style={{ transformOrigin: "106px 71px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
-                  transition={{ duration: 0.22, delay: 1.05, ease: [0.1, 0.9, 0.2, 1] }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.92] }}
+                  transition={{ duration: 0.15, delay: 0.55, ease: [0.05, 0.95, 0.1, 1] }}
                 />
-                {/* Seam 5: (40,156 -> 26,172) Mid-Left crack line -> expanding out Left screen */}
+
+                {/* --- 4th POP (0.82s): Narrow oblique beam cutting through Lower-Right corner --- */}
                 <motion.polygon
-                  points="40,156 26,172 -520,320 -520,20"
+                  points="85,248 126,274 580,720 460,820"
+                  fill="url(#outwardBeamLowerRightSeam)"
+                  filter="url(#outwardBeamGlow)"
+                  style={{ transformOrigin: "105px 261px" }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.85] }}
+                  transition={{ duration: 0.14, delay: 0.82, ease: [0.05, 0.95, 0.1, 1] }}
+                />
+
+                {/* --- 5th POP (1.10s): Sharp horizontal sliver piercing West --- */}
+                <motion.polygon
+                  points="40,156 26,172 -480,220 -500,130"
                   fill="url(#outwardBeamMidLeftSeam)"
                   filter="url(#outwardBeamGlow)"
                   style={{ transformOrigin: "33px 164px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
-                  transition={{ duration: 0.22, delay: 1.12, ease: [0.1, 0.9, 0.2, 1] }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.9] }}
+                  transition={{ duration: 0.14, delay: 1.10, ease: [0.05, 0.95, 0.1, 1] }}
                 />
-                {/* Seam 8: (96,350 -> 102,400) Bottom Spine crack line -> expanding out Bottom screen */}
+
+                {/* --- 6th POP (1.35s): Off-center vertical beam piercing down-right towards South-South-East --- */}
                 <motion.polygon
-                  points="96,350 102,400 240,880 -80,880"
+                  points="96,350 102,400 190,880 70,880"
                   fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
                   style={{ transformOrigin: "99px 375px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
-                  transition={{ duration: 0.22, delay: 1.20, ease: [0.1, 0.9, 0.2, 1] }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.92] }}
+                  transition={{ duration: 0.15, delay: 1.35, ease: [0.05, 0.95, 0.1, 1] }}
                 />
               </g>
             )}
