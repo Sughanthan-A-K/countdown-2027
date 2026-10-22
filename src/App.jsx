@@ -296,8 +296,9 @@ function App() {
   const [diwaliPhase, setDiwaliPhase] = useState(0);
   const [lokiCrackStage, setLokiCrackStage] = useState(0); // 0 = normal, 1 = first crack, 2 = deep branching, 3 = full cosmos breach
 
-  // Ensure Loki crack stage is strictly 0 whenever we are NOT on Dec 16
-  const isDec16Card = calendarDate.getFullYear() === 2026 && calendarDate.getMonth() === 11 && calendarDate.getDate() === 16;
+  // Ensure Loki crack stage is strictly 0 whenever we are NOT on Dec 16 (or if dev mode is off)
+  // Loki Multiverse easter egg is only active when in devMode OR on actual Dec 16 date
+  const isDec16Card = isDevMode && calendarDate.getFullYear() === 2026 && calendarDate.getMonth() === 11 && calendarDate.getDate() === 16;
   useEffect(() => {
     if (!isDec16Card && lokiCrackStage !== 0) {
       setLokiCrackStage(0);
@@ -1590,13 +1591,13 @@ function App() {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
                           const next = Math.min(prev + 1, 4);
-                          // On 4th tap (random natural escalating light sequence over 2.6s, then shattering into portal):
+                          // On 4th tap (outer beams start with delays, then center accelerates fast right before shatter):
                           if (next === 4) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 2600);
+                            }, 3600);
                           }
                           return next;
                         });
