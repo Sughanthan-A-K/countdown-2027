@@ -749,39 +749,69 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
               </>
             ) : (
               <>
-                <div className="pt-8 sm:pt-10 px-8 flex flex-col items-center w-full z-10 relative">
-                  <h2 className={`text-lg sm:text-xl font-black tracking-widest uppercase ${textPrimary}`}>
+                <div className={`pt-8 sm:pt-10 px-8 flex flex-col items-center w-full z-10 relative ${isDec16Blocked && lokiCrackStage > 0 ? 'z-[60]' : ''}`}>
+                  <h2 
+                    className={`text-lg sm:text-xl font-black tracking-widest uppercase transition-all duration-700 ${
+                      isDec16Blocked && lokiCrackStage > 0 
+                        ? 'text-white drop-shadow-[0_0_12px_rgba(52,211,153,0.85)]' 
+                        : textPrimary
+                    }`}
+                  >
                     {dateText}
                   </h2>
                 </div>
 
-                <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-2">
+                <div className={`flex-1 flex flex-col items-center justify-center relative w-full mt-2 ${isDec16Blocked && lokiCrackStage > 0 ? 'z-[60]' : 'z-10'}`}>
                   <div className="w-full flex justify-start pl-8 z-20 mb-[-1rem]">
-                    <span className={`font-bold text-xs sm:text-sm tracking-widest uppercase ${textSecondary}`}>
+                    <span 
+                      className={`font-bold text-xs sm:text-sm tracking-widest uppercase transition-all duration-700 ${
+                        isDec16Blocked && lokiCrackStage > 0 
+                          ? 'text-emerald-300 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]' 
+                          : textSecondary
+                      }`}
+                    >
                       Today
                     </span>
                   </div>
                   
-                  <h1 className={`text-[7.5rem] sm:text-[9.5rem] font-black leading-none tracking-tighter text-center ${textPrimary}`}>
+                  <h1 
+                    className={`text-[7.5rem] sm:text-[9.5rem] font-black leading-none tracking-tighter text-center select-none transition-all duration-700 ${
+                      isDec16Blocked && lokiCrackStage > 0 
+                        ? 'text-white drop-shadow-[0_0_35px_rgba(52,211,153,0.9)] text-shadow-[0_0_50px_#10b981]' 
+                        : textPrimary
+                    }`}
+                  >
                     {daysRemaining}
                   </h1>
                   
                   <div className="w-full flex justify-end pr-8 z-20 mt-[-1rem]">
-                    <span className={`font-bold text-lg sm:text-xl italic ${textSecondary}`}>
+                    <span 
+                      className={`font-bold text-lg sm:text-xl italic transition-all duration-700 ${
+                        isDec16Blocked && lokiCrackStage > 0 
+                          ? 'text-emerald-300 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]' 
+                          : textSecondary
+                      }`}
+                    >
                       th day
                     </span>
                   </div>
                 </div>
                 
-                <div className="pb-6 sm:pb-8 flex justify-center w-full z-10 relative">
+                <div className={`pb-6 sm:pb-8 flex justify-center w-full relative ${isDec16Blocked && lokiCrackStage > 0 ? 'z-[60]' : 'z-10'}`}>
                   <div 
-                    className={`px-6 py-2 rounded-full border-2 cursor-default select-none ${pillBgOutline}`}
+                    className={`px-6 py-2 rounded-full border-2 cursor-default select-none transition-all duration-700 ${
+                      isDec16Blocked && lokiCrackStage > 0
+                        ? 'bg-black/90 border-emerald-400 text-emerald-200 shadow-[0_0_15px_rgba(16,185,129,0.6)]'
+                        : pillBgOutline
+                    }`}
                     onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
                     onPointerDown={(e) => { e.stopPropagation(); if (onDevHoldStart) onDevHoldStart(); }}
                     onPointerUp={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
                     onPointerLeave={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
                   >
-                    <span className={`text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase ${pillTextOutline}`}>
+                    <span className={`text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase ${
+                      isDec16Blocked && lokiCrackStage > 0 ? 'text-emerald-300' : pillTextOutline
+                    }`}>
                       To reach 2027
                     </span>
                   </div>

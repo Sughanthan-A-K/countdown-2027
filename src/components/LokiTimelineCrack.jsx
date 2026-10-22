@@ -33,14 +33,14 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
   return (
     <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl">
-      {/* Background Dimming as glass is damaged */}
+      {/* Background Dimming as glass is damaged (Subtle so card text & "16" remain completely crisp and clear) */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ 
-          opacity: crackStage >= 4 ? 0.92 : (crackStage === 3 ? 0.72 : (crackStage === 2 ? 0.48 : 0.22)) 
+          opacity: crackStage >= 4 ? 0.35 : (crackStage === 3 ? 0.25 : (crackStage === 2 ? 0.15 : 0.08)) 
         }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="absolute inset-0 bg-black/85 pointer-events-none rounded-3xl"
+        className="absolute inset-0 bg-black/50 pointer-events-none rounded-3xl"
       />
 
       {/* Behind-the-glass pure emerald ambient light */}
