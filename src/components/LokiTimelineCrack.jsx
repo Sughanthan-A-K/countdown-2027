@@ -6,20 +6,20 @@ import { motion } from 'framer-motion';
  * 
  * Progressive, Realistic Broken Glass Cracking:
  * 
- * 1. Clean Single Lines (No artificial double lines, pure emerald light in gaps).
- * 2. Tap 1: Spine fracture shoots down smoothly.
- * 3. Tap 2: Center spine widens mildly, branches shoot outward slowly.
- * 4. Tap 3: Full corner-reaching spiderweb fissures.
- * 5. Tap 4: NATURAL OUTWARD LIGHT RAY SHOOT (Center -> Outer):
- *    - Point of light origin is at the crack center: (102px, 185px).
- *    - Rays SHOOT OUTWARD from center towards the screen edges (Center-la irunthu veliya takku-takku nu shoot aagum).
- *    - LinearGradient has bright white-mint center at origin (0%) and fades away to transparent at outer boundary (100%).
- *    - Wave reveal over 2.0s:
- *        * 0.0s: First 2 opposite rays shoot outward from center.
- *        * 0.45s: Next opposite pair shoots outward from center.
- *        * 0.9s: Side horizontal breach rays shoot outward from center.
- *        * 1.3s: Vertical spine rays shoot outward from center.
- *        * 2.0s: Shatter into pieces!
+ * 1. Clean Single Lines (No artificial double lines or blinking noise):
+ *    - Pure, single crystalline fracture path with natural jagged geometry.
+ *    - Only emerald green light bleeds through the crack gaps (no white glint/sparkle noise).
+ * 
+ * 2. Gap Widening:
+ *    - Tap 1: Single fine crack.
+ *    - Tap 2: Center spine opens slightly, green light glows through.
+ *    - Tap 3: Center spine opens wider, pure green aura radiates.
+ *    - Tap 4: Center spine splits wide as deep cracks continuously multiply.
+ * 
+ * 3. 4th Tap Rapid Cascade & Brightness Escalation (Over exactly 2.0s before shatter):
+ *    - Cracks continuously develop & spread rapidly outward.
+ *    - Same emerald god rays stay in place, but their BRIGHTNESS intensifies steadily (opacity 0.2 -> 1.0, glow scale 1.0 -> 2.2).
+ *    - At exactly 2.0 seconds, the card explodes into slow-mo shards!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -32,7 +32,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
   const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 14));
 
   return (
-    <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl">
+    <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
       {/* Background Dimming as glass is damaged */}
       <motion.div 
         initial={{ opacity: 0 }}
@@ -60,7 +60,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Stage 4: Light Rays Shooting OUTWARD from center point (102, 185) */}
+      {/* Stage 4: Same emerald volumetric god rays whose BRIGHTNESS continuously escalates over the 2 seconds */}
       {isLightRaysCreeping && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
           <svg 
@@ -69,76 +69,31 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             style={{ mixBlendMode: 'screen' }}
           >
             <defs>
-              {/* Radial gradient centered at crack puncture (102, 185) */}
               <radialGradient id="glassImpactBloom" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.9" />
-                <stop offset="65%" stopColor="#10b981" stopOpacity="0.4" />
+                <stop offset="0%" stopColor="#34d399" stopOpacity="1" />
+                <stop offset="35%" stopColor="#10b981" stopOpacity="0.8" />
+                <stop offset="70%" stopColor="#059669" stopOpacity="0.35" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
 
-              {/* Rays start bright white/mint at crack center (0%) and fade out towards outer screen (100%) */}
-              {/* Top-Right Ray Gradient */}
-              <linearGradient id="rayOutTopRight" x1="102" y1="185" x2="320" y2="-100" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
+              <linearGradient id="pureGreenRay1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="25%" stopColor="#34d399" stopOpacity="0.8" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.35" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </linearGradient>
 
-              {/* Bottom-Right Ray Gradient */}
-              <linearGradient id="rayOutBottomRight" x1="102" y1="185" x2="300" y2="540" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
+              <linearGradient id="pureGreenRay2" x1="50%" y1="50%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="20%" stopColor="#34d399" stopOpacity="0.8" />
+                <stop offset="65%" stopColor="#10b981" stopOpacity="0.35" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </linearGradient>
 
-              {/* Top-Left Ray Gradient */}
-              <linearGradient id="rayOutTopLeft" x1="102" y1="185" x2="-120" y2="-60" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Bottom-Left Ray Gradient */}
-              <linearGradient id="rayOutBottomLeft" x1="102" y1="185" x2="-140" y2="480" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Right Horizontal Ray Gradient */}
-              <linearGradient id="rayOutRight" x1="102" y1="185" x2="420" y2="180" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Left Horizontal Ray Gradient */}
-              <linearGradient id="rayOutLeft" x1="102" y1="185" x2="-220" y2="150" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Upward Spine Ray Gradient */}
-              <linearGradient id="rayOutTop" x1="102" y1="185" x2="102" y2="-160" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Downward Spine Ray Gradient */}
-              <linearGradient id="rayOutBottom" x1="102" y1="185" x2="102" y2="580" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
+              <linearGradient id="pureGreenRay3" x1="50%" y1="50%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="20%" stopColor="#34d399" stopOpacity="0.8" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.35" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </linearGradient>
 
@@ -147,109 +102,83 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               </filter>
             </defs>
 
-            {/* Impact Center Point Bloom */}
+            {/* Impact Center Point Bloom (Brightness increases steadily 0.2 -> 1.0) */}
             <motion.ellipse
               cx="102"
               cy="185"
               rx="24"
               ry="24"
               fill="url(#glassImpactBloom)"
-              initial={{ scale: 0.3, opacity: 0.3 }}
-              animate={{ scale: [0.3, 1.8], opacity: [0.3, 1.0] }}
+              initial={{ scale: 0.4, opacity: 0.2 }}
+              animate={{ scale: [0.4, 2.0], opacity: [0.2, 1.0] }}
               transition={{ duration: 2.0, ease: "easeIn" }}
               filter="url(#glassRayBlur)"
             />
 
-            {/* ============================================================ */}
-            {/* INITIAL PAIR (0.0s - Instant): 2 Opposite Rays Shoot OUTWARD from Center */}
-            {/* Ray A: Top-Left ray (Shoots from 102,185 outward to top-left) */}
+            {/* Crepuscular Rays radiating out through the crack fissures with ESCALATING BRIGHTNESS (Extending far out of card across full viewport) */}
             <motion.polygon
-              points="102,185 106,75 -80,-100 -180,-30"
-              fill="url(#rayOutTopLeft)"
+              points="102,185 145,150 780,-280 560,-320"
+              fill="url(#pureGreenRay1)"
               filter="url(#glassRayBlur)"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.05, 1.0], opacity: [0, 0.95, 1.0] }}
-              transition={{ duration: 0.6, delay: 0.0, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "102px 185px" }}
+              initial={{ opacity: 0.15 }}
+              animate={{ opacity: [0.15, 1.0] }}
+              transition={{ duration: 2.0, ease: "easeIn" }}
             />
-            {/* Ray B: Opposite Bottom-Right ray (Shoots from 102,185 outward to bottom-right) */}
             <motion.polygon
-              points="102,185 85,250 320,520 200,560"
-              fill="url(#rayOutBottomRight)"
+              points="102,185 118,190 820,120 780,360"
+              fill="url(#pureGreenRay1)"
               filter="url(#glassRayBlur)"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.05, 1.0], opacity: [0, 0.95, 1.0] }}
-              transition={{ duration: 0.6, delay: 0.0, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "102px 185px" }}
+              initial={{ opacity: 0.15 }}
+              animate={{ opacity: [0.15, 0.95] }}
+              transition={{ duration: 2.0, ease: "easeIn" }}
             />
-
-            {/* ============================================================ */}
-            {/* SECOND PAIR (0.45s): 2 Opposite Rays Shoot OUTWARD from Center */}
-            {/* Ray C: Top-Right ray */}
             <motion.polygon
-              points="102,185 145,150 380,-80 260,-120"
-              fill="url(#rayOutTopRight)"
+              points="102,185 85,250 620,820 400,880"
+              fill="url(#pureGreenRay1)"
               filter="url(#glassRayBlur)"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.05, 1.0], opacity: [0, 0.95, 1.0] }}
-              transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "102px 185px" }}
+              initial={{ opacity: 0.15 }}
+              animate={{ opacity: [0.15, 1.0] }}
+              transition={{ duration: 2.0, ease: "easeIn" }}
             />
-            {/* Ray D: Opposite Bottom-Left ray */}
             <motion.polygon
-              points="102,185 85,250 -120,540 -180,420"
-              fill="url(#rayOutBottomLeft)"
+              points="102,185 85,250 -420,840 -480,620"
+              fill="url(#pureGreenRay2)"
               filter="url(#glassRayBlur)"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.05, 1.0], opacity: [0, 0.95, 1.0] }}
-              transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "102px 185px" }}
+              initial={{ opacity: 0.15 }}
+              animate={{ opacity: [0.15, 0.95] }}
+              transition={{ duration: 2.0, ease: "easeIn" }}
             />
-
-            {/* ============================================================ */}
-            {/* THIRD PAIR (0.9s): Side Breach Rays Shoot OUTWARD from Center */}
-            {/* Ray E: Right horizontal breach */}
             <motion.polygon
-              points="102,185 118,190 420,120 400,240"
-              fill="url(#rayOutRight)"
+              points="102,185 88,125 -500,80 -520,320"
+              fill="url(#pureGreenRay2)"
               filter="url(#glassRayBlur)"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.05, 1.0], opacity: [0, 0.95, 1.0] }}
-              transition={{ duration: 0.5, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "102px 185px" }}
+              initial={{ opacity: 0.15 }}
+              animate={{ opacity: [0.15, 1.0] }}
+              transition={{ duration: 2.0, ease: "easeIn" }}
             />
-            {/* Ray F: Left horizontal breach */}
             <motion.polygon
-              points="102,185 88,125 -200,80 -220,190"
-              fill="url(#rayOutLeft)"
+              points="102,185 106,75 -380,-300 -480,-130"
+              fill="url(#pureGreenRay2)"
               filter="url(#glassRayBlur)"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.05, 1.0], opacity: [0, 0.95, 1.0] }}
-              transition={{ duration: 0.5, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "102px 185px" }}
+              initial={{ opacity: 0.15 }}
+              animate={{ opacity: [0.15, 0.95] }}
+              transition={{ duration: 2.0, ease: "easeIn" }}
             />
-
-            {/* ============================================================ */}
-            {/* FINAL SPINE PAIR (1.3s): Vertical Rays Shoot UP & DOWN from Center */}
-            {/* Ray G: Straight upward spine ray */}
             <motion.polygon
-              points="102,185 98,15 40,-160 160,-160"
-              fill="url(#rayOutTop)"
+              points="102,185 98,15 -60,-360 260,-360"
+              fill="url(#pureGreenRay3)"
               filter="url(#glassRayBlur)"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.05, 1.0], opacity: [0, 1.0, 1.0] }}
-              transition={{ duration: 0.5, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "102px 185px" }}
+              initial={{ opacity: 0.2 }}
+              animate={{ opacity: [0.2, 1.0] }}
+              transition={{ duration: 2.0, ease: "easeIn" }}
             />
-            {/* Ray H: Straight downward spine ray */}
             <motion.polygon
-              points="102,185 102,385 40,580 160,580"
-              fill="url(#rayOutBottom)"
+              points="102,185 102,385 -60,880 260,880"
+              fill="url(#pureGreenRay3)"
               filter="url(#glassRayBlur)"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.05, 1.0], opacity: [0, 1.0, 1.0] }}
-              transition={{ duration: 0.5, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "102px 185px" }}
+              initial={{ opacity: 0.15 }}
+              animate={{ opacity: [0.15, 1.0] }}
+              transition={{ duration: 2.0, ease: "easeIn" }}
             />
           </svg>
         </div>
@@ -383,7 +312,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: Continuous Cracks Spreading Rapidly While Rays Shoot Outward (Exactly 2.0s) */}
+        {/* TAP 4: Continuous Cracks Spreading Rapidly While Rays Escalate Brightness (Exactly 2.0s) */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-cascades">
