@@ -43,19 +43,44 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         className="absolute inset-0 bg-black/50 pointer-events-none rounded-3xl"
       />
 
-      {/* Behind-the-glass pure emerald ambient light */}
+      {/* Behind-the-glass pure emerald ambient light - Escalates into blinding portal aura on Tap 4 */}
       {crackStage >= 2 && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ 
-            opacity: crackStage >= 4 ? 0.95 : (crackStage === 3 ? 0.8 : 0.45),
-            scale: crackStage >= 4 ? 1.35 : (crackStage === 3 ? 1.2 : 1.0),
+            opacity: crackStage >= 4 ? [0.65, 0.85, 1.0] : (crackStage === 3 ? 0.8 : 0.45),
+            scale: crackStage >= 4 ? [1.1, 1.35, 1.7] : (crackStage === 3 ? 1.2 : 1.0),
           }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={
+            crackStage >= 4 
+              ? { duration: 2.0, ease: "easeInOut", times: [0, 0.6, 1] }
+              : { duration: 0.8, ease: "easeOut" }
+          }
           className="absolute w-80 h-96 rounded-full pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 45%, rgba(16,185,129,0.6) 0%, rgba(5,150,105,0.3) 50%, transparent 75%)',
+            background: 'radial-gradient(ellipse at 50% 45%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.5) 45%, transparent 75%)',
             filter: 'blur(30px)'
+          }}
+        />
+      )}
+
+      {/* TAP 4: Center Core White-Hot Escalation (Vedikka porathunaala center-la velicham athigam aaguthu) */}
+      {crackStage >= 4 && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.4 }}
+          animate={{
+            opacity: [0, 0.35, 0.7, 0.95, 1.0],
+            scale: [0.5, 0.8, 1.2, 1.6, 2.2]
+          }}
+          transition={{ duration: 2.1, ease: [0.12, 0.8, 0.2, 1] }}
+          className="absolute w-44 h-44 rounded-full pointer-events-none z-[65]"
+          style={{
+            top: '46%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: 'radial-gradient(circle, #ffffff 0%, rgba(167,243,208,0.9) 25%, rgba(52,211,153,0.6) 55%, transparent 75%)',
+            filter: 'blur(16px)',
+            mixBlendMode: 'screen'
           }}
         />
       )}
@@ -105,14 +130,30 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* --- TAP 4 FRESH CRACK SEAMS --- */}
-              {/* Fresh Seam A: Wave 1 Top-Right Corner Crack (168, 22 -> 200, 5) -> shoots out Far Top-Right */}
+              {/* --- TAP 4 EXTRA BEAMS FROM EXACT CRACK SEAMS --- */}
+              {/* Seam 3: Top Spine Crack (104, 65) -> (108, 78) - shoots out towards Top-Center/Right */}
               <linearGradient 
-                id="outwardBeamWave1Corner" 
+                id="outwardBeamTopSpine" 
                 gradientUnits="userSpaceOnUse"
-                x1="184" 
-                y1="13" 
-                x2="850" 
+                x1="106" 
+                y1="71" 
+                x2="60" 
+                y2="-380"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Seam 4: Upper-Left Branch Crack (76, 100) -> (45, 108) - shoots out towards Top-Left screen */}
+              <linearGradient 
+                id="outwardBeamUpperLeft" 
+                gradientUnits="userSpaceOnUse"
+                x1="60" 
+                y1="104" 
+                x2="-400" 
                 y2="-220"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
@@ -122,14 +163,14 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Fresh Seam B: Wave 2 Mid-Left Edge Crack (12, 188 -> 0, 205) -> shoots out Direct Mid-Left */}
+              {/* Seam 5: Mid-Left Branch Crack (40, 156) -> (26, 172) - shoots out towards Mid-Left screen */}
               <linearGradient 
-                id="outwardBeamWave2MidLeft" 
+                id="outwardBeamMidLeftSeam" 
                 gradientUnits="userSpaceOnUse"
-                x1="6" 
-                y1="196" 
+                x1="33" 
+                y1="164" 
                 x2="-520" 
-                y2="260"
+                y2="170"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
@@ -138,14 +179,14 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Fresh Seam C: Wave 1 Upper-Left Edge Crack (30, 75 -> 0, 15) -> shoots out Steep Top-Left */}
+              {/* Seam 6: Mid-Right Branch Crack (165, 138) -> (182, 148) - shoots out towards Mid-Right screen */}
               <linearGradient 
-                id="outwardBeamWave1TopLeft" 
+                id="outwardBeamMidRightSeam" 
                 gradientUnits="userSpaceOnUse"
-                x1="15" 
-                y1="45" 
-                x2="-450" 
-                y2="-320"
+                x1="173" 
+                y1="143" 
+                x2="780" 
+                y2="140"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
@@ -154,13 +195,29 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Fresh Seam D: Wave 3 Bottom-Left Corner Crack (30, 364 -> 0, 400) -> shoots out Far Bottom-Left */}
+              {/* Seam 7: Lower-Right Branch Crack (85, 248) -> (126, 274) - shoots out towards Bottom-Right screen */}
               <linearGradient 
-                id="outwardBeamWave3BottomLeft" 
+                id="outwardBeamLowerRightSeam" 
                 gradientUnits="userSpaceOnUse"
-                x1="15" 
-                y1="382" 
-                x2="-500" 
+                x1="105" 
+                y1="261" 
+                x2="650" 
+                y2="780"
+              >
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Seam 8: Bottom Spine Crack (96, 350) -> (102, 400) - shoots out towards Bottom-Center screen */}
+              <linearGradient 
+                id="outwardBeamBottomSpineSeam" 
+                gradientUnits="userSpaceOnUse"
+                x1="99" 
+                y1="375" 
+                x2="90" 
                 y2="880"
               >
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
@@ -170,35 +227,32 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Fresh Seam E: Wave 2 Mid-Right Lower Branch (155, 210 -> 200, 252) -> shoots out Lower-Right */}
-              <linearGradient 
-                id="outwardBeamWave2MidRight" 
-                gradientUnits="userSpaceOnUse"
-                x1="177" 
-                y1="231" 
-                x2="780" 
-                y2="420"
-              >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+              {/* --- MICRO-CRACK SLIVERS (Chinna chinna cracks-la irunthu vara beams) --- */}
+              {/* Micro 1: Top-Right corner micro crack (168, 22 -> 200, 5) */}
+              <linearGradient id="microBeamTopRight" gradientUnits="userSpaceOnUse" x1="184" y1="13" x2="680" y2="-280">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Fresh Seam F: Wave 3 Bottom-Right Edge Crack (175, 304 -> 200, 380) -> shoots out Steep Bottom-Right */}
-              <linearGradient 
-                id="outwardBeamWave3BottomRight" 
-                gradientUnits="userSpaceOnUse"
-                x1="187" 
-                y1="342" 
-                x2="650" 
-                y2="890"
-              >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+              {/* Micro 2: Upper-Left far edge micro crack (14, 42 -> 0, 15) */}
+              <linearGradient id="microBeamUpperEdge" gradientUnits="userSpaceOnUse" x1="7" y1="28" x2="-450" y2="-180">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Micro 3: Bottom-Left corner micro crack (14, 382 -> 0, 400) */}
+              <linearGradient id="microBeamBottomCorner" gradientUnits="userSpaceOnUse" x1="7" y1="391" x2="-420" y2="780">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Micro 4: Right edge gap micro crack (155, 210 -> 180, 235) */}
+              <linearGradient id="microBeamRightEdge" gradientUnits="userSpaceOnUse" x1="167" y1="222" x2="720" y2="420">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.8" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
@@ -243,75 +297,120 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             />
 
             {/* ============================================================ */}
-            {/* TAP 4: BRAND NEW CRACK LINES CREATING ASYMMETRIC LIGHT BURSTS */}
-            {/* Slicing outward from the brand-new corner/edge cracks that form on 4th tap */}
+            {/* TAP 4: ASYMMETRIC, NATURAL CRACK LIGHT BURSTS (TAKKU TAKKUNU POPPING) */}
+            {/* Organic, random angles breaking the symmetrical circular pattern */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- 1st POP (0.04s): Top-Right brand new corner crack (168,22 -> 200,5) slicing Far Top-Right --- */}
+                {/* --- 1st POP (0.04s): Razor-thin sharp beam piercing Upper-Left corner --- */}
                 <motion.polygon
-                  points="168,22 200,5 880,-120 720,-340"
-                  fill="url(#outwardBeamWave1Corner)"
+                  points="76,100 45,108 -340,-260 -240,-360"
+                  fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "184px 13px" }}
+                  style={{ transformOrigin: "60px 104px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.9] }}
                   transition={{ duration: 0.14, delay: 0.04, ease: [0.05, 0.95, 0.1, 1] }}
                 />
 
-                {/* --- 2nd POP (0.26s): Mid-Left brand new edge crack (12,188 -> 0,205) slicing direct West --- */}
+                {/* --- 2nd POP (0.28s): Angular blade beam slicing through Mid-Right --- */}
                 <motion.polygon
-                  points="12,188 0,205 -500,320 -500,160"
-                  fill="url(#outwardBeamWave2MidLeft)"
+                  points="165,138 182,148 760,110 680,240"
+                  fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "6px 196px" }}
+                  style={{ transformOrigin: "173px 143px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.88] }}
-                  transition={{ duration: 0.14, delay: 0.26, ease: [0.05, 0.95, 0.1, 1] }}
+                  transition={{ duration: 0.14, delay: 0.28, ease: [0.05, 0.95, 0.1, 1] }}
                 />
 
-                {/* --- 3rd POP (0.52s): Upper-Left brand new edge crack (30,75 -> 0,15) slicing steep North-West --- */}
+                {/* --- 3rd POP (0.55s): Steep upward fissure shaft tilting North-North-West --- */}
                 <motion.polygon
-                  points="30,75 0,15 -380,-380 -220,-420"
-                  fill="url(#outwardBeamWave1TopLeft)"
+                  points="104,65 108,78 40,-420 -80,-380"
+                  fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "15px 45px" }}
+                  style={{ transformOrigin: "106px 71px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.92] }}
-                  transition={{ duration: 0.14, delay: 0.52, ease: [0.05, 0.95, 0.1, 1] }}
+                  transition={{ duration: 0.15, delay: 0.55, ease: [0.05, 0.95, 0.1, 1] }}
                 />
 
-                {/* --- 4th POP (0.78s): Mid-Right brand new branch crack (155,210 -> 200,252) slicing East-South-East --- */}
+                {/* --- 4th POP (0.82s): Narrow oblique beam cutting through Lower-Right corner --- */}
                 <motion.polygon
-                  points="155,210 200,252 820,380 750,180"
-                  fill="url(#outwardBeamWave2MidRight)"
+                  points="85,248 126,274 580,720 460,820"
+                  fill="url(#outwardBeamLowerRightSeam)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "177px 231px" }}
+                  style={{ transformOrigin: "105px 261px" }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.86] }}
-                  transition={{ duration: 0.14, delay: 0.78, ease: [0.05, 0.95, 0.1, 1] }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.85] }}
+                  transition={{ duration: 0.14, delay: 0.82, ease: [0.05, 0.95, 0.1, 1] }}
                 />
 
-                {/* --- 5th POP (1.04s): Bottom-Left brand new corner crack (30,364 -> 0,400) slicing South-West --- */}
+                {/* --- 5th POP (1.10s): Sharp horizontal sliver piercing West --- */}
                 <motion.polygon
-                  points="30,364 0,400 -450,880 -280,900"
-                  fill="url(#outwardBeamWave3BottomLeft)"
+                  points="40,156 26,172 -480,220 -500,130"
+                  fill="url(#outwardBeamMidLeftSeam)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "15px 382px" }}
+                  style={{ transformOrigin: "33px 164px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.9] }}
-                  transition={{ duration: 0.14, delay: 1.04, ease: [0.05, 0.95, 0.1, 1] }}
+                  transition={{ duration: 0.14, delay: 1.10, ease: [0.05, 0.95, 0.1, 1] }}
                 />
 
-                {/* --- 6th POP (1.30s): Bottom-Right brand new corner crack (175,304 -> 200,380) slicing South-East --- */}
+                {/* --- 6th POP (1.35s): Off-center vertical beam piercing down-right towards South-South-East --- */}
                 <motion.polygon
-                  points="175,304 200,380 720,850 560,900"
-                  fill="url(#outwardBeamWave3BottomRight)"
+                  points="96,350 102,400 190,880 70,880"
+                  fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "187px 342px" }}
+                  style={{ transformOrigin: "99px 375px" }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.92] }}
-                  transition={{ duration: 0.14, delay: 1.30, ease: [0.05, 0.95, 0.1, 1] }}
+                  transition={{ duration: 0.15, delay: 1.35, ease: [0.05, 0.95, 0.1, 1] }}
+                />
+
+                {/* --- CHINNA CHINNA GAP CRACKS LA IRUNTHU VARRA EXTRA MICRO BEAMS (Random Takku pops) --- */}
+                {/* Micro Beam 1: Upper-Right corner gap (0.42s) */}
+                <motion.polygon
+                  points="168,22 200,5 560,-220 480,-300"
+                  fill="url(#microBeamTopRight)"
+                  filter="url(#outwardBeamGlow)"
+                  style={{ transformOrigin: "184px 13px" }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 0.85, 0.8] }}
+                  transition={{ duration: 0.12, delay: 0.42, ease: [0.05, 0.95, 0.1, 1] }}
+                />
+
+                {/* Micro Beam 2: Upper-Left far edge gap (0.70s) */}
+                <motion.polygon
+                  points="14,42 0,15 -360,-120 -380,-240"
+                  fill="url(#microBeamUpperEdge)"
+                  filter="url(#outwardBeamGlow)"
+                  style={{ transformOrigin: "7px 28px" }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 0.85, 0.8] }}
+                  transition={{ duration: 0.12, delay: 0.70, ease: [0.05, 0.95, 0.1, 1] }}
+                />
+
+                {/* Micro Beam 3: Right edge gap behind 'th day' (0.95s) */}
+                <motion.polygon
+                  points="155,210 180,235 680,350 620,460"
+                  fill="url(#microBeamRightEdge)"
+                  filter="url(#outwardBeamGlow)"
+                  style={{ transformOrigin: "167px 222px" }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 0.85, 0.8] }}
+                  transition={{ duration: 0.12, delay: 0.95, ease: [0.05, 0.95, 0.1, 1] }}
+                />
+
+                {/* Micro Beam 4: Bottom-Left corner far gap (1.22s) */}
+                <motion.polygon
+                  points="14,382 0,400 -320,680 -380,580"
+                  fill="url(#microBeamBottomCorner)"
+                  filter="url(#outwardBeamGlow)"
+                  style={{ transformOrigin: "7px 391px" }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [0, 1.05, 1], opacity: [0, 0.85, 0.8] }}
+                  transition={{ duration: 0.12, delay: 1.22, ease: [0.05, 0.95, 0.1, 1] }}
                 />
               </g>
             )}
