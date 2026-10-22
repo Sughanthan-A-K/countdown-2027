@@ -5,20 +5,38 @@ import { motion } from 'framer-motion';
  * LokiTimelineCrack
  * 
  * Interactive Multiverse Crack for Dec 16:
+ * - Natural glass fracture pattern with organic branching, micro-fissures, and irregular dendritic propagation.
  * - crackStage 0: 100% hidden, completely normal card.
- * - crackStage 1: Subtle initial fissure drawing across the card.
- * - crackStage 2: Deeper electrical branching with green glow bleeding through.
- * - crackStage 3: Full cosmic breach: universe nebula & stars visible.
+ * - crackStage 1: Subtle initial natural glass fracture drawing across the card.
+ * - crackStage 2: Deeper dendritic fractures with branching forks and glowing emerald bleeding.
+ * - crackStage 3: Full cosmic breach: universe nebula & stars visible through the fractured web.
  * - crackStage 4 (Light Ray Creep & Glass Fracture Transition):
- *   Natural emerald sunlight / crepuscular beam shafts beaming through jagged broken glass fractures
- *   (referencing Images 2, 3, 4: light traveling through broken glass gaps), glowing white-hot along the edges
- *   for 2 seconds before the final glass shatter!
+ *   Natural emerald sunlight / crepuscular beam shafts beaming through jagged broken glass fractures,
+ *   glowing white-hot along the edges for 2 seconds before the final glass shatter!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
 
   const isFullUniverse = crackStage >= 3;
   const isLightRaysCreeping = crackStage >= 4;
+
+  // Realistic dendritic glass fracture path:
+  // Starts top-center, branches with small jagged micro-zigzags like real tempered/shattered glass
+  const mainSpinePath = "M 102 10 L 98 42 L 106 78 L 94 116 L 108 152 L 102 188 L 114 224 L 92 268 L 104 312 L 96 354 L 100 395";
+  
+  // Primary branch fractures
+  const primaryBranchesPath = 
+    "M 106 78 L 78 98 L 56 122 M 106 78 L 128 92 L 154 112 " +
+    "M 94 116 L 68 144 L 42 162 " +
+    "M 102 188 L 138 174 L 172 168 M 102 188 L 64 212 L 32 238 " +
+    "M 114 224 L 148 248 L 178 282 " +
+    "M 92 268 L 62 294 L 38 336 M 104 312 L 136 332 L 164 365";
+
+  // Fine secondary micro-cracks (Stage 3 & 4)
+  const microBranchesPath = 
+    "M 78 98 L 84 130 M 128 92 L 142 68 M 68 144 L 82 172 M 138 174 L 152 206 " +
+    "M 64 212 L 48 190 M 148 248 L 132 284 M 62 294 L 80 324 M 136 332 L 154 308 " +
+    "M 56 122 L 28 132 M 172 168 L 192 182 M 32 238 L 18 262 M 178 282 L 194 310";
 
   return (
     <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
@@ -52,17 +70,16 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Stage 4: Light traveling through cracked broken glass gaps (Images 2, 3, 4) */}
+      {/* Stage 4: Light traveling through cracked broken glass gaps */}
       {isLightRaysCreeping && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
-          {/* SVG Volumetric Light Cones / Crepuscular God Rays streaming out from crack apertures */}
+          {/* SVG Volumetric Light Cones streaming out through fracture gaps */}
           <svg 
             viewBox="0 0 200 400" 
             className="w-full h-full absolute inset-0 overflow-visible pointer-events-none"
             style={{ mixBlendMode: 'screen' }}
           >
             <defs>
-              {/* Radial gradient from fracture puncture hole at (105, 180) */}
               <radialGradient id="holeBloom" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.9" />
@@ -70,7 +87,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
 
-              {/* Linear gradients for fan shafts radiating outward */}
               <linearGradient id="rayGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
                 <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.75" />
@@ -97,10 +113,10 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               </filter>
             </defs>
 
-            {/* Core puncture bloom hole where the fracture point originates */}
+            {/* Core puncture bloom hole */}
             <motion.ellipse
-              cx="105"
-              cy="180"
+              cx="102"
+              cy="188"
               rx="24"
               ry="24"
               fill="url(#holeBloom)"
@@ -114,9 +130,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             />
 
             {/* Natural Crepuscular Beams Beaming Out Through Glass Fractures */}
-            {/* Beam 1: Top-Right fissure gap shaft */}
             <motion.polygon
-              points="105,180 140,160 380,-80 260,-120"
+              points="102,188 138,174 380,-80 260,-120"
               fill="url(#rayGrad1)"
               filter="url(#softGlowRay)"
               initial={{ opacity: 0 }}
@@ -124,9 +139,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 1.6, delay: 0.05, ease: "easeOut" }}
             />
 
-            {/* Beam 2: Right horizontal breach beam */}
             <motion.polygon
-              points="105,180 112,185 420,120 400,240"
+              points="102,188 114,224 420,120 400,240"
               fill="url(#rayGrad1)"
               filter="url(#softGlowRay)"
               initial={{ opacity: 0 }}
@@ -134,9 +148,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 1.7, delay: 0.15, ease: "easeOut" }}
             />
 
-            {/* Beam 3: Bottom-Right branch shaft */}
             <motion.polygon
-              points="105,180 88,240 320,520 200,560"
+              points="102,188 92,268 320,520 200,560"
               fill="url(#rayGrad1)"
               filter="url(#softGlowRay)"
               initial={{ opacity: 0 }}
@@ -144,9 +157,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 1.8, delay: 0.1, ease: "easeOut" }}
             />
 
-            {/* Beam 4: Bottom-Left fissure shaft */}
             <motion.polygon
-              points="105,180 88,240 -120,540 -180,420"
+              points="102,188 64,212 -120,540 -180,420"
               fill="url(#rayGrad2)"
               filter="url(#softGlowRay)"
               initial={{ opacity: 0 }}
@@ -154,9 +166,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 1.6, delay: 0.08, ease: "easeOut" }}
             />
 
-            {/* Beam 5: Left branch gap shaft */}
             <motion.polygon
-              points="105,180 92,130 -200,80 -220,190"
+              points="102,188 94,116 -200,80 -220,190"
               fill="url(#rayGrad2)"
               filter="url(#softGlowRay)"
               initial={{ opacity: 0 }}
@@ -164,9 +175,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 1.7, delay: 0.12, ease: "easeOut" }}
             />
 
-            {/* Beam 6: Top-Left branch shaft */}
             <motion.polygon
-              points="105,180 105,80 -80,-100 -180,-30"
+              points="102,188 106,78 -80,-100 -180,-30"
               fill="url(#rayGrad2)"
               filter="url(#softGlowRay)"
               initial={{ opacity: 0 }}
@@ -174,9 +184,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 1.8, delay: 0.02, ease: "easeOut" }}
             />
 
-            {/* Beam 7: Upward vertical fracture beam */}
             <motion.polygon
-              points="105,180 100,20 40,-160 160,-160"
+              points="102,188 102,10 40,-160 160,-160"
               fill="url(#rayGrad3)"
               filter="url(#softGlowRay)"
               initial={{ opacity: 0 }}
@@ -184,9 +193,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 1.6, delay: 0.06, ease: "easeOut" }}
             />
 
-            {/* Beam 8: Downward spine fracture beam */}
             <motion.polygon
-              points="105,180 98,380 40,580 160,580"
+              points="102,188 100,395 40,580 160,580"
               fill="url(#rayGrad3)"
               filter="url(#softGlowRay)"
               initial={{ opacity: 0 }}
@@ -197,7 +205,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         </div>
       )}
 
-      {/* SVG Lightning Fissure Paths */}
+      {/* SVG Natural Dendritic Glass Fissure Paths */}
       <svg 
         viewBox="0 0 200 400" 
         className="w-full h-full absolute inset-0 pointer-events-none z-10"
@@ -210,7 +218,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             <stop offset="100%" stopColor="#059669" />
           </linearGradient>
           <filter id="fissureGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation={isLightRaysCreeping ? "9" : (isFullUniverse ? "5" : "2.5")} result="glow" />
+            <feGaussianBlur stdDeviation={isLightRaysCreeping ? "8" : (isFullUniverse ? "4.5" : "2")} result="glow" />
             <feMerge>
               <feMergeNode in="glow" />
               <feMergeNode in="SourceGraphic" />
@@ -218,27 +226,27 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           </filter>
         </defs>
 
-        {/* Outer Deep Glow Fissure */}
+        {/* 1. Outer Deep Glow Fissure (Main Spine) */}
         <motion.path
-          d="M 100 20 L 105 80 L 92 130 L 112 180 L 88 240 L 106 310 L 98 380"
+          d={mainSpinePath}
           stroke="#10b981"
-          strokeWidth={isLightRaysCreeping ? "22" : (isFullUniverse ? "14" : (crackStage === 2 ? "8" : "4"))}
+          strokeWidth={isLightRaysCreeping ? "20" : (isFullUniverse ? "12" : (crackStage === 2 ? "7" : "3.5"))}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
           filter="url(#fissureGlow)"
           opacity={isLightRaysCreeping ? 1 : (isFullUniverse ? 0.9 : 0.6)}
           animate={{
-            strokeWidth: isLightRaysCreeping ? [16, 24, 20] : (isFullUniverse ? [12, 16, 12] : [6, 9, 6])
+            strokeWidth: isLightRaysCreeping ? [16, 22, 18] : (isFullUniverse ? [10, 14, 10] : [5, 8, 5])
           }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Core Electric Beam */}
+        {/* 2. Core Vibrant Glass Spine */}
         <motion.path
-          d="M 100 20 L 105 80 L 92 130 L 112 180 L 88 240 L 106 310 L 98 380"
+          d={mainSpinePath}
           stroke="url(#lokiGreenGradient)"
-          strokeWidth={isLightRaysCreeping ? "14" : (isFullUniverse ? "9" : (crackStage === 2 ? "5" : "2.5"))}
+          strokeWidth={isLightRaysCreeping ? "12" : (isFullUniverse ? "8" : (crackStage === 2 ? "4.5" : "2"))}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
@@ -247,59 +255,95 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           transition={{ duration: 0.9, ease: "easeOut" }}
         />
 
-        {/* Inner intense white-mint fracture line */}
+        {/* 3. Razor Sharp Glass Edge (White-Hot Core) */}
         <motion.path
-          d="M 100 20 L 105 80 L 92 130 L 112 180 L 88 240 L 106 310 L 98 380"
+          d={mainSpinePath}
           stroke="#f0fdf4"
-          strokeWidth={isLightRaysCreeping ? "6" : (isFullUniverse ? "3.5" : "1.5")}
+          strokeWidth={isLightRaysCreeping ? "4.5" : (isFullUniverse ? "2.5" : "1.2")}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
-          animate={{ opacity: [0.7, 1, 0.7] }}
+          animate={{ opacity: [0.75, 1, 0.75] }}
           transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Branch Cracks Left & Right */}
+        {/* 4. Natural Branch Cracks (Stage 2+) */}
         {crackStage >= 2 && (
-          <motion.path
-            d="M 105 80 L 75 110 M 92 130 L 60 155 M 112 180 L 140 160 M 88 240 L 125 265 M 106 310 L 70 335"
-            stroke="#34d399"
-            strokeWidth={isLightRaysCreeping ? "6" : (isFullUniverse ? "3" : "1.8")}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          />
+          <>
+            <motion.path
+              d={primaryBranchesPath}
+              stroke="#059669"
+              strokeWidth={isLightRaysCreeping ? "10" : (isFullUniverse ? "6" : "3")}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              filter="url(#fissureGlow)"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            />
+            <motion.path
+              d={primaryBranchesPath}
+              stroke="#34d399"
+              strokeWidth={isLightRaysCreeping ? "4.5" : (isFullUniverse ? "2.5" : "1.4")}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            />
+            <motion.path
+              d={primaryBranchesPath}
+              stroke="#f0fdf4"
+              strokeWidth={isLightRaysCreeping ? "2" : "0.9"}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              opacity="0.9"
+            />
+          </>
         )}
 
-        {/* Deep Wild Secondary Branches */}
+        {/* 5. Natural Dendritic Micro-Fissures (Stage 3+) */}
         {isFullUniverse && (
-          <motion.path
-            d="M 75 110 L 45 105 M 60 155 L 35 180 M 140 160 L 175 175 M 125 265 L 160 280 M 70 335 L 40 350"
-            stroke="#6ee7b7"
-            strokeWidth={isLightRaysCreeping ? "4.5" : "2"}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
-          />
+          <>
+            <motion.path
+              d={microBranchesPath}
+              stroke="#10b981"
+              strokeWidth={isLightRaysCreeping ? "4" : "2"}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
+            />
+            <motion.path
+              d={microBranchesPath}
+              stroke="#a7f3d0"
+              strokeWidth={isLightRaysCreeping ? "1.8" : "1"}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
+            />
+          </>
         )}
 
-        {/* Stage 4: Hot white edge highlights on secondary fractures (matching bright fractured glass edges in Images 2, 3, 4) */}
+        {/* 6. Stage 4: Super intense razor-sharp white glass fracture sheen */}
         {isLightRaysCreeping && (
           <motion.path
-            d="M 105 80 L 75 110 M 92 130 L 60 155 M 112 180 L 140 160 M 88 240 L 125 265 M 106 310 L 70 335 M 75 110 L 45 105 M 60 155 L 35 180 M 140 160 L 175 175 M 125 265 L 160 280 M 70 335 L 40 350"
+            d={`${mainSpinePath} ${primaryBranchesPath} ${microBranchesPath}`}
             stroke="#ffffff"
-            strokeWidth="1.8"
+            strokeWidth="1.2"
             strokeLinecap="round"
             strokeLinejoin="round"
             fill="none"
-            animate={{ opacity: [0.6, 1, 0.7] }}
-            transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
+            animate={{ opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 0.4, repeat: Infinity, ease: "easeInOut" }}
           />
         )}
       </svg>
