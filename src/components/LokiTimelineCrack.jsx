@@ -397,19 +397,18 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 1: Center Spine Fracture (Shoots down on 1st tap, STAYS CONSTANT!) */}
-        {/* Extends cleanly right up to the card edges without crossing outside */}
+        {/* TAP 1: Center Spine Fracture (Realistic Glass Fissure) */}
+        {/* Sharp crystalline fracture line with natural micro-facets, NO rounded tips */}
         {/* ============================================================ */}
 
-        {/* Single crisp crystalline fracture line touching card edges (y: 6 to y: 394) */}
-        {/* Natural high-detail fractured glass spine with realistic jagged facets & butt end caps */}
+        {/* Realistic sharp broken glass fissure touching card edges (y: 6 to y: 394) */}
         <motion.path
-          d="M 98 6 L 99 28 L 96 48 L 104 65 L 102 72 L 108 78 L 103 98 L 92 122 L 95 148 L 91 168 L 102 185 L 96 218 L 85 248 L 89 278 L 106 312 L 101 332 L 96 350 L 99 374 L 102 394"
+          d="M 97 6 L 99 28 L 96 48 L 102 74 L 106 88 L 94 116 L 98 138 L 93 162 L 104 185 L 98 214 L 88 238 L 84 256 L 96 284 L 104 315 L 95 342 L 98 368 L 101 394"
           stroke={crackStage >= 2 ? "#d1fae5" : "#ffffff"}
           strokeWidth={spineStroke}
           strokeLinecap="butt"
           strokeLinejoin="miter"
-          strokeMiterlimit="3"
+          strokeMiterlimit="4"
           fill="none"
           initial={crackStage === 1 ? { pathLength: 0 } : false}
           animate={{ 
@@ -417,20 +416,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             stroke: crackStage >= 4 ? ["#d1fae5", "#ffffff"] : (crackStage >= 2 ? "#d1fae5" : "#ffffff"),
             strokeWidth: crackStage >= 4 ? [spineStroke, spineStroke * 1.5] : spineStroke
           }}
-          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-        />
-
-        {/* Natural Micro-Splinter Fissure Hairlines along Spine on Tap 1 */}
-        <motion.path
-          d="M 104 65 L 108 55 M 92 122 L 87 132 M 102 185 L 109 194 M 85 248 L 80 238 M 106 312 L 112 304"
-          stroke="#ffffff"
-          strokeWidth="0.8"
-          strokeLinecap="butt"
-          strokeLinejoin="miter"
-          fill="none"
-          initial={crackStage === 1 ? { pathLength: 0 } : false}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.2, delay: 0.15, ease: "easeOut" }}
+          transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
         />
 
         {/* ============================================================ */}
@@ -459,11 +445,11 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
             {/* Natural crystalline branches spreading outwards from spine */}
             <motion.path
-              d="M 108 78 L 76 100 L 45 108 M 92 122 L 64 146 L 40 156 M 102 185 L 140 152 L 165 138 M 85 248 L 126 274 L 155 286 M 106 312 L 72 336 L 44 348"
+              d="M 106 88 L 76 100 L 45 108 M 94 116 L 64 146 L 40 156 M 104 185 L 140 152 L 165 138 M 84 256 L 126 274 L 155 286 M 104 315 L 72 336 L 44 348"
               stroke="#ffffff"
               strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap="butt"
+              strokeLinejoin="miter"
               fill="none"
               initial={crackStage === 2 ? { pathLength: 0 } : false}
               animate={{ 
@@ -501,11 +487,11 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
             {/* Single clean spiderweb lines advancing toward the outer gaps */}
             <motion.path
-              d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360 M 45 108 L 30 116 M 40 156 L 26 172 M 165 138 L 182 148 M 155 286 L 175 304 M 44 348 L 30 364"
+              d="M 76 100 L 64 146 M 104 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 84 256 L 76 290 L 72 336 L 90 360 M 45 108 L 30 116 M 40 156 L 26 172 M 165 138 L 182 148 M 155 286 L 175 304 M 44 348 L 30 364"
               stroke="#ffffff"
               strokeWidth="1.1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap="butt"
+              strokeLinejoin="miter"
               fill="none"
               initial={crackStage === 3 ? { pathLength: 0 } : false}
               animate={{ 
@@ -539,8 +525,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#ffffff"
               strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap="butt"
+              strokeLinejoin="miter"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -564,8 +550,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#ffffff"
               strokeWidth="1.1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap="butt"
+              strokeLinejoin="miter"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -589,8 +575,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
               stroke="#ffffff"
               strokeWidth="1.3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap="butt"
+              strokeLinejoin="miter"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
