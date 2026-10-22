@@ -121,24 +121,25 @@ export default function LokiTimelinePortal() {
         <motion.g
           drag
           dragSnapToOrigin
-          dragElastic={0.06}
-          dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
+          dragElastic={0.035}
+          dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
           dragTransition={{ 
             power: 0,
-            timeConstant: 800,
-            bounceStiffness: 45, 
-            bounceDamping: 18 
+            timeConstant: 1800,
+            bounceStiffness: 12, 
+            bounceDamping: 22 
           }}
           whileDrag={{ cursor: 'grabbing' }}
           className="pointer-events-auto cursor-grab"
           style={{ transformOrigin: "500px 300px" }}
         >
-          {/* Invisible thick hit-area stroke for effortless touch & drag */}
+          {/* Invisible extra-wide hit-area stroke for effortless grab anywhere across the branch */}
           <path
             d="M -150 220 Q 250 340, 500 370 T 1150 390"
             fill="none"
-            stroke="transparent"
-            strokeWidth="50"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
             strokeLinecap="round"
           />
           {/* Ambient drop shadow */}
@@ -173,13 +174,13 @@ export default function LokiTimelinePortal() {
         <motion.g
           drag
           dragSnapToOrigin
-          dragElastic={0.06}
-          dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
+          dragElastic={0.035}
+          dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
           dragTransition={{ 
             power: 0,
-            timeConstant: 800,
-            bounceStiffness: 45, 
-            bounceDamping: 18 
+            timeConstant: 1800,
+            bounceStiffness: 12, 
+            bounceDamping: 22 
           }}
           whileDrag={{ cursor: 'grabbing' }}
           className="pointer-events-auto cursor-grab"
@@ -188,8 +189,9 @@ export default function LokiTimelinePortal() {
           <path
             d="M -120 70 Q 400 160, 680 140 T 1120 180"
             fill="none"
-            stroke="transparent"
-            strokeWidth="50"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
             strokeLinecap="round"
           />
           <path
@@ -221,13 +223,13 @@ export default function LokiTimelinePortal() {
         <motion.g
           drag
           dragSnapToOrigin
-          dragElastic={0.06}
-          dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
+          dragElastic={0.035}
+          dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
           dragTransition={{ 
             power: 0,
-            timeConstant: 800,
-            bounceStiffness: 45, 
-            bounceDamping: 18 
+            timeConstant: 1800,
+            bounceStiffness: 12, 
+            bounceDamping: 22 
           }}
           whileDrag={{ cursor: 'grabbing' }}
           className="pointer-events-auto cursor-grab"
@@ -236,8 +238,9 @@ export default function LokiTimelinePortal() {
           <path
             d="M -150 820 Q 200 720, 520 670 T 1150 860"
             fill="none"
-            stroke="transparent"
-            strokeWidth="50"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
             strokeLinecap="round"
           />
           <path
@@ -269,13 +272,13 @@ export default function LokiTimelinePortal() {
         <motion.g
           drag
           dragSnapToOrigin
-          dragElastic={0.06}
-          dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
+          dragElastic={0.035}
+          dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
           dragTransition={{ 
             power: 0,
-            timeConstant: 800,
-            bounceStiffness: 45, 
-            bounceDamping: 18 
+            timeConstant: 1800,
+            bounceStiffness: 12, 
+            bounceDamping: 22 
           }}
           whileDrag={{ cursor: 'grabbing' }}
           className="pointer-events-auto cursor-grab"
@@ -284,8 +287,9 @@ export default function LokiTimelinePortal() {
           <path
             d="M 1150 80 Q 750 380, 450 550 T -120 880"
             fill="none"
-            stroke="transparent"
-            strokeWidth="50"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
             strokeLinecap="round"
           />
           <path
@@ -317,13 +321,13 @@ export default function LokiTimelinePortal() {
         <motion.g
           drag
           dragSnapToOrigin
-          dragElastic={0.06}
-          dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
+          dragElastic={0.035}
+          dragConstraints={{ left: -100, right: 100, top: -70, bottom: 70 }}
           dragTransition={{ 
             power: 0,
-            timeConstant: 800,
-            bounceStiffness: 45, 
-            bounceDamping: 18 
+            timeConstant: 1800,
+            bounceStiffness: 12, 
+            bounceDamping: 22 
           }}
           whileDrag={{ cursor: 'grabbing' }}
           className="pointer-events-auto cursor-grab"
@@ -332,8 +336,9 @@ export default function LokiTimelinePortal() {
           <path
             d="M -100 480 Q 300 420, 650 490 T 1150 510"
             fill="none"
-            stroke="transparent"
-            strokeWidth="50"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth="90"
             strokeLinecap="round"
           />
           <path
