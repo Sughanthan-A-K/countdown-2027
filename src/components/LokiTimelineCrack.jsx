@@ -12,12 +12,11 @@ import { motion } from 'framer-motion';
  * - TAP 2 (Spreading into Inner Empty Space):
  *   Cracks branch slowly from the spine out into inner empty space.
  * 
- * - TAP 3 (THE 2-BEAM 3D LIGHT BURST REQUESTED BY USER):
- *   - REMOVED the starburst lines / jolikkuradhu at center (clean, pure fracture gap).
- *   - NOW 2 POWERFUL 3D BEAMS (oru 2ndu vachiko):
- *     1. Beam 1: Blasts piercing out from center (102, 185) toward upper-right across full screen!
- *     2. Beam 2: Blasts piercing out from center (102, 185) toward bottom-left across full screen!
- *     Natural 3D perspective projection directly from the center aperture.
+ * - TAP 3 (TRUE 3D PROJECTION FROM CENTER OUT TO SCREEN):
+ *   "card center point la iruthu card ah vittu veliya ponum bro"
+ *   -> Exactly 2 volumetric light cones with apex anchored at Card Center (50%, 46.25%).
+ *   -> Origin: 0 width at center -> expanding outwards into wide volumetric light shafts traveling AWAY from center,
+ *      shooting out through the card onto the screen!
  * 
  * - TAP 4 (Spreading into remaining gaps & shatter):
  *   - 0.0s: Cracks creep into top corners.
@@ -62,78 +61,77 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
       )}
 
       {/* ============================================================ */}
-      {/* TAP 3: 2 POWERFUL 3D LIGHT BEAMS FROM CENTER (No jolikkuradhu / No starburst) */}
+      {/* TAP 3: 2 3D VOLUMETRIC CONES SHOOTING FROM CENTER OUTWARDS ACROSS SCREEN */}
       {/* ============================================================ */}
       {crackStage >= 3 && (
-        <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
-          <svg 
-            viewBox="0 0 200 400" 
-            className="w-full h-full absolute inset-0 overflow-visible pointer-events-none"
-            style={{ mixBlendMode: 'screen' }}
+        <div className="absolute inset-0 pointer-events-none z-50 overflow-visible flex items-center justify-center">
+          {/* BEAM 1: Anchored at center, shooting OUTWARDS towards Upper-Right onto user screen */}
+          <div 
+            className="absolute"
+            style={{
+              top: '46.25%',
+              left: '51%',
+              width: 0,
+              height: 0,
+            }}
           >
-            <defs>
-              <linearGradient id="beam1Grad" x1="0%" y1="50%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="38%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              <linearGradient id="beam2Grad" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="15%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="38%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              <filter id="pure3DBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3" result="sharp" />
-                <feGaussianBlur stdDeviation="9" result="soft" />
-                <feMerge>
-                  <feMergeNode in="soft" />
-                  <feMergeNode in="sharp" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* Beam 1: Blasts from center (102, 185) towards upper-right across full screen! */}
-            <motion.polygon
-              points="102,185 116,180 820,-240 560,-320"
-              fill="url(#beam1Grad)"
-              filter="url(#pure3DBeamGlow)"
-              initial={{ scale: 0, opacity: 0 }}
+            <motion.div
+              initial={{ scaleY: 0, scaleX: 0, opacity: 0 }}
               animate={{ 
-                scale: 1,
-                opacity: [0, 1, 0.88]
+                scaleY: [0, 1.2, 1], 
+                scaleX: [0, 1.1, 1], 
+                opacity: [0, 1, 0.9] 
               }}
-              style={{ transformOrigin: "102px 185px" }}
-              transition={{ 
-                duration: 0.18,
-                ease: [0.08, 0.82, 0.17, 1] 
+              transition={{ duration: 0.22, ease: [0.1, 0.9, 0.2, 1] }}
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: '-35px',
+                width: '70px',
+                height: '140vh',
+                transformOrigin: 'bottom center',
+                transform: 'rotate(52deg)',
+                clipPath: 'polygon(50% 100%, 0% 0%, 100% 0%)',
+                background: 'linear-gradient(to top, #ffffff 0%, rgba(167,243,208,0.95) 12%, rgba(52,211,153,0.8) 35%, rgba(16,185,129,0.4) 65%, transparent 100%)',
+                filter: 'drop-shadow(0 0 18px #34d399) blur(4px)',
+                mixBlendMode: 'screen'
               }}
             />
+          </div>
 
-            {/* Beam 2: Blasts from center (102, 185) towards bottom-left across full screen! */}
-            <motion.polygon
-              points="102,185 90,192 -480,780 -260,860"
-              fill="url(#beam2Grad)"
-              filter="url(#pure3DBeamGlow)"
-              initial={{ scale: 0, opacity: 0 }}
+          {/* BEAM 2: Anchored at center, shooting OUTWARDS towards Bottom-Left onto user screen */}
+          <div 
+            className="absolute"
+            style={{
+              top: '46.25%',
+              left: '51%',
+              width: 0,
+              height: 0,
+            }}
+          >
+            <motion.div
+              initial={{ scaleY: 0, scaleX: 0, opacity: 0 }}
               animate={{ 
-                scale: 1,
-                opacity: [0, 1, 0.88]
+                scaleY: [0, 1.2, 1], 
+                scaleX: [0, 1.1, 1], 
+                opacity: [0, 1, 0.9] 
               }}
-              style={{ transformOrigin: "102px 185px" }}
-              transition={{ 
-                duration: 0.22,
-                delay: 0.04,
-                ease: [0.08, 0.82, 0.17, 1] 
+              transition={{ duration: 0.24, delay: 0.03, ease: [0.1, 0.9, 0.2, 1] }}
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: '-32px',
+                width: '65px',
+                height: '140vh',
+                transformOrigin: 'bottom center',
+                transform: 'rotate(-138deg)',
+                clipPath: 'polygon(50% 100%, 0% 0%, 100% 0%)',
+                background: 'linear-gradient(to top, #ffffff 0%, rgba(167,243,208,0.95) 12%, rgba(52,211,153,0.8) 35%, rgba(16,185,129,0.4) 65%, transparent 100%)',
+                filter: 'drop-shadow(0 0 18px #34d399) blur(4px)',
+                mixBlendMode: 'screen'
               }}
             />
-          </svg>
+          </div>
         </div>
       )}
 
@@ -218,7 +216,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 3: Spreading further outward into Mid-Outer Empty Space (NO JOLIKKURADHU) */}
+        {/* TAP 3: Spreading further outward into Mid-Outer Empty Space */}
         {/* ============================================================ */}
         {crackStage >= 3 && (
           <g key="crack-stage-3-persistent">
