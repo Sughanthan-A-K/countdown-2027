@@ -133,9 +133,9 @@ export default function LokiTimelinePortal() {
         </defs>
       </svg>
 
-      {/* 2. The Organic Asymmetrical Portal Opening (Contained with organic natural tapered Ends, Expanding smoothly over time) */}
+      {/* 2. The Organic Asymmetrical Portal Opening (Distinct Top & Bottom Shapes, Crystal-Clear Razor Edge with Brilliant Glow) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-visible">
-        {/* Outer illuminated cloudy rift lip (Height restricted to 82vh with organic taper, starts lean and slowly widens) */}
+        {/* Layer A: Atmospheric Soft Emerald Cloud Backing */}
         <motion.div
           initial={{ scaleX: 0.35, opacity: 0.6 }}
           animate={{
@@ -144,20 +144,20 @@ export default function LokiTimelinePortal() {
             opacity: [0.6, 0.95, 1, 0.92, 0.98]
           }}
           transition={{
-            // Slow organic widening expansion over 6.5s to reach natural full majesty, then subtle breathing loop
             scaleX: { duration: 6.5, ease: [0.16, 1, 0.3, 1] },
             scaleY: { duration: 7, ease: [0.16, 1, 0.3, 1] },
             opacity: { duration: 4, ease: "easeOut" }
           }}
-          className="absolute h-[82vh] max-h-[820px] w-64 sm:w-80 pointer-events-none rounded-[50%_45%_55%_40%/35%_50%_45%_40%]"
+          className="absolute h-[84vh] max-h-[850px] w-72 sm:w-88 pointer-events-none rounded-[65%_35%_75%_25%/25%_70%_30%_75%]"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,1) 0%, rgba(52,211,153,0.88) 35%, rgba(16,185,129,0.65) 60%, rgba(5,150,105,0.25) 80%, transparent 95%)',
-            boxShadow: '0 0 100px rgba(52,211,153,0.6), 0 0 180px rgba(16,185,129,0.4)',
-            filter: 'url(#lokiOrganicRiftEdge) blur(10px)'
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.95) 0%, rgba(52,211,153,0.8) 35%, rgba(16,185,129,0.5) 60%, rgba(5,150,105,0.2) 80%, transparent 95%)',
+            boxShadow: '0 0 120px rgba(52,211,153,0.7), 0 0 200px rgba(16,185,129,0.45)',
+            filter: 'blur(16px)'
           }}
         />
 
-        {/* Inner Void / Deep Spacetime Tear (Organic jagged opening with contained natural top and bottom ends) */}
+        {/* Layer B: Brilliant Laser-Crisp Inner Void & Glowing Crystal Border (NO BLUR on border!) */}
+        {/* Top is narrow high pointed beak, Bottom is wider rounded flared cloud base */}
         <motion.div
           initial={{ scaleX: 0.25 }}
           animate={{
@@ -168,15 +168,32 @@ export default function LokiTimelinePortal() {
             scaleX: { duration: 6.8, ease: [0.16, 1, 0.3, 1] },
             scaleY: { duration: 7.2, ease: [0.16, 1, 0.3, 1] }
           }}
-          className="absolute h-[76vh] max-h-[760px] w-24 sm:w-36 pointer-events-none rounded-[45%_55%_40%_50%/40%_40%_50%_50%]"
+          className="absolute h-[78vh] max-h-[780px] w-28 sm:w-44 pointer-events-none rounded-[75%_25%_45%_55%/18%_22%_78%_82%]"
           style={{
-            background: 'radial-gradient(ellipse at 50% 55%, #052e24 0%, #022018 45%, #01140e 75%, transparent 100%)',
-            borderLeft: '4px solid rgba(209,250,229,0.95)',
-            borderRight: '4px solid rgba(209,250,229,0.95)',
-            borderTop: '2px solid rgba(209,250,229,0.7)',
-            borderBottom: '2px solid rgba(209,250,229,0.7)',
-            boxShadow: '0 0 65px rgba(52,211,153,1), 0 0 120px rgba(16,185,129,0.7), inset 0 0 40px rgba(0,0,0,0.85)',
-            filter: 'url(#lokiOrganicRiftEdge) blur(3px)'
+            background: 'radial-gradient(ellipse at 50% 52%, #021a14 0%, #01120d 50%, #000906 80%, transparent 100%)',
+            // Ultra-bright crystal-sharp glowing border:
+            borderLeft: '4.5px solid #ffffff',
+            borderRight: '4.5px solid #ffffff',
+            borderTop: '3px solid #d1fae5',
+            borderBottom: '5px solid #6ee7b7',
+            boxShadow: '0 0 20px #ffffff, 0 0 45px #6ee7b7, 0 0 85px #10b981, inset 0 0 35px rgba(0,0,0,0.95)'
+          }}
+        />
+
+        {/* Layer C: Razor-Sharp Fine Energy Filament tracing the border */}
+        <motion.div
+          initial={{ scaleX: 0.25 }}
+          animate={{
+            scaleX: [0.25, 1.0, 1.06, 0.96, 1.02]
+          }}
+          transition={{
+            scaleX: { duration: 6.8, ease: [0.16, 1, 0.3, 1] }
+          }}
+          className="absolute h-[76vh] max-h-[760px] w-24 sm:w-40 pointer-events-none rounded-[72%_28%_48%_52%/20%_24%_76%_80%]"
+          style={{
+            borderLeft: '2px solid #a7f3d0',
+            borderRight: '2px solid #a7f3d0',
+            boxShadow: '0 0 15px #34d399, inset 0 0 15px #059669'
           }}
         />
 
@@ -187,25 +204,24 @@ export default function LokiTimelinePortal() {
             opacity: [0.85, 1, 0.85]
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[58%] w-12 h-12 rounded-full bg-emerald-100 blur-sm shadow-[0_0_50px_#a7f3d0,0_0_100px_#34d399,0_0_160px_#10b981] pointer-events-none"
+          className="absolute top-[56%] w-14 h-14 rounded-full bg-white shadow-[0_0_40px_#ffffff,0_0_80px_#6ee7b7,0_0_140px_#10b981] pointer-events-none"
         />
 
-        {/* Intense white-mint core tear spine (Contained height with organic natural pinch at top and bottom) */}
+        {/* Intense white-mint core tear spine (Crisp, brilliantly lit central filament) */}
         <motion.div
           initial={{ scaleX: 0.3, opacity: 0.7 }}
           animate={{
             scaleX: [0.3, 1.0, 1.15, 0.95, 1.0],
-            opacity: [0.7, 1, 0.9, 1, 0.9]
+            opacity: [0.85, 1, 0.9, 1, 0.9]
           }}
           transition={{
             scaleX: { duration: 6.0, ease: [0.16, 1, 0.3, 1] },
             opacity: { duration: 5, repeat: Infinity, ease: "easeInOut" }
           }}
-          className="absolute h-[70vh] max-h-[700px] w-5 sm:w-6 pointer-events-none rounded-[50%]"
+          className="absolute h-[72vh] max-h-[720px] w-4 sm:w-5 pointer-events-none rounded-[50%]"
           style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(209,250,229,0.9) 15%, #ffffff 50%, rgba(167,243,208,0.9) 85%, transparent 100%)',
-            boxShadow: '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 120px #10b981',
-            filter: 'url(#lokiOrganicRiftEdge) blur(2.5px)'
+            background: 'linear-gradient(180deg, transparent 0%, #ffffff 20%, #a7f3d0 50%, #34d399 80%, transparent 100%)',
+            boxShadow: '0 0 25px #ffffff, 0 0 50px #34d399, 0 0 90px #10b981'
           }}
         />
       </div>
