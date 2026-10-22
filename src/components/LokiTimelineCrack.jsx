@@ -298,13 +298,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Crisp piercing beam glow - optimized for mobile GPU */}
-              <filter id="outwardBeamGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3.5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
+              {/* Pure High-Performance Mobile GPU Beam Glow (Zero rasterization bottleneck) */}
+              <filter id="outwardBeamGlow" x="-10%" y="-10%" width="120%" height="120%">
+                <feGaussianBlur stdDeviation="2.5" />
               </filter>
             </defs>
 
@@ -469,8 +465,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <filter id="pureGreenGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation={crackStage >= 3 ? "2.2" : "1.2"} />
+          <filter id="pureGreenGlow" x="-15%" y="-15%" width="130%" height="130%">
+            <feGaussianBlur stdDeviation={crackStage >= 3 ? "1.6" : "1.0"} />
           </filter>
         </defs>
 

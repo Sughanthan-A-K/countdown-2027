@@ -55,7 +55,10 @@ export default function LokiTimelinePortal() {
       </svg>
 
       {/* 2. The Organic Asymmetrical Portal Opening (Matching reference image shape) */}
-      <div className="absolute inset-y-0 w-full max-w-[420px] flex items-center justify-center">
+      <div 
+        className="absolute inset-y-0 w-full max-w-[420px] flex items-center justify-center"
+        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+      >
         {/* Outer illuminated cloudy rift lip */}
         <motion.div
           animate={{
@@ -119,6 +122,7 @@ export default function LokiTimelinePortal() {
         preserveAspectRatio="none"
         className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" 
         xmlns="http://www.w3.org/2000/svg"
+        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
       >
         {/* Branch 1: Upper graceful arc crossing from beyond left (-150) to beyond right (1150) */}
         <motion.g
