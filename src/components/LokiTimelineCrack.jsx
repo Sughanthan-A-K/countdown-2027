@@ -6,20 +6,15 @@ import { motion } from 'framer-motion';
  * 
  * Progressive, Realistic Broken Glass Cracking:
  * 
- * 1. Clean Single Lines (No artificial double lines or blinking noise):
- *    - Pure, single crystalline fracture path with natural jagged geometry.
- *    - Only emerald green light bleeds through the crack gaps (no white glint/sparkle noise).
- * 
- * 2. Gap Widening:
- *    - Tap 1: Single fine crack.
- *    - Tap 2: Center spine opens slightly, green light glows through.
- *    - Tap 3: Center spine opens wider, pure green aura radiates.
- *    - Tap 4: Center spine splits wide as deep cracks continuously multiply.
- * 
- * 3. 4th Tap Rapid Cascade & Brightness Escalation (Over exactly 2.0s before shatter):
- *    - Cracks continuously develop & spread rapidly outward.
- *    - Same emerald god rays stay in place, but their BRIGHTNESS intensifies steadily (opacity 0.2 -> 1.0, glow scale 1.0 -> 2.2).
- *    - At exactly 2.0 seconds, the card explodes into slow-mo shards!
+ * 1. Clean Single Lines (No artificial double lines, pure emerald light in gaps).
+ * 2. Tap 1: Spine fracture shoots down smoothly.
+ * 3. Tap 2: Center spine widens mildly, branches shoot outward slowly.
+ * 4. Tap 3: Full corner-reaching spiderweb fissures.
+ * 5. Tap 4: Natural Sequential Ray Reveal as Cracks Multiply (2.0s hold):
+ *    - Instant (0.0s): First 2 opposite light rays beam out (Top-Left & Bottom-Right).
+ *    - Wave 1 (0.5s): As fractures extend left & right, 2 more opposite rays shoot out (Top-Right & Bottom-Left).
+ *    - Wave 2 (1.0s): 2 horizontal breach rays pierce through side fissures.
+ *    - Wave 3 (1.4s): Vertical spine rays surge with full radiant brightness right as card shatters!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -33,7 +28,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
   return (
     <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl">
-      {/* Background Dimming as glass is damaged (Subtle so card text & "16" remain completely crisp and clear) */}
+      {/* Background Dimming as glass is damaged */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ 
@@ -60,7 +55,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Stage 4: Same emerald volumetric god rays whose BRIGHTNESS continuously escalates over the 2 seconds */}
+      {/* Stage 4: Light Rays Reveal Organically ONE BY ONE as Cracks Spread */}
       {isLightRaysCreeping && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
           <svg 
@@ -102,83 +97,107 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               </filter>
             </defs>
 
-            {/* Impact Center Point Bloom (Brightness increases steadily 0.2 -> 1.0) */}
+            {/* Impact Center Point Bloom (grows as rays emerge) */}
             <motion.ellipse
               cx="102"
               cy="185"
               rx="24"
               ry="24"
               fill="url(#glassImpactBloom)"
-              initial={{ scale: 0.4, opacity: 0.2 }}
-              animate={{ scale: [0.4, 2.0], opacity: [0.2, 1.0] }}
+              initial={{ scale: 0.3, opacity: 0.2 }}
+              animate={{ scale: [0.3, 1.8], opacity: [0.2, 1.0] }}
               transition={{ duration: 2.0, ease: "easeIn" }}
               filter="url(#glassRayBlur)"
             />
 
-            {/* Crepuscular Rays radiating out through the crack fissures with ESCALATING BRIGHTNESS */}
-            <motion.polygon
-              points="102,185 145,150 380,-80 260,-120"
-              fill="url(#pureGreenRay1)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
-            <motion.polygon
-              points="102,185 118,190 420,120 400,240"
-              fill="url(#pureGreenRay1)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 0.95] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
-            <motion.polygon
-              points="102,185 85,250 320,520 200,560"
-              fill="url(#pureGreenRay1)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
-            <motion.polygon
-              points="102,185 85,250 -120,540 -180,420"
-              fill="url(#pureGreenRay2)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 0.95] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
-            <motion.polygon
-              points="102,185 88,125 -200,80 -220,190"
-              fill="url(#pureGreenRay2)"
-              filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
-            />
+            {/* ============================================================ */}
+            {/* INITIAL PAIR (0.0s): First 2 Opposite Rays Beaming Out */}
+            {/* Ray A: Top-Left diagonal ray */}
             <motion.polygon
               points="102,185 106,75 -80,-100 -180,-30"
               fill="url(#pureGreenRay2)"
               filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 0.95] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
+              initial={{ opacity: 0, scale: 0.2 }}
+              animate={{ opacity: [0, 0.45, 1.0], scale: [0.2, 1.0, 1.0] }}
+              transition={{ duration: 2.0, delay: 0.0, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
             />
+            {/* Ray B: Opposite Bottom-Right diagonal ray */}
+            <motion.polygon
+              points="102,185 85,250 320,520 200,560"
+              fill="url(#pureGreenRay1)"
+              filter="url(#glassRayBlur)"
+              initial={{ opacity: 0, scale: 0.2 }}
+              animate={{ opacity: [0, 0.45, 1.0], scale: [0.2, 1.0, 1.0] }}
+              transition={{ duration: 2.0, delay: 0.0, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
+            />
+
+            {/* ============================================================ */}
+            {/* SECOND PAIR (0.5s): As cracks creep into top-right & bottom-left */}
+            {/* Ray C: Top-Right ray */}
+            <motion.polygon
+              points="102,185 145,150 380,-80 260,-120"
+              fill="url(#pureGreenRay1)"
+              filter="url(#glassRayBlur)"
+              initial={{ opacity: 0, scale: 0.2 }}
+              animate={{ opacity: [0, 0.5, 1.0], scale: [0.2, 1.0, 1.0] }}
+              transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
+            />
+            {/* Ray D: Opposite Bottom-Left ray */}
+            <motion.polygon
+              points="102,185 85,250 -120,540 -180,420"
+              fill="url(#pureGreenRay2)"
+              filter="url(#glassRayBlur)"
+              initial={{ opacity: 0, scale: 0.2 }}
+              animate={{ opacity: [0, 0.5, 0.95], scale: [0.2, 1.0, 1.0] }}
+              transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
+            />
+
+            {/* ============================================================ */}
+            {/* THIRD PAIR (1.0s): Horizontal breach rays piercing side fissures */}
+            {/* Ray E: Right horizontal breach */}
+            <motion.polygon
+              points="102,185 118,190 420,120 400,240"
+              fill="url(#pureGreenRay1)"
+              filter="url(#glassRayBlur)"
+              initial={{ opacity: 0, scale: 0.2 }}
+              animate={{ opacity: [0, 0.6, 1.0], scale: [0.2, 1.0, 1.0] }}
+              transition={{ duration: 1.0, delay: 1.0, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
+            />
+            {/* Ray F: Left horizontal breach */}
+            <motion.polygon
+              points="102,185 88,125 -200,80 -220,190"
+              fill="url(#pureGreenRay2)"
+              filter="url(#glassRayBlur)"
+              initial={{ opacity: 0, scale: 0.2 }}
+              animate={{ opacity: [0, 0.6, 1.0], scale: [0.2, 1.0, 1.0] }}
+              transition={{ duration: 1.0, delay: 1.0, ease: "easeOut" }}
+              style={{ transformOrigin: "102px 185px" }}
+            />
+
+            {/* ============================================================ */}
+            {/* FINAL SURGE (1.4s): Vertical spine rays beaming with peak luminance */}
+            {/* Ray G: Upward vertical spine ray */}
             <motion.polygon
               points="102,185 98,15 40,-160 160,-160"
               fill="url(#pureGreenRay3)"
               filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.2 }}
-              animate={{ opacity: [0.2, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.7, 1.0] }}
+              transition={{ duration: 0.6, delay: 1.4, ease: "easeOut" }}
             />
+            {/* Ray H: Downward vertical spine ray */}
             <motion.polygon
               points="102,185 102,385 40,580 160,580"
               fill="url(#pureGreenRay3)"
               filter="url(#glassRayBlur)"
-              initial={{ opacity: 0.15 }}
-              animate={{ opacity: [0.15, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.7, 1.0] }}
+              transition={{ duration: 0.6, delay: 1.4, ease: "easeOut" }}
             />
           </svg>
         </div>
@@ -312,7 +331,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: Continuous Cracks Spreading Rapidly While Rays Escalate Brightness (Exactly 2.0s) */}
+        {/* TAP 4: Continuous Cracks Spreading Rapidly While Rays Escalate (Exactly 2.0s) */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-cascades">
