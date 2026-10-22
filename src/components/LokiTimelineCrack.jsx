@@ -6,26 +6,23 @@ import { motion } from 'framer-motion';
  * 
  * Progressive, Realistic Broken Glass Cracking:
  * 
- * CONCEPT: "Tap panna tap panna virisal center la irunthu space irukura edathukku spread aaganum"
- * 
  * - TAP 1:
- *   Spine crack shooting down the center from (98, 0) to (102, 400).
+ *   Spine crack shooting down the center from top to bottom.
  * 
  * - TAP 2 (Spreading into Inner Empty Space):
- *   Cracks branch slowly from the spine out into the immediate empty spaces
- *   around the 16 number and middle zones.
+ *   Cracks branch slowly from the spine out into inner empty space.
  * 
- * - TAP 3 (Spreading into Mid-Outer Empty Space):
- *   From those branch points, cracks creep outwards into the mid-left (around "TODAY"),
- *   mid-right (around "th day"), upper-left, and lower-center uncracked areas.
+ * - TAP 3 (THE 3D LIGHT BURST REQUESTED BY USER):
+ *   "3rd time tap pannum pothu etho oru side la iruthu oru light mattume takkunu therikuthu...
+ *   slow ah varala takkunu therikuthu athu card center la irunthu 3D maathiri screen la adikuthu"
+ *   -> Instant, high-speed piercing 3D volumetric emerald beam bursting directly out of the center
+ *      puncture aperture towards one side across the user's screen!
  * 
- * - TAP 4 (Spreading into all remaining corner & perimeter gaps across 3 quick bursts):
- *   - 0.0s: Cracks creep from mid-points into top-left and top-right uncracked corners.
- *   - 0.5s: Cracks branch into the open gaps around the pill button and side edges.
- *   - 1.0s: Final perimeter cracks reach the 4 extreme outer corners (0,0), (200,0), (0,400), (200,400).
+ * - TAP 4 (Spreading into remaining gaps & shatter):
+ *   - 0.0s: Cracks creep into top corners.
+ *   - 0.5s: Cracks branch into mid/pill gaps.
+ *   - 1.0s: Final perimeter cracks reach outer corners.
  *   - 1.5s: Glass completely shatters into the portal!
- * 
- * All cracks are on z-[70] so they cut cleanly over the top of the "16" date number.
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -61,6 +58,76 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             filter: 'blur(30px)'
           }}
         />
+      )}
+
+      {/* ============================================================ */}
+      {/* TAP 3: INSTANT 3D LIGHT BURST FROM CENTER (Takkunu therikkira beam) */}
+      {/* ============================================================ */}
+      {crackStage >= 3 && (
+        <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
+          <svg 
+            viewBox="0 0 200 400" 
+            className="w-full h-full absolute inset-0 overflow-visible pointer-events-none"
+            style={{ mixBlendMode: 'screen' }}
+          >
+            <defs>
+              <linearGradient id="instant3DBeamGrad" x1="0%" y1="50%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
+              <radialGradient id="centerInstantBloom" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.9" />
+                <stop offset="65%" stopColor="#10b981" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+              </radialGradient>
+
+              <filter id="beamTakkunuGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3.5" result="sharp" />
+                <feGaussianBlur stdDeviation="10" result="soft" />
+                <feMerge>
+                  <feMergeNode in="soft" />
+                  <feMergeNode in="sharp" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Instant white-hot flash point at center aperture (102, 185) */}
+            <motion.ellipse
+              cx="102"
+              cy="185"
+              rx="20"
+              ry="20"
+              fill="url(#centerInstantBloom)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 1.8, 1.3], opacity: [0, 1, 0.9] }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              filter="url(#beamTakkunuGlow)"
+            />
+
+            {/* Single Powerful 3D Light Shaft: Blasts instantly out from center (102, 185) toward upper-right across full screen! */}
+            <motion.polygon
+              points="102,185 116,180 820,-240 560,-320"
+              fill="url(#instant3DBeamGrad)"
+              filter="url(#beamTakkunuGlow)"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ 
+                scale: 1,
+                opacity: [0, 1, 0.85]
+              }}
+              style={{ transformOrigin: "102px 185px" }}
+              transition={{ 
+                duration: 0.18, // Instant "takkunu" burst
+                ease: [0.08, 0.82, 0.17, 1] 
+              }}
+            />
+          </svg>
+        </div>
       )}
 
       {/* NATURAL BROKEN GLASS FRACTURE SVG */}
@@ -220,7 +287,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               transition={{ duration: 0.45, ease: "easeOut" }}
             />
 
-            {/* --- WAVE 2 (after 0.5s): Spreading into Mid-Left (Behind "TODAY") & Mid-Right (Behind "th day") Empty Spaces --- */}
+            {/* --- WAVE 2 (after 0.5s): Spreading into Mid-Left & Mid-Right Empty Spaces --- */}
             <motion.path
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#10b981"
