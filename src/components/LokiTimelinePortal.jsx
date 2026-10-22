@@ -14,10 +14,7 @@ import { motion } from 'framer-motion';
  */
 export default function LokiTimelinePortal() {
   return (
-    <div 
-      className="fixed inset-0 flex items-center justify-center pointer-events-none z-30 overflow-hidden"
-      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
-    >
+    <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-30 overflow-hidden">
       {/* 1. Full Page Deep Emerald Atmospheric Glow & Reflection (Flooding the entire screen like in reference) */}
       <motion.div 
         initial={{ opacity: 0 }}
@@ -36,29 +33,26 @@ export default function LokiTimelinePortal() {
         className="absolute inset-0"
         style={{
           background: 'radial-gradient(circle at 55% 50%, rgba(16,185,129,0.7) 0%, rgba(5,150,105,0.5) 35%, rgba(4,120,87,0.35) 60%, rgba(2,44,34,0.85) 90%)',
-          willChange: 'transform, opacity'
+          filter: 'blur(30px)'
         }}
       />
 
       {/* SVG Organic Distortion Filters for the irregular jagged portal border ONLY */}
       <svg className="absolute w-0 h-0 pointer-events-none">
         <defs>
-          <filter id="lokiOrganicRiftEdge" x="-10%" y="-10%" width="120%" height="120%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="24" xChannelSelector="R" yChannelSelector="G" />
+          <filter id="lokiOrganicRiftEdge" x="-30%" y="-30%" width="160%" height="160%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="4" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" />
           </filter>
 
-          <filter id="smoothBranchGlow" x="-10%" y="-10%" width="120%" height="120%">
-            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#010f0b" floodOpacity="0.8" />
+          <filter id="smoothBranchGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#010f0b" floodOpacity="0.9" />
           </filter>
         </defs>
       </svg>
 
       {/* 2. The Organic Asymmetrical Portal Opening (Matching reference image shape) */}
-      <div 
-        className="absolute inset-y-0 w-full max-w-[420px] flex items-center justify-center pointer-events-none"
-        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
-      >
+      <div className="absolute inset-y-0 w-full max-w-[420px] flex items-center justify-center">
         {/* Outer illuminated cloudy rift lip */}
         <motion.div
           animate={{
@@ -69,7 +63,7 @@ export default function LokiTimelinePortal() {
           className="absolute h-full w-56 sm:w-64"
           style={{
             background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.9) 0%, rgba(52,211,153,0.7) 35%, rgba(16,185,129,0.4) 65%, transparent 85%)',
-            willChange: 'transform, opacity'
+            filter: 'url(#lokiOrganicRiftEdge) blur(12px)'
           }}
         />
 
@@ -85,8 +79,8 @@ export default function LokiTimelinePortal() {
             background: 'radial-gradient(ellipse at 50% 55%, #052e24 0%, #022018 45%, #01140e 75%, transparent 100%)',
             borderLeft: '3px solid rgba(209,250,229,0.85)',
             borderRight: '3px solid rgba(209,250,229,0.85)',
-            boxShadow: '0 0 35px rgba(52,211,153,0.85), inset 0 0 25px rgba(0,0,0,0.85)',
-            willChange: 'transform'
+            boxShadow: '0 0 45px rgba(52,211,153,0.9), inset 0 0 35px rgba(0,0,0,0.85)',
+            filter: 'url(#lokiOrganicRiftEdge) blur(4px)'
           }}
         />
 
@@ -97,8 +91,7 @@ export default function LokiTimelinePortal() {
             opacity: [0.75, 1, 0.75]
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[62%] w-10 h-10 rounded-full bg-emerald-200/90 shadow-[0_0_30px_#a7f3d0,0_0_60px_#34d399]"
-          style={{ willChange: 'transform, opacity' }}
+          className="absolute top-[62%] w-10 h-10 rounded-full bg-emerald-200/90 blur-md shadow-[0_0_40px_#a7f3d0,0_0_80px_#34d399]"
         />
 
         {/* Intense white-mint core tear spine */}
@@ -111,8 +104,8 @@ export default function LokiTimelinePortal() {
           className="absolute h-full w-4 sm:w-5"
           style={{
             background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(209,250,229,0.95) 25%, #ffffff 60%, rgba(167,243,208,0.9) 85%, rgba(255,255,255,0.1) 100%)',
-            boxShadow: '0 0 20px #6ee7b7, 0 0 35px #10b981',
-            willChange: 'transform, opacity'
+            boxShadow: '0 0 25px #6ee7b7, 0 0 50px #10b981',
+            filter: 'url(#lokiOrganicRiftEdge) blur(3px)'
           }}
         />
       </div>
@@ -123,7 +116,6 @@ export default function LokiTimelinePortal() {
         preserveAspectRatio="none"
         className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" 
         xmlns="http://www.w3.org/2000/svg"
-        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
       >
         {/* Branch 1: Upper graceful arc crossing from beyond left (-150) to beyond right (1150) */}
         <motion.g

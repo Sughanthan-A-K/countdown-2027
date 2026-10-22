@@ -32,10 +32,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
   const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 14));
 
   return (
-    <div 
-      className="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none overflow-visible rounded-3xl"
-      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
-    >
+    <div className="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
       {/* Background Dimming as glass is damaged */}
       <motion.div 
         initial={{ opacity: 0 }}
@@ -57,8 +54,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="absolute w-80 h-96 rounded-full pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.45) 35%, rgba(4,120,87,0.15) 55%, transparent 75%)',
-            willChange: 'transform, opacity'
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.45) 50%, transparent 75%)',
+            filter: 'blur(35px)'
           }}
         />
       )}
@@ -298,37 +295,37 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Pure High-Performance Mobile GPU Beam Glow (Zero rasterization bottleneck) */}
-              <filter id="outwardBeamGlow" x="-10%" y="-10%" width="120%" height="120%">
-                <feGaussianBlur stdDeviation="2.5" />
+              {/* Crisp piercing beam glow */}
+              <filter id="outwardBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3.5" result="blur1" />
+                <feGaussianBlur stdDeviation="9" result="blur2" />
+                <feMerge>
+                  <feMergeNode in="blur2" />
+                  <feMergeNode in="blur1" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
               </filter>
             </defs>
 
-            {/* ============================================================ */}
-            {/* TAP 3 & TAP 4: OUTWARD 3D LIGHT BEAMS FROM CRACK SEAM SEGMENTS */}
-            {/* Card-kulla irukura exact crack line/fissure-la irunthu thaan light screen-ku veliya pogum */}
-            {/* ============================================================ */}
-            {crackStage >= 3 && (
-              <g key="crack-stage-3-and-4-beams">
-                {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding INFINITELY across screen --- */}
-                <motion.polygon
-                  points="102,185 140,152 4200,-1600 3200,-2200"
-                  fill="url(#outwardBeam1)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.1, ease: "easeOut" }}
-                />
+            {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding INFINITELY across screen --- */}
+            <motion.polygon
+              points="102,185 140,152 4200,-1600 3200,-2200"
+              fill="url(#outwardBeam1)"
+              filter="url(#outwardBeamGlow)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, ease: "easeOut" }}
+            />
 
-                {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
-                <motion.polygon
-                  points="102,185 85,248 -2600,4500 -3200,3800"
-                  fill="url(#outwardBeam2)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
-                />
-              </g>
-            )}
+            {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
+            <motion.polygon
+              points="102,185 85,248 -2600,4500 -3200,3800"
+              fill="url(#outwardBeam2)"
+              filter="url(#outwardBeamGlow)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
+            />
 
             {/* ============================================================ */}
             {/* TAP 4: NATURAL PROGRESSION */}
@@ -342,6 +339,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="76,100 45,108 -3400,-2600 -2400,-3600"
                   fill="url(#outwardBeamUpperLeft)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
                   transition={{ duration: 0.25, delay: 0.65, ease: "easeOut" }}
@@ -351,6 +349,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="165,138 4200,300 4500,1800 182,148"
                   fill="url(#outwardBeamMidRightSeam)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
                   transition={{ duration: 0.25, delay: 1.20, ease: "easeOut" }}
@@ -360,6 +359,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="168,22 200,5 3800,-1600 3200,-2400"
                   fill="url(#microBeamTopRight)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.85 }}
                   transition={{ duration: 0.22, delay: 1.75, ease: "easeOut" }}
@@ -369,6 +369,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="85,248 126,274 3800,4200 3000,4800"
                   fill="url(#outwardBeamLowerRightSeam)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.88 }}
                   transition={{ duration: 0.20, delay: 2.20, ease: "easeOut" }}
@@ -378,6 +379,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="14,382 0,400 -2600,4800 -3400,4000"
                   fill="url(#microBeamBottomCorner)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.85 }}
                   transition={{ duration: 0.18, delay: 2.55, ease: "easeOut" }}
@@ -387,6 +389,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="96,350 102,400 1200,4500 200,4500"
                   fill="url(#outwardBeamBottomSpineSeam)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.92 }}
                   transition={{ duration: 0.14, delay: 2.85, ease: "easeOut" }}
@@ -397,6 +400,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="108,78 -3800,-3200 -4200,-1800 92,122"
                   fill="url(#beamRedLine2)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.92 }}
                   transition={{ duration: 0.10, delay: 3.05, ease: "easeOut" }}
@@ -406,6 +410,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="104,65 108,78 400,-4200 -800,-3800"
                   fill="url(#outwardBeamTopSpine)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.92 }}
                   transition={{ duration: 0.08, delay: 3.18, ease: "easeOut" }}
@@ -415,6 +420,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="92,122 64,146 -4500,-600 -4200,-1800"
                   fill="url(#climaxLeftInfiniteBeam)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
                   transition={{ duration: 0.08, delay: 3.28, ease: "easeOut" }}
@@ -424,6 +430,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="92,122 -4500,600 -4500,1800 102,185"
                   fill="url(#beamRedLine1)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
                   transition={{ duration: 0.07, delay: 3.36, ease: "easeOut" }}
@@ -433,6 +440,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="140,152 4200,2400 4500,3800 155,210"
                   fill="url(#beamRedLine5)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
                   transition={{ duration: 0.06, delay: 3.42, ease: "easeOut" }}
@@ -442,6 +450,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <motion.polygon
                   points="102,185 140,152 4800,-400 3800,-1600"
                   fill="url(#climaxCenterInfiniteBeam)"
+                  filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1.0 }}
                   transition={{ duration: 0.06, delay: 3.48, ease: "easeOut" }}
@@ -459,8 +468,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <filter id="pureGreenGlow" x="-10%" y="-10%" width="120%" height="120%">
-            <feDropShadow dx="0" dy="0" stdDeviation={crackStage >= 3 ? "1.5" : "0.8"} floodColor="#10b981" floodOpacity="0.8" />
+          <filter id="pureGreenGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation={crackStage >= 3 ? "2.2" : "1.2"} />
           </filter>
         </defs>
 
