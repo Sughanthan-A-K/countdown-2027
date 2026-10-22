@@ -231,6 +231,15 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
+              {/* Climax Center Infinite Beam: Origin at center fracture (102, 185) -> blasting East-South-East to infinity */}
+              <linearGradient id="climaxCenterInfiniteBeam" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="4500" y2="-600">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </linearGradient>
+
               {/* Crisp piercing beam glow */}
               <filter id="outwardBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="3.5" result="blur1" />
@@ -347,6 +356,16 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   animate={{ opacity: 0.85 }}
                   transition={{ duration: 0.08, delay: 1.58 }}
                 />
+
+                {/* --- 9th CLIMAX POP (1.82s): Extra Infinite Light Shaft Blasting Directly from Center Fracture (102, 185) Just Before Shatter! --- */}
+                <motion.polygon
+                  points="102,185 118,162 4800,-400 4500,-1400"
+                  fill="url(#climaxCenterInfiniteBeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1.0, 1.0] }}
+                  transition={{ duration: 0.06, delay: 1.82 }}
+                />
               </g>
             )}
           </svg>
@@ -400,25 +419,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         {/* TAP 1: Center Spine Fracture (Shoots down on 1st tap, STAYS CONSTANT!) */}
         {/* Extends cleanly right up to the card edges without crossing outside */}
         {/* ============================================================ */}
-
-        {/* TAP 4 FINALE: Controlled piercing emerald light bleeding outward through center spine */}
-        {crackStage >= 4 && (
-          <motion.path
-            d="M 98 6 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 394"
-            stroke="#34d399"
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-            filter="url(#pureGreenGlow)"
-            initial={{ opacity: 0 }}
-            animate={{ 
-              opacity: [0, 0.6, 0.95],
-              strokeWidth: [4, 9, 13]
-            }}
-            transition={{ duration: 1.6, delay: 0.3, ease: "easeOut" }}
-          />
-        )}
 
         {/* Single crisp crystalline fracture line touching card edges (y: 6 to y: 394) */}
         <motion.path
