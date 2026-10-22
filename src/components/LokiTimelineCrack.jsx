@@ -43,44 +43,19 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         className="absolute inset-0 bg-black/50 pointer-events-none rounded-3xl"
       />
 
-      {/* Behind-the-glass pure emerald ambient light - Escalates into blinding portal aura on Tap 4 */}
+      {/* Behind-the-glass pure emerald ambient light - Escalates naturally on Tap 4 */}
       {crackStage >= 2 && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ 
-            opacity: crackStage >= 4 ? [0.65, 0.85, 1.0] : (crackStage === 3 ? 0.8 : 0.45),
-            scale: crackStage >= 4 ? [1.1, 1.35, 1.7] : (crackStage === 3 ? 1.2 : 1.0),
+            opacity: crackStage >= 4 ? 0.95 : (crackStage === 3 ? 0.8 : 0.45),
+            scale: crackStage >= 4 ? 1.4 : (crackStage === 3 ? 1.2 : 1.0),
           }}
-          transition={
-            crackStage >= 4 
-              ? { duration: 2.0, ease: "easeInOut", times: [0, 0.6, 1] }
-              : { duration: 0.8, ease: "easeOut" }
-          }
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="absolute w-80 h-96 rounded-full pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 45%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.5) 45%, transparent 75%)',
-            filter: 'blur(30px)'
-          }}
-        />
-      )}
-
-      {/* TAP 4: Center Core White-Hot Escalation (Vedikka porathunaala center-la velicham athigam aaguthu) */}
-      {crackStage >= 4 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.4 }}
-          animate={{
-            opacity: [0, 0.35, 0.7, 0.95, 1.0],
-            scale: [0.5, 0.8, 1.2, 1.6, 2.2]
-          }}
-          transition={{ duration: 2.1, ease: [0.12, 0.8, 0.2, 1] }}
-          className="absolute w-44 h-44 rounded-full pointer-events-none z-[65]"
-          style={{
-            top: '46%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            background: 'radial-gradient(circle, #ffffff 0%, rgba(167,243,208,0.9) 25%, rgba(52,211,153,0.6) 55%, transparent 75%)',
-            filter: 'blur(16px)',
-            mixBlendMode: 'screen'
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.45) 50%, transparent 75%)',
+            filter: 'blur(35px)'
           }}
         />
       )}
@@ -273,144 +248,115 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               points="102,185 140,152 780,-280 560,-320"
               fill="url(#outwardBeam1)"
               filter="url(#outwardBeamGlow)"
-              style={{ transformOrigin: "121px 168px" }}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1.08, 1], 
-                opacity: crackStage >= 4 ? [0.95, 1.0] : [0, 1, 0.95] 
-              }}
-              transition={{ duration: 0.22, ease: [0.1, 0.9, 0.2, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, ease: "easeOut" }}
             />
 
-            {/* --- TAP 3 BEAM 2 (Blue Line in screenshot): From spine crack seam (102, 185) -> (85, 248) expanding out towards Bottom-Left --- */}
+            {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding out towards Bottom-Left --- */}
             <motion.polygon
               points="102,185 85,248 -420,840 -480,620"
               fill="url(#outwardBeam2)"
               filter="url(#outwardBeamGlow)"
-              style={{ transformOrigin: "93px 216px" }}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: [0, 1.08, 1], 
-                opacity: crackStage >= 4 ? [0.95, 1.0] : [0, 1, 0.95] 
-              }}
-              transition={{ duration: 0.24, delay: 0.03, ease: [0.1, 0.9, 0.2, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
             />
 
             {/* ============================================================ */}
-            {/* TAP 4: ASYMMETRIC, NATURAL CRACK LIGHT BURSTS (TAKKU TAKKUNU POPPING) */}
-            {/* Organic, random angles breaking the symmetrical circular pattern */}
+            {/* TAP 4: RANDOM OUTWARD LIGHT BURSTS (TAKKU TAKKUNU INSTANT FLASH) */}
+            {/* No scale-down/pinch animations! Direct instant light shoot! */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- 1st POP (0.04s): Razor-thin sharp beam piercing Upper-Left corner --- */}
+                {/* --- 1st POP (0.04s): Piercing Upper-Left corner --- */}
                 <motion.polygon
                   points="76,100 45,108 -340,-260 -240,-360"
                   fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "60px 104px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.9] }}
-                  transition={{ duration: 0.14, delay: 0.04, ease: [0.05, 0.95, 0.1, 1] }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.95 }}
+                  transition={{ duration: 0.08, delay: 0.04 }}
                 />
 
-                {/* --- 2nd POP (0.28s): Angular blade beam slicing through Mid-Right --- */}
+                {/* --- 2nd POP (0.22s): Blade beam slicing through Mid-Right --- */}
                 <motion.polygon
                   points="165,138 182,148 760,110 680,240"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "173px 143px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.88] }}
-                  transition={{ duration: 0.14, delay: 0.28, ease: [0.05, 0.95, 0.1, 1] }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.9 }}
+                  transition={{ duration: 0.08, delay: 0.22 }}
                 />
 
-                {/* --- 3rd POP (0.55s): Steep upward fissure shaft tilting North-North-West --- */}
-                <motion.polygon
-                  points="104,65 108,78 40,-420 -80,-380"
-                  fill="url(#outwardBeamTopSpine)"
-                  filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "106px 71px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.92] }}
-                  transition={{ duration: 0.15, delay: 0.55, ease: [0.05, 0.95, 0.1, 1] }}
-                />
-
-                {/* --- 4th POP (0.82s): Narrow oblique beam cutting through Lower-Right corner --- */}
-                <motion.polygon
-                  points="85,248 126,274 580,720 460,820"
-                  fill="url(#outwardBeamLowerRightSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "105px 261px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.85] }}
-                  transition={{ duration: 0.14, delay: 0.82, ease: [0.05, 0.95, 0.1, 1] }}
-                />
-
-                {/* --- 5th POP (1.10s): Sharp horizontal sliver piercing West --- */}
-                <motion.polygon
-                  points="40,156 26,172 -480,220 -500,130"
-                  fill="url(#outwardBeamMidLeftSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "33px 164px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.9] }}
-                  transition={{ duration: 0.14, delay: 1.10, ease: [0.05, 0.95, 0.1, 1] }}
-                />
-
-                {/* --- 6th POP (1.35s): Off-center vertical beam piercing down-right towards South-South-East --- */}
-                <motion.polygon
-                  points="96,350 102,400 190,880 70,880"
-                  fill="url(#outwardBeamBottomSpineSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "99px 375px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 1, 0.92] }}
-                  transition={{ duration: 0.15, delay: 1.35, ease: [0.05, 0.95, 0.1, 1] }}
-                />
-
-                {/* --- CHINNA CHINNA GAP CRACKS LA IRUNTHU VARRA EXTRA MICRO BEAMS (Random Takku pops) --- */}
-                {/* Micro Beam 1: Upper-Right corner gap (0.42s) */}
+                {/* --- 3rd POP (0.42s): Upper-Right corner gap --- */}
                 <motion.polygon
                   points="168,22 200,5 560,-220 480,-300"
                   fill="url(#microBeamTopRight)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "184px 13px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 0.85, 0.8] }}
-                  transition={{ duration: 0.12, delay: 0.42, ease: [0.05, 0.95, 0.1, 1] }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.08, delay: 0.42 }}
                 />
 
-                {/* Micro Beam 2: Upper-Left far edge gap (0.70s) */}
+                {/* --- 4th POP (0.60s): Steep upward fissure shaft tilting North-North-West --- */}
                 <motion.polygon
-                  points="14,42 0,15 -360,-120 -380,-240"
-                  fill="url(#microBeamUpperEdge)"
+                  points="104,65 108,78 40,-420 -80,-380"
+                  fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "7px 28px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 0.85, 0.8] }}
-                  transition={{ duration: 0.12, delay: 0.70, ease: [0.05, 0.95, 0.1, 1] }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.92 }}
+                  transition={{ duration: 0.08, delay: 0.60 }}
                 />
 
-                {/* Micro Beam 3: Right edge gap behind 'th day' (0.95s) */}
+                {/* --- 5th POP (0.80s): Narrow oblique beam cutting through Lower-Right corner --- */}
+                <motion.polygon
+                  points="85,248 126,274 580,720 460,820"
+                  fill="url(#outwardBeamLowerRightSeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 0.80 }}
+                />
+
+                {/* --- 6th POP (1.00s): Sharp horizontal sliver piercing West --- */}
+                <motion.polygon
+                  points="40,156 26,172 -480,220 -500,130"
+                  fill="url(#outwardBeamMidLeftSeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.9 }}
+                  transition={{ duration: 0.08, delay: 1.00 }}
+                />
+
+                {/* --- 7th POP (1.15s): Right edge gap behind 'th day' --- */}
                 <motion.polygon
                   points="155,210 180,235 680,350 620,460"
                   fill="url(#microBeamRightEdge)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "167px 222px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 0.85, 0.8] }}
-                  transition={{ duration: 0.12, delay: 0.95, ease: [0.05, 0.95, 0.1, 1] }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.08, delay: 1.15 }}
                 />
 
-                {/* Micro Beam 4: Bottom-Left corner far gap (1.22s) */}
+                {/* --- 8th POP (1.30s): Off-center vertical beam piercing South-South-East --- */}
+                <motion.polygon
+                  points="96,350 102,400 190,880 70,880"
+                  fill="url(#outwardBeamBottomSpineSeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.92 }}
+                  transition={{ duration: 0.08, delay: 1.30 }}
+                />
+
+                {/* --- 9th POP (1.45s): Bottom-Left corner far gap --- */}
                 <motion.polygon
                   points="14,382 0,400 -320,680 -380,580"
                   fill="url(#microBeamBottomCorner)"
                   filter="url(#outwardBeamGlow)"
-                  style={{ transformOrigin: "7px 391px" }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.05, 1], opacity: [0, 0.85, 0.8] }}
-                  transition={{ duration: 0.12, delay: 1.22, ease: [0.05, 0.95, 0.1, 1] }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.08, delay: 1.45 }}
                 />
               </g>
             )}
