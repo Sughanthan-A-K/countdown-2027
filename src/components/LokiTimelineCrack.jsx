@@ -16,12 +16,10 @@ import { motion } from 'framer-motion';
  *    - Tap 3: Center spine opens wider, pure green aura radiates.
  *    - Tap 4: Center spine splits wide as deep cracks continuously multiply.
  * 
- * 3. Exact Neon God Rays - Blasting from Card Center outwards with snap ("Tak Tak") reveals:
- *    - Light rays emanate directly from center crack point (102, 185) shooting outwards across the viewport.
- *    - Linear gradients flow strictly from Center (x1="102", y1="185", 100% white-emerald) -> Outer (0% transparent).
- *    - Fast, punchy snap reveals ("Tak Tak") with random stagger intervals:
- *      (0.08s -> 0.28s -> 0.44s -> 0.65s -> 0.82s -> 1.05s -> 1.25s -> 1.42s).
- *    - At 2.0s, final glass shatter triggers!
+ * 3. Exact Neon Light Rays From Card Center (Tak Tak Nu Bursting Out):
+ *    - Exact same intense neon beam styling is preserved.
+ *    - Radial gradients centered exactly on the fracture origin (102, 185) so rays beam from card center OUTWARDS.
+ *    - Reveals with snappy "tak tak" random bursts (rapid 0.25s entrance with snappy spring/easing) one by one!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -62,7 +60,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Stage 4: Strong Neon Emerald God Rays Blasting From Center Outward with "Tak Tak" Random Snaps */}
+      {/* Stage 4: Exact Neon God Rays Beaming from Card Center Outwards in Snappy "Tak Tak" Random Bursts */}
       {isLightRaysCreeping && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
           <svg 
@@ -71,92 +69,28 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             style={{ mixBlendMode: 'screen' }}
           >
             <defs>
-              {/* Intense neon core bloom at fracture origin (102, 185) */}
-              <radialGradient id="neonImpactBloom" cx="50%" cy="50%" r="50%">
+              {/* Central origin bloom where rays originate */}
+              <radialGradient id="neonCenterBloom" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="55%" stopColor="#10b981" stopOpacity="0.85" />
-                <stop offset="85%" stopColor="#059669" stopOpacity="0.4" />
+                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.95" />
+                <stop offset="60%" stopColor="#10b981" stopOpacity="0.8" />
+                <stop offset="85%" stopColor="#059669" stopOpacity="0.3" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
 
-              {/* Exact Linear Gradients: Originating bright at center (102, 185) -> Fading outward */}
-              {/* Ray 1: Toward Top-Right (780, -280) */}
-              <linearGradient id="rayFromCenter1" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="670" y2="-250">
+              {/* Radial gradient centered at (102, 185) so light is intense AT CARD CENTER and beams OUTWARD */}
+              <radialGradient id="radialNeonRayOut" cx="102" cy="185" r="320" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
                 <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
                 <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Ray 2: Toward Top-Vertical (100, -360) */}
-              <linearGradient id="rayFromCenter2" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="100" y2="-360">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Ray 3: Toward Top-Left (-430, -210) */}
-              <linearGradient id="rayFromCenter3" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="-430" y2="-210">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Ray 4: Toward Left (-510, 200) */}
-              <linearGradient id="rayFromCenter4" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="-510" y2="200">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Ray 5: Toward Right (800, 240) */}
-              <linearGradient id="rayFromCenter5" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="800" y2="240">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Ray 6: Toward Bottom-Left (-450, 730) */}
-              <linearGradient id="rayFromCenter6" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="-450" y2="730">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Ray 7: Toward Bottom-Right (510, 850) */}
-              <linearGradient id="rayFromCenter7" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="510" y2="850">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Ray 8: Toward Bottom-Vertical (100, 880) */}
-              <linearGradient id="rayFromCenter8" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="100" y2="880">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+              </radialGradient>
 
               {/* Crisp neon glow filter */}
               <filter id="neonBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="3.5" result="blur1" />
-                <feGaussianBlur stdDeviation="8" result="blur2" />
+                <feGaussianBlur stdDeviation="9" result="blur2" />
                 <feMerge>
                   <feMergeNode in="blur2" />
                   <feMergeNode in="blur1" />
@@ -171,100 +105,99 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               cy="185"
               rx="24"
               ry="24"
-              fill="url(#neonImpactBloom)"
-              initial={{ scale: 0.2, opacity: 0.2 }}
-              animate={{ scale: [0.3, 2.2], opacity: [0.3, 1.0] }}
-              transition={{ duration: 2.0, ease: "easeIn" }}
+              fill="url(#neonCenterBloom)"
+              initial={{ scale: 0.1, opacity: 0 }}
+              animate={{ scale: [0.3, 2.0], opacity: [0.5, 1.0] }}
+              transition={{ duration: 1.8, ease: "easeOut" }}
               filter="url(#neonBeamGlow)"
             />
 
-            {/* Fast, Punchy Snap Reveals ("Tak Tak") from Center Outwards with Random Delays */}
-
-            {/* Snap 1: Top-Right ray blasts out at 0.08s */}
+            {/* Rays originating exactly at center (102, 185) and shooting OUTWARD to the screen bounds */}
+            {/* Ray 1: Snaps out at 0.08s */}
             <motion.polygon
-              points="102,185 135,160 780,-280 560,-320"
-              fill="url(#rayFromCenter1)"
+              points="102,185 130,165 720,-240 540,-290"
+              fill="url(#radialNeonRayOut)"
               filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.05 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.25, delay: 0.08, ease: [0.18, 0.89, 0.32, 1.25] }}
+              transition={{ duration: 0.22, delay: 0.08, ease: [0.18, 0.89, 0.32, 1.28] }}
               style={{ transformOrigin: "102px 185px" }}
             />
 
-            {/* Snap 2: Top-Vertical ray blasts out at 0.28s */}
+            {/* Ray 2: Snaps out at 0.22s */}
             <motion.polygon
-              points="102,185 106,60 260,-360 -60,-360"
-              fill="url(#rayFromCenter2)"
+              points="102,185 98,40 -60,-360 260,-360"
+              fill="url(#radialNeonRayOut)"
               filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.05 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 0.28, ease: [0.18, 0.89, 0.32, 1.25] }}
+              transition={{ duration: 0.22, delay: 0.22, ease: [0.18, 0.89, 0.32, 1.28] }}
               style={{ transformOrigin: "102px 185px" }}
             />
 
-            {/* Snap 3: Left ray blasts out at 0.44s */}
+            {/* Ray 3: Snaps out at 0.42s */}
             <motion.polygon
-              points="102,185 80,140 -500,80 -520,320"
-              fill="url(#rayFromCenter4)"
+              points="102,185 85,115 -420,-260 -500,-100"
+              fill="url(#radialNeonRayOut)"
               filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.05 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.24, delay: 0.44, ease: [0.18, 0.89, 0.32, 1.25] }}
+              transition={{ duration: 0.22, delay: 0.42, ease: [0.18, 0.89, 0.32, 1.28] }}
               style={{ transformOrigin: "102px 185px" }}
             />
 
-            {/* Snap 4: Top-Left ray blasts out at 0.65s */}
+            {/* Ray 4: Snaps out at 0.58s */}
             <motion.polygon
-              points="102,185 92,110 -380,-300 -480,-130"
-              fill="url(#rayFromCenter3)"
+              points="102,185 88,145 -520,60 -540,280"
+              fill="url(#radialNeonRayOut)"
               filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.05 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 0.65, ease: [0.18, 0.89, 0.32, 1.25] }}
+              transition={{ duration: 0.22, delay: 0.58, ease: [0.18, 0.89, 0.32, 1.28] }}
               style={{ transformOrigin: "102px 185px" }}
             />
 
-            {/* Snap 5: Right ray blasts out at 0.82s */}
+            {/* Ray 5: Snaps out at 0.78s */}
             <motion.polygon
-              points="102,185 125,200 820,120 780,360"
-              fill="url(#rayFromCenter5)"
+              points="102,185 118,190 820,120 780,360"
+              fill="url(#radialNeonRayOut)"
               filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.05 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.25, delay: 0.82, ease: [0.18, 0.89, 0.32, 1.25] }}
+              transition={{ duration: 0.22, delay: 0.78, ease: [0.18, 0.89, 0.32, 1.28] }}
               style={{ transformOrigin: "102px 185px" }}
             />
 
-            {/* Snap 6: Bottom-Left ray blasts out at 1.05s */}
+            {/* Ray 6: Snaps out at 0.95s */}
             <motion.polygon
-              points="102,185 85,240 -420,840 -480,620"
-              fill="url(#rayFromCenter6)"
+              points="102,185 85,230 -420,840 -480,620"
+              fill="url(#radialNeonRayOut)"
               filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.05 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 1.05, ease: [0.18, 0.89, 0.32, 1.25] }}
+              transition={{ duration: 0.22, delay: 0.95, ease: [0.18, 0.89, 0.32, 1.28] }}
               style={{ transformOrigin: "102px 185px" }}
             />
 
-            {/* Snap 7: Bottom-Right ray blasts out at 1.25s */}
+            {/* Ray 7: Snaps out at 1.15s */}
             <motion.polygon
-              points="102,185 120,240 620,820 400,880"
-              fill="url(#rayFromCenter7)"
+              points="102,185 115,235 620,820 400,880"
+              fill="url(#radialNeonRayOut)"
               filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.05 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.24, delay: 1.25, ease: [0.18, 0.89, 0.32, 1.25] }}
+              transition={{ duration: 0.22, delay: 1.15, ease: [0.18, 0.89, 0.32, 1.28] }}
               style={{ transformOrigin: "102px 185px" }}
             />
 
-            {/* Snap 8: Bottom-Vertical spine ray blasts out at 1.42s */}
+            {/* Ray 8: Snaps out at 1.35s */}
             <motion.polygon
-              points="102,185 102,300 260,880 -60,880"
-              fill="url(#rayFromCenter8)"
+              points="102,185 102,320 -60,880 260,880"
+              fill="url(#radialNeonRayOut)"
               filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0.05 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 1.42, ease: [0.18, 0.89, 0.32, 1.25] }}
+              transition={{ duration: 0.22, delay: 1.35, ease: [0.18, 0.89, 0.32, 1.28] }}
               style={{ transformOrigin: "102px 185px" }}
             />
           </svg>
