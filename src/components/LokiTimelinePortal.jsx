@@ -88,20 +88,34 @@ export default function LokiTimelinePortal() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
-        className="absolute inset-0 bg-[#021811]"
+        className="absolute inset-0 bg-[#01140e]"
       />
 
-      {/* Broad luminous aurora fields across the entire background */}
+      {/* Layer 1: Vivid Luminous Emerald Aurora Atmosphere */}
       <motion.div
         animate={{
-          opacity: [0.75, 0.95, 0.75],
-          scale: [1, 1.05, 1]
+          opacity: [0.85, 1, 0.85],
+          scale: [1, 1.08, 1]
         }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(circle at 55% 50%, rgba(16,185,129,0.7) 0%, rgba(5,150,105,0.5) 35%, rgba(4,120,87,0.35) 60%, rgba(2,44,34,0.85) 90%)',
-          filter: 'blur(30px)'
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.7) 35%, rgba(4,120,87,0.5) 60%, rgba(1,25,18,0.92) 90%)',
+          filter: 'blur(35px)'
+        }}
+      />
+
+      {/* Layer 2: Radiant Center Halo Aura (Vibrant Bright Mint & Emerald Glow behind the Portal) */}
+      <motion.div
+        animate={{
+          scale: [0.95, 1.15, 0.95],
+          opacity: [0.75, 0.95, 0.75]
+        }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute w-[600px] h-[85vh] rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(52,211,153,0.75) 0%, rgba(16,185,129,0.55) 40%, rgba(5,150,105,0.25) 70%, transparent 95%)',
+          filter: 'blur(45px)'
         }}
       />
 
@@ -124,14 +138,15 @@ export default function LokiTimelinePortal() {
         {/* Outer illuminated cloudy rift lip */}
         <motion.div
           animate={{
-            scaleX: [0.96, 1.04, 0.96],
-            opacity: [0.85, 1, 0.85]
+            scaleX: [0.96, 1.06, 0.96],
+            opacity: [0.9, 1, 0.9]
           }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute h-full w-56 sm:w-64 pointer-events-none"
+          className="absolute h-full w-64 sm:w-80 pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.9) 0%, rgba(52,211,153,0.7) 35%, rgba(16,185,129,0.4) 65%, transparent 85%)',
-            filter: 'url(#lokiOrganicRiftEdge) blur(12px)'
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,1) 0%, rgba(52,211,153,0.88) 35%, rgba(16,185,129,0.65) 60%, rgba(5,150,105,0.3) 80%, transparent 95%)',
+            boxShadow: '0 0 100px rgba(52,211,153,0.6), 0 0 180px rgba(16,185,129,0.4)',
+            filter: 'url(#lokiOrganicRiftEdge) blur(10px)'
           }}
         />
 
@@ -145,35 +160,35 @@ export default function LokiTimelinePortal() {
           className="absolute h-[110%] w-24 sm:w-32 pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse at 50% 55%, #052e24 0%, #022018 45%, #01140e 75%, transparent 100%)',
-            borderLeft: '3px solid rgba(209,250,229,0.85)',
-            borderRight: '3px solid rgba(209,250,229,0.85)',
-            boxShadow: '0 0 45px rgba(52,211,153,0.9), inset 0 0 35px rgba(0,0,0,0.85)',
-            filter: 'url(#lokiOrganicRiftEdge) blur(4px)'
+            borderLeft: '4px solid rgba(209,250,229,0.95)',
+            borderRight: '4px solid rgba(209,250,229,0.95)',
+            boxShadow: '0 0 65px rgba(52,211,153,1), 0 0 120px rgba(16,185,129,0.7), inset 0 0 40px rgba(0,0,0,0.85)',
+            filter: 'url(#lokiOrganicRiftEdge) blur(3px)'
           }}
         />
 
         {/* Soft Point of Light Origin (The distant nexus glimmer seen in reference image) */}
         <motion.div
           animate={{
-            scale: [0.85, 1.25, 0.85],
-            opacity: [0.75, 1, 0.75]
+            scale: [0.9, 1.35, 0.9],
+            opacity: [0.85, 1, 0.85]
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[62%] w-10 h-10 rounded-full bg-emerald-200/90 blur-md shadow-[0_0_40px_#a7f3d0,0_0_80px_#34d399] pointer-events-none"
+          className="absolute top-[62%] w-12 h-12 rounded-full bg-emerald-100 blur-sm shadow-[0_0_50px_#a7f3d0,0_0_100px_#34d399,0_0_160px_#10b981] pointer-events-none"
         />
 
         {/* Intense white-mint core tear spine */}
         <motion.div
           animate={{
-            opacity: [0.85, 1, 0.85],
-            scaleX: [0.9, 1.2, 0.9]
+            opacity: [0.9, 1, 0.9],
+            scaleX: [0.95, 1.25, 0.95]
           }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute h-full w-4 sm:w-5 pointer-events-none"
+          className="absolute h-full w-5 sm:w-6 pointer-events-none"
           style={{
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(209,250,229,0.95) 25%, #ffffff 60%, rgba(167,243,208,0.9) 85%, rgba(255,255,255,0.1) 100%)',
-            boxShadow: '0 0 25px #6ee7b7, 0 0 50px #10b981',
-            filter: 'url(#lokiOrganicRiftEdge) blur(3px)'
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(209,250,229,1) 25%, #ffffff 60%, rgba(167,243,208,1) 85%, rgba(255,255,255,0.2) 100%)',
+            boxShadow: '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 120px #10b981',
+            filter: 'url(#lokiOrganicRiftEdge) blur(2.5px)'
           }}
         />
       </div>
