@@ -6,13 +6,12 @@ import { motion } from 'framer-motion';
  * 
  * Realistic Broken Glass Fractures for Dec 16:
  * - Natural glass fracture network with sharp, jagged crystalline crack fissures, spiderweb tension micro-fractures,
- *   and internal light reflections (zero artificial neon tubes/thick glow strokes).
- * - As the user taps and breaks the glass more and more:
- *   - Stage 1: Fine, realistic glass hairline fracture spreading from an impact point.
- *   - Stage 2: Deep branching glass fissures radiating outward with subtle emerald refractions trapped inside the broken glass seams.
- *   - Stage 3: Shattered pane network with extensive glass crazing/spiderwebbing and bright emerald portal light bleeding through the cracks.
- *   - Stage 4: Glass fractures burst with intense emerald crepuscular god rays escaping through the glass gaps,
- *     white-hot fracture edges, holding for 2 seconds before cleanly shattering away!
+ *   and internal light reflections.
+ * - Dynamic path drawing on EVERY crack tap:
+ *   - Tap 1: Spine fracture shoots down smoothly from top to bottom (pathLength 0 -> 1).
+ *   - Tap 2: Branch fissures shoot outward from the spine like real cracking glass (pathLength 0 -> 1).
+ *   - Tap 3: Interconnecting spiderweb fissures & micro stress-fractures rapidly shoot and connect between shards (pathLength 0 -> 1).
+ *   - Tap 4: High-intensity crepuscular green god rays project through the gaps, holding for 2 seconds before shatter!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -181,7 +180,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Subtle soft refraction blur for deep seams */}
           <filter id="glassRefract" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation={crackStage >= 3 ? "1.8" : "1.0"} />
           </filter>
@@ -191,9 +189,9 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         {/* LAYER 1: Deep Emerald Seam Glow (Bleeding only inside the fissure gaps) */}
         {/* ============================================================ */}
         {crackStage >= 2 && (
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: crackStage >= 3 ? 0.9 : 0.6 }}>
+          <g>
             {/* Primary Fissure Emerald Underglow */}
-            <path
+            <motion.path
               d="M 98 15 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 385"
               stroke="#059669"
               strokeWidth={crackStage >= 4 ? "4.5" : (crackStage >= 3 ? "3.2" : "2")}
@@ -201,10 +199,13 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               strokeLinejoin="round"
               fill="none"
               filter="url(#glassRefract)"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             />
 
             {/* Branch Seams Underglow */}
-            <path
+            <motion.path
               d="M 108 78 L 74 102 L 52 110 L 30 114 M 92 122 L 62 148 L 44 162 M 102 185 L 145 150 L 172 135 M 85 248 L 128 274 L 160 286 M 106 312 L 68 338 L 42 348"
               stroke="#10b981"
               strokeWidth={crackStage >= 4 ? "3.2" : (crackStage >= 3 ? "2.2" : "1.4")}
@@ -212,24 +213,30 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               strokeLinejoin="round"
               fill="none"
               filter="url(#glassRefract)"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.65, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
             />
-          </motion.g>
+          </g>
         )}
 
         {/* ============================================================ */}
-        {/* LAYER 2: Primary Spine Fracture (Natural jagged broken glass seam) */}
+        {/* LAYER 2: Primary Spine Fracture (Shooting down smoothly on Tap 1) */}
         {/* ============================================================ */}
         {/* Shadow seam behind the glass crack (gives realistic physical depth) */}
-        <path
+        <motion.path
           d="M 98.5 15.5 L 104.5 65.5 L 108.5 78.5 L 92.5 122.5 L 102.5 185.5 L 85.5 248.5 L 106.5 312.5 L 96.5 350.5 L 102.5 385.5"
           stroke="rgba(0, 0, 0, 0.7)"
           strokeWidth={crackStage >= 3 ? "2" : "1.2"}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        {/* Main Glass Fracture Edge (Crisp crystalline hairline) */}
+        {/* Main Glass Fracture Edge (Crisp crystalline hairline shooting down) */}
         <motion.path
           d="M 98 15 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 385"
           stroke={crackStage >= 3 ? "#e6fffa" : "#ffffff"}
@@ -239,30 +246,29 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
           fill="none"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
           opacity={0.95}
         />
 
-        {/* Parallel double-refraction line (Glass thickness reflection seen in broken windshields) */}
-        <path
+        {/* Parallel double-refraction line shooting down with the crack */}
+        <motion.path
           d="M 99.5 15 L 105.5 65 L 109.5 78 L 93.5 122 L 103.5 185 L 86.5 248 L 107.5 312 L 97.5 350 L 103.5 385"
           stroke={crackStage >= 2 ? "rgba(110, 231, 183, 0.75)" : "rgba(255, 255, 255, 0.5)"}
           strokeWidth="0.7"
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         />
 
         {/* ============================================================ */}
-        {/* LAYER 3: Stage 2 - Branching Tension Cracks */}
+        {/* LAYER 3: Stage 2 - Branching Tension Cracks (Shooting outward from spine) */}
         {/* ============================================================ */}
         {crackStage >= 2 && (
-          <motion.g
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
-          >
-            {/* Branch fracture paths */}
+          <g>
+            {/* Branch fracture paths shooting outward like live cracking glass */}
             <motion.path
               d="M 108 78 L 74 102 L 52 110 L 30 114 M 92 122 L 62 148 L 44 162 M 102 185 L 145 150 L 172 135 M 85 248 L 128 274 L 160 286 M 106 312 L 68 338 L 42 348"
               stroke="#ffffff"
@@ -272,29 +278,28 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             />
-            {/* Branch emerald refraction */}
-            <path
+            {/* Branch emerald refraction shooting along with the cracks */}
+            <motion.path
               d="M 109 79 L 75 103 L 53 111 M 93 123 L 63 149 M 103 186 L 146 151 M 86 249 L 129 275 M 107 313 L 69 339"
               stroke="rgba(52, 211, 153, 0.8)"
               strokeWidth="0.8"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             />
-          </motion.g>
+          </g>
         )}
 
         {/* ============================================================ */}
-        {/* LAYER 4: Stage 3 & 4 - Spiderweb Micro-Fractures & Glass Crazing */}
+        {/* LAYER 4: Stage 3 & 4 - Spiderweb Micro-Fractures (Shooting and interconnecting) */}
         {/* ============================================================ */}
         {crackStage >= 3 && (
-          <motion.g
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
-          >
+          <g>
             {/* Fine secondary spiderwebbing connecting across shards */}
             <motion.path
               d="M 74 102 L 62 148 M 62 148 L 88 180 M 102 185 L 115 160 L 145 150 M 145 150 L 152 210 L 128 274 M 85 248 L 80 285 L 106 312 M 74 102 L 95 85 M 128 274 L 110 300 M 68 338 L 88 360"
@@ -305,29 +310,35 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             />
 
             {/* Tiny crystalline glass stress fractures around impact point (102, 185) */}
-            <path
+            <motion.path
               d="M 102 185 L 94 172 M 102 185 L 112 176 M 102 185 L 108 198 M 102 185 L 92 192 M 102 185 L 100 168 M 102 185 L 116 188"
               stroke="rgba(255, 255, 255, 0.95)"
               strokeWidth="1.1"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.45, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
             />
 
             {/* Emerald light bleeding through micro-gaps */}
-            <path
+            <motion.path
               d="M 74 102 L 62 148 M 102 185 L 115 160 M 145 150 L 152 210 M 85 248 L 80 285"
               stroke="rgba(52, 211, 153, 0.75)"
               strokeWidth="0.7"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             />
-          </motion.g>
+          </g>
         )}
 
         {/* ============================================================ */}
