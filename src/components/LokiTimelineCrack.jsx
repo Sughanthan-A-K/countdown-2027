@@ -366,6 +366,37 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         </defs>
 
         {/* ============================================================ */}
+        {/* TAP 4: ESCALATING BRIGHT CORE AT EXACT CARD CENTER (100, 200) */}
+        {/* SVG coordinates-la exact Card Center (50%, 50%) = (100, 200) */}
+        {/* ============================================================ */}
+        {crackStage >= 4 && (
+          <g key="crack-stage-4-center-bright-core">
+            <defs>
+              <radialGradient id="exactCardCenterCore" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.9" />
+                <stop offset="55%" stopColor="#34d399" stopOpacity="0.65" />
+                <stop offset="85%" stopColor="#10b981" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <motion.circle
+              cx="100"
+              cy="200"
+              r="40"
+              fill="url(#exactCardCenterCore)"
+              filter="url(#pureGreenGlow)"
+              initial={{ scale: 0.3, opacity: 0 }}
+              animate={{
+                scale: [0.4, 0.9, 1.4, 2.0],
+                opacity: [0, 0.5, 0.85, 1.0]
+              }}
+              transition={{ duration: 2.1, ease: [0.12, 0.8, 0.2, 1] }}
+            />
+          </g>
+        )}
+
+        {/* ============================================================ */}
         {/* TAP 1: Center Spine Fracture (Shoots down on 1st tap, STAYS CONSTANT!) */}
         {/* Strictly contained within card borders (y: 10 to y: 390) so glow doesn't bleed out */}
         {/* ============================================================ */}
