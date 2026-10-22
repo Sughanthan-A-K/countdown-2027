@@ -60,27 +60,6 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* TAP 4: Center Core White-Hot Escalation - Shifted further Left & Top */}
-      {crackStage >= 4 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.4 }}
-          animate={{
-            opacity: [0, 0.4, 0.85, 1.0],
-            scale: [0.6, 1.0, 1.5, 2.0]
-          }}
-          transition={{ duration: 2.0, ease: [0.12, 0.8, 0.2, 1] }}
-          className="absolute w-44 h-44 rounded-full pointer-events-none z-[65]"
-          style={{
-            top: '43%',
-            left: '46%',
-            transform: 'translate(-50%, -50%)',
-            background: 'radial-gradient(circle at center, #ffffff 0%, rgba(167,243,208,0.95) 25%, rgba(52,211,153,0.7) 50%, rgba(16,185,129,0.25) 70%, transparent 85%)',
-            filter: 'blur(16px)',
-            mixBlendMode: 'screen'
-          }}
-        />
-      )}
-
       {/* ============================================================ */}
       {/* TAP 3 & TAP 4: OUTWARD 3D LIGHT BEAMS FROM CRACK SEAM SEGMENTS */}
       {/* Card-kulla irukura exact crack line/fissure-la irunthu thaan light screen-ku veliya pogum */}
@@ -349,17 +328,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.18 }}
                 />
 
-                {/* --- 7th POP (1.35s): Right edge gap behind 'th day' --- */}
-                <motion.polygon
-                  points="155,210 180,235 4400,3200 3800,1200"
-                  fill="url(#microBeamRightEdge)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.08, delay: 1.35 }}
-                />
-
-                {/* --- 8th POP (1.42s): Off-center vertical beam piercing South-South-East --- */}
+                {/* --- 7th POP (1.42s): Off-center vertical beam piercing South-South-East --- */}
                 <motion.polygon
                   points="96,350 102,400 1200,4500 200,4500"
                   fill="url(#outwardBeamBottomSpineSeam)"
@@ -369,7 +338,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.42 }}
                 />
 
-                {/* --- 9th POP (1.58s): Bottom-Left corner far gap --- */}
+                {/* --- 8th POP (1.58s): Bottom-Left corner far gap --- */}
                 <motion.polygon
                   points="14,382 0,400 -2600,4800 -3400,4000"
                   fill="url(#microBeamBottomCorner)"
