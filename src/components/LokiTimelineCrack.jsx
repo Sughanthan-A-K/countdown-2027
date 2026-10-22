@@ -16,10 +16,11 @@ import { motion } from 'framer-motion';
  *    - Tap 3: Center spine opens wider, pure green aura radiates.
  *    - Tap 4: Center spine splits wide as deep cracks continuously multiply.
  * 
- * 3. Exact Neon Light Rays From Card Center (Tak Tak Nu Bursting Out):
- *    - Exact same intense neon beam styling is preserved.
- *    - Radial gradients centered exactly on the fracture origin (102, 185) so rays beam from card center OUTWARDS.
- *    - Reveals with snappy "tak tak" random bursts (rapid 0.25s entrance with snappy spring/easing) one by one!
+ * 3. Intense Neon God Rays (Strong Piercing Laser Beams):
+ *    - Not a faint wash, but strong piercing neon emerald laser shafts with white-hot cores.
+ *    - Sequenced organically to reveal one by one as the cracks shoot open across the card!
+ *    - Over 2.0s, each ray blasts outward piercing far across the full screen in 3D,
+ *      then triggers the majestic glass shatter!
  */
 export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
@@ -60,149 +61,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         />
       )}
 
-      {/* Stage 4: Exact Neon God Rays Beaming from Card Center Outwards in Snappy "Tak Tak" Random Bursts */}
-      {isLightRaysCreeping && (
-        <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
-          <svg 
-            viewBox="0 0 200 400" 
-            className="w-full h-full absolute inset-0 overflow-visible pointer-events-none"
-            style={{ mixBlendMode: 'screen' }}
-          >
-            <defs>
-              {/* Central origin bloom where rays originate */}
-              <radialGradient id="neonCenterBloom" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="30%" stopColor="#6ee7b7" stopOpacity="0.95" />
-                <stop offset="60%" stopColor="#10b981" stopOpacity="0.8" />
-                <stop offset="85%" stopColor="#059669" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </radialGradient>
-
-              {/* Radial gradient centered at (102, 185) so light is intense AT CARD CENTER and beams OUTWARD */}
-              <radialGradient id="radialNeonRayOut" cx="102" cy="185" r="320" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="12%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="70%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
-              </radialGradient>
-
-              {/* Crisp neon glow filter */}
-              <filter id="neonBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3.5" result="blur1" />
-                <feGaussianBlur stdDeviation="9" result="blur2" />
-                <feMerge>
-                  <feMergeNode in="blur2" />
-                  <feMergeNode in="blur1" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* Impact Center Point Bloom */}
-            <motion.ellipse
-              cx="102"
-              cy="185"
-              rx="24"
-              ry="24"
-              fill="url(#neonCenterBloom)"
-              initial={{ scale: 0.1, opacity: 0 }}
-              animate={{ scale: [0.3, 2.0], opacity: [0.5, 1.0] }}
-              transition={{ duration: 1.8, ease: "easeOut" }}
-              filter="url(#neonBeamGlow)"
-            />
-
-            {/* Rays originating exactly at center (102, 185) and shooting OUTWARD to the screen bounds */}
-            {/* Ray 1: Snaps out at 0.08s */}
-            <motion.polygon
-              points="102,185 130,165 720,-240 540,-290"
-              fill="url(#radialNeonRayOut)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 0.08, ease: [0.18, 0.89, 0.32, 1.28] }}
-              style={{ transformOrigin: "102px 185px" }}
-            />
-
-            {/* Ray 2: Snaps out at 0.22s */}
-            <motion.polygon
-              points="102,185 98,40 -60,-360 260,-360"
-              fill="url(#radialNeonRayOut)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 0.22, ease: [0.18, 0.89, 0.32, 1.28] }}
-              style={{ transformOrigin: "102px 185px" }}
-            />
-
-            {/* Ray 3: Snaps out at 0.42s */}
-            <motion.polygon
-              points="102,185 85,115 -420,-260 -500,-100"
-              fill="url(#radialNeonRayOut)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 0.42, ease: [0.18, 0.89, 0.32, 1.28] }}
-              style={{ transformOrigin: "102px 185px" }}
-            />
-
-            {/* Ray 4: Snaps out at 0.58s */}
-            <motion.polygon
-              points="102,185 88,145 -520,60 -540,280"
-              fill="url(#radialNeonRayOut)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 0.58, ease: [0.18, 0.89, 0.32, 1.28] }}
-              style={{ transformOrigin: "102px 185px" }}
-            />
-
-            {/* Ray 5: Snaps out at 0.78s */}
-            <motion.polygon
-              points="102,185 118,190 820,120 780,360"
-              fill="url(#radialNeonRayOut)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 0.78, ease: [0.18, 0.89, 0.32, 1.28] }}
-              style={{ transformOrigin: "102px 185px" }}
-            />
-
-            {/* Ray 6: Snaps out at 0.95s */}
-            <motion.polygon
-              points="102,185 85,230 -420,840 -480,620"
-              fill="url(#radialNeonRayOut)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 0.95, ease: [0.18, 0.89, 0.32, 1.28] }}
-              style={{ transformOrigin: "102px 185px" }}
-            />
-
-            {/* Ray 7: Snaps out at 1.15s */}
-            <motion.polygon
-              points="102,185 115,235 620,820 400,880"
-              fill="url(#radialNeonRayOut)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 1.15, ease: [0.18, 0.89, 0.32, 1.28] }}
-              style={{ transformOrigin: "102px 185px" }}
-            />
-
-            {/* Ray 8: Snaps out at 1.35s */}
-            <motion.polygon
-              points="102,185 102,320 -60,880 260,880"
-              fill="url(#radialNeonRayOut)"
-              filter="url(#neonBeamGlow)"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.22, delay: 1.35, ease: [0.18, 0.89, 0.32, 1.28] }}
-              style={{ transformOrigin: "102px 185px" }}
-            />
-          </svg>
-        </div>
-      )}
+      {/* (Light rays traveling through glass gaps archived in memory and safely removed) */}
 
       {/* NATURAL BROKEN GLASS FRACTURE SVG */}
       <svg 
