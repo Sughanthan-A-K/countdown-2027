@@ -398,12 +398,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
         {/* ============================================================ */}
         {/* TAP 1: Center Spine Fracture (Shoots down on 1st tap, STAYS CONSTANT!) */}
-        {/* Strictly contained inside card borders (y: 20 to y: 380) */}
+        {/* Extends cleanly right up to the card edges without crossing outside */}
         {/* ============================================================ */}
 
-        {/* Single crisp crystalline fracture line cutting across card (Strictly inside card: y 20 to 380) */}
+        {/* Single crisp crystalline fracture line touching card edges (y: 6 to y: 394) */}
         <motion.path
-          d="M 98 20 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 380"
+          d="M 98 6 L 104 65 L 108 78 L 92 122 L 102 185 L 85 248 L 106 312 L 96 350 L 102 394"
           stroke={crackStage >= 2 ? "#d1fae5" : "#ffffff"}
           strokeWidth={spineStroke}
           strokeLinecap="round"
