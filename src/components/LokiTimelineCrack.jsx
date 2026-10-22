@@ -240,17 +240,8 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Climax Center Infinite Beam 2 (Left adjacent): Origin at Center-Left Hub (92, 122) -> (102, 185) */}
-              <linearGradient id="climaxLeftAdjacentBeam" gradientUnits="userSpaceOnUse" x1="97" y1="153" x2="-3800" y2="1800">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Climax Final Infinite Beam 3 (Center Aperture Core): Origin at Center Hub (102, 185) -> blasting East-South-East */}
-              <linearGradient id="climaxCenterInfiniteBeam" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="4800" y2="-400">
+              {/* Climax Final Infinite Beam 3 (Center Aperture Core): Origin at Center Hub (102, 185) -> blasting East-North-East */}
+              <linearGradient id="climaxCenterInfiniteBeam" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="4800" y2="-800">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
                 <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
@@ -375,30 +366,23 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.58 }}
                 />
 
-                {/* --- EXTRA CLIMAX BEAM 1 (1.75s): Left side of Center Fissure (92,122 -> 64,146) --- */}
+                {/* --- EXTRA CLIMAX BEAM 1 (1.75s): Left side Center Fissure (Single clean beam on Left) --- */}
                 <motion.polygon
                   points="92,122 64,146 -4500,-600 -4200,-1800"
                   fill="url(#climaxLeftInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.95, 0.95] }}
+                  animate={{ opacity: 0.95 }}
                   transition={{ duration: 0.06, delay: 1.75 }}
                 />
 
-                {/* --- EXTRA CLIMAX BEAM (1.92s - FINAL BURST JUST BEFORE VEDIKKURA SHATTER): Blasting Straight Out from Central Hub (102, 185)! --- */}
-                {/* Seam (102,185 -> 118,162): y1=185 to 2200, y2=162 to -1400 (Clean straight cone, no twist!) */}
+                {/* --- FINAL CLIMAX BURST (1.92s): Straight clean cone blasting from Center Hub (102, 185) -> (140, 152) without any twist! --- */}
                 <motion.polygon
-                  points="102,185 118,162 4800,-1400 4500,1200"
+                  points="102,185 140,152 4800,-400 3800,-1600"
                   fill="url(#climaxCenterInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1.0, 1.0] }}
-                  transition={{ duration: 0.06, delay: 1.92 }}
-                />
-                  fill="url(#climaxCenterInfiniteBeam)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1.0, 1.0] }}
+                  animate={{ opacity: 1.0 }}
                   transition={{ duration: 0.06, delay: 1.92 }}
                 />
               </g>
