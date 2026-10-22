@@ -1590,13 +1590,13 @@ function App() {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
                           const next = Math.min(prev + 1, 4);
-                          // On 4th tap (random light rays popping progressively across all sides, then shattering into portal):
+                          // On 4th tap (random natural escalating light sequence over 4.8s, then shattering into portal):
                           if (next === 4) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 2200);
+                            }, 4800);
                           }
                           return next;
                         });

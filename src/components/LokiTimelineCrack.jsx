@@ -328,132 +328,132 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             />
 
             {/* ============================================================ */}
-            {/* TAP 4: ASYMMETRIC RANDOM TIMING LIGHT BURSTS (SOLID & CLEAN) */}
-            {/* RHYTHM: Center -> Surrounding (Outer) -> Center Climax -> Blast! */}
+            {/* TAP 4: NATURAL ESCALATING RANDOM LIGHT BURSTS (SMOOTH & CINEMATIC) */}
+            {/* Organic, spacious delays (0.6s -> 1.8s -> 3.0s -> 4.2s rapid climax) */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* 1. CENTER BEAMS POP FIRST (0.04s - 0.25s) */}
-                {/* Red Line 1 (0.04s): Center-Left Spine Fissure (92, 122 -> 102, 185) */}
+                {/* 1. EARLY STAGE: Center beams emerge first smoothly (0.5s - 1.2s) */}
+                {/* Red Line 1 (0.6s): Center-Left Spine Fissure (92, 122 -> 102, 185) */}
                 <motion.polygon
                   points="92,122 -4500,600 -4500,1800 102,185"
                   fill="url(#beamRedLine1)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.08, delay: 0.04 }}
+                  transition={{ duration: 0.25, delay: 0.60, ease: "easeOut" }}
                 />
 
-                {/* Red Line 5 (0.22s): Lower-Right Center Fissures (140, 152 -> 155, 210) */}
+                {/* Red Line 5 (1.15s): Lower-Right Center Fissures (140, 152 -> 155, 210) */}
                 <motion.polygon
                   points="140,152 4200,2400 4500,3800 155,210"
                   fill="url(#beamRedLine5)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 0.22 }}
+                  transition={{ duration: 0.25, delay: 1.15, ease: "easeOut" }}
                 />
 
-                {/* 2. SURROUNDING OUTER CRACKS POP NEXT (0.42s - 1.45s) */}
-                {/* Piercing Upper-Left corner (0.42s) */}
+                {/* 2. MID-STAGE: Surrounding cracks illuminate organically (1.8s - 3.2s) */}
+                {/* Piercing Upper-Left corner (1.80s) */}
                 <motion.polygon
                   points="76,100 45,108 -3400,-2600 -2400,-3600"
                   fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 0.42 }}
+                  transition={{ duration: 0.25, delay: 1.80, ease: "easeOut" }}
                 />
 
-                {/* Blade beam slicing through Mid-Right (0.60s) */}
+                {/* Blade beam slicing through Mid-Right (2.45s) */}
                 <motion.polygon
                   points="165,138 4200,300 4500,1800 182,148"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 0.60 }}
+                  transition={{ duration: 0.25, delay: 2.45, ease: "easeOut" }}
                 />
 
-                {/* Red Line 2: Upper Spine Fissure (0.75s) */}
+                {/* Upper Spine Fissure (3.10s) */}
                 <motion.polygon
                   points="108,78 -3800,-3200 -4200,-1800 92,122"
                   fill="url(#beamRedLine2)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 0.75 }}
+                  transition={{ duration: 0.25, delay: 3.10, ease: "easeOut" }}
                 />
 
-                {/* Upper-Right corner gap (0.88s) */}
+                {/* Upper-Right corner gap (3.65s) */}
                 <motion.polygon
                   points="168,22 200,5 3800,-1600 3200,-2400"
                   fill="url(#microBeamTopRight)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.08, delay: 0.88 }}
+                  transition={{ duration: 0.22, delay: 3.65, ease: "easeOut" }}
                 />
 
-                {/* Steep upward fissure shaft (1.15s) */}
+                {/* 3. CLIMAX TAKKU-TAKKU RAPID BURSTS (4.0s - 4.55s) -> Just before shatter blast! */}
+                {/* Steep upward fissure shaft (4.05s) */}
                 <motion.polygon
                   points="104,65 108,78 400,-4200 -800,-3800"
                   fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 1.15 }}
+                  transition={{ duration: 0.12, delay: 4.05, ease: "easeOut" }}
                 />
 
-                {/* Lower-Right corner beam (1.38s) */}
+                {/* Lower-Right corner beam (4.20s) */}
                 <motion.polygon
                   points="85,248 126,274 3800,4200 3000,4800"
                   fill="url(#outwardBeamLowerRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 1.38 }}
+                  transition={{ duration: 0.12, delay: 4.20, ease: "easeOut" }}
                 />
 
-                {/* Bottom-Left corner far gap (1.58s) */}
+                {/* Bottom-Left corner far gap (4.32s) */}
                 <motion.polygon
                   points="14,382 0,400 -2600,4800 -3400,4000"
                   fill="url(#microBeamBottomCorner)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.08, delay: 1.58 }}
+                  transition={{ duration: 0.12, delay: 4.32, ease: "easeOut" }}
                 />
 
-                {/* Off-center vertical beam South (1.68s) */}
+                {/* Off-center vertical beam South (4.42s) */}
                 <motion.polygon
                   points="96,350 102,400 1200,4500 200,4500"
                   fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 1.68 }}
+                  transition={{ duration: 0.10, delay: 4.42, ease: "easeOut" }}
                 />
 
-                {/* 3. CENTER FINALE BEAMS (1.82s - 1.95s) - Just before shatter blast! */}
-                {/* Left side Center Fissure (1.82s) */}
+                {/* Left side Center Fissure (4.50s) */}
                 <motion.polygon
                   points="92,122 64,146 -4500,-600 -4200,-1800"
                   fill="url(#climaxLeftInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.06, delay: 1.82 }}
+                  transition={{ duration: 0.08, delay: 4.50, ease: "easeOut" }}
                 />
 
-                {/* FINAL CLIMAX BURST (1.95s): Mega Beam from Center Hub (102, 185) -> (140, 152) */}
+                {/* FINAL MEGA CLIMAX BURST (4.58s): Center Hub Mega Beam -> Leading directly into 4.8s Supernova Shatter! */}
                 <motion.polygon
                   points="102,185 140,152 4800,-400 3800,-1600"
                   fill="url(#climaxCenterInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1.0 }}
-                  transition={{ duration: 0.06, delay: 1.95 }}
+                  transition={{ duration: 0.08, delay: 4.58, ease: "easeOut" }}
                 />
               </g>
             )}
