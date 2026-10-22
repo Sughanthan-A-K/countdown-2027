@@ -329,81 +329,123 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
             {/* ============================================================ */}
             {/* TAP 4: ASYMMETRIC RANDOM TIMING LIGHT BURSTS (SOLID & CLEAN) */}
+            {/* RHYTHM: Center -> Surrounding (Outer) -> Center Climax -> Blast! */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- 1st POP (0.04s): Piercing Upper-Left corner --- */}
+                {/* 1. CENTER BEAMS POP FIRST (0.04s - 0.25s) */}
+                {/* Red Line 1 (0.04s): Center-Left Spine Fissure (92, 122 -> 102, 185) */}
                 <motion.polygon
-                  points="76,100 45,108 -3400,-2600 -2400,-3600"
-                  fill="url(#outwardBeamUpperLeft)"
+                  points="92,122 -4500,600 -4500,1800 102,185"
+                  fill="url(#beamRedLine1)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
                   transition={{ duration: 0.08, delay: 0.04 }}
                 />
 
-                {/* --- 2nd POP (0.38s): Blade beam slicing through Mid-Right (CLEAN STRAIGHT CONE, NO TWIST!) --- */}
-                {/* Seam (165,138 -> 182,148): Upper pt (165,138) to Upper outer (4200, 300); Lower pt (182,148) to Lower outer (4500, 1800) */}
+                {/* Red Line 5 (0.22s): Lower-Right Center Fissures (140, 152 -> 155, 210) */}
+                <motion.polygon
+                  points="140,152 4200,2400 4500,3800 155,210"
+                  fill="url(#beamRedLine5)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.92 }}
+                  transition={{ duration: 0.08, delay: 0.22 }}
+                />
+
+                {/* 2. SURROUNDING OUTER CRACKS POP NEXT (0.42s - 1.45s) */}
+                {/* Piercing Upper-Left corner (0.42s) */}
+                <motion.polygon
+                  points="76,100 45,108 -3400,-2600 -2400,-3600"
+                  fill="url(#outwardBeamUpperLeft)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.9 }}
+                  transition={{ duration: 0.08, delay: 0.42 }}
+                />
+
+                {/* Blade beam slicing through Mid-Right (0.60s) */}
                 <motion.polygon
                   points="165,138 4200,300 4500,1800 182,148"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 0.38 }}
+                  transition={{ duration: 0.08, delay: 0.60 }}
                 />
 
-                {/* --- 3rd POP (0.52s): Upper-Right corner gap --- */}
+                {/* Red Line 2: Upper Spine Fissure (0.75s) */}
+                <motion.polygon
+                  points="108,78 -3800,-3200 -4200,-1800 92,122"
+                  fill="url(#beamRedLine2)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 0.75 }}
+                />
+
+                {/* Upper-Right corner gap (0.88s) */}
                 <motion.polygon
                   points="168,22 200,5 3800,-1600 3200,-2400"
                   fill="url(#microBeamTopRight)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.08, delay: 0.52 }}
+                  transition={{ duration: 0.08, delay: 0.88 }}
                 />
 
-                {/* --- 4th POP (0.85s): Steep upward fissure shaft tilting North-North-West --- */}
+                {/* Red Line 3: Upper-Right Branch (1.02s) */}
                 <motion.polygon
-                  points="104,65 108,78 400,-4200 -800,-3800"
-                  fill="url(#outwardBeamTopSpine)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 0.85 }}
-                />
-
-                {/* --- 5th POP (1.02s): Narrow oblique beam cutting through Lower-Right corner --- */}
-                <motion.polygon
-                  points="85,248 126,274 3800,4200 3000,4800"
-                  fill="url(#outwardBeamLowerRightSeam)"
+                  points="140,45 3200,-3600 4000,-2800 175,22"
+                  fill="url(#beamRedLine3)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.88 }}
                   transition={{ duration: 0.08, delay: 1.02 }}
                 />
 
-                {/* --- 6th POP (1.18s): Sharp horizontal sliver piercing West --- */}
+                {/* Steep upward fissure shaft (1.15s) */}
+                <motion.polygon
+                  points="104,65 108,78 400,-4200 -800,-3800"
+                  fill="url(#outwardBeamTopSpine)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.9 }}
+                  transition={{ duration: 0.08, delay: 1.15 }}
+                />
+
+                {/* Red Line 4: Mid-Left Branch (1.28s) */}
+                <motion.polygon
+                  points="64,146 -4200,1800 -4500,2800 40,156"
+                  fill="url(#beamRedLine4)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 1.28 }}
+                />
+
+                {/* Lower-Right corner beam (1.38s) */}
+                <motion.polygon
+                  points="85,248 126,274 3800,4200 3000,4800"
+                  fill="url(#outwardBeamLowerRightSeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.08, delay: 1.38 }}
+                />
+
+                {/* Sharp horizontal sliver piercing West (1.48s) */}
                 <motion.polygon
                   points="40,156 26,172 -4200,1200 -4500,200"
                   fill="url(#outwardBeamMidLeftSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.08, delay: 1.18 }}
+                  transition={{ duration: 0.08, delay: 1.48 }}
                 />
 
-                {/* --- 7th POP (1.42s): Off-center vertical beam piercing South-South-East --- */}
-                <motion.polygon
-                  points="96,350 102,400 1200,4500 200,4500"
-                  fill="url(#outwardBeamBottomSpineSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 1.42 }}
-                />
-
-                {/* --- 8th POP (1.58s): Bottom-Left corner far gap --- */}
+                {/* Bottom-Left corner far gap (1.58s) */}
                 <motion.polygon
                   points="14,382 0,400 -2600,4800 -3400,4000"
                   fill="url(#microBeamBottomCorner)"
@@ -413,75 +455,35 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                   transition={{ duration: 0.08, delay: 1.58 }}
                 />
 
-                {/* --- 5 NEW CRACK LIGHT BEAMS (FROM USER'S RED LINES) --- */}
-                {/* Red Line 1 (0.45s): Center-Left Spine Fissure (92, 122 -> 102, 185) */}
+                {/* Off-center vertical beam South (1.68s) */}
                 <motion.polygon
-                  points="92,122 -4500,600 -4500,1800 102,185"
-                  fill="url(#beamRedLine1)"
+                  points="96,350 102,400 1200,4500 200,4500"
+                  fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 0.45 }}
+                  animate={{ opacity: 0.92 }}
+                  transition={{ duration: 0.08, delay: 1.68 }}
                 />
 
-                {/* Red Line 2 (0.72s): Upper Spine Fissure (108, 78 -> 92, 122) */}
-                <motion.polygon
-                  points="108,78 -3800,-3200 -4200,-1800 92,122"
-                  fill="url(#beamRedLine2)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 0.72 }}
-                />
-
-                {/* Red Line 3 (0.92s): Upper-Right Branch Fissure (140, 45 -> 175, 22) */}
-                <motion.polygon
-                  points="140,45 3200,-3600 4000,-2800 175,22"
-                  fill="url(#beamRedLine3)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 0.92 }}
-                />
-
-                {/* Red Line 4 (1.10s): Mid-Left Branch Fissure (64, 146 -> 40, 156) */}
-                <motion.polygon
-                  points="64,146 -4200,1800 -4500,2800 40,156"
-                  fill="url(#beamRedLine4)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 1.10 }}
-                />
-
-                {/* Red Line 5 (1.30s): Lower-Right Center Fissures (140, 152 -> 165, 138 & 155, 210) */}
-                <motion.polygon
-                  points="140,152 4200,2400 4500,3800 155,210"
-                  fill="url(#beamRedLine5)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.08, delay: 1.30 }}
-                />
-
-                {/* --- EXTRA CLIMAX BEAM 1 (1.75s): Left side Center Fissure (Single clean beam on Left) --- */}
+                {/* 3. CENTER FINALE BEAMS (1.82s - 1.95s) - Just before shatter blast! */}
+                {/* Left side Center Fissure (1.82s) */}
                 <motion.polygon
                   points="92,122 64,146 -4500,-600 -4200,-1800"
                   fill="url(#climaxLeftInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.06, delay: 1.75 }}
+                  transition={{ duration: 0.06, delay: 1.82 }}
                 />
 
-                {/* --- FINAL CLIMAX BURST (1.92s): Straight clean cone blasting from Center Hub (102, 185) -> (140, 152) without any twist! --- */}
+                {/* FINAL CLIMAX BURST (1.95s): Mega Beam from Center Hub (102, 185) -> (140, 152) */}
                 <motion.polygon
                   points="102,185 140,152 4800,-400 3800,-1600"
                   fill="url(#climaxCenterInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1.0 }}
-                  transition={{ duration: 0.06, delay: 1.92 }}
+                  transition={{ duration: 0.06, delay: 1.95 }}
                 />
               </g>
             )}

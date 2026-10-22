@@ -41,19 +41,39 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
 
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible">
-      {/* 1. Powerful Primary Emerald Shockwave Ripple Ring (Slow-motion majestic expansion) */}
+      {/* 0. BLINDING SUPERNOVA CENTER FLASHBURST (Natural high-impact epicenter explosion) */}
       <motion.div
-        initial={{ scale: 0.2, opacity: 1, borderWidth: '18px' }}
+        initial={{ opacity: 1, scale: 0.1 }}
         animate={{ 
-          scale: [0.3, 3.8], 
-          opacity: [1, 0.7, 0],
-          borderWidth: ['18px', '1px']
+          opacity: [1, 1, 0], 
+          scale: [0.1, 3.2, 5.0] 
+        }}
+        transition={{ duration: 0.65, ease: [0.05, 0.95, 0.2, 1] }}
+        className="absolute w-64 h-64 rounded-full bg-white blur-2xl pointer-events-none"
+      />
+      <motion.div
+        initial={{ opacity: 0.95, scale: 0.2 }}
+        animate={{ 
+          opacity: [0.95, 0.8, 0], 
+          scale: [0.2, 4.0, 6.5] 
+        }}
+        transition={{ duration: 0.85, ease: "easeOut" }}
+        className="absolute w-80 h-80 rounded-full bg-emerald-400/80 blur-3xl pointer-events-none"
+      />
+
+      {/* 1. Powerful Primary Emerald Shockwave Ripple Ring (Explosive blast expansion) */}
+      <motion.div
+        initial={{ scale: 0.1, opacity: 1, borderWidth: '28px' }}
+        animate={{ 
+          scale: [0.1, 4.2], 
+          opacity: [1, 0.8, 0],
+          borderWidth: ['28px', '1px']
         }}
         transition={{ 
-          duration: 2.2, 
-          ease: [0.12, 0.8, 0.32, 1] 
+          duration: 1.4, 
+          ease: [0.05, 0.85, 0.25, 1] 
         }}
-        className="absolute rounded-full border-emerald-300 shadow-[0_0_60px_#10b981,_inset_0_0_40px_#34d399] pointer-events-none"
+        className="absolute rounded-full border-white shadow-[0_0_80px_#34d399,_inset_0_0_50px_#a7f3d0] pointer-events-none"
         style={{
           width: '320px',
           height: '320px',
@@ -62,18 +82,18 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
 
       {/* 2. Secondary High-Speed Distortion Shockwave Ring */}
       <motion.div
-        initial={{ scale: 0.1, opacity: 1, borderWidth: '24px' }}
+        initial={{ scale: 0.05, opacity: 1, borderWidth: '32px' }}
         animate={{ 
-          scale: [0.2, 5.0], 
-          opacity: [0.95, 0.5, 0],
-          borderWidth: ['24px', '2px']
+          scale: [0.05, 5.5], 
+          opacity: [1, 0.6, 0],
+          borderWidth: ['32px', '2px']
         }}
         transition={{ 
-          duration: 2.5, 
-          delay: 0.12,
-          ease: [0.15, 0.85, 0.35, 1] 
+          duration: 1.6, 
+          delay: 0.05,
+          ease: [0.08, 0.9, 0.3, 1] 
         }}
-        className="absolute rounded-full border-teal-200/90 shadow-[0_0_80px_#6ee7b7] pointer-events-none"
+        className="absolute rounded-full border-teal-200 shadow-[0_0_90px_#10b981] pointer-events-none"
         style={{
           width: '280px',
           height: '280px',
@@ -82,17 +102,17 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
 
       {/* 3. Third Atmospheric Deep Emerald Pressure Wave */}
       <motion.div
-        initial={{ scale: 0.4, opacity: 0.85 }}
+        initial={{ scale: 0.2, opacity: 0.9 }}
         animate={{ 
-          scale: [0.4, 4.2], 
-          opacity: [0.85, 0] 
+          scale: [0.2, 4.8], 
+          opacity: [0.9, 0] 
         }}
         transition={{ 
-          duration: 2.6, 
-          delay: 0.2,
+          duration: 1.8, 
+          delay: 0.08,
           ease: "easeOut" 
         }}
-        className="absolute rounded-full bg-radial from-emerald-400/40 via-teal-500/20 to-transparent blur-xl pointer-events-none"
+        className="absolute rounded-full bg-radial from-emerald-300/60 via-teal-500/30 to-transparent blur-2xl pointer-events-none"
         style={{
           width: '360px',
           height: '360px',
