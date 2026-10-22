@@ -361,41 +361,42 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             )}
 
             {/* ============================================================ */}
-            {/* LUMINOUS COSMIC PARTICLES STREAMING ALONG THE LIGHT BEAMS */}
-            {/* Card virisal-la irunthu light streams vazhiya veliya parakkira particles */}
+            {/* LUMINOUS COSMIC PARTICLES STRICTLY INSIDE THE LIGHT BEAMS */}
+            {/* Light shaft-oda centerline kulla mattum thaan slow-ah travel aagum */}
             {/* ============================================================ */}
             {crackStage >= 3 && (
               <g key="crack-light-particles">
                 {[
-                  // Stream along Beam 1 (Top-Right): origin (121, 168) -> (750, -220)
-                  { x0: 121, y0: 168, x1: 720, y1: -220, r: 2.5, d: 0.05, dur: 0.85 },
-                  { x0: 130, y0: 160, x1: 820, y1: -120, r: 1.8, d: 0.35, dur: 0.95 },
-                  { x0: 115, y0: 175, x1: 650, y1: -320, r: 2.0, d: 0.65, dur: 0.90 },
-                  { x0: 125, y0: 165, x1: 780, y1: -180, r: 1.5, d: 1.05, dur: 0.80 },
-                  
-                  // Stream along Beam 2 (Bottom-Left): origin (93, 216) -> (-450, 750)
-                  { x0: 93, y0: 216, x1: -450, y1: 750, r: 2.4, d: 0.12, dur: 0.90 },
-                  { x0: 88, y0: 230, x1: -520, y1: 680, r: 1.6, d: 0.45, dur: 0.95 },
-                  { x0: 98, y0: 205, x1: -380, y1: 820, r: 2.1, d: 0.78, dur: 0.85 },
-                  { x0: 90, y0: 220, x1: -480, y1: 720, r: 1.7, d: 1.15, dur: 0.82 },
+                  // Stream along Beam 1 (Top-Right): Centerline from (121, 168) -> (3700, -1900)
+                  { x0: 121, y0: 168, x1: 2200, y1: -1100, r: 2.2, d: 0.1, dur: 3.4 },
+                  { x0: 125, y0: 165, x1: 2400, y1: -1250, r: 1.6, d: 1.2, dur: 3.6 },
+                  { x0: 118, y0: 170, x1: 2000, y1: -950, r: 1.9, d: 2.1, dur: 3.8 },
 
-                  // Stream along Top-Left & Top-Center (Tap 4)
+                  // Stream along Beam 2 (Bottom-Left): Centerline from (93, 216) -> (-2900, 4150)
+                  { x0: 93, y0: 216, x1: -1800, y1: 2600, r: 2.2, d: 0.2, dur: 3.5 },
+                  { x0: 90, y0: 220, x1: -2000, y1: 2900, r: 1.6, d: 1.4, dur: 3.7 },
+                  { x0: 96, y0: 212, x1: -1600, y1: 2300, r: 1.8, d: 2.3, dur: 3.9 },
+
+                  // Tap 4 extra streams - Strictly along beam centerlines:
                   ...(crackStage >= 4 ? [
-                    { x0: 60, y0: 104, x1: -520, y1: -320, r: 2.2, d: 0.15, dur: 0.80 },
-                    { x0: 50, y0: 95, x1: -460, y1: -420, r: 1.6, d: 0.55, dur: 0.85 },
-                    { x0: 106, y0: 71, x1: 20, y1: -580, r: 2.4, d: 0.68, dur: 0.78 },
-                    { x0: 104, y0: 65, x1: -180, y1: -520, r: 1.8, d: 1.00, dur: 0.82 },
+                    // Top-Left beam (76,100 -> 45,108): Centerline towards (-2900, -3100)
+                    { x0: 60, y0: 104, x1: -1800, y1: -1900, r: 2.0, d: 0.3, dur: 3.3 },
+                    { x0: 55, y0: 106, x1: -1600, y1: -1700, r: 1.5, d: 1.5, dur: 3.6 },
 
-                    // Stream along Mid-Right & Lower-Right (Tap 4)
-                    { x0: 173, y0: 143, x1: 780, y1: 220, r: 2.0, d: 0.28, dur: 0.85 },
-                    { x0: 180, y0: 150, x1: 720, y1: 320, r: 1.5, d: 0.62, dur: 0.90 },
-                    { x0: 105, y0: 261, x1: 680, y1: 740, r: 2.3, d: 0.85, dur: 0.82 },
-                    { x0: 115, y0: 270, x1: 580, y1: 820, r: 1.7, d: 1.25, dur: 0.88 },
+                    // Mid-Right beam (165,138 -> 182,148): Centerline towards (4350, 1050)
+                    { x0: 173, y0: 143, x1: 2500, y1: 600, r: 1.9, d: 0.4, dur: 3.4 },
 
-                    // Stream along Mid-Left & Bottom-Spine (Tap 4)
-                    { x0: 33, y0: 164, x1: -600, y1: 240, r: 2.1, d: 1.05, dur: 0.80 },
-                    { x0: 99, y0: 375, x1: 220, y1: 880, r: 2.5, d: 1.35, dur: 0.78 },
-                    { x0: 96, y0: 360, x1: -20, y1: 880, r: 1.8, d: 1.50, dur: 0.82 }
+                    // Top-Spine beam (104,65 -> 108,78): Centerline straight UP towards (-200, -4000)
+                    { x0: 106, y0: 71, x1: -100, y1: -2500, r: 2.1, d: 0.6, dur: 3.2 },
+
+                    // Lower-Right beam (85,248 -> 126,274): Centerline towards (3400, 4500)
+                    { x0: 105, y0: 261, x1: 2100, y1: 2800, r: 2.0, d: 0.8, dur: 3.5 },
+
+                    // Mid-Left beam (40,156 -> 26,172): Centerline towards (-4350, 700)
+                    { x0: 33, y0: 164, x1: -2400, y1: 400, r: 1.9, d: 1.0, dur: 3.4 },
+
+                    // Bottom-Spine beam (96,350 -> 102,400): Centerline straight DOWN towards (700, 4500)
+                    { x0: 99, y0: 375, x1: 450, y1: 2800, r: 2.1, d: 1.2, dur: 3.3 }
                   ] : [])
                 ].map((p, idx) => (
                   <motion.circle
@@ -403,19 +404,19 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
                     r={p.r}
                     fill="#ffffff"
                     filter="url(#outwardBeamGlow)"
-                    initial={{ cx: p.x0, cy: p.y0, opacity: 0, scale: 0.4 }}
+                    initial={{ cx: p.x0, cy: p.y0, opacity: 0, scale: 0.5 }}
                     animate={{ 
-                      cx: [p.x0, p.x0 + (p.x1 - p.x0) * 0.4, p.x1],
-                      cy: [p.y0, p.y0 + (p.y1 - p.y0) * 0.4, p.y1],
-                      opacity: [0, 1, 0.8, 0],
-                      scale: [0.4, 1.4, 1.0, 0.2]
+                      cx: [p.x0, p.x0 + (p.x1 - p.x0) * 0.35, p.x1],
+                      cy: [p.y0, p.y0 + (p.y1 - p.y0) * 0.35, p.y1],
+                      opacity: [0, 0.95, 0.85, 0],
+                      scale: [0.5, 1.2, 1.0, 0.3]
                     }}
                     transition={{
                       duration: p.dur,
                       delay: p.d,
                       repeat: Infinity,
-                      repeatDelay: 0.2,
-                      ease: [0.15, 0.8, 0.25, 1]
+                      repeatDelay: 0.4,
+                      ease: "linear"
                     }}
                   />
                 ))}
