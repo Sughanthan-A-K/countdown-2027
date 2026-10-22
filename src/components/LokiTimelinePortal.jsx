@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
  */
 export default function LokiTimelinePortal() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-30 overflow-hidden">
+    <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
       {/* 1. Full Page Deep Emerald Atmospheric Glow & Reflection (Flooding the entire screen like in reference) */}
       <motion.div 
         initial={{ opacity: 0 }}
