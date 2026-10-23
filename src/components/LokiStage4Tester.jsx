@@ -302,11 +302,11 @@ export default function LokiStage4Tester({
                 className={`rounded-lg border transition-all ${
                   isSolo
                     ? 'bg-amber-950/70 border-amber-500/90 text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.3)] ring-1 ring-amber-400/50'
-                    : isViewed
-                    ? 'bg-sky-950/40 border-sky-500/60 text-sky-100 shadow-[0_0_8px_rgba(14,165,233,0.18)]'
                     : isChecked
-                    ? 'bg-emerald-950/40 border-emerald-500/50 hover:border-emerald-400 text-neutral-100 shadow-[0_0_6px_rgba(16,185,129,0.15)]'
-                    : 'bg-neutral-950/50 border-neutral-800/80 text-neutral-500 opacity-60 hover:opacity-100'
+                    ? (isViewed 
+                        ? 'bg-sky-950/40 border-sky-500/60 text-sky-100 shadow-[0_0_8px_rgba(14,165,233,0.18)]' 
+                        : 'bg-emerald-950/40 border-emerald-500/50 hover:border-emerald-400 text-neutral-100 shadow-[0_0_6px_rgba(16,185,129,0.15)]')
+                    : 'bg-rose-950/25 border-rose-900/50 hover:border-rose-700/70 text-rose-200/80 shadow-[0_0_6px_rgba(244,63,94,0.12)]'
                 }`}
               >
                 <div 
@@ -317,19 +317,29 @@ export default function LokiStage4Tester({
                     <span className={`text-[10px] font-mono font-bold w-5 h-5 flex-shrink-0 flex items-center justify-center rounded transition-all ${
                       isSolo
                         ? 'bg-amber-500 text-black font-extrabold shadow-[0_0_6px_#f59e0b]'
-                        : isViewed
-                        ? 'bg-sky-500 text-black font-bold shadow-[0_0_6px_rgba(14,165,233,0.6)]'
-                        : isChecked 
-                        ? 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60' 
-                        : 'bg-neutral-800 text-neutral-400'
+                        : isChecked
+                        ? (isViewed 
+                            ? 'bg-sky-500 text-black font-bold shadow-[0_0_6px_rgba(14,165,233,0.6)]' 
+                            : 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60')
+                        : 'bg-rose-900/80 text-rose-300 border border-rose-600/50 shadow-[0_0_4px_rgba(244,63,94,0.4)]'
                     }`}>
                       {beam.id}
                     </span>
                     <div className="truncate flex-1">
-                      <div className="text-[10px] font-medium leading-tight truncate">
-                        {beam.name}
+                      <div className="text-[10px] font-medium leading-tight truncate flex items-center gap-1">
+                        <span className="truncate">{beam.name}</span>
+                        {!isChecked && (
+                          <span className="text-[8px] px-1 py-0.2 rounded bg-rose-950 text-rose-400 border border-rose-800/60 font-sans font-semibold">
+                            Off
+                          </span>
+                        )}
+                        {isChecked && isViewed && (
+                          <span className="text-[8px] px-1 py-0.2 rounded bg-sky-950 text-sky-300 border border-sky-700/60 font-sans font-semibold">
+                            Viewed
+                          </span>
+                        )}
                       </div>
-                      <div className="text-[8px] text-neutral-400 font-mono">
+                      <div className={`text-[8px] font-mono ${isChecked ? 'text-neutral-400' : 'text-rose-400/60'}`}>
                         {beam.delay}
                       </div>
                     </div>
@@ -368,7 +378,7 @@ export default function LokiStage4Tester({
                     </button>
 
                     {/* Checkbox */}
-                    <div className={isChecked ? 'text-emerald-400' : 'text-neutral-600'}>
+                    <div className={isChecked ? 'text-emerald-400' : 'text-rose-400/80'}>
                       {isChecked ? <CheckSquare size={13} /> : <Square size={13} />}
                     </div>
                   </div>
@@ -417,13 +427,13 @@ export default function LokiStage4Tester({
               </div>
 
               {/* RIGHT SIDE: UNCHECKED BEAMS */}
-              <div className="bg-neutral-950/40 p-2 rounded-xl border border-neutral-800 flex flex-col">
-                <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-neutral-800">
-                  <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold flex items-center gap-1">
-                    <Square size={11} /> Unchecked ({unselectedBeams.length})
+              <div className="bg-neutral-950/40 p-2 rounded-xl border border-rose-900/40 flex flex-col">
+                <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-rose-950">
+                  <span className="text-[10px] uppercase tracking-wider text-rose-400 font-semibold flex items-center gap-1">
+                    <Square size={11} /> Disabled / Off ({unselectedBeams.length})
                   </span>
-                  <span className="text-[8px] text-neutral-500 font-mono">
-                    RIGHT SIDE
+                  <span className="text-[8px] text-rose-500/70 font-mono">
+                    OFF (RED)
                   </span>
                 </div>
                 {unselectedBeams.length === 0 ? (
