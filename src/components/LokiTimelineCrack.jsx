@@ -24,8 +24,14 @@ import { motion } from 'framer-motion';
  *   - 1.0s: Final perimeter cracks reach outer corners.
  *   - 1.5s: Glass completely shatters into the portal!
  */
-export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null }) {
+export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, activeBeams = null }) {
   if (crackStage <= 0) return null;
+
+  // Helper to check if a specific beam is enabled (null = all enabled by default)
+  const isBeamActive = (beamId) => {
+    if (!activeBeams) return true;
+    return activeBeams.includes(beamId);
+  };
 
   // If stage4Step is explicitly controlled (e.g. 1 to 4), use it; otherwise default to full normal behavior (null = full)
   const isStepMode = crackStage === 4 && stage4Step !== null;
@@ -341,128 +347,152 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null })
             {showOuterBeams && (
               <g key="tap-4-cascading-light-shafts">
                 {/* --- 1. SURROUNDING OUTER CRACKS RADIATE FIRST WITH DELAYS (0.6s - 2.6s) --- */}
-                {/* Upper-Left Corner Beam (0.65s) */}
-                <motion.polygon
-                  points="76,100 45,108 -3400,-2600 -2400,-3600"
-                  fill="url(#outwardBeamUpperLeft)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.25, delay: isStepMode ? 0 : 0.65, ease: "easeOut" }}
-                />
+                {/* Beam 1: Upper-Left Corner Beam (0.65s) */}
+                {isBeamActive(1) && (
+                  <motion.polygon
+                    points="76,100 45,108 -3400,-2600 -2400,-3600"
+                    fill="url(#outwardBeamUpperLeft)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.9 }}
+                    transition={{ duration: 0.25, delay: isStepMode ? 0 : 0.65, ease: "easeOut" }}
+                  />
+                )}
 
-                {/* Blade Beam Mid-Right (1.20s) */}
-                <motion.polygon
-                  points="165,138 4200,300 4500,1800 182,148"
-                  fill="url(#outwardBeamMidRightSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.25, delay: isStepMode ? 0.05 : 1.20, ease: "easeOut" }}
-                />
+                {/* Beam 2: Blade Beam Mid-Right (1.20s) */}
+                {isBeamActive(2) && (
+                  <motion.polygon
+                    points="165,138 4200,300 4500,1800 182,148"
+                    fill="url(#outwardBeamMidRightSeam)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.9 }}
+                    transition={{ duration: 0.25, delay: isStepMode ? 0.05 : 1.20, ease: "easeOut" }}
+                  />
+                )}
 
-                {/* Upper-Right Corner Gap (1.75s) */}
-                <motion.polygon
-                  points="168,22 200,5 3800,-1600 3200,-2400"
-                  fill="url(#microBeamTopRight)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.22, delay: isStepMode ? 0.1 : 1.75, ease: "easeOut" }}
-                />
+                {/* Beam 3: Upper-Right Corner Gap (1.75s) */}
+                {isBeamActive(3) && (
+                  <motion.polygon
+                    points="168,22 200,5 3800,-1600 3200,-2400"
+                    fill="url(#microBeamTopRight)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.85 }}
+                    transition={{ duration: 0.22, delay: isStepMode ? 0.1 : 1.75, ease: "easeOut" }}
+                  />
+                )}
 
-                {/* Lower-Right Corner Beam (2.20s) */}
-                <motion.polygon
-                  points="85,248 126,274 3800,4200 3000,4800"
-                  fill="url(#outwardBeamLowerRightSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.20, delay: isStepMode ? 0.15 : 2.20, ease: "easeOut" }}
-                />
+                {/* Beam 4: Lower-Right Corner Beam (2.20s) */}
+                {isBeamActive(4) && (
+                  <motion.polygon
+                    points="85,248 126,274 3800,4200 3000,4800"
+                    fill="url(#outwardBeamLowerRightSeam)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.88 }}
+                    transition={{ duration: 0.20, delay: isStepMode ? 0.15 : 2.20, ease: "easeOut" }}
+                  />
+                )}
 
-                {/* Bottom-Left Corner Gap (2.55s) */}
-                <motion.polygon
-                  points="14,382 0,400 -2600,4800 -3400,4000"
-                  fill="url(#microBeamBottomCorner)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.18, delay: isStepMode ? 0.2 : 2.55, ease: "easeOut" }}
-                />
+                {/* Beam 5: Bottom-Left Corner Gap (2.55s) */}
+                {isBeamActive(5) && (
+                  <motion.polygon
+                    points="14,382 0,400 -2600,4800 -3400,4000"
+                    fill="url(#microBeamBottomCorner)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.85 }}
+                    transition={{ duration: 0.18, delay: isStepMode ? 0.2 : 2.55, ease: "easeOut" }}
+                  />
+                )}
 
-                {/* South Spine Off-Center Beam (2.85s) */}
-                <motion.polygon
-                  points="96,350 102,400 1200,4500 200,4500"
-                  fill="url(#outwardBeamBottomSpineSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.14, delay: isStepMode ? 0.25 : 2.85, ease: "easeOut" }}
-                />
+                {/* Beam 6: South Spine Off-Center Beam (2.85s) */}
+                {isBeamActive(6) && (
+                  <motion.polygon
+                    points="96,350 102,400 1200,4500 200,4500"
+                    fill="url(#outwardBeamBottomSpineSeam)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.92 }}
+                    transition={{ duration: 0.14, delay: isStepMode ? 0.25 : 2.85, ease: "easeOut" }}
+                  />
+                )}
 
                 {/* --- 2. CENTER CRACKS BURST RAPID & FAST (3.05s - 3.48s) --- */}
                 {showCenterBursts && (
                   <>
-                    {/* Upper Center Spine Fissure (3.05s) */}
-                    <motion.polygon
-                      points="108,78 -3800,-3200 -4200,-1800 92,122"
-                      fill="url(#beamRedLine2)"
-                      filter="url(#outwardBeamGlow)"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.92 }}
-                      transition={{ duration: 0.10, delay: isStepMode ? 0 : 3.05, ease: "easeOut" }}
-                    />
+                    {/* Beam 7: Upper Center Spine Fissure (3.05s) */}
+                    {isBeamActive(7) && (
+                      <motion.polygon
+                        points="108,78 -3800,-3200 -4200,-1800 92,122"
+                        fill="url(#beamRedLine2)"
+                        filter="url(#outwardBeamGlow)"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.92 }}
+                        transition={{ duration: 0.10, delay: isStepMode ? 0 : 3.05, ease: "easeOut" }}
+                      />
+                    )}
 
-                    {/* Steep Upward Top Spine Shaft (3.18s) */}
-                    <motion.polygon
-                      points="104,65 108,78 400,-4200 -800,-3800"
-                      fill="url(#outwardBeamTopSpine)"
-                      filter="url(#outwardBeamGlow)"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.92 }}
-                      transition={{ duration: 0.08, delay: isStepMode ? 0.05 : 3.18, ease: "easeOut" }}
-                    />
+                    {/* Beam 8: Steep Upward Top Spine Shaft (3.18s) */}
+                    {isBeamActive(8) && (
+                      <motion.polygon
+                        points="104,65 108,78 400,-4200 -800,-3800"
+                        fill="url(#outwardBeamTopSpine)"
+                        filter="url(#outwardBeamGlow)"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.92 }}
+                        transition={{ duration: 0.08, delay: isStepMode ? 0.05 : 3.18, ease: "easeOut" }}
+                      />
+                    )}
 
-                    {/* Left side Center Fissure (3.28s) */}
-                    <motion.polygon
-                      points="92,122 64,146 -4500,-600 -4200,-1800"
-                      fill="url(#climaxLeftInfiniteBeam)"
-                      filter="url(#outwardBeamGlow)"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.95 }}
-                      transition={{ duration: 0.08, delay: isStepMode ? 0.1 : 3.28, ease: "easeOut" }}
-                    />
+                    {/* Beam 9: Left side Center Fissure (3.28s) */}
+                    {isBeamActive(9) && (
+                      <motion.polygon
+                        points="92,122 64,146 -4500,-600 -4200,-1800"
+                        fill="url(#climaxLeftInfiniteBeam)"
+                        filter="url(#outwardBeamGlow)"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.95 }}
+                        transition={{ duration: 0.08, delay: isStepMode ? 0.1 : 3.28, ease: "easeOut" }}
+                      />
+                    )}
 
-                    {/* Center Fissures Red Line 1 (3.36s) */}
-                    <motion.polygon
-                      points="92,122 -4500,600 -4500,1800 102,185"
-                      fill="url(#beamRedLine1)"
-                      filter="url(#outwardBeamGlow)"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.95 }}
-                      transition={{ duration: 0.07, delay: isStepMode ? 0.15 : 3.36, ease: "easeOut" }}
-                    />
+                    {/* Beam 10: Center Fissures Red Line 1 (3.36s) */}
+                    {isBeamActive(10) && (
+                      <motion.polygon
+                        points="92,122 -4500,600 -4500,1800 102,185"
+                        fill="url(#beamRedLine1)"
+                        filter="url(#outwardBeamGlow)"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.95 }}
+                        transition={{ duration: 0.07, delay: isStepMode ? 0.15 : 3.36, ease: "easeOut" }}
+                      />
+                    )}
 
-                    {/* Center Fissures Red Line 5 (3.42s) */}
-                    <motion.polygon
-                      points="140,152 4200,2400 4500,3800 155,210"
-                      fill="url(#beamRedLine5)"
-                      filter="url(#outwardBeamGlow)"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.95 }}
-                      transition={{ duration: 0.06, delay: isStepMode ? 0.2 : 3.42, ease: "easeOut" }}
-                    />
+                    {/* Beam 11: Center Fissures Red Line 5 (3.42s) */}
+                    {isBeamActive(11) && (
+                      <motion.polygon
+                        points="140,152 4200,2400 4500,3800 155,210"
+                        fill="url(#beamRedLine5)"
+                        filter="url(#outwardBeamGlow)"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.95 }}
+                        transition={{ duration: 0.06, delay: isStepMode ? 0.2 : 3.42, ease: "easeOut" }}
+                      />
+                    )}
 
-                    {/* FINAL MEGA CENTER CLIMAX BEAM (3.48s): Central Hub Peak Laser -> Directly triggering 3.6s Shatter! */}
-                    <motion.polygon
-                      points="102,185 140,152 4800,-400 3800,-1600"
-                      fill="url(#climaxCenterInfiniteBeam)"
-                      filter="url(#outwardBeamGlow)"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1.0 }}
-                      transition={{ duration: 0.06, delay: isStepMode ? 0.25 : 3.48, ease: "easeOut" }}
-                    />
+                    {/* Beam 12: FINAL MEGA CENTER CLIMAX BEAM (3.48s) */}
+                    {isBeamActive(12) && (
+                      <motion.polygon
+                        points="102,185 140,152 4800,-400 3800,-1600"
+                        fill="url(#climaxCenterInfiniteBeam)"
+                        filter="url(#outwardBeamGlow)"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1.0 }}
+                        transition={{ duration: 0.06, delay: isStepMode ? 0.25 : 3.48, ease: "easeOut" }}
+                      />
+                    )}
                   </>
                 )}
               </g>

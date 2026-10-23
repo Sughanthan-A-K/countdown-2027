@@ -308,6 +308,36 @@ function App() {
   const [showStage4Tester, setShowStage4Tester] = useState(false);
   const [stage4StepIndex, setStage4StepIndex] = useState(1);
   const [isTesterAutoPlaying, setIsTesterAutoPlaying] = useState(false);
+  // Active light beams control in Stage 4 (null = all active by default, or array of active beam IDs 1-12)
+  const [activeBeams, setActiveBeams] = useState(() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  const [currentSoloBeam, setCurrentSoloBeam] = useState(null);
+
+  const handleToggleBeam = (beamId) => {
+    setCurrentSoloBeam(null);
+    setActiveBeams(prev => {
+      const list = prev || [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+      if (list.includes(beamId)) {
+        return list.filter(id => id !== beamId);
+      } else {
+        return [...list, beamId].sort((a, b) => a - b);
+      }
+    });
+  };
+
+  const handleSelectAllBeams = () => {
+    setCurrentSoloBeam(null);
+    setActiveBeams([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  };
+
+  const handleDeselectAllBeams = () => {
+    setCurrentSoloBeam(null);
+    setActiveBeams([]);
+  };
+
+  const handleSetSoloBeam = (beamId) => {
+    setCurrentSoloBeam(beamId);
+    setActiveBeams([beamId]);
+  };
 
   // Keyboard shortcut Shift+T to toggle stage 4 tester
   useEffect(() => {
@@ -1657,6 +1687,7 @@ function App() {
                       isDec16Blocked={page.index === 0 && isDec16Card}
                       lokiCrackStage={page.index === 0 ? lokiCrackStage : 0}
                       stage4Step={page.index === 0 && showStage4Tester && lokiCrackStage === 4 ? stage4StepIndex : null}
+                      activeBeams={page.index === 0 && showStage4Tester && lokiCrackStage === 4 ? activeBeams : null}
                       isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
@@ -1800,6 +1831,12 @@ function App() {
           onSetStepIndex={handleTesterSetStep}
           isAutoPlaying={isTesterAutoPlaying}
           onToggleAutoPlay={handleToggleAutoPlay}
+          activeBeams={activeBeams}
+          onToggleBeam={handleToggleBeam}
+          onSelectAllBeams={handleSelectAllBeams}
+          onDeselectAllBeams={handleDeselectAllBeams}
+          currentSoloBeam={currentSoloBeam}
+          onSetSoloBeam={handleSetSoloBeam}
           onClose={() => setShowStage4Tester(false)}
         />
       )}
