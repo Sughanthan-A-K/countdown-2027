@@ -16,7 +16,8 @@ function LokiLifePowerSpread({
   tapRatio = 0.5, 
   isEnergized, 
   isFinalBranch = false,
-  allEnergizedStage = false 
+  allEnergizedStage = false,
+  scaleFactor = 1.0
 }) {
   if (!isEnergized || !branchPathRef.current) return null;
 
@@ -48,14 +49,17 @@ function LokiLifePowerSpread({
   const leftDistance = tapLen;
   const duration = isFinalBranch ? 6.5 : 12.0;
 
+  // Scale factor: expands the venom layers to match branch thickness!
+  const s = scaleFactor;
+
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Behind the pulse: Awakened subtle living dark-green body (No marks at tap point - smooth seamless fade-in) */}
+      {/* 1. Behind the pulse: Awakened subtle living dark-green body scaled to branch thickness */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#064e3b"
-        strokeWidth="9"
+        strokeWidth={9 * s}
         strokeLinecap="butt"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
@@ -66,7 +70,7 @@ function LokiLifePowerSpread({
         d={pathD}
         fill="none"
         stroke="#047857"
-        strokeWidth="4"
+        strokeWidth={4 * s}
         strokeLinecap="butt"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
@@ -74,21 +78,21 @@ function LokiLifePowerSpread({
         opacity={0.65}
       />
 
-      {/* 2. The Traveling Pulse - ALL LAYERS SAME UNIFORM LENGTH with Venom-tendril organic edge */}
+      {/* 2. The Traveling Pulse - ALL LAYERS PROPORTIONAL TO BRANCH SIZE with Venom-tendril organic edge */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
         {/* Layer A: Atmospheric emerald volumetric aura bloom */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#10b981"
-          strokeWidth="20"
+          strokeWidth={20 * s}
           strokeLinecap="butt"
           strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
           initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
           animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
           transition={{ duration, ease: "easeOut" }}
           opacity={0.55}
-          style={{ filter: "blur(5px)" }}
+          style={{ filter: `blur(${Math.max(3, 5 * s)}px)` }}
         />
 
         {/* Layer B: Deep vibrant emerald/lime body */}
@@ -96,7 +100,7 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#22c55e"
-          strokeWidth="11"
+          strokeWidth={11 * s}
           strokeLinecap="butt"
           strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
           initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
@@ -110,7 +114,7 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#84cc16"
-          strokeWidth="6"
+          strokeWidth={6 * s}
           strokeLinecap="butt"
           strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
           initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
@@ -124,7 +128,7 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth="2.5"
+          strokeWidth={2.5 * s}
           strokeLinecap="butt"
           strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
           initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
@@ -149,18 +153,18 @@ function LokiLifePowerSpread({
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#10b981"
-            strokeWidth="32"
+            strokeWidth={32 * s}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.75, 0.6] }}
             transition={{ duration: 1.2, ease: "easeOut" }}
-            style={{ filter: "blur(8px)" }}
+            style={{ filter: `blur(${Math.max(4, 8 * s)}px)` }}
           />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#4ade80"
-            strokeWidth="15"
+            strokeWidth={15 * s}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.95] }}
@@ -170,7 +174,7 @@ function LokiLifePowerSpread({
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#ffffff"
-            strokeWidth="3"
+            strokeWidth={3 * s}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.9] }}
@@ -193,7 +197,8 @@ function DraggableBranch({
   allEnergizedStage,
   isFinalBranch = false,
   flyOut3D = false,
-  flyOutDelay = 0
+  flyOutDelay = 0,
+  scaleFactor = 1.0
 }) {
   const targetX = useMotionValue(0);
   const targetY = useMotionValue(0);
@@ -320,6 +325,7 @@ function DraggableBranch({
             isEnergized={true} 
             isFinalBranch={isFinalBranch}
             allEnergizedStage={allEnergizedStage}
+            scaleFactor={scaleFactor}
           />
         )}
       </motion.g>
@@ -614,6 +620,7 @@ export default function LokiTimelinePortal() {
           isFinalBranch={lastTappedBranchId === 'branch-1'}
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={0}
+          scaleFactor={2.2}
           windConfig={{
             y: [-14, 14, -14],
             x: [-8, 8, -8],
@@ -698,6 +705,7 @@ export default function LokiTimelinePortal() {
           isFinalBranch={lastTappedBranchId === 'branch-2'}
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={0.25}
+          scaleFactor={0.55}
           windConfig={{
             y: [10, -10, 10],
             x: [5, -5, 5],
@@ -752,6 +760,7 @@ export default function LokiTimelinePortal() {
           isFinalBranch={lastTappedBranchId === 'branch-3'}
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={0.5}
+          scaleFactor={0.75}
           windConfig={{
             y: [-14, 14, -14],
             x: [-6, 6, -6],
@@ -804,6 +813,7 @@ export default function LokiTimelinePortal() {
           isFinalBranch={lastTappedBranchId === 'branch-4'}
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={0.75}
+          scaleFactor={0.5}
           windConfig={{
             x: [-10, 10, -10],
             y: [8, -8, 8],
@@ -857,6 +867,7 @@ export default function LokiTimelinePortal() {
           isFinalBranch={lastTappedBranchId === 'branch-5'}
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={1.0}
+          scaleFactor={0.55}
           windConfig={{
             y: [10, -10, 10],
             x: [6, -6, 6],
