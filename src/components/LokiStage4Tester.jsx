@@ -71,9 +71,15 @@ export default function LokiStage4Tester({
     offsetY: 0
   };
 
-  const handleBeamToggle = (e, beamId) => {
+  const handleRowTapPreview = (e, beamId) => {
     e.stopPropagation();
     setViewedBeams(prev => new Set(prev).add(beamId));
+    // Tapping the row toggles Solo View: if already viewing, turn off back to normal; if not, preview this beam!
+    onSetSoloBeam(beamId);
+  };
+
+  const handleCheckboxToggle = (e, beamId) => {
+    e.stopPropagation();
     onToggleBeam(beamId);
   };
 
@@ -349,12 +355,14 @@ export default function LokiStage4Tester({
                 }`}
               >
                 <div 
-                  onClick={(e) => handleBeamToggle(e, beam.id)}
+                  onClick={(e) => handleRowTapPreview(e, beam.id)}
                   className="flex items-center justify-between p-1.5 cursor-pointer"
                 >
                   <div className="flex items-center gap-1.5 overflow-hidden flex-1">
                     <span className={`text-[10px] font-mono font-bold w-5 h-5 flex-shrink-0 flex items-center justify-center rounded transition-all ${
-                      isChecked 
+                      isSolo
+                        ? 'bg-amber-500 text-black font-extrabold shadow-[0_0_8px_#f59e0b]'
+                        : isChecked 
                         ? (isViewed 
                             ? 'bg-sky-500 text-black font-bold shadow-[0_0_6px_rgba(14,165,233,0.6)]' 
                             : 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60')
@@ -365,7 +373,12 @@ export default function LokiStage4Tester({
                     <div className="truncate flex-1">
                       <div className="text-[10px] font-medium leading-tight truncate flex items-center gap-1">
                         <span className="truncate">{beam.name}</span>
-                        {isChecked && isViewed && (
+                        {isSolo && (
+                          <span className="text-[8px] px-1 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-600 font-sans font-bold animate-pulse">
+                            Viewing
+                          </span>
+                        )}
+                        {!isSolo && isViewed && (
                           <span className="text-[8px] px-1 py-0.2 rounded bg-sky-950 text-sky-300 border border-sky-700/60 font-sans font-semibold">
                             Viewed
                           </span>
@@ -377,7 +390,7 @@ export default function LokiStage4Tester({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 pl-1">
+                  <div className="flex items-center gap-1.5 pl-1">
                     {/* Note Button */}
                     <button
                       onClick={(e) => {
@@ -394,10 +407,14 @@ export default function LokiStage4Tester({
                       <FileText size={11} />
                     </button>
 
-                    {/* Checkbox Icon */}
-                    <div className={isChecked ? 'text-emerald-400' : 'text-neutral-600'}>
+                    {/* Dedicated Checkbox (Clicking this alone checks/unchecks into 3D Angle Tool) */}
+                    <button
+                      onClick={(e) => handleCheckboxToggle(e, beam.id)}
+                      title={isChecked ? "Uncheck (remove from 3D Angle list)" : "Check (add to 3D Angle list)"}
+                      className={`p-1 rounded hover:bg-neutral-800 transition-colors ${isChecked ? 'text-emerald-400' : 'text-neutral-500 hover:text-neutral-300'}`}
+                    >
                       {isChecked ? <CheckSquare size={14} /> : <Square size={14} />}
-                    </div>
+                    </button>
                   </div>
                 </div>
 
