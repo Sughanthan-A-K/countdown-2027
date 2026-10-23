@@ -9,12 +9,19 @@ export const STAGE_4_STEPS = [
 ];
 
 export const LIGHT_BEAMS_LIST = [
+  // --- TAP 3 VOLUMETRIC CONE BEAMS ---
+  { id: 101, name: "Tap 3 Beam 1: Upper-Right", delay: "0.00s", origin: "Center Seam (102,185 -> 140,152)", group: "Tap 3" },
+  { id: 102, name: "Tap 3 Beam 2: Lower-Left", delay: "0.03s", origin: "Spine Seam (102,185 -> 85,248)", group: "Tap 3" },
+
+  // --- TAP 4 OUTER EDGES & CORNERS ---
   { id: 1, name: "Upper-Left Corner Beam", delay: "0.65s", origin: "Top-Left (45,108)", group: "Outer" },
   { id: 2, name: "Blade Beam Mid-Right", delay: "1.20s", origin: "Right Edge (182,148)", group: "Outer" },
   { id: 3, name: "Upper-Right Corner Gap", delay: "1.75s", origin: "Top-Right (200,5)", group: "Outer" },
   { id: 4, name: "Lower-Right Corner Beam", delay: "2.20s", origin: "Bottom-Right (126,274)", group: "Outer" },
   { id: 5, name: "Bottom-Left Corner Gap", delay: "2.55s", origin: "Bottom-Left (0,400)", group: "Outer" },
   { id: 6, name: "South Spine Off-Center", delay: "2.85s", origin: "Bottom-Center (102,400)", group: "Outer" },
+
+  // --- TAP 4 CENTER CLIMAX BURSTS ---
   { id: 7, name: "Upper Center Spine Fissure", delay: "3.05s", origin: "Center-Up (92,122)", group: "Center" },
   { id: 8, name: "Steep Upward Top Spine Shaft", delay: "3.18s", origin: "Top-Spine (108,78)", group: "Center" },
   { id: 9, name: "Left-side Center Fissure", delay: "3.28s", origin: "Mid-Left (64,146)", group: "Center" },

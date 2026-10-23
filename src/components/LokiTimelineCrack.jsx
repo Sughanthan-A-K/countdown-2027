@@ -320,24 +320,28 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
             </defs>
 
             {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding INFINITELY across screen --- */}
-            <motion.polygon
-              points="102,185 140,152 4200,-1600 3200,-2200"
-              fill="url(#outwardBeam1)"
-              filter="url(#outwardBeamGlow)"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.1, ease: "easeOut" }}
-            />
+            {isBeamActive(101) && (
+              <motion.polygon
+                points="102,185 140,152 4200,-1600 3200,-2200"
+                fill="url(#outwardBeam1)"
+                filter="url(#outwardBeamGlow)"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.1, ease: "easeOut" }}
+              />
+            )}
 
             {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
-            <motion.polygon
-              points="102,185 85,248 -2600,4500 -3200,3800"
-              fill="url(#outwardBeam2)"
-              filter="url(#outwardBeamGlow)"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
-            />
+            {isBeamActive(102) && (
+              <motion.polygon
+                points="102,185 85,248 -2600,4500 -3200,3800"
+                fill="url(#outwardBeam2)"
+                filter="url(#outwardBeamGlow)"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
+              />
+            )}
 
             {/* ============================================================ */}
             {/* TAP 4: NATURAL PROGRESSION */}
