@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight, X, CheckSquare, Square, Eye, FileText, CheckCircle2 } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight, X, CheckSquare, Square, Eye, FileText, CheckCircle2, Compass, Copy, Check } from 'lucide-react';
 
 export const STAGE_4_STEPS = [
   { id: 1, name: "4.1: Edge & Corner Beams", desc: "Outer cracks emit light shafts (0.6s - 2.85s)" },
@@ -43,6 +43,9 @@ export default function LokiStage4Tester({
   onDeselectAllBeams,
   currentSoloBeam,
   onSetSoloBeam,
+  beamTransforms = {},
+  onUpdateBeamTransform,
+  onResetBeamTransform,
   onClose
 }) {
   // Track beams that user has inspected with the Eye icon
@@ -50,6 +53,22 @@ export default function LokiStage4Tester({
   // Store user notes for each beam { [beamId]: "note text" }
   const [beamNotes, setBeamNotes] = useState(() => ({}));
   const [editingNoteBeamId, setEditingNoteBeamId] = useState(null);
+
+  // Direction/Angle Tuner Target Mode: 'global' (all beams) or specific beamId (number)
+  const [tuneTarget, setTuneTarget] = useState('global');
+  const [copiedConfig, setCopiedConfig] = useState(false);
+
+  // Joystick dragging state
+  const joystickRef = useRef(null);
+  const [isDraggingJoystick, setIsDraggingJoystick] = useState(false);
+
+  const activeTransform = (tuneTarget === 'global' ? beamTransforms?.global : beamTransforms?.[tuneTarget]) || {
+    angle: 0,
+    scaleX: 1,
+    scaleY: 1,
+    offsetX: 0,
+    offsetY: 0
+  };
 
   const handleEyeClick = (e, beamId) => {
     e.stopPropagation();
@@ -62,6 +81,44 @@ export default function LokiStage4Tester({
       ...prev,
       [beamId]: text
     }));
+  };
+
+  // Joystick pointer calculations
+  const handleJoystickPointer = (clientX, clientY) => {
+    if (!joystickRef.current || !onUpdateBeamTransform) return;
+    const rect = joystickRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const dx = clientX - centerX;
+    const dy = clientY - centerY;
+    // Calculate angle in degrees (-180 to +180)
+    const angleDeg = Math.round(Math.atan2(dy, dx) * (180 / Math.PI));
+    // Calculate distance ratio (offset reach)
+    const dist = Math.min(rect.width / 2, Math.sqrt(dx * dx + dy * dy));
+    const reach = parseFloat((dist / (rect.width / 2)).toFixed(2));
+
+    onUpdateBeamTransform(tuneTarget, {
+      angle: angleDeg,
+      offsetX: Math.round(dx * 0.4),
+      offsetY: Math.round(dy * 0.4)
+    });
+  };
+
+  const handleCopyConfiguration = () => {
+    const configData = {
+      timestamp: new Date().toLocaleTimeString(),
+      checkedBeams: activeBeams || [],
+      currentSoloBeam,
+      tuneTarget,
+      transforms: beamTransforms,
+      notes: beamNotes
+    };
+
+    const formatted = JSON.stringify(configData, null, 2);
+    navigator.clipboard.writeText(formatted).then(() => {
+      setCopiedConfig(true);
+      setTimeout(() => setCopiedConfig(false), 2200);
+    });
   };
   return (
     <div className="fixed top-16 left-6 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-emerald-500/50 rounded-2xl p-4 shadow-[0_0_35px_rgba(16,185,129,0.35)] text-white w-80 max-h-[88vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700">
@@ -361,6 +418,174 @@ export default function LokiStage4Tester({
             </div>
           );
         })()}
+      </div>
+
+      {/* ============================================================ */}
+      {/* 3D DIRECTION & ANGLE TUNER (JOYSTICK + SLIDERS + COPY CONFIG) */}
+      {/* ============================================================ */}
+      <div className="pt-2.5 mt-2.5 border-t border-neutral-800">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[10px] uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1">
+            <Compass size={13} className="text-cyan-400" /> 3D Beam Angle & Direction
+          </span>
+          {/* Target Selector: Global vs Current Selected Beam */}
+          <div className="flex items-center gap-1 bg-neutral-950 p-0.5 rounded-lg border border-neutral-800">
+            <button
+              onClick={() => setTuneTarget('global')}
+              className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition-colors ${
+                tuneTarget === 'global' ? 'bg-cyan-500 text-black shadow-[0_0_6px_#06b6d4]' : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              All Beams
+            </button>
+            <button
+              onClick={() => {
+                const targetId = currentSoloBeam || (activeBeams && activeBeams[0]) || 1;
+                setTuneTarget(targetId);
+              }}
+              className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition-colors ${
+                tuneTarget !== 'global' ? 'bg-amber-500 text-black shadow-[0_0_6px_#f59e0b]' : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              {tuneTarget !== 'global' ? `Beam #${tuneTarget}` : 'Target Beam'}
+            </button>
+          </div>
+        </div>
+
+        {/* If target beam is active, show target quick selector pills */}
+        {tuneTarget !== 'global' && (
+          <div className="flex items-center gap-1 mb-2 overflow-x-auto pb-1 scrollbar-none">
+            {LIGHT_BEAMS_LIST.map((b) => (
+              <button
+                key={`pill-${b.id}`}
+                onClick={() => setTuneTarget(b.id)}
+                className={`px-1.5 py-0.5 rounded text-[9px] font-mono whitespace-nowrap transition-colors ${
+                  tuneTarget === b.id 
+                    ? 'bg-amber-500 text-black font-bold shadow-[0_0_6px_#f59e0b]' 
+                    : 'bg-neutral-800 text-neutral-400 hover:text-neutral-200'
+                }`}
+              >
+                #{b.id}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Interactive 3D Gimbal / Joystick Pad */}
+        <div className="bg-neutral-950/80 p-2.5 rounded-xl border border-neutral-800 flex items-center gap-3">
+          {/* Circular Joystick */}
+          <div
+            ref={joystickRef}
+            onPointerDown={(e) => {
+              setIsDraggingJoystick(true);
+              e.currentTarget.setPointerCapture(e.pointerId);
+              handleJoystickPointer(e.clientX, e.clientY);
+            }}
+            onPointerMove={(e) => {
+              if (isDraggingJoystick) {
+                handleJoystickPointer(e.clientX, e.clientY);
+              }
+            }}
+            onPointerUp={(e) => {
+              setIsDraggingJoystick(false);
+              try { e.currentTarget.releasePointerCapture(e.pointerId); } catch (_) {}
+            }}
+            className="w-20 h-20 rounded-full bg-neutral-900 border-2 border-dashed border-cyan-500/40 relative flex items-center justify-center cursor-crosshair select-none shadow-[inset_0_0_12px_rgba(0,0,0,0.8)]"
+            title="Drag joystick to rotate & direct light rays in 3D"
+          >
+            {/* Crosshairs */}
+            <div className="absolute inset-x-0 top-1/2 h-px bg-neutral-800 pointer-events-none" />
+            <div className="absolute inset-y-0 left-1/2 w-px bg-neutral-800 pointer-events-none" />
+            
+            {/* Angle Indicator Line */}
+            <div
+              className="absolute w-1/2 h-0.5 bg-gradient-to-r from-transparent to-cyan-400 origin-left left-1/2 top-1/2 pointer-events-none"
+              style={{ transform: `translateY(-50%) rotate(${activeTransform.angle || 0}deg)` }}
+            />
+
+            {/* Draggable Knob */}
+            <div
+              className="w-5 h-5 rounded-full bg-gradient-to-tr from-cyan-500 to-emerald-400 shadow-[0_0_10px_#06b6d4] flex items-center justify-center pointer-events-none transition-transform"
+              style={{
+                transform: `translate(${(activeTransform.offsetX || 0) * 0.6}px, ${(activeTransform.offsetY || 0) * 0.6}px)`
+              }}
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-white" />
+            </div>
+          </div>
+
+          {/* Precision Values & Sliders */}
+          <div className="flex-1 space-y-2">
+            {/* Angle Slider */}
+            <div>
+              <div className="flex items-center justify-between text-[10px] text-neutral-400 mb-0.5">
+                <span>Angle:</span>
+                <span className="font-mono text-cyan-300 font-bold">{activeTransform.angle || 0}°</span>
+              </div>
+              <input
+                type="range"
+                min="-180"
+                max="180"
+                value={activeTransform.angle || 0}
+                onChange={(e) => onUpdateBeamTransform(tuneTarget, { angle: parseInt(e.target.value, 10) })}
+                className="w-full h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+              />
+            </div>
+
+            {/* Spread / Scale Width Slider */}
+            <div>
+              <div className="flex items-center justify-between text-[10px] text-neutral-400 mb-0.5">
+                <span>Spread / Width:</span>
+                <span className="font-mono text-emerald-300 font-bold">{(activeTransform.scaleX || 1).toFixed(1)}x</span>
+              </div>
+              <input
+                type="range"
+                min="0.4"
+                max="3.0"
+                step="0.1"
+                value={activeTransform.scaleX || 1}
+                onChange={(e) => onUpdateBeamTransform(tuneTarget, { 
+                  scaleX: parseFloat(e.target.value), 
+                  scaleY: parseFloat(e.target.value) 
+                })}
+                className="w-full h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+              />
+            </div>
+
+            {/* Reset Target Button */}
+            <div className="flex items-center justify-end pt-0.5">
+              <button
+                onClick={() => onResetBeamTransform(tuneTarget)}
+                className="text-[9px] text-neutral-400 hover:text-rose-400 transition-colors flex items-center gap-0.5"
+              >
+                <RotateCcw size={10} /> Reset Angle
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Copy Beam Configuration Action Box */}
+        <div className="mt-2 flex items-center gap-1.5">
+          <button
+            onClick={handleCopyConfiguration}
+            className={`flex-1 py-1.5 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all text-[11px] ${
+              copiedConfig 
+                ? 'bg-emerald-500 text-black shadow-[0_0_12px_#10b981]' 
+                : 'bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+            }`}
+          >
+            {copiedConfig ? <Check size={14} /> : <Copy size={14} />}
+            {copiedConfig ? "Config Copied! Send to Assistant" : "Copy Live Beam Angles & Config"}
+          </button>
+          
+          <button
+            onClick={() => onResetBeamTransform('all')}
+            title="Reset all angles & directions to default"
+            className="p-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white transition-colors"
+          >
+            <RotateCcw size={14} />
+          </button>
+        </div>
       </div>
 
       {/* Quick Action Footer */}

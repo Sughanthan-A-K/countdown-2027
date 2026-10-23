@@ -311,6 +311,31 @@ function App() {
   // Active light beams control in Stage 3 & Stage 4 (null = all active by default, or array of active beam IDs)
   const [activeBeams, setActiveBeams] = useState(() => [101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   const [currentSoloBeam, setCurrentSoloBeam] = useState(null);
+  // Dynamic 3D / Directional beam transforms { global: { angle, scaleX, scaleY, offsetX, offsetY }, [beamId]: { ... } }
+  const [beamTransforms, setBeamTransforms] = useState(() => ({
+    global: { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
+  }));
+
+  const handleUpdateBeamTransform = (targetKey, changes) => {
+    setBeamTransforms(prev => ({
+      ...prev,
+      [targetKey]: {
+        ...(prev[targetKey] || { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }),
+        ...changes
+      }
+    }));
+  };
+
+  const handleResetBeamTransform = (targetKey) => {
+    setBeamTransforms(prev => {
+      const next = { ...prev };
+      if (targetKey === 'all') {
+        return { global: { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 } };
+      }
+      delete next[targetKey];
+      return next;
+    });
+  };
 
   const handleToggleBeam = (beamId) => {
     setCurrentSoloBeam(null);
@@ -1696,6 +1721,7 @@ function App() {
                           ? (currentSoloBeam ? [currentSoloBeam] : activeBeams) 
                           : null
                       }
+                      beamTransforms={page.index === 0 && showStage4Tester ? beamTransforms : null}
                       isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
@@ -1845,6 +1871,9 @@ function App() {
           onDeselectAllBeams={handleDeselectAllBeams}
           currentSoloBeam={currentSoloBeam}
           onSetSoloBeam={handleSetSoloBeam}
+          beamTransforms={beamTransforms}
+          onUpdateBeamTransform={handleUpdateBeamTransform}
+          onResetBeamTransform={handleResetBeamTransform}
           onClose={() => setShowStage4Tester(false)}
         />
       )}

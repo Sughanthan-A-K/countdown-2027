@@ -24,13 +24,36 @@ import { motion } from 'framer-motion';
  *   - 1.0s: Final perimeter cracks reach outer corners.
  *   - 1.5s: Glass completely shatters into the portal!
  */
-export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, activeBeams = null }) {
+export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, activeBeams = null, beamTransforms = null }) {
   if (crackStage <= 0) return null;
 
   // Helper to check if a specific beam is enabled (null = all enabled by default)
   const isBeamActive = (beamId) => {
     if (!activeBeams) return true;
     return activeBeams.includes(beamId);
+  };
+
+  // Helper to get dynamic transform string for a beam
+  // originPoint: [x, y] in SVG coordinates (e.g. [121, 168])
+  const getBeamTransform = (beamId, originPoint) => {
+    if (!beamTransforms) return undefined;
+    const globalT = beamTransforms.global || { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 };
+    const beamT = beamTransforms[beamId] || { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 };
+
+    const totalAngle = (globalT.angle || 0) + (beamT.angle || 0);
+    const totalScaleX = (globalT.scaleX || 1) * (beamT.scaleX || 1);
+    const totalScaleY = (globalT.scaleY || 1) * (beamT.scaleY || 1);
+    const totalOffsetX = (globalT.offsetX || 0) + (beamT.offsetX || 0);
+    const totalOffsetY = (globalT.offsetY || 0) + (beamT.offsetY || 0);
+
+    if (totalAngle === 0 && totalScaleX === 1 && totalScaleY === 1 && totalOffsetX === 0 && totalOffsetY === 0) {
+      return undefined;
+    }
+
+    const ox = originPoint ? originPoint[0] : 100;
+    const oy = originPoint ? originPoint[1] : 200;
+
+    return `translate(${totalOffsetX}, ${totalOffsetY}) translate(${ox}, ${oy}) rotate(${totalAngle}) scale(${totalScaleX}, ${totalScaleY}) translate(${-ox}, ${-oy})`;
   };
 
   // If stage4Step is explicitly controlled (e.g. 1 to 4), use it; otherwise default to full normal behavior (null = full)
@@ -325,6 +348,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 points="102,185 140,152 4200,-1600 3200,-2200"
                 fill="url(#outwardBeam1)"
                 filter="url(#outwardBeamGlow)"
+                transform={getBeamTransform(101, [121, 168])}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.1, ease: "easeOut" }}
@@ -337,6 +361,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 points="102,185 85,248 -2600,4500 -3200,3800"
                 fill="url(#outwardBeam2)"
                 filter="url(#outwardBeamGlow)"
+                transform={getBeamTransform(102, [93, 216])}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
@@ -357,6 +382,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     points="76,100 45,108 -3400,-2600 -2400,-3600"
                     fill="url(#outwardBeamUpperLeft)"
                     filter="url(#outwardBeamGlow)"
+                    transform={getBeamTransform(1, [60, 104])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
                     transition={{ duration: 0.25, delay: isStepMode ? 0 : 0.65, ease: "easeOut" }}
@@ -369,6 +395,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     points="165,138 4200,300 4500,1800 182,148"
                     fill="url(#outwardBeamMidRightSeam)"
                     filter="url(#outwardBeamGlow)"
+                    transform={getBeamTransform(2, [173, 143])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
                     transition={{ duration: 0.25, delay: isStepMode ? 0.05 : 1.20, ease: "easeOut" }}
@@ -381,6 +408,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     points="168,22 200,5 3800,-1600 3200,-2400"
                     fill="url(#microBeamTopRight)"
                     filter="url(#outwardBeamGlow)"
+                    transform={getBeamTransform(3, [184, 13])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.85 }}
                     transition={{ duration: 0.22, delay: isStepMode ? 0.1 : 1.75, ease: "easeOut" }}
@@ -393,6 +421,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     points="85,248 126,274 3800,4200 3000,4800"
                     fill="url(#outwardBeamLowerRightSeam)"
                     filter="url(#outwardBeamGlow)"
+                    transform={getBeamTransform(4, [105, 261])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.88 }}
                     transition={{ duration: 0.20, delay: isStepMode ? 0.15 : 2.20, ease: "easeOut" }}
@@ -405,6 +434,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     points="14,382 0,400 -2600,4800 -3400,4000"
                     fill="url(#microBeamBottomCorner)"
                     filter="url(#outwardBeamGlow)"
+                    transform={getBeamTransform(5, [7, 391])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.85 }}
                     transition={{ duration: 0.18, delay: isStepMode ? 0.2 : 2.55, ease: "easeOut" }}
@@ -417,6 +447,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     points="96,350 102,400 1200,4500 200,4500"
                     fill="url(#outwardBeamBottomSpineSeam)"
                     filter="url(#outwardBeamGlow)"
+                    transform={getBeamTransform(6, [99, 375])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.92 }}
                     transition={{ duration: 0.14, delay: isStepMode ? 0.25 : 2.85, ease: "easeOut" }}
@@ -432,6 +463,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         points="108,78 -3800,-3200 -4200,-1800 92,122"
                         fill="url(#beamRedLine2)"
                         filter="url(#outwardBeamGlow)"
+                        transform={getBeamTransform(7, [100, 100])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.92 }}
                         transition={{ duration: 0.10, delay: isStepMode ? 0 : 3.05, ease: "easeOut" }}
@@ -444,6 +476,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         points="104,65 108,78 400,-4200 -800,-3800"
                         fill="url(#outwardBeamTopSpine)"
                         filter="url(#outwardBeamGlow)"
+                        transform={getBeamTransform(8, [106, 71])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.92 }}
                         transition={{ duration: 0.08, delay: isStepMode ? 0.05 : 3.18, ease: "easeOut" }}
@@ -456,6 +489,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         points="92,122 64,146 -4500,-600 -4200,-1800"
                         fill="url(#climaxLeftInfiniteBeam)"
                         filter="url(#outwardBeamGlow)"
+                        transform={getBeamTransform(9, [78, 134])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.95 }}
                         transition={{ duration: 0.08, delay: isStepMode ? 0.1 : 3.28, ease: "easeOut" }}
@@ -468,6 +502,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         points="92,122 -4500,600 -4500,1800 102,185"
                         fill="url(#beamRedLine1)"
                         filter="url(#outwardBeamGlow)"
+                        transform={getBeamTransform(10, [97, 153])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.95 }}
                         transition={{ duration: 0.07, delay: isStepMode ? 0.15 : 3.36, ease: "easeOut" }}
@@ -480,6 +515,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         points="140,152 4200,2400 4500,3800 155,210"
                         fill="url(#beamRedLine5)"
                         filter="url(#outwardBeamGlow)"
+                        transform={getBeamTransform(11, [147, 181])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.95 }}
                         transition={{ duration: 0.06, delay: isStepMode ? 0.2 : 3.42, ease: "easeOut" }}
@@ -492,6 +528,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         points="102,185 140,152 4800,-400 3800,-1600"
                         fill="url(#climaxCenterInfiniteBeam)"
                         filter="url(#outwardBeamGlow)"
+                        transform={getBeamTransform(12, [121, 168])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1.0 }}
                         transition={{ duration: 0.06, delay: isStepMode ? 0.25 : 3.48, ease: "easeOut" }}

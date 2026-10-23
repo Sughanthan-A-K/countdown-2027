@@ -14,7 +14,7 @@ import LokiTimelinePortal from './LokiTimelinePortal';
 import LokiMindStoneShatter from './LokiMindStoneShatter';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady, isDec16Blocked, lokiCrackStage = 0, stage4Step = null, activeBeams = null, onLokiCardTap, isDec16UnderlyingHidden }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady, isDec16Blocked, lokiCrackStage = 0, stage4Step = null, activeBeams = null, beamTransforms = null, onLokiCardTap, isDec16UnderlyingHidden }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -315,7 +315,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         >
           {/* Dec 16 Loki Multiverse Crack (Progressive Tap Stages 1 to 4) */}
           {isTop && isDec16Blocked && lokiCrackStage > 0 && (
-            <LokiTimelineCrack crackStage={lokiCrackStage} stage4Step={stage4Step} activeBeams={activeBeams} />
+            <LokiTimelineCrack crackStage={lokiCrackStage} stage4Step={stage4Step} activeBeams={activeBeams} beamTransforms={beamTransforms} />
           )}
           {isTop && !isAyudhaWishActive && (
             <motion.div 
