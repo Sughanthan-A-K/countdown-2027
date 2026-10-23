@@ -1513,7 +1513,9 @@ function App() {
             initial={tutorialState === 1 && tutorialTears === 0 ? { opacity: 0, y: 150, scale: 0.9 } : false}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }} 
-            className={`relative w-full max-w-[400px] h-[60vh] min-h-[450px] flex items-center justify-center perspective-[1200px] ${diwaliPhase >= 1 ? 'z-[1000]' : 'z-[60]'}`}
+            className={`relative w-full max-w-[400px] h-[60vh] min-h-[450px] flex items-center justify-center perspective-[1200px] ${
+              isDec16Card && lokiCrackStage >= 5 ? 'pointer-events-none' : ''
+            } ${diwaliPhase >= 1 ? 'z-[1000]' : 'z-[60]'}`}
           >
             <AnimatePresence>
                 {isSharedCardView ? (
