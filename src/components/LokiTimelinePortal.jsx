@@ -11,7 +11,13 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
  * 3. Once all 5 branches have been tapped and their pulses finish, they trigger a staggered, sudden transformation
  *    ("smooth-ah maarakoodadhu... takk takk takk-nu maaranum") into vibrant full Loki green!
  */
-function LokiLifePowerSpread({ branchPathRef, tapRatio = 0.5, isEnergized, allEnergizedStage }) {
+function LokiLifePowerSpread({ 
+  branchPathRef, 
+  tapRatio = 0.5, 
+  isEnergized, 
+  isFinalBranch = false,
+  allEnergizedStage = false 
+}) {
   if (!isEnergized || !branchPathRef.current) return null;
 
   const pathEl = branchPathRef.current;
@@ -40,7 +46,7 @@ function LokiLifePowerSpread({ branchPathRef, tapRatio = 0.5, isEnergized, allEn
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  const duration = 12.0;
+  const duration = isFinalBranch ? 6.5 : 12.0;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
@@ -70,59 +76,59 @@ function LokiLifePowerSpread({ branchPathRef, tapRatio = 0.5, isEnergized, allEn
 
       {/* 2. The Traveling Pulse - ALL LAYERS SAME UNIFORM LENGTH with Venom-tendril organic edge */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
-        {/* Layer A: Atmospheric emerald volumetric aura bloom (SAME length pulseLen) */}
+        {/* Layer A: Atmospheric emerald volumetric aura bloom */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#10b981"
           strokeWidth="20"
           strokeLinecap="butt"
-          strokeDasharray={`${pulseLen} ${distance + 500}`}
-          initial={{ strokeDashoffset: pulseLen }}
-          animate={{ strokeDashoffset: -(distance + 100) }}
+          strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
+          initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
+          animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
           transition={{ duration, ease: "easeOut" }}
           opacity={0.55}
           style={{ filter: "blur(5px)" }}
         />
 
-        {/* Layer B: Deep vibrant emerald/lime body (SAME length pulseLen) */}
+        {/* Layer B: Deep vibrant emerald/lime body */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#22c55e"
           strokeWidth="11"
           strokeLinecap="butt"
-          strokeDasharray={`${pulseLen} ${distance + 500}`}
-          initial={{ strokeDashoffset: pulseLen }}
-          animate={{ strokeDashoffset: -(distance + 100) }}
+          strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
+          initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
+          animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
           transition={{ duration, ease: "easeOut" }}
           opacity={0.85}
         />
 
-        {/* Layer C: Vibrant bright lime core (SAME length pulseLen) */}
+        {/* Layer C: Vibrant bright lime core */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#84cc16"
           strokeWidth="6"
           strokeLinecap="butt"
-          strokeDasharray={`${pulseLen} ${distance + 500}`}
-          initial={{ strokeDashoffset: pulseLen }}
-          animate={{ strokeDashoffset: -(distance + 100) }}
+          strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
+          initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
+          animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
           transition={{ duration, ease: "easeOut" }}
           opacity={0.95}
         />
 
-        {/* Layer D: Intense white-mint core filament (SAME length pulseLen - zero step-down!) */}
+        {/* Layer D: Intense white-mint core filament */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#ffffff"
           strokeWidth="2.5"
           strokeLinecap="butt"
-          strokeDasharray={`${pulseLen} ${distance + 500}`}
-          initial={{ strokeDashoffset: pulseLen }}
-          animate={{ strokeDashoffset: -(distance + 100) }}
+          strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
+          initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
+          animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
           transition={{ duration, ease: "easeOut" }}
           opacity={1}
         />
@@ -136,21 +142,41 @@ function LokiLifePowerSpread({ branchPathRef, tapRatio = 0.5, isEnergized, allEn
       {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
       {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
 
-      {/* Full Final Burst when all 5 branches are energized (Takk takk takk snap) */}
+      {/* Full Final Burst when all branches connect (Smooth vibrant living venom glow) */}
       {allEnergizedStage && (
-        <motion.path
-          d={pathEl.getAttribute('d')}
-          fill="none"
-          stroke="#4ade80"
-          strokeWidth="14"
-          strokeLinecap="round"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 0.95] }}
-          transition={{ duration: 0.15 }}
-          style={{
-            filter: "drop-shadow(0 0 15px #22c55e) drop-shadow(0 0 30px #10b981)"
-          }}
-        />
+        <g style={{ filter: "url(#venomPulseDistort)" }}>
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#10b981"
+            strokeWidth="32"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.75, 0.6] }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            style={{ filter: "blur(8px)" }}
+          />
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#4ade80"
+            strokeWidth="15"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0.95] }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+          />
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="3"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0.9] }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          />
+        </g>
       )}
     </g>
   );
@@ -164,7 +190,10 @@ function DraggableBranch({
   pathData,
   onEnergize,
   energizedData,
-  allEnergizedStage
+  allEnergizedStage,
+  isFinalBranch = false,
+  flyOut3D = false,
+  flyOutDelay = 0
 }) {
   const targetX = useMotionValue(0);
   const targetY = useMotionValue(0);
@@ -250,12 +279,26 @@ function DraggableBranch({
 
   return (
     <motion.g
-      animate={{ 
+      // Wind sway normal animation OR 3D Fly-Out past screen towards camera
+      animate={flyOut3D ? {
+        scale: [1, 1.4, 3.8, 8.5],
+        opacity: [1, 1, 0.9, 0],
+        y: [0, -30, -120, -350]
+      } : { 
         y: windConfig.y,
         x: windConfig.x,
         rotate: windConfig.rotate
       }}
-      transition={{ duration: windConfig.duration, repeat: Infinity, ease: "easeInOut", delay: windConfig.delay || 0 }}
+      transition={flyOut3D ? {
+        duration: 3.2,
+        delay: flyOutDelay,
+        ease: [0.15, 0.85, 0.35, 1]
+      } : {
+        duration: windConfig.duration,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: windConfig.delay || 0
+      }}
       style={{ transformOrigin: origin }}
     >
       <motion.g
@@ -275,6 +318,7 @@ function DraggableBranch({
             branchPathRef={branchPathRef}
             tapRatio={tapRatio}
             isEnergized={true} 
+            isFinalBranch={isFinalBranch}
             allEnergizedStage={allEnergizedStage}
           />
         )}
@@ -299,6 +343,10 @@ export default function LokiTimelinePortal() {
   const [energizedBranches, setEnergizedBranches] = useState({});
   // Track individual branch awakened full stages when all 5 are touched ("takk takk takk" stagger)
   const [awakenedStages, setAwakenedStages] = useState({});
+  // Track which branch was tapped last (the 5th branch that triggered the continuous venom cascade)
+  const [lastTappedBranchId, setLastTappedBranchId] = useState(null);
+  // Track 3D fly-out state (branches fly towards camera and past the screen)
+  const [trigger3DFlyOut, setTrigger3DFlyOut] = useState(false);
 
   const handleBranchEnergize = (id, clickX, clickY) => {
     setEnergizedBranches(prev => {
@@ -312,13 +360,24 @@ export default function LokiTimelinePortal() {
         }
       };
 
-      // When all 5 branches are tapped, trigger sudden staggered awakening ("takk takk takk-nu maaranum")
-      if (Object.keys(next).length === 5) {
-        ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'].forEach((bId, idx) => {
+      const count = Object.keys(next).length;
+      if (count === 5) {
+        setLastTappedBranchId(id);
+
+        // Sequence:
+        // 1. Final 5th branch continuous venom surge flows to ends in ~4-5s
+        // 2. Venom spreads across all remaining branches smoothly igniting them
+        const allBranchIds = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'];
+        allBranchIds.forEach((bId, idx) => {
           setTimeout(() => {
             setAwakenedStages(stagePrev => ({ ...stagePrev, [bId]: true }));
-          }, 12000 + idx * 350); // wait until pulses cross outer then pop takk takk takk!
+          }, 3500 + idx * 400);
         });
+
+        // 3. Once all branches are fully glowing, trigger 3D Fly-Out past screen
+        setTimeout(() => {
+          setTrigger3DFlyOut(true);
+        }, 6500);
       }
 
       return next;
@@ -520,6 +579,9 @@ export default function LokiTimelinePortal() {
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-1']}
           allEnergizedStage={awakenedStages['branch-1']}
+          isFinalBranch={lastTappedBranchId === 'branch-1'}
+          flyOut3D={trigger3DFlyOut}
+          flyOutDelay={0}
           windConfig={{
             y: [-14, 14, -14],
             x: [-8, 8, -8],
@@ -573,6 +635,9 @@ export default function LokiTimelinePortal() {
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-2']}
           allEnergizedStage={awakenedStages['branch-2']}
+          isFinalBranch={lastTappedBranchId === 'branch-2'}
+          flyOut3D={trigger3DFlyOut}
+          flyOutDelay={0.25}
           windConfig={{
             y: [12, -12, 12],
             x: [6, -6, 6],
@@ -622,6 +687,9 @@ export default function LokiTimelinePortal() {
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-3']}
           allEnergizedStage={awakenedStages['branch-3']}
+          isFinalBranch={lastTappedBranchId === 'branch-3'}
+          flyOut3D={trigger3DFlyOut}
+          flyOutDelay={0.5}
           windConfig={{
             y: [-16, 16, -16],
             x: [-6, 6, -6],
@@ -671,6 +739,9 @@ export default function LokiTimelinePortal() {
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-4']}
           allEnergizedStage={awakenedStages['branch-4']}
+          isFinalBranch={lastTappedBranchId === 'branch-4'}
+          flyOut3D={trigger3DFlyOut}
+          flyOutDelay={0.75}
           windConfig={{
             x: [-12, 12, -12],
             y: [10, -10, 10],
@@ -720,6 +791,9 @@ export default function LokiTimelinePortal() {
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-5']}
           allEnergizedStage={awakenedStages['branch-5']}
+          isFinalBranch={lastTappedBranchId === 'branch-5'}
+          flyOut3D={trigger3DFlyOut}
+          flyOutDelay={1.0}
           windConfig={{
             y: [12, -12, 12],
             x: [8, -8, 8],
