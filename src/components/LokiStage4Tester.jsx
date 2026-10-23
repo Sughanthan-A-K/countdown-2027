@@ -190,27 +190,29 @@ export default function LokiStage4Tester({
           </button>
         </div>
 
-        {/* List of 12 Light Beams with individual checkboxes & sequence number */}
-        <div className="space-y-1 max-h-56 overflow-y-auto pr-1">
-          {LIGHT_BEAMS_LIST.map((beam) => {
-            const isChecked = activeBeams ? activeBeams.includes(beam.id) : true;
-            const isSolo = currentSoloBeam === beam.id;
+        {/* List of 14 Light Beams with individual checkboxes & sequence number */}
+        {/* Selected beams pinned to the top in a distinct highlight container */}
+        {(() => {
+          const selectedBeams = LIGHT_BEAMS_LIST.filter(b => activeBeams ? activeBeams.includes(b.id) : true);
+          const unselectedBeams = LIGHT_BEAMS_LIST.filter(b => activeBeams ? !activeBeams.includes(b.id) : false);
 
+          const renderBeamItem = (beam, isChecked) => {
+            const isSolo = currentSoloBeam === beam.id;
             return (
               <div
                 key={`beam-${beam.id}`}
                 onClick={() => onToggleBeam(beam.id)}
                 className={`flex items-center justify-between p-1.5 rounded-lg border cursor-pointer transition-all ${
                   isSolo
-                    ? 'bg-amber-950/60 border-amber-500/80 text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.25)]'
+                    ? 'bg-amber-950/70 border-amber-500/90 text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.3)]'
                     : isChecked
-                    ? 'bg-neutral-800/80 border-emerald-600/40 hover:border-emerald-500/70 text-neutral-200'
+                    ? 'bg-emerald-950/40 border-emerald-500/50 hover:border-emerald-400 text-neutral-100 shadow-[0_0_6px_rgba(16,185,129,0.15)]'
                     : 'bg-neutral-950/50 border-neutral-800/80 text-neutral-500 opacity-60 hover:opacity-100'
                 }`}
               >
                 <div className="flex items-center gap-2 overflow-hidden">
                   <span className={`text-[10px] font-mono font-bold w-5 h-5 flex items-center justify-center rounded ${
-                    isChecked ? 'bg-emerald-900/80 text-emerald-300 border border-emerald-600/40' : 'bg-neutral-800 text-neutral-400'
+                    isChecked ? 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60' : 'bg-neutral-800 text-neutral-400'
                   }`}>
                     {beam.id}
                   </span>
@@ -243,8 +245,47 @@ export default function LokiStage4Tester({
                 </div>
               </div>
             );
-          })}
-        </div>
+          };
+
+          return (
+            <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+              {/* PINNED CHECKED BEAMS SECTION (TOP) */}
+              <div className="bg-neutral-950/90 p-2 rounded-xl border border-emerald-500/40">
+                <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-emerald-900/50">
+                  <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold flex items-center gap-1">
+                    <CheckSquare size={11} /> Active / Checked Beams ({selectedBeams.length})
+                  </span>
+                  {selectedBeams.length > 0 && (
+                    <span className="text-[9px] text-emerald-300 font-mono">
+                      {selectedBeams.map(b => `#${b.id}`).join(', ')}
+                    </span>
+                  )}
+                </div>
+                {selectedBeams.length === 0 ? (
+                  <div className="text-[10px] text-neutral-500 italic py-1 text-center">
+                    No beams checked. Click below to add.
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    {selectedBeams.map((beam) => renderBeamItem(beam, true))}
+                  </div>
+                )}
+              </div>
+
+              {/* UNCHECKED BEAMS SECTION (REMAINING) */}
+              {unselectedBeams.length > 0 && (
+                <div className="bg-neutral-950/40 p-2 rounded-xl border border-neutral-800">
+                  <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold mb-1.5 flex items-center gap-1">
+                    <Square size={11} /> Inactive / Unchecked ({unselectedBeams.length})
+                  </div>
+                  <div className="space-y-1">
+                    {unselectedBeams.map((beam) => renderBeamItem(beam, false))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       {/* Quick Action Footer */}
