@@ -2,113 +2,155 @@ import React, { useRef, useState, useMemo } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 /**
- * LokiLifePowerSingleFlow
+ * LokiLifePowerSpread
  * 
- * Exact match to user's specification and attached diagram:
- * - Single continuous path (no joint or duplicate overlay at tap point).
- * - Reveals smoothly from user's tap point outwards using SVG stroke-dashoffset / pathLength.
- * - Single flowing wave (no second lagging trail - "antha 2nd la irukuratha thookidu one pona pothum").
- * - As the wave travels:
- *   1. Glowing green head (vibrant emerald, lime, glowing mint/white core and volumetric aura).
- *   2. Directly turns the branch from dark/black into soft, living awakened emerald-green in its wake!
+ * Symmetrical bi-directional pulse spreading outward from the exact user tap point:
+ * 1. From tap point, a glowing green pulse (exact length from before, with bright white-mint filament)
+ *    travels Left and Right simultaneously.
+ * 2. Behind the traveling green pulse, the branch smoothly awakens from dark black into subtle living green.
+ * 3. Once all 5 branches have been tapped and their pulses finish, they trigger a staggered, sudden transformation
+ *    ("smooth-ah maarakoodadhu... takk takk takk-nu maaranum") into vibrant full Loki green!
  */
-function LokiLifePowerSingleFlow({ pathData, tapRatio = 0.5, isEnergized }) {
-  if (!isEnergized || !pathData) return null;
+function LokiLifePowerSpread({ branchPathRef, tapRatio = 0.5, isEnergized, allEnergizedStage }) {
+  if (!isEnergized || !branchPathRef.current) return null;
 
-  return (
-    <g>
-      {/* 1. Volumetric Ethereal Green Atmosphere (Huge soft bloom following the front) */}
+  const pathEl = branchPathRef.current;
+  const totalLen = pathEl.getTotalLength ? pathEl.getTotalLength() : 1400;
+  const tapLen = totalLen * Math.min(0.95, Math.max(0.05, tapRatio));
+
+  // Pulse length: standard dynamic slug length
+  const pulseLen = 220;
+
+  // Generate subpath helper
+  const getSubpath = (fromLen, toLen) => {
+    const samples = 35;
+    let d = "";
+    for (let i = 0; i <= samples; i++) {
+      const l = fromLen + (i / samples) * (toLen - fromLen);
+      const pt = pathEl.getPointAtLength(l);
+      d += (i === 0 ? `M ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}` : ` L ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`);
+    }
+    return d;
+  };
+
+  // Rightward path (from tap to end)
+  const rightD = getSubpath(tapLen, totalLen);
+  // Leftward path (from tap to start)
+  const leftD = getSubpath(tapLen, 0);
+
+  const rightDistance = totalLen - tapLen;
+  const leftDistance = tapLen;
+  const duration = 12.0;
+
+  const renderTravelingPulse = (pathD, distance, key) => (
+    <g key={key}>
+      {/* 1. Behind the pulse: Awakened subtle living dark-green body */}
       <motion.path
-        d={pathData}
+        d={pathD}
         fill="none"
-        stroke="#10b981"
-        strokeWidth="36"
+        stroke="#064e3b"
+        strokeWidth="10"
         strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.4 }}
-        transition={{ duration: 3.0, ease: "easeOut" }}
-        style={{ filter: "blur(14px)" }}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration, ease: "easeOut" }}
+        opacity={0.85}
       />
-
-      {/* 2. Living Awakened Branch Body: Seamlessly transforms from dead black into deep living emerald */}
       <motion.path
-        d={pathData}
+        d={pathD}
         fill="none"
         stroke="#047857"
-        strokeWidth="9"
+        strokeWidth="5"
         strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.9 }}
-        transition={{ duration: 4.0, ease: "easeOut" }}
-      />
-      <motion.path
-        d={pathData}
-        fill="none"
-        stroke="#10b981"
-        strokeWidth="4.5"
-        strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.85 }}
-        transition={{ duration: 4.0, ease: "easeOut" }}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration, ease: "easeOut" }}
+        opacity={0.7}
       />
 
-      {/* 3. The Traveling Glowing Green Wave Pulse (Single continuous traveling head) */}
-      {/* Outer green pulse aura */}
+      {/* 2. The Traveling Green Pulse with Mint-White Core (Symmetrical on both sides) */}
+      {/* Outer soft emerald bloom */}
       <motion.path
-        d={pathData}
+        d={pathD}
+        fill="none"
+        stroke="#10b981"
+        strokeWidth="24"
+        strokeLinecap="round"
+        strokeDasharray={`${pulseLen} ${distance + 500}`}
+        initial={{ strokeDashoffset: pulseLen }}
+        animate={{ strokeDashoffset: -(distance + 100) }}
+        transition={{ duration, ease: "easeOut" }}
+        opacity={0.6}
+        style={{ filter: "blur(6px)" }}
+      />
+
+      {/* Radiant Emerald / Lime sleeve */}
+      <motion.path
+        d={pathD}
         fill="none"
         stroke="#22c55e"
-        strokeWidth="16"
+        strokeWidth="13"
         strokeLinecap="round"
-        strokeDasharray="260 2200"
-        initial={{ strokeDashoffset: Math.round(1800 * (1 - tapRatio) + 260) }}
-        animate={{ strokeDashoffset: -2200 }}
-        transition={{ duration: 22.0, ease: "easeOut" }}
-        opacity={0.8}
-        style={{ filter: "blur(3px)" }}
+        strokeDasharray={`${pulseLen - 20} ${distance + 500}`}
+        initial={{ strokeDashoffset: pulseLen - 20 }}
+        animate={{ strokeDashoffset: -(distance + 100) }}
+        transition={{ duration, ease: "easeOut" }}
+        opacity={0.85}
+        style={{ filter: "blur(2px)" }}
       />
 
       {/* Vibrant Lime Strand */}
       <motion.path
-        d={pathData}
+        d={pathD}
         fill="none"
-        stroke="#4ade80"
-        strokeWidth="8"
+        stroke="#84cc16"
+        strokeWidth="7"
         strokeLinecap="round"
-        strokeDasharray="220 2200"
-        initial={{ strokeDashoffset: Math.round(1800 * (1 - tapRatio) + 220) }}
-        animate={{ strokeDashoffset: -2200 }}
-        transition={{ duration: 22.0, ease: "easeOut" }}
+        strokeDasharray={`${pulseLen - 40} ${distance + 500}`}
+        initial={{ strokeDashoffset: pulseLen - 40 }}
+        animate={{ strokeDashoffset: -(distance + 100) }}
+        transition={{ duration, ease: "easeOut" }}
         opacity={0.95}
       />
 
-      {/* Radiant Yellow-Gold Filament */}
+      {/* White-Mint Core Head */}
       <motion.path
-        d={pathData}
+        d={pathD}
         fill="none"
-        stroke="#facc15"
-        strokeWidth="4.5"
+        stroke="#f0fdf4"
+        strokeWidth="3"
         strokeLinecap="round"
-        strokeDasharray="180 2200"
-        initial={{ strokeDashoffset: Math.round(1800 * (1 - tapRatio) + 180) }}
-        animate={{ strokeDashoffset: -2200 }}
-        transition={{ duration: 22.0, ease: "easeOut" }}
+        strokeDasharray={`${pulseLen - 70} ${distance + 500}`}
+        initial={{ strokeDashoffset: pulseLen - 70 }}
+        animate={{ strokeDashoffset: -(distance + 100) }}
+        transition={{ duration, ease: "easeOut" }}
         opacity={1}
       />
+    </g>
+  );
 
-      {/* Blinding White Core Filament */}
-      <motion.path
-        d={pathData}
-        fill="none"
-        stroke="#ffffff"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeDasharray="140 2200"
-        initial={{ strokeDashoffset: Math.round(1800 * (1 - tapRatio) + 140) }}
-        animate={{ strokeDashoffset: -2200 }}
-        transition={{ duration: 22.0, ease: "easeOut" }}
-        opacity={1}
-      />
+  return (
+    <g>
+      {/* Symmetrical Left and Right Pulses spreading outward from tap point */}
+      {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
+      {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
+
+      {/* Full Final Burst when all 5 branches are energized (Takk takk takk snap) */}
+      {allEnergizedStage && (
+        <motion.path
+          d={pathEl.getAttribute('d')}
+          fill="none"
+          stroke="#4ade80"
+          strokeWidth="14"
+          strokeLinecap="round"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 1, 0.95] }}
+          transition={{ duration: 0.15 }}
+          style={{
+            filter: "drop-shadow(0 0 15px #22c55e) drop-shadow(0 0 30px #10b981)"
+          }}
+        />
+      )}
     </g>
   );
 }
@@ -120,7 +162,8 @@ function DraggableBranch({
   windConfig,
   pathData,
   onEnergize,
-  energizedData
+  energizedData,
+  allEnergizedStage
 }) {
   const targetX = useMotionValue(0);
   const targetY = useMotionValue(0);
@@ -225,12 +268,13 @@ function DraggableBranch({
         {children}
 
         {/* --- LOKI GOD OF STORIES MAGIC LIFE POWER FLOW OVERLAY --- */}
-        {/* Single continuous path, zero joints, smoothly turns branch from black to green */}
+        {/* Symmetrical Left and Right Pulse Spread from Tap Point */}
         {energizedData && (
-          <LokiLifePowerSingleFlow 
-            pathData={pathData}
+          <LokiLifePowerSpread 
+            branchPathRef={branchPathRef}
             tapRatio={tapRatio}
             isEnergized={true} 
+            allEnergizedStage={allEnergizedStage}
           />
         )}
       </motion.g>
@@ -252,17 +296,32 @@ function DraggableBranch({
 export default function LokiTimelinePortal() {
   // Track which branches have been energized with Loki's life magic
   const [energizedBranches, setEnergizedBranches] = useState({});
+  // Track individual branch awakened full stages when all 5 are touched ("takk takk takk" stagger)
+  const [awakenedStages, setAwakenedStages] = useState({});
 
   const handleBranchEnergize = (id, clickX, clickY) => {
-    setEnergizedBranches(prev => ({
-      ...prev,
-      [id]: {
-        active: true,
-        x: clickX,
-        y: clickY,
-        timestamp: Date.now()
+    setEnergizedBranches(prev => {
+      const next = {
+        ...prev,
+        [id]: {
+          active: true,
+          x: clickX,
+          y: clickY,
+          timestamp: Date.now()
+        }
+      };
+
+      // When all 5 branches are tapped, trigger sudden staggered awakening ("takk takk takk-nu maaranum")
+      if (Object.keys(next).length === 5) {
+        ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'].forEach((bId, idx) => {
+          setTimeout(() => {
+            setAwakenedStages(stagePrev => ({ ...stagePrev, [bId]: true }));
+          }, 12000 + idx * 350); // wait until pulses cross outer then pop takk takk takk!
+        });
       }
-    }));
+
+      return next;
+    });
   };
 
   // Total energized count (0 to 5) directly expands the inner white core spine width!
@@ -450,11 +509,10 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-1"
           pathData="M -150 220 Q 250 340, 500 370 T 1150 390"
-          forwardPath="M 500 370 T 1150 390"
-          backwardPath="M 500 370 Q 250 340, -150 220"
           origin="500px 300px"
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-1']}
+          allEnergizedStage={awakenedStages['branch-1']}
           windConfig={{
             y: [-14, 14, -14],
             x: [-8, 8, -8],
@@ -504,11 +562,10 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-2"
           pathData="M -120 70 Q 400 160, 680 140 T 1120 180"
-          forwardPath="M 500 150 Q 680 140, 1120 180"
-          backwardPath="M 500 150 Q 400 160, -120 70"
           origin="500px 150px"
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-2']}
+          allEnergizedStage={awakenedStages['branch-2']}
           windConfig={{
             y: [12, -12, 12],
             x: [6, -6, 6],
@@ -554,11 +611,10 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-3"
           pathData="M -150 820 Q 200 720, 520 670 T 1150 860"
-          forwardPath="M 520 670 T 1150 860"
-          backwardPath="M 520 670 Q 200 720, -150 820"
           origin="500px 750px"
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-3']}
+          allEnergizedStage={awakenedStages['branch-3']}
           windConfig={{
             y: [-16, 16, -16],
             x: [-6, 6, -6],
@@ -604,11 +660,10 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-4"
           pathData="M 1150 80 Q 750 380, 450 550 T -120 880"
-          forwardPath="M 450 550 T -120 880"
-          backwardPath="M 450 550 Q 750 380, 1150 80"
           origin="500px 500px"
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-4']}
+          allEnergizedStage={awakenedStages['branch-4']}
           windConfig={{
             x: [-12, 12, -12],
             y: [10, -10, 10],
@@ -654,11 +709,10 @@ export default function LokiTimelinePortal() {
         <DraggableBranch
           id="branch-5"
           pathData="M -100 480 Q 300 420, 650 490 T 1150 510"
-          forwardPath="M 500 455 Q 650 490, 1150 510"
-          backwardPath="M 500 455 Q 300 420, -100 480"
           origin="500px 520px"
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-5']}
+          allEnergizedStage={awakenedStages['branch-5']}
           windConfig={{
             y: [12, -12, 12],
             x: [8, -8, 8],
