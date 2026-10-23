@@ -7,6 +7,7 @@ import ConfettiBurst from './components/ConfettiBurst';
 import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
 import LokiTimelinePortal from './components/LokiTimelinePortal';
+import LokiStage4Tester from './components/LokiStage4Tester';
 import confetti from 'canvas-confetti';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier, isSpecialCardDate, isKeyEligible } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
@@ -152,9 +153,18 @@ function App() {
   });
 
   const isSharedCardView = !!sharedCardData;
+  // If system date has advanced to Dec 17 (or later in 2026), but the user is still on Dec 16 card (since it cannot be torn),
+  // Dec 16 card MUST be strictly presented in Dark Mode for all users!
+  const isDec16CardLockedDark = (
+    calendarDate.getFullYear() === 2026 && 
+    calendarDate.getMonth() === 11 && 
+    calendarDate.getDate() === 16 &&
+    actualToday >= new Date(2026, 11, 17)
+  );
+
   const effectiveDarkMode = isSharedCardView 
     ? (sharedCardData?.type === 'diwali' ? isDarkMode : false) 
-    : isDarkMode;
+    : (isDec16CardLockedDark ? true : isDarkMode);
 
   const [shareToastText, setShareToastText] = useState("");
   const [showShareToast, setShowShareToast] = useState(false);
@@ -294,6 +304,65 @@ function App() {
   const [showDiwaliEvent, setShowDiwaliEvent] = useState(false);
   const [diwaliPhase, setDiwaliPhase] = useState(0);
   const [lokiCrackStage, setLokiCrackStage] = useState(0); // 0 = normal, 1 = first crack, 2 = deep branching, 3 = full cosmos breach
+  // Stage 4 tester states (System keyboard shortcut Shift+T)
+  const [showStage4Tester, setShowStage4Tester] = useState(false);
+  const [stage4StepIndex, setStage4StepIndex] = useState(1);
+  const [isTesterAutoPlaying, setIsTesterAutoPlaying] = useState(false);
+
+  // Keyboard shortcut Shift+T to toggle stage 4 tester
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.shiftKey && (e.key === 'T' || e.key === 't')) {
+        e.preventDefault();
+        setShowStage4Tester(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // When tester changes stage4StepIndex or crackStage
+  const handleTesterSetStage = (stg) => {
+    setIsTesterAutoPlaying(false);
+    setLokiCrackStage(stg);
+  };
+
+  const handleTesterSetStep = (step) => {
+    setIsTesterAutoPlaying(false);
+    setLokiCrackStage(4);
+    setStage4StepIndex(step);
+    if (step === 5) {
+      setTimeout(() => setLokiCrackStage(5), 400);
+    }
+  };
+
+  const handleToggleAutoPlay = () => {
+    setIsTesterAutoPlaying(prev => !prev);
+  };
+
+  // Auto-play interval for stepping through 4.1 to 4.5
+  useEffect(() => {
+    let interval = null;
+    if (isTesterAutoPlaying) {
+      interval = setInterval(() => {
+        setStage4StepIndex(prev => {
+          if (prev >= 5) {
+            setIsTesterAutoPlaying(false);
+            setLokiCrackStage(5);
+            return 5;
+          }
+          const next = prev + 1;
+          if (next === 5) {
+            setTimeout(() => setLokiCrackStage(5), 400);
+          }
+          return next;
+        });
+      }, 1500);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isTesterAutoPlaying]);
 
   // Ensure Loki crack stage is strictly 0 whenever we are NOT on Dec 16 (or if dev mode is off)
   // Loki Multiverse easter egg is only active when in devMode OR on actual Dec 16 date
@@ -1194,8 +1263,7 @@ function App() {
 
           {!isSharedCardView && (
             <>
-              {/* Dev Mode Reset Button (or during Loki Multiverse portal stage 5) */}
-              {(isDevMode || (isDec16Card && lokiCrackStage >= 5)) && (
+              {isDevMode && (
                 <button 
                   onClick={() => {
                     // Reset Vijayadashami / special festival progress in dev mode on single click
@@ -1203,9 +1271,6 @@ function App() {
                       localStorage.removeItem('vijayadashamiEventDone_2026');
                       localStorage.removeItem('ayudhaPoojaEventDone_2026');
                     } catch (e) {}
-
-                    // Reset Dec 16 crack / Loki portal stages on refresh button
-                    setLokiCrackStage(0);
 
                     const stored = localStorage.getItem('devOverrideDate');
                     if (stored) {
@@ -1220,7 +1285,7 @@ function App() {
 
                     if (navigator.vibrate) navigator.vibrate([50]);
                   }}
-                  className={`absolute top-8 right-24 z-[100] p-3 rounded-full border-2 shadow-md ${
+                  className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
                     isDarkMode 
                       ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
                       : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
@@ -1518,8 +1583,8 @@ function App() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }} 
             className={`relative w-full max-w-[400px] h-[60vh] min-h-[450px] flex items-center justify-center perspective-[1200px] ${
-              isDec16Card && lokiCrackStage >= 5 ? 'z-[95]' : (diwaliPhase >= 1 ? 'z-[1000]' : 'z-[60]')
-            }`}
+              isDec16Card && lokiCrackStage >= 5 ? 'pointer-events-none' : ''
+            } ${diwaliPhase >= 1 ? 'z-[1000]' : 'z-[60]'}`}
           >
             <AnimatePresence>
                 {isSharedCardView ? (
@@ -1591,6 +1656,7 @@ function App() {
                       globalLang={globalLang}
                       isDec16Blocked={page.index === 0 && isDec16Card}
                       lokiCrackStage={page.index === 0 ? lokiCrackStage : 0}
+                      stage4Step={page.index === 0 && showStage4Tester && lokiCrackStage === 4 ? stage4StepIndex : null}
                       isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
@@ -1723,6 +1789,19 @@ function App() {
           setShowDiwaliEvent(false);
           if (!isDevMode && !isSharedCardView) localStorage.setItem('diwaliEventDone_2026', 'true');
         }} />
+      )}
+
+      {/* Loki Stage 4 Developer Testing Floating Stepper (Shortcut: Shift + T) */}
+      {showStage4Tester && (
+        <LokiStage4Tester 
+          crackStage={lokiCrackStage}
+          onSetCrackStage={handleTesterSetStage}
+          stepIndex={stage4StepIndex}
+          onSetStepIndex={handleTesterSetStep}
+          isAutoPlaying={isTesterAutoPlaying}
+          onToggleAutoPlay={handleToggleAutoPlay}
+          onClose={() => setShowStage4Tester(false)}
+        />
       )}
     </>
   );
