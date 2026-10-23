@@ -33,27 +33,53 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
     return activeBeams.includes(beamId);
   };
 
-  // Helper to get dynamic transform string for a beam
-  // IMPORTANT: The origin point [ox, oy] is the exact crack seam / fissure point on the card!
-  // The light origin STAYS ANCHORED to the crack seam, while only the outer beam direction swings/rotates!
-  const getBeamTransform = (beamId, originPoint) => {
-    if (!beamTransforms) return undefined;
+  // Helper to dynamically swing ONLY the outer projection points of a beam,
+  // keeping the base seam points [p1, p2] 100% physically fixed on the crack fracture!
+  const getDynamicBeamPoints = (beamId, defaultPointsStr) => {
+    // defaultPointsStr format: "p1x,p1y p2x,p2y p3x,p3y p4x,p4y"
+    // p1, p2 = fixed crack seam points on the card
+    // p3, p4 = outer piercing projection points traveling far out onto the screen
+    if (!beamTransforms) return defaultPointsStr;
     const globalT = beamTransforms.global || { angle: 0, scaleX: 1, scaleY: 1 };
     const beamT = beamTransforms[beamId] || { angle: 0, scaleX: 1, scaleY: 1 };
 
     const totalAngle = (globalT.angle || 0) + (beamT.angle || 0);
-    const totalScaleX = (globalT.scaleX || 1) * (beamT.scaleX || 1);
-    const totalScaleY = (globalT.scaleY || 1) * (beamT.scaleY || 1);
+    const totalScale = (globalT.scaleX || 1) * (beamT.scaleX || 1);
 
-    if (totalAngle === 0 && totalScaleX === 1 && totalScaleY === 1) {
-      return undefined;
+    if (totalAngle === 0 && totalScale === 1) {
+      return defaultPointsStr;
     }
 
-    // Anchor strictly at the seam origin (ox, oy)
-    const ox = originPoint ? originPoint[0] : 100;
-    const oy = originPoint ? originPoint[1] : 200;
+    const pts = defaultPointsStr.trim().split(/\s+/).map(pair => {
+      const [x, y] = pair.split(',').map(Number);
+      return [x, y];
+    });
 
-    return `translate(${ox}, ${oy}) rotate(${totalAngle}) scale(${totalScaleX}, ${totalScaleY}) translate(${-ox}, ${-oy})`;
+    if (pts.length < 4) return defaultPointsStr;
+
+    // Anchor is the EXACT midpoint of the crack seam segment (p1 and p2)
+    const [p1, p2, p3, p4] = pts;
+    const anchorX = (p1[0] + p2[0]) / 2;
+    const anchorY = (p1[1] + p2[1]) / 2;
+
+    const rad = (totalAngle * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+
+    // Rotate & scale ONLY the outer piercing points (p3 and p4) around the crack seam anchor
+    const rotatePoint = ([px, py]) => {
+      const dx = (px - anchorX) * totalScale;
+      const dy = (py - anchorY) * totalScale;
+      const rx = anchorX + (dx * cos - dy * sin);
+      const ry = anchorY + (dx * sin + dy * cos);
+      return `${Math.round(rx)},${Math.round(ry)}`;
+    };
+
+    const newP3 = rotatePoint(p3);
+    const newP4 = rotatePoint(p4);
+
+    // Points p1 and p2 remain 100% UNCHANGED and locked into the crack seam!
+    return `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${newP3} ${newP4}`;
   };
 
   // If stage4Step is explicitly controlled (e.g. 1 to 4), use it; otherwise default to full normal behavior (null = full)
@@ -345,10 +371,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
             {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding INFINITELY across screen --- */}
             {isBeamActive(101) && (
               <motion.polygon
-                points="102,185 140,152 4200,-1600 3200,-2200"
+                points={getDynamicBeamPoints(101, "102,185 140,152 4200,-1600 3200,-2200")}
                 fill="url(#outwardBeam1)"
                 filter="url(#outwardBeamGlow)"
-                transform={getBeamTransform(101, [121, 168])}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.1, ease: "easeOut" }}
@@ -358,10 +383,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
             {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
             {isBeamActive(102) && (
               <motion.polygon
-                points="102,185 85,248 -2600,4500 -3200,3800"
+                points={getDynamicBeamPoints(102, "102,185 85,248 -2600,4500 -3200,3800")}
                 fill="url(#outwardBeam2)"
                 filter="url(#outwardBeamGlow)"
-                transform={getBeamTransform(102, [93, 216])}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
@@ -379,10 +403,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 {/* Beam 1: Upper-Left Corner Beam (0.65s) */}
                 {isBeamActive(1) && (
                   <motion.polygon
-                    points="76,100 45,108 -3400,-2600 -2400,-3600"
+                    points={getDynamicBeamPoints(1, "76,100 45,108 -3400,-2600 -2400,-3600")}
                     fill="url(#outwardBeamUpperLeft)"
                     filter="url(#outwardBeamGlow)"
-                    transform={getBeamTransform(1, [60, 104])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
                     transition={{ duration: 0.25, delay: isStepMode ? 0 : 0.65, ease: "easeOut" }}
@@ -392,10 +415,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 {/* Beam 2: Blade Beam Mid-Right (1.20s) */}
                 {isBeamActive(2) && (
                   <motion.polygon
-                    points="165,138 4200,300 4500,1800 182,148"
+                    points={getDynamicBeamPoints(2, "165,138 182,148 4500,1800 4200,300")}
                     fill="url(#outwardBeamMidRightSeam)"
                     filter="url(#outwardBeamGlow)"
-                    transform={getBeamTransform(2, [173, 143])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
                     transition={{ duration: 0.25, delay: isStepMode ? 0.05 : 1.20, ease: "easeOut" }}
@@ -405,10 +427,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 {/* Beam 3: Upper-Right Corner Gap (1.75s) */}
                 {isBeamActive(3) && (
                   <motion.polygon
-                    points="168,22 200,5 3800,-1600 3200,-2400"
+                    points={getDynamicBeamPoints(3, "168,22 200,5 3800,-1600 3200,-2400")}
                     fill="url(#microBeamTopRight)"
                     filter="url(#outwardBeamGlow)"
-                    transform={getBeamTransform(3, [184, 13])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.85 }}
                     transition={{ duration: 0.22, delay: isStepMode ? 0.1 : 1.75, ease: "easeOut" }}
@@ -418,10 +439,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 {/* Beam 4: Lower-Right Corner Beam (2.20s) */}
                 {isBeamActive(4) && (
                   <motion.polygon
-                    points="85,248 126,274 3800,4200 3000,4800"
+                    points={getDynamicBeamPoints(4, "85,248 126,274 3800,4200 3000,4800")}
                     fill="url(#outwardBeamLowerRightSeam)"
                     filter="url(#outwardBeamGlow)"
-                    transform={getBeamTransform(4, [105, 261])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.88 }}
                     transition={{ duration: 0.20, delay: isStepMode ? 0.15 : 2.20, ease: "easeOut" }}
@@ -431,10 +451,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 {/* Beam 5: Bottom-Left Corner Gap (2.55s) */}
                 {isBeamActive(5) && (
                   <motion.polygon
-                    points="14,382 0,400 -2600,4800 -3400,4000"
+                    points={getDynamicBeamPoints(5, "14,382 0,400 -2600,4800 -3400,4000")}
                     fill="url(#microBeamBottomCorner)"
                     filter="url(#outwardBeamGlow)"
-                    transform={getBeamTransform(5, [7, 391])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.85 }}
                     transition={{ duration: 0.18, delay: isStepMode ? 0.2 : 2.55, ease: "easeOut" }}
@@ -444,10 +463,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 {/* Beam 6: South Spine Off-Center Beam (2.85s) */}
                 {isBeamActive(6) && (
                   <motion.polygon
-                    points="96,350 102,400 1200,4500 200,4500"
+                    points={getDynamicBeamPoints(6, "96,350 102,400 1200,4500 200,4500")}
                     fill="url(#outwardBeamBottomSpineSeam)"
                     filter="url(#outwardBeamGlow)"
-                    transform={getBeamTransform(6, [99, 375])}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.92 }}
                     transition={{ duration: 0.14, delay: isStepMode ? 0.25 : 2.85, ease: "easeOut" }}
@@ -460,10 +478,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     {/* Beam 7: Upper Center Spine Fissure (3.05s) */}
                     {isBeamActive(7) && (
                       <motion.polygon
-                        points="108,78 -3800,-3200 -4200,-1800 92,122"
+                        points={getDynamicBeamPoints(7, "108,78 92,122 -4200,-1800 -3800,-3200")}
                         fill="url(#beamRedLine2)"
                         filter="url(#outwardBeamGlow)"
-                        transform={getBeamTransform(7, [100, 100])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.92 }}
                         transition={{ duration: 0.10, delay: isStepMode ? 0 : 3.05, ease: "easeOut" }}
@@ -473,10 +490,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     {/* Beam 8: Steep Upward Top Spine Shaft (3.18s) */}
                     {isBeamActive(8) && (
                       <motion.polygon
-                        points="104,65 108,78 400,-4200 -800,-3800"
+                        points={getDynamicBeamPoints(8, "104,65 108,78 400,-4200 -800,-3800")}
                         fill="url(#outwardBeamTopSpine)"
                         filter="url(#outwardBeamGlow)"
-                        transform={getBeamTransform(8, [106, 71])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.92 }}
                         transition={{ duration: 0.08, delay: isStepMode ? 0.05 : 3.18, ease: "easeOut" }}
@@ -486,10 +502,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     {/* Beam 9: Left side Center Fissure (3.28s) */}
                     {isBeamActive(9) && (
                       <motion.polygon
-                        points="92,122 64,146 -4500,-600 -4200,-1800"
+                        points={getDynamicBeamPoints(9, "92,122 64,146 -4500,-600 -4200,-1800")}
                         fill="url(#climaxLeftInfiniteBeam)"
                         filter="url(#outwardBeamGlow)"
-                        transform={getBeamTransform(9, [78, 134])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.95 }}
                         transition={{ duration: 0.08, delay: isStepMode ? 0.1 : 3.28, ease: "easeOut" }}
@@ -499,10 +514,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     {/* Beam 10: Center Fissures Red Line 1 (3.36s) */}
                     {isBeamActive(10) && (
                       <motion.polygon
-                        points="92,122 -4500,600 -4500,1800 102,185"
+                        points={getDynamicBeamPoints(10, "92,122 102,185 -4500,1800 -4500,600")}
                         fill="url(#beamRedLine1)"
                         filter="url(#outwardBeamGlow)"
-                        transform={getBeamTransform(10, [97, 153])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.95 }}
                         transition={{ duration: 0.07, delay: isStepMode ? 0.15 : 3.36, ease: "easeOut" }}
@@ -512,10 +526,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     {/* Beam 11: Center Fissures Red Line 5 (3.42s) */}
                     {isBeamActive(11) && (
                       <motion.polygon
-                        points="140,152 4200,2400 4500,3800 155,210"
+                        points={getDynamicBeamPoints(11, "140,152 155,210 4500,3800 4200,2400")}
                         fill="url(#beamRedLine5)"
                         filter="url(#outwardBeamGlow)"
-                        transform={getBeamTransform(11, [147, 181])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.95 }}
                         transition={{ duration: 0.06, delay: isStepMode ? 0.2 : 3.42, ease: "easeOut" }}
@@ -525,10 +538,9 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     {/* Beam 12: FINAL MEGA CENTER CLIMAX BEAM (3.48s) */}
                     {isBeamActive(12) && (
                       <motion.polygon
-                        points="102,185 140,152 4800,-400 3800,-1600"
+                        points={getDynamicBeamPoints(12, "102,185 140,152 4800,-400 3800,-1600")}
                         fill="url(#climaxCenterInfiniteBeam)"
                         filter="url(#outwardBeamGlow)"
-                        transform={getBeamTransform(12, [121, 168])}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1.0 }}
                         transition={{ duration: 0.06, delay: isStepMode ? 0.25 : 3.48, ease: "easeOut" }}
