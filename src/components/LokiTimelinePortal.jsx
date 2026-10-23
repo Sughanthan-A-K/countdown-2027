@@ -349,7 +349,7 @@ export default function LokiTimelinePortal() {
               : '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 110px #10b981'
           }}
           transition={{
-            width: { duration: 12.0, ease: [0.16, 1, 0.3, 1] },
+            width: { duration: 25.0, ease: [0.16, 1, 0.3, 1] },
             opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" }
           }}
           className="absolute h-[110vh] pointer-events-none rounded-[50%]"
@@ -379,8 +379,8 @@ export default function LokiTimelinePortal() {
                     cy={data.y || 500}
                     initial={{ r: 0 }}
                     animate={{ r: 1600 }}
-                    // Deep cosmic slow motion over 22 seconds - exceptionally smooth & gradual
-                    transition={{ duration: 22.0, ease: [0.16, 0.9, 0.3, 1] }}
+                    // Ultra deep slow motion over 45 seconds - meditative and ultra gradual
+                    transition={{ duration: 45.0, ease: [0.16, 0.95, 0.35, 1] }}
                   />
                 ) : (
                   <circle cx="500" cy="500" r="0" />
