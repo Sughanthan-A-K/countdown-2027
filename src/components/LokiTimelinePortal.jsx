@@ -603,7 +603,7 @@ export default function LokiTimelinePortal() {
             );
           })}
         </defs>
-        {/* Branch 1: Upper graceful arc crossing from foreground left (-150, near screen: thick) into distant right (thin) */}
+        {/* Branch 1: The Massive Foreground Branch Cluster (Near screen on Top-Left: thick trunk clump with multiple braided roots) */}
         <DraggableBranch
           id="branch-1"
           pathData="M -150 220 Q 250 340, 500 370 T 1150 390"
@@ -628,33 +628,52 @@ export default function LokiTimelinePortal() {
             fill="none"
             stroke="#000000"
             strokeOpacity="0.001"
-            strokeWidth="90"
+            strokeWidth="110"
             strokeLinecap="round"
           />
-          {/* Ambient drop shadow with 3D depth */}
+          {/* Ambient drop shadow with heavy 3D depth for close foreground trunk */}
           <path
             d="M -150 220 Q 250 340, 500 370 T 1150 390"
             fill="none"
             stroke="#000000"
-            strokeWidth="20"
+            strokeWidth="35"
             strokeLinecap="round"
             opacity="0.95"
-            style={{ filter: "drop-shadow(0 15px 25px rgba(0,0,0,0.85))" }}
+            style={{ filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.95))" }}
           />
-          {/* Foreground Close Branch Outline (Wide screen-near segment) */}
+
+          {/* MASSIVE FOREGROUND TRUNK CLUMP (Top-Left near camera: up to 55px thick, tapering to 9px in distance) */}
+          {/* Outer cluster base silhouette */}
+          <path
+            d="M -150 180 Q 150 280, 420 350"
+            fill="none"
+            stroke="url(#branch1_depth_grad)"
+            strokeWidth="38"
+            strokeLinecap="round"
+            opacity="0.85"
+          />
+          <path
+            d="M -150 250 Q 180 320, 450 365"
+            fill="none"
+            stroke="url(#branch1_depth_grad)"
+            strokeWidth="32"
+            strokeLinecap="round"
+            opacity="0.8"
+          />
+          {/* Main Huge Root Trunk extending towards portal */}
           <path
             d="M -150 220 Q 250 340, 500 370"
             fill="none"
             stroke="url(#branch1_depth_grad)"
-            strokeWidth="22"
+            strokeWidth="48"
             strokeLinecap="round"
           />
-          {/* Main Dark Silhouette Body with continuous 3D taper */}
+          {/* Main Continuous Spine tapering smoothly towards the distant portal */}
           <path
             d="M -150 220 Q 250 340, 500 370 T 1150 390"
             fill="none"
             stroke="url(#branch1_depth_grad)"
-            strokeWidth="15"
+            strokeWidth="14"
             strokeLinecap="round"
           />
           {/* Subtle Darkest Emerald Edge Glint */}
@@ -662,13 +681,13 @@ export default function LokiTimelinePortal() {
             d="M -150 219 Q 250 339, 500 369 T 1150 389"
             fill="none"
             stroke="#062d22"
-            strokeWidth="3.2"
+            strokeWidth="3.5"
             strokeLinecap="round"
             opacity="0.65"
           />
         </DraggableBranch>
 
-        {/* Branch 2: High Sweeping gentle branch (Tapered from left screen foreground to distant portal) */}
+        {/* Branch 2: Distant High Thin Branch (Way in the background, near the portal: thin delicate wire) */}
         <DraggableBranch
           id="branch-2"
           pathData="M -120 70 Q 400 160, 680 140 T 1120 180"
@@ -680,9 +699,9 @@ export default function LokiTimelinePortal() {
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={0.25}
           windConfig={{
-            y: [12, -12, 12],
-            x: [6, -6, 6],
-            rotate: [1.0, -1.0, 1.0],
+            y: [10, -10, 10],
+            x: [5, -5, 5],
+            rotate: [0.8, -0.8, 0.8],
             duration: 22,
             delay: 1
           }}
@@ -695,41 +714,34 @@ export default function LokiTimelinePortal() {
             strokeWidth="90"
             strokeLinecap="round"
           />
+          {/* Distant soft shadow */}
           <path
             d="M -120 70 Q 400 160, 680 140 T 1120 180"
             fill="none"
             stroke="#000000"
-            strokeWidth="18"
+            strokeWidth="10"
             strokeLinecap="round"
-            opacity="0.9"
-            style={{ filter: "drop-shadow(0 12px 20px rgba(0,0,0,0.8))" }}
+            opacity="0.75"
           />
-          {/* Foreground Close segment */}
-          <path
-            d="M -120 70 Q 400 160, 680 140"
-            fill="none"
-            stroke="url(#branch2_depth_grad)"
-            strokeWidth="16"
-            strokeLinecap="round"
-          />
+          {/* Thin delicate distant branch body (6px thin) */}
           <path
             d="M -120 70 Q 400 160, 680 140 T 1120 180"
             fill="none"
             stroke="url(#branch2_depth_grad)"
-            strokeWidth="11"
+            strokeWidth="5.5"
             strokeLinecap="round"
           />
           <path
             d="M -120 69 Q 400 159, 680 139 T 1120 179"
             fill="none"
             stroke="#062d22"
-            strokeWidth="2.5"
+            strokeWidth="1.6"
             strokeLinecap="round"
-            opacity="0.6"
+            opacity="0.55"
           />
         </DraggableBranch>
 
-        {/* Branch 3: Lower Ascending Vine (Near screen on left foreground, tapering upwards into portal) */}
+        {/* Branch 3: Lower Ascending Vine (Medium distance, crossing up towards portal) */}
         <DraggableBranch
           id="branch-3"
           pathData="M -150 820 Q 200 720, 520 670 T 1150 860"
@@ -741,9 +753,9 @@ export default function LokiTimelinePortal() {
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={0.5}
           windConfig={{
-            y: [-16, 16, -16],
+            y: [-14, 14, -14],
             x: [-6, 6, -6],
-            rotate: [-0.9, 0.9, -0.9],
+            rotate: [-0.8, 0.8, -0.8],
             duration: 20,
             delay: 2
           }}
@@ -760,37 +772,28 @@ export default function LokiTimelinePortal() {
             d="M -150 820 Q 200 720, 520 670 T 1150 860"
             fill="none"
             stroke="#000000"
-            strokeWidth="22"
+            strokeWidth="12"
             strokeLinecap="round"
-            opacity="0.95"
-            style={{ filter: "drop-shadow(0 16px 28px rgba(0,0,0,0.9))" }}
-          />
-          {/* Foreground Near Screen Base */}
-          <path
-            d="M -150 820 Q 200 720, 520 670"
-            fill="none"
-            stroke="url(#branch3_depth_grad)"
-            strokeWidth="22"
-            strokeLinecap="round"
+            opacity="0.8"
           />
           <path
             d="M -150 820 Q 200 720, 520 670 T 1150 860"
             fill="none"
             stroke="url(#branch3_depth_grad)"
-            strokeWidth="14"
+            strokeWidth="7.5"
             strokeLinecap="round"
           />
           <path
             d="M -150 819 Q 200 719, 520 669 T 1150 859"
             fill="none"
             stroke="#062d22"
-            strokeWidth="3.2"
+            strokeWidth="1.8"
             strokeLinecap="round"
-            opacity="0.65"
+            opacity="0.55"
           />
         </DraggableBranch>
 
-        {/* Branch 4: Long Diagonal Branch (Near screen on top-right, tapering deep into bottom-left) */}
+        {/* Branch 4: Distant Deep Diagonal Branch (Thin delicate thread crossing behind portal) */}
         <DraggableBranch
           id="branch-4"
           pathData="M 1150 80 Q 750 380, 450 550 T -120 880"
@@ -802,9 +805,9 @@ export default function LokiTimelinePortal() {
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={0.75}
           windConfig={{
-            x: [-12, 12, -12],
-            y: [10, -10, 10],
-            rotate: [-0.6, 0.6, -0.6],
+            x: [-10, 10, -10],
+            y: [8, -8, 8],
+            rotate: [-0.5, 0.5, -0.5],
             duration: 24,
             delay: 0.5
           }}
@@ -821,37 +824,29 @@ export default function LokiTimelinePortal() {
             d="M 1150 80 Q 750 380, 450 550 T -120 880"
             fill="none"
             stroke="#000000"
-            strokeWidth="18"
+            strokeWidth="10"
             strokeLinecap="round"
-            opacity="0.9"
-            style={{ filter: "drop-shadow(0 14px 22px rgba(0,0,0,0.85))" }}
+            opacity="0.7"
           />
-          {/* Close Foreground segment on top-right */}
-          <path
-            d="M 1150 80 Q 750 380, 450 550"
-            fill="none"
-            stroke="url(#branch4_depth_grad)"
-            strokeWidth="18"
-            strokeLinecap="round"
-          />
+          {/* Distant thin branch (6px) */}
           <path
             d="M 1150 80 Q 750 380, 450 550 T -120 880"
             fill="none"
             stroke="url(#branch4_depth_grad)"
-            strokeWidth="12"
+            strokeWidth="5"
             strokeLinecap="round"
           />
           <path
             d="M 1150 79 Q 750 379, 450 549 T -120 879"
             fill="none"
             stroke="#062d22"
-            strokeWidth="2.5"
+            strokeWidth="1.5"
             strokeLinecap="round"
-            opacity="0.6"
+            opacity="0.5"
           />
         </DraggableBranch>
 
-        {/* Branch 5: Mid-lower gentle horizontal vine (Foreground on left near screen, entering portal) */}
+        {/* Branch 5: Mid-lower gentle horizontal vine (Thin distant line entering portal) */}
         <DraggableBranch
           id="branch-5"
           pathData="M -100 480 Q 300 420, 650 490 T 1150 510"
@@ -863,9 +858,9 @@ export default function LokiTimelinePortal() {
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={1.0}
           windConfig={{
-            y: [12, -12, 12],
-            x: [8, -8, 8],
-            rotate: [0.7, -0.7, 0.7],
+            y: [10, -10, 10],
+            x: [6, -6, 6],
+            rotate: [0.6, -0.6, 0.6],
             duration: 19,
             delay: 2.5
           }}
@@ -882,33 +877,25 @@ export default function LokiTimelinePortal() {
             d="M -100 480 Q 300 420, 650 490 T 1150 510"
             fill="none"
             stroke="#000000"
-            strokeWidth="18"
+            strokeWidth="10"
             strokeLinecap="round"
-            opacity="0.9"
-            style={{ filter: "drop-shadow(0 14px 22px rgba(0,0,0,0.85))" }}
+            opacity="0.75"
           />
-          {/* Foreground segment */}
-          <path
-            d="M -100 480 Q 300 420, 650 490"
-            fill="none"
-            stroke="url(#branch5_depth_grad)"
-            strokeWidth="18"
-            strokeLinecap="round"
-          />
+          {/* Distant thin branch (6px) */}
           <path
             d="M -100 480 Q 300 420, 650 490 T 1150 510"
             fill="none"
             stroke="url(#branch5_depth_grad)"
-            strokeWidth="12"
+            strokeWidth="5.5"
             strokeLinecap="round"
           />
           <path
             d="M -100 479 Q 300 419, 650 489 T 1150 509"
             fill="none"
             stroke="#062d22"
-            strokeWidth="2.2"
+            strokeWidth="1.6"
             strokeLinecap="round"
-            opacity="0.6"
+            opacity="0.55"
           />
         </DraggableBranch>
       </svg>
