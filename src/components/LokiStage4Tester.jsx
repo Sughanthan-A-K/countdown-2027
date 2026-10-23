@@ -84,7 +84,7 @@ export default function LokiStage4Tester({
     }));
   };
 
-  // Joystick pointer calculations
+  // Joystick pointer calculations: Pure directional angle from crack seam
   const handleJoystickPointer = (clientX, clientY) => {
     if (!joystickRef.current || !onUpdateBeamTransform) return;
     const rect = joystickRef.current.getBoundingClientRect();
@@ -92,16 +92,11 @@ export default function LokiStage4Tester({
     const centerY = rect.top + rect.height / 2;
     const dx = clientX - centerX;
     const dy = clientY - centerY;
-    // Calculate angle in degrees (-180 to +180)
+    // Calculate aiming angle in degrees (-180 to +180)
     const angleDeg = Math.round(Math.atan2(dy, dx) * (180 / Math.PI));
-    // Calculate distance ratio (offset reach)
-    const dist = Math.min(rect.width / 2, Math.sqrt(dx * dx + dy * dy));
-    const reach = parseFloat((dist / (rect.width / 2)).toFixed(2));
 
     onUpdateBeamTransform(tuneTarget, {
-      angle: angleDeg,
-      offsetX: Math.round(dx * 0.4),
-      offsetY: Math.round(dy * 0.4)
+      angle: angleDeg
     });
   };
 
@@ -595,11 +590,13 @@ export default function LokiStage4Tester({
               style={{ transform: `translateY(-50%) rotate(${activeTransform.angle || 0}deg)` }}
             />
 
-            {/* Draggable Knob */}
+            {/* Draggable Knob positioned along angle ring */}
             <div
-              className="w-4.5 h-4.5 rounded-full bg-gradient-to-tr from-cyan-500 to-emerald-400 shadow-[0_0_8px_#06b6d4] flex items-center justify-center pointer-events-none transition-transform"
+              className="w-4 h-4 rounded-full bg-gradient-to-tr from-cyan-400 to-emerald-400 shadow-[0_0_8px_#06b6d4] flex items-center justify-center pointer-events-none transition-transform absolute"
               style={{
-                transform: `translate(${(activeTransform.offsetX || 0) * 0.5}px, ${(activeTransform.offsetY || 0) * 0.5}px)`
+                left: '50%',
+                top: '50%',
+                transform: `translate(-50%, -50%) rotate(${activeTransform.angle || 0}deg) translateX(28px)`
               }}
             >
               <div className="w-1.5 h-1.5 rounded-full bg-white" />

@@ -34,26 +34,26 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
   };
 
   // Helper to get dynamic transform string for a beam
-  // originPoint: [x, y] in SVG coordinates (e.g. [121, 168])
+  // IMPORTANT: The origin point [ox, oy] is the exact crack seam / fissure point on the card!
+  // The light origin STAYS ANCHORED to the crack seam, while only the outer beam direction swings/rotates!
   const getBeamTransform = (beamId, originPoint) => {
     if (!beamTransforms) return undefined;
-    const globalT = beamTransforms.global || { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 };
-    const beamT = beamTransforms[beamId] || { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 };
+    const globalT = beamTransforms.global || { angle: 0, scaleX: 1, scaleY: 1 };
+    const beamT = beamTransforms[beamId] || { angle: 0, scaleX: 1, scaleY: 1 };
 
     const totalAngle = (globalT.angle || 0) + (beamT.angle || 0);
     const totalScaleX = (globalT.scaleX || 1) * (beamT.scaleX || 1);
     const totalScaleY = (globalT.scaleY || 1) * (beamT.scaleY || 1);
-    const totalOffsetX = (globalT.offsetX || 0) + (beamT.offsetX || 0);
-    const totalOffsetY = (globalT.offsetY || 0) + (beamT.offsetY || 0);
 
-    if (totalAngle === 0 && totalScaleX === 1 && totalScaleY === 1 && totalOffsetX === 0 && totalOffsetY === 0) {
+    if (totalAngle === 0 && totalScaleX === 1 && totalScaleY === 1) {
       return undefined;
     }
 
+    // Anchor strictly at the seam origin (ox, oy)
     const ox = originPoint ? originPoint[0] : 100;
     const oy = originPoint ? originPoint[1] : 200;
 
-    return `translate(${totalOffsetX}, ${totalOffsetY}) translate(${ox}, ${oy}) rotate(${totalAngle}) scale(${totalScaleX}, ${totalScaleY}) translate(${-ox}, ${-oy})`;
+    return `translate(${ox}, ${oy}) rotate(${totalAngle}) scale(${totalScaleX}, ${totalScaleY}) translate(${-ox}, ${-oy})`;
   };
 
   // If stage4Step is explicitly controlled (e.g. 1 to 4), use it; otherwise default to full normal behavior (null = full)
