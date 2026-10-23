@@ -308,8 +308,8 @@ function App() {
   const [showStage4Tester, setShowStage4Tester] = useState(false);
   const [stage4StepIndex, setStage4StepIndex] = useState(1);
   const [isTesterAutoPlaying, setIsTesterAutoPlaying] = useState(false);
-  // Active light beams control in Stage 3 & Stage 4 (null = all active by default, or array of active beam IDs)
-  const [activeBeams, setActiveBeams] = useState(() => [101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  // Active light beams control in Stage 3 & Stage 4 (empty by default so user enables beams intentionally)
+  const [activeBeams, setActiveBeams] = useState(() => []);
   const [currentSoloBeam, setCurrentSoloBeam] = useState(null);
   // Dynamic 3D / Directional beam transforms { global: { angle, scaleX, scaleY, offsetX, offsetY }, [beamId]: { ... } }
   const [beamTransforms, setBeamTransforms] = useState(() => ({
@@ -371,8 +371,7 @@ function App() {
   // Keyboard shortcut Shift+T to toggle stage 4 tester
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Check Shift + T
-      if (e.shiftKey && (e.key === 'T' || e.key === 't' || e.code === 'KeyT')) {
+      if (e.shiftKey && (e.key === 'T' || e.key === 't')) {
         e.preventDefault();
         setShowStage4Tester(prev => !prev);
       }
@@ -387,17 +386,8 @@ function App() {
     setCurrentSoloBeam(null);
     setLokiCrackStage(stg);
     
-    // Auto-sync checked beams according to the selected stage!
-    if (stg <= 2) {
-      setActiveBeams([]);
-    } else if (stg === 3) {
-      // Tap 3: ONLY the 2 volumetric light cones from center!
-      setActiveBeams([101, 102]);
-    } else if (stg >= 4) {
-      // Tap 4 Step 1 default: Outer perimeter edge beams
-      setActiveBeams([1, 2, 3, 4, 5, 6]);
-      setStage4StepIndex(1);
-    }
+    // Auto-sync checked beams: Start with EMPTY array so user tests beams one by one!
+    setActiveBeams([]);
   };
 
   const handleTesterSetStep = (step) => {
@@ -406,19 +396,9 @@ function App() {
     setLokiCrackStage(4);
     setStage4StepIndex(step);
     
-    // Auto-sync checked beams step-by-step in Stage 4:
-    if (step === 1) {
-      // Step 4.1: Edge & Corner Beams
-      setActiveBeams([1, 2, 3, 4, 5, 6]);
-    } else if (step === 2) {
-      // Step 4.2: Outer beams + Center wave
-      setActiveBeams([1, 2, 3, 4, 5, 6]);
-    } else if (step === 3) {
-      // Step 4.3: Center Laser Bursts (7 to 12) + Outer beams
-      setActiveBeams([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-    } else if (step === 4) {
-      // Step 4.4: All beams active then shatter
-      setActiveBeams([101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    // Auto-sync checked beams: Start with EMPTY array so user can check/uncheck cleanly!
+    setActiveBeams([]);
+    if (step === 4) {
       setTimeout(() => setLokiCrackStage(5), 400);
     }
   };
@@ -1467,22 +1447,6 @@ function App() {
               >
                 <Info size={20} />
               </motion.button>
-              
-              {/* Developer Mode On-Screen Quick Toggle for Tester (Always available on screen) */}
-              {isDevMode && (
-                <button
-                  onClick={() => setShowStage4Tester(prev => !prev)}
-                  title="Toggle Loki Beam & Stage Tester (or press Shift+T)"
-                  className={`absolute top-8 left-40 z-[60] px-3 py-2 rounded-full border-2 text-xs font-bold shadow-md transition-all flex items-center gap-1.5 ${
-                    showStage4Tester 
-                      ? 'bg-emerald-500 text-black border-emerald-400 shadow-[0_0_12px_#10b981]' 
-                      : (isDarkMode ? 'bg-neutral-900 border-neutral-600 text-emerald-400 hover:border-emerald-500' : 'bg-white border-neutral-800 text-emerald-600 hover:border-emerald-600')
-                  }`}
-                >
-                  <span>⚡</span>
-                  <span>Tester</span>
-                </button>
-              )}
               
               {isDevMode && (
                 <button 
