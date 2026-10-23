@@ -289,15 +289,17 @@ export default function LokiStage4Tester({
             {/* View All Beams ON / OFF in Screen */}
             <button
               onClick={onAllPreviewOn}
-              title="Turn ON preview for all beams"
-              className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 hover:bg-emerald-900 transition-colors font-medium"
+              disabled={previewBeams.size === LIGHT_BEAMS_LIST.length}
+              title={previewBeams.size === LIGHT_BEAMS_LIST.length ? "All beams are already ON" : "Turn ON preview for all beams"}
+              className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 hover:bg-emerald-900 disabled:opacity-30 disabled:pointer-events-none transition-colors font-medium"
             >
               All ON
             </button>
             <button
               onClick={onAllPreviewOff}
-              title="Turn OFF preview for all beams"
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors font-medium"
+              disabled={previewBeams.size === 0 && !currentSoloBeam}
+              title={previewBeams.size === 0 && !currentSoloBeam ? "All beams are already OFF" : "Turn OFF preview for all beams"}
+              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 disabled:opacity-30 disabled:pointer-events-none transition-colors font-medium"
             >
               All OFF
             </button>
@@ -305,15 +307,17 @@ export default function LokiStage4Tester({
             {/* Checkbox All Check / Clear for 3D Angle Tool */}
             <button
               onClick={onSelectAllBeams}
-              title="Check all beams into 3D Angle list"
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+              disabled={activeBeams && activeBeams.length === LIGHT_BEAMS_LIST.length}
+              title={activeBeams && activeBeams.length === LIGHT_BEAMS_LIST.length ? "All beams are already checked" : "Check all beams into 3D Angle list"}
+              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 disabled:opacity-30 disabled:pointer-events-none transition-colors"
             >
               Check All
             </button>
             <button
               onClick={onDeselectAllBeams}
-              title="Clear all checked beams from 3D Angle list"
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+              disabled={!activeBeams || activeBeams.length === 0}
+              title={!activeBeams || activeBeams.length === 0 ? "Already cleared" : "Clear all checked beams from 3D Angle list"}
+              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 disabled:opacity-30 disabled:pointer-events-none transition-colors"
             >
               Clear
             </button>
