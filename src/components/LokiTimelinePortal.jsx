@@ -1,127 +1,167 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-function WovenLifePowerStrands({ pathData, branchLength = 1400 }) {
-  // A traveling segment (slug) of ~350px with tapered feathering at both ends
-  // Traveling continuously along the branch and leaving vibrant emerald alive in its wake
-  const dashLength = 340;
-  const gapLength = branchLength + 500;
+/**
+ * WovenLifePowerStrands - "Train" Traveling Pulse on Braided Vines
+ * 
+ * Implements Loki's God of Stories life magic as described:
+ * 1. Dual pulses travel outward from the tap point: one Leftwards, one Rightwards with EQUAL timing & speed.
+ * 2. Train slug concept: A fixed-length segment (~320px) travels along the branch like a train on a track.
+ * 3. Soft tapered ends: Head and tail fade smoothly into the branch.
+ * 4. Braided organic clump ("murukki pinniya wire"): Multiple intertwined filaments of emerald, vibrant lime, 
+ *    golden-chartreuse, and white core highlight.
+ * 5. Track behind train: Behind the passing slug, the branch leaves its dark/black organic body with a 
+ *    subtle, rich dark-emerald living awakening glow.
+ */
+function WovenLifePowerStrands({ forwardPath, backwardPath, isEnergized }) {
+  if (!isEnergized || !forwardPath || !backwardPath) return null;
 
-  return (
-    <g>
-      {/* 1. Permanent Wake: Once the pulse sweeps through, the branch remains alive with soft emerald glow */}
-      <motion.path
-        d={pathData}
-        fill="none"
-        stroke="#059669"
-        strokeWidth="9"
-        strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.85 }}
-        transition={{ duration: 6.0, ease: "easeOut", delay: 1.0 }}
-      />
-      <motion.path
-        d={pathData}
-        fill="none"
-        stroke="#10b981"
-        strokeWidth="14"
-        strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.6 }}
-        transition={{ duration: 6.0, ease: "easeOut", delay: 1.0 }}
-      />
+  const trainLength = 320;
+  const pathLength = 1600;
+  // Slow, smooth travel duration (equal for both directions)
+  const duration = 28.0;
 
-      {/* 2. THE TRAVELING 1-METER POWER PULSE (Tapered slug moving slowly along the branch) */}
-      {/* Outer vivid green aurora glow envelope */}
+  const renderPulseDirection = (pathD, keyPrefix) => (
+    <g key={keyPrefix}>
+      {/* Behind the train: Awakened dark emerald trace that gradually breathes life */}
       <motion.path
-        d={pathData}
+        d={pathD}
         fill="none"
-        stroke="#10b981"
-        strokeWidth="20"
-        strokeLinecap="round"
-        strokeDasharray={`${dashLength} ${gapLength}`}
-        initial={{ strokeDashoffset: dashLength }}
-        animate={{ strokeDashoffset: [-dashLength, -gapLength] }}
-        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
-        opacity={0.9}
-      />
-
-      {/* Mid vibrant lime/yellow-green core (Exact match with reference image media_1792720403066_1352b878.png) */}
-      <motion.path
-        d={pathData}
-        fill="none"
-        stroke="#4ade80"
+        stroke="#064e3b"
         strokeWidth="11"
         strokeLinecap="round"
-        strokeDasharray={`${dashLength - 20} ${gapLength + 20}`}
-        initial={{ strokeDashoffset: dashLength - 20 }}
-        animate={{ strokeDashoffset: [-(dashLength - 20), -gapLength] }}
-        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.55 }}
+        transition={{ duration, ease: "easeOut" }}
+      />
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#022c22"
+        strokeWidth="6"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.8 }}
+        transition={{ duration, ease: "easeOut" }}
+      />
+
+      {/* --- THE TRAVELING TRAIN SLUG (Simultaneous bi-directional) --- */}
+      {/* 1. Outermost soft atmospheric emerald haze */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#10b981"
+        strokeWidth="26"
+        strokeLinecap="round"
+        strokeDasharray={`${trainLength} ${pathLength}`}
+        initial={{ strokeDashoffset: trainLength }}
+        animate={{ strokeDashoffset: -pathLength }}
+        transition={{ duration, ease: "easeOut" }}
+        opacity={0.35}
+      />
+
+      {/* 2. Deep vibrant green auroral sleeve */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#059669"
+        strokeWidth="16"
+        strokeLinecap="round"
+        strokeDasharray={`${trainLength - 20} ${pathLength + 20}`}
+        initial={{ strokeDashoffset: trainLength - 20 }}
+        animate={{ strokeDashoffset: -pathLength }}
+        transition={{ duration, ease: "easeOut" }}
+        opacity={0.8}
+      />
+
+      {/* 3. Braided Vine Strand A: Vibrant Lime (#84cc16 / #4ade80) */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#4ade80"
+        strokeWidth="9"
+        strokeLinecap="round"
+        strokeDasharray={`${trainLength - 40} ${pathLength + 40}`}
+        initial={{ strokeDashoffset: trainLength - 40 }}
+        animate={{ strokeDashoffset: -pathLength }}
+        transition={{ duration, ease: "easeOut" }}
         opacity={0.95}
       />
 
-      {/* Bright chartreuse-gold inner energy layer */}
+      {/* 4. Braided Vine Strand B: Warm golden-chartreuse interwoven fiber (#a3e635 / #eab308) */}
       <motion.path
-        d={pathData}
+        d={pathD}
         fill="none"
-        stroke="#a3e635"
-        strokeWidth="6"
+        stroke="#bef264"
+        strokeWidth="5"
         strokeLinecap="round"
-        strokeDasharray={`${dashLength - 40} ${gapLength + 40}`}
-        initial={{ strokeDashoffset: dashLength - 40 }}
-        animate={{ strokeDashoffset: [-(dashLength - 40), -gapLength] }}
-        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
+        strokeDasharray={`${trainLength - 70} 12 ${trainLength - 100} ${pathLength}`}
+        initial={{ strokeDashoffset: trainLength - 60 }}
+        animate={{ strokeDashoffset: -pathLength }}
+        transition={{ duration, ease: "easeOut" }}
         opacity={1}
       />
 
-      {/* Blinding white-yellow center filament (Tapered tips on both ends) */}
+      {/* 5. Braided Vine Strand C: Intense yellow-green life filament (#facc15) */}
       <motion.path
-        d={pathData}
+        d={pathD}
         fill="none"
-        stroke="#fef08a"
-        strokeWidth="2.8"
+        stroke="#fde047"
+        strokeWidth="3.2"
         strokeLinecap="round"
-        strokeDasharray={`${dashLength - 60} ${gapLength + 60}`}
-        initial={{ strokeDashoffset: dashLength - 60 }}
-        animate={{ strokeDashoffset: [-(dashLength - 60), -gapLength] }}
-        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
+        strokeDasharray={`${trainLength - 90} 8 60 ${pathLength}`}
+        initial={{ strokeDashoffset: trainLength - 80 }}
+        animate={{ strokeDashoffset: -pathLength }}
+        transition={{ duration, ease: "easeOut" }}
         opacity={1}
       />
+
+      {/* 6. Core white-mint luminous filament (Tapered softly at both ends) */}
       <motion.path
-        d={pathData}
+        d={pathD}
         fill="none"
         stroke="#ffffff"
-        strokeWidth="1.6"
+        strokeWidth="1.8"
         strokeLinecap="round"
-        strokeDasharray={`${dashLength - 80} ${gapLength + 80}`}
-        initial={{ strokeDashoffset: dashLength - 80 }}
-        animate={{ strokeDashoffset: [-(dashLength - 80), -gapLength] }}
-        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
+        strokeDasharray={`${trainLength - 130} ${pathLength + 130}`}
+        initial={{ strokeDashoffset: trainLength - 110 }}
+        animate={{ strokeDashoffset: -pathLength }}
+        transition={{ duration, ease: "easeOut" }}
         opacity={1}
       />
     </g>
   );
+
+  return (
+    <g>
+      {/* Equal bi-directional spread: Right/Forward direction */}
+      {renderPulseDirection(forwardPath, "pulse-forward")}
+      {/* Equal bi-directional spread: Left/Backward direction */}
+      {renderPulseDirection(backwardPath, "pulse-backward")}
+    </g>
+  );
 }
+
 function DraggableBranch({ 
   id,
   children, 
   origin = "500px 300px", 
   windConfig,
   pathData,
-  forwardPath,
-  backwardPath,
   onEnergize,
   energizedData
 }) {
-  // Raw target offsets driven by user drag gestures
   const targetX = useMotionValue(0);
   const targetY = useMotionValue(0);
 
-  // Ultra-heavy damped spring: Even if user drags fast, spring moves slowly and resists speed!
   const smoothX = useSpring(targetX, { stiffness: 18, damping: 25, mass: 2.5 });
   const smoothY = useSpring(targetY, { stiffness: 18, damping: 25, mass: 2.5 });
 
   const isDragging = useRef(false);
+  const branchPathRef = useRef(null);
+
+  // Dynamic forward and backward paths split from user tap point
+  const [splitPaths, setSplitPaths] = useState(null);
 
   const handlePointerDown = (e) => {
     isDragging.current = true;
@@ -131,18 +171,59 @@ function DraggableBranch({
     const initialTargetY = targetY.get();
 
     // Trigger Loki God of Stories life magic power flow starting exactly from touch point!
-    if (onEnergize) {
-      const svg = e.currentTarget.closest('svg');
-      let clickX = 500;
-      let clickY = 500;
-      if (svg) {
-        const pt = svg.createSVGPoint();
-        pt.x = e.clientX;
-        pt.y = e.clientY;
-        const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
-        clickX = svgP.x;
-        clickY = svgP.y;
+    const svg = e.currentTarget.closest('svg');
+    let clickX = 500;
+    let clickY = 500;
+    if (svg) {
+      const pt = svg.createSVGPoint();
+      pt.x = e.clientX;
+      pt.y = e.clientY;
+      const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+      clickX = svgP.x;
+      clickY = svgP.y;
+    }
+
+    // Split the branch SVG path into forward (rightward) and backward (leftward) subpaths from the tap point
+    if (branchPathRef.current) {
+      const pathEl = branchPathRef.current;
+      const totalLen = pathEl.getTotalLength();
+      let bestLen = 0;
+      let minDistance = Infinity;
+
+      // Sample path to find closest point to click
+      const steps = 60;
+      for (let i = 0; i <= steps; i++) {
+        const len = (i / steps) * totalLen;
+        const p = pathEl.getPointAtLength(len);
+        const dist = Math.hypot(p.x - clickX, p.y - clickY);
+        if (dist < minDistance) {
+          minDistance = dist;
+          bestLen = len;
+        }
       }
+
+      // Generate forward subpath: starting at tap point -> progressing towards end of branch
+      const fwdSamples = 30;
+      let fwdD = "";
+      for (let i = 0; i <= fwdSamples; i++) {
+        const l = bestLen + (i / fwdSamples) * (totalLen - bestLen);
+        const ptAt = pathEl.getPointAtLength(l);
+        fwdD += (i === 0 ? `M ${ptAt.x.toFixed(1)} ${ptAt.y.toFixed(1)}` : ` L ${ptAt.x.toFixed(1)} ${ptAt.y.toFixed(1)}`);
+      }
+
+      // Generate backward subpath: starting at tap point -> progressing towards start of branch (left)
+      const bwdSamples = 30;
+      let bwdD = "";
+      for (let i = 0; i <= bwdSamples; i++) {
+        const l = bestLen - (i / bwdSamples) * bestLen;
+        const ptAt = pathEl.getPointAtLength(l);
+        bwdD += (i === 0 ? `M ${ptAt.x.toFixed(1)} ${ptAt.y.toFixed(1)}` : ` L ${ptAt.x.toFixed(1)} ${ptAt.y.toFixed(1)}`);
+      }
+
+      setSplitPaths({ forward: fwdD, backward: bwdD });
+    }
+
+    if (onEnergize) {
       onEnergize(id, clickX, clickY);
     }
 
@@ -151,7 +232,6 @@ function DraggableBranch({
       const dx = moveEvent.clientX - startClientX;
       const dy = moveEvent.clientY - startClientY;
       
-      // Heavy friction scaling factor (0.18): Dragging mouse 100px only moves target 18px!
       const resistanceFactor = 0.18;
       const clampedX = Math.max(-80, Math.min(80, initialTargetX + dx * resistanceFactor));
       const clampedY = Math.max(-60, Math.min(60, initialTargetY + dy * resistanceFactor));
@@ -189,14 +269,19 @@ function DraggableBranch({
         onPointerDown={handlePointerDown}
         className="pointer-events-auto cursor-grab active:cursor-grabbing select-none"
       >
+        {/* Hidden reference path to compute exact total length and subpaths on click */}
+        <path ref={branchPathRef} d={pathData} fill="none" stroke="none" />
+
         {children}
 
         {/* --- LOKI GOD OF STORIES MAGIC LIFE POWER FLOW OVERLAY --- */}
-        {/* Seamless woven braided currents spreading organically outwards from tap point */}
-        {energizedData && (
-          <g clipPath={`url(#power-reveal-${id})`}>
-            <WovenLifePowerStrands pathData={pathData} />
-          </g>
+        {/* Equal bi-directional traveling train pulses radiating outward from the tap point */}
+        {energizedData && splitPaths && (
+          <WovenLifePowerStrands 
+            forwardPath={splitPaths.forward} 
+            backwardPath={splitPaths.backward}
+            isEnergized={true} 
+          />
         )}
       </motion.g>
     </motion.g>
