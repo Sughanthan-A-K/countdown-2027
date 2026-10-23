@@ -223,13 +223,14 @@ export default function LokiStage4Tester({
       </motion.div>
 
       {/* ============================================================ */}
-      {/* TOOL 2: LIGHT BEAMS CHECKLIST & NOTES (DRAGGABLE) */}
+      {/* TOOL 2: LIGHT BEAMS CHECKLIST & NOTES (DRAGGABLE 2-COLUMN VIEW) */}
+      {/* Left side: Checked Beams | Right side: Unchecked Beams */}
       {/* ============================================================ */}
       <motion.div
         drag
         dragMomentum={false}
-        initial={{ x: 330, y: 70 }}
-        className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-amber-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(245,158,11,0.25)] text-white w-80 max-h-[82vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700"
+        initial={{ x: 320, y: 70 }}
+        className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-amber-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(245,158,11,0.25)] text-white w-[540px] max-h-[82vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700"
       >
         {/* Drag Handle Bar */}
         <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-700/80 cursor-grab active:cursor-grabbing sticky top-0 bg-neutral-900/95 z-10 pt-0.5">
@@ -239,24 +240,24 @@ export default function LokiStage4Tester({
               2. BEAMS SELECTOR ({LIGHT_BEAMS_LIST.length})
             </span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <button
               onClick={onSelectAllBeams}
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+              className="text-[9px] px-2 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
             >
-              All
+              All ON
             </button>
             <button
               onClick={onDeselectAllBeams}
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+              className="text-[9px] px-2 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
             >
-              Clear
+              All OFF
             </button>
           </div>
         </div>
 
         {/* Solo Beam Stepper: Prev / Next */}
-        <div className="flex items-center gap-1.5 mb-2 bg-neutral-950/80 p-1.5 rounded-xl border border-neutral-800">
+        <div className="flex items-center gap-1.5 mb-2.5 bg-neutral-950/80 p-1.5 rounded-xl border border-neutral-800">
           <button
             onClick={() => {
               const current = currentSoloBeam || 1;
@@ -266,10 +267,10 @@ export default function LokiStage4Tester({
             className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-200 transition-colors"
           >
             <ChevronLeft size={13} />
-            Prev
+            Prev Beam
           </button>
-          <div className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/70 border border-amber-600/40 text-amber-300 font-bold whitespace-nowrap">
-            {currentSoloBeam ? `#${currentSoloBeam}` : 'Custom'}
+          <div className="text-[10px] font-mono px-3 py-0.5 rounded bg-amber-950/70 border border-amber-600/40 text-amber-300 font-bold whitespace-nowrap">
+            {currentSoloBeam ? `Solo Beam #${currentSoloBeam}` : 'Multiple Beams Active'}
           </div>
           <button
             onClick={() => {
@@ -279,12 +280,12 @@ export default function LokiStage4Tester({
             }}
             className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-200 transition-colors"
           >
-            Next
+            Next Beam
             <ChevronRight size={13} />
           </button>
         </div>
 
-        {/* List of 14 Light Beams with individual checkboxes & sequence number */}
+        {/* 2-COLUMN VIEW: LEFT = CHECKED BEAMS | RIGHT = UNCHECKED BEAMS */}
         {(() => {
           const selectedBeams = LIGHT_BEAMS_LIST.filter(b => activeBeams ? activeBeams.includes(b.id) : true);
           const unselectedBeams = LIGHT_BEAMS_LIST.filter(b => activeBeams ? !activeBeams.includes(b.id) : false);
@@ -312,8 +313,8 @@ export default function LokiStage4Tester({
                   onClick={() => onToggleBeam(beam.id)}
                   className="flex items-center justify-between p-1.5 cursor-pointer"
                 >
-                  <div className="flex items-center gap-2 overflow-hidden flex-1">
-                    <span className={`text-[10px] font-mono font-bold w-5 h-5 flex items-center justify-center rounded transition-all ${
+                  <div className="flex items-center gap-1.5 overflow-hidden flex-1">
+                    <span className={`text-[10px] font-mono font-bold w-5 h-5 flex-shrink-0 flex items-center justify-center rounded transition-all ${
                       isSolo
                         ? 'bg-amber-500 text-black font-extrabold shadow-[0_0_6px_#f59e0b]'
                         : isViewed
@@ -325,41 +326,36 @@ export default function LokiStage4Tester({
                       {beam.id}
                     </span>
                     <div className="truncate flex-1">
-                      <div className="text-[11px] font-medium leading-tight truncate flex items-center gap-1.5">
-                        <span className="truncate">{beam.name}</span>
-                        {isViewed && (
-                          <span className="text-[9px] px-1 py-0.2 rounded bg-sky-900/80 text-sky-300 border border-sky-600/50 flex items-center gap-0.5 font-sans font-semibold">
-                            <CheckCircle2 size={9} /> Viewed
-                          </span>
-                        )}
+                      <div className="text-[10px] font-medium leading-tight truncate">
+                        {beam.name}
                       </div>
-                      <div className="text-[9px] text-neutral-400 font-mono">
-                        {beam.delay} • {beam.origin}
+                      <div className="text-[8px] text-neutral-400 font-mono">
+                        {beam.delay}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 pl-2">
+                  <div className="flex items-center gap-1 pl-1">
                     {/* Note Button */}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         setEditingNoteBeamId(isEditingNote ? null : beam.id);
                       }}
-                      title={hasNote ? `Note: ${beamNotes[beam.id]}` : "Add test note for this beam"}
+                      title={hasNote ? `Note: ${beamNotes[beam.id]}` : "Add test note"}
                       className={`p-1 rounded transition-colors ${
                         hasNote 
                           ? 'text-amber-400 bg-amber-950/80 border border-amber-600/40' 
                           : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
                       }`}
                     >
-                      <FileText size={12} />
+                      <FileText size={11} />
                     </button>
 
                     {/* Eye Solo Button */}
                     <button
                       onClick={(e) => handleEyeClick(e, beam.id)}
-                      title={isSolo ? "Turn Off Solo Preview" : "Preview this beam (Solo View & Marks as Viewed)"}
+                      title={isSolo ? "Turn Off Solo Preview" : "Preview this beam (Solo View)"}
                       className={`p-1 rounded transition-all ${
                         isSolo 
                           ? 'bg-amber-500 text-black shadow-[0_0_8px_#f59e0b]' 
@@ -368,12 +364,12 @@ export default function LokiStage4Tester({
                           : 'text-neutral-500 hover:text-amber-300 hover:bg-neutral-800'
                       }`}
                     >
-                      <Eye size={13} />
+                      <Eye size={12} />
                     </button>
 
                     {/* Checkbox */}
                     <div className={isChecked ? 'text-emerald-400' : 'text-neutral-600'}>
-                      {isChecked ? <CheckSquare size={14} /> : <Square size={14} />}
+                      {isChecked ? <CheckSquare size={13} /> : <Square size={13} />}
                     </div>
                   </div>
                 </div>
@@ -382,14 +378,14 @@ export default function LokiStage4Tester({
                 {(isEditingNote || hasNote) && (
                   <div 
                     onClick={(e) => e.stopPropagation()} 
-                    className="px-2 pb-2 pt-1 border-t border-neutral-800/80 bg-neutral-950/60 rounded-b-lg"
+                    className="px-2 pb-1.5 pt-1 border-t border-neutral-800/80 bg-neutral-950/60 rounded-b-lg"
                   >
                     <input
                       type="text"
                       value={beamNotes[beam.id] || ''}
                       onChange={(e) => handleUpdateNote(beam.id, e.target.value)}
-                      placeholder="Add note (e.g. good / angle too wide)..."
-                      className="w-full bg-neutral-900 border border-neutral-700/80 rounded px-2 py-1 text-[10px] text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-sky-500 font-sans"
+                      placeholder="Add note..."
+                      className="w-full bg-neutral-900 border border-neutral-700/80 rounded px-1.5 py-0.5 text-[9px] text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-sky-500 font-sans"
                     />
                   </div>
                 )}
@@ -398,41 +394,48 @@ export default function LokiStage4Tester({
           };
 
           return (
-            <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-              {/* PINNED CHECKED BEAMS SECTION (TOP) */}
-              <div className="bg-neutral-950/90 p-2 rounded-xl border border-emerald-500/40">
-                <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-emerald-900/50">
+            <div className="grid grid-cols-2 gap-2.5">
+              {/* LEFT SIDE: CHECKED BEAMS */}
+              <div className="bg-neutral-950/90 p-2 rounded-xl border border-emerald-500/40 flex flex-col">
+                <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-emerald-900/50">
                   <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold flex items-center gap-1">
                     <CheckSquare size={11} /> Checked ({selectedBeams.length})
                   </span>
-                  {selectedBeams.length > 0 && (
-                    <span className="text-[9px] text-emerald-300 font-mono">
-                      {selectedBeams.map(b => `#${b.id}`).join(', ')}
-                    </span>
-                  )}
+                  <span className="text-[8px] text-emerald-400/70 font-mono">
+                    LEFT SIDE
+                  </span>
                 </div>
                 {selectedBeams.length === 0 ? (
-                  <div className="text-[10px] text-neutral-500 italic py-1 text-center">
-                    No beams checked. Click below to add.
+                  <div className="text-[10px] text-neutral-500 italic py-6 text-center">
+                    No beams checked.<br/>Click on right side to add.
                   </div>
                 ) : (
-                  <div className="space-y-1">
+                  <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
                     {selectedBeams.map((beam) => renderBeamItem(beam, true))}
                   </div>
                 )}
               </div>
 
-              {/* UNCHECKED BEAMS SECTION (REMAINING) */}
-              {unselectedBeams.length > 0 && (
-                <div className="bg-neutral-950/40 p-2 rounded-xl border border-neutral-800">
-                  <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold mb-1.5 flex items-center gap-1">
-                    <Square size={11} /> Inactive / Unchecked ({unselectedBeams.length})
+              {/* RIGHT SIDE: UNCHECKED BEAMS */}
+              <div className="bg-neutral-950/40 p-2 rounded-xl border border-neutral-800 flex flex-col">
+                <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-neutral-800">
+                  <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold flex items-center gap-1">
+                    <Square size={11} /> Unchecked ({unselectedBeams.length})
+                  </span>
+                  <span className="text-[8px] text-neutral-500 font-mono">
+                    RIGHT SIDE
+                  </span>
+                </div>
+                {unselectedBeams.length === 0 ? (
+                  <div className="text-[10px] text-neutral-500 italic py-6 text-center">
+                    All beams are currently checked!
                   </div>
-                  <div className="space-y-1">
+                ) : (
+                  <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
                     {unselectedBeams.map((beam) => renderBeamItem(beam, false))}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           );
         })()}

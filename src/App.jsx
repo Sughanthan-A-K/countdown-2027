@@ -383,14 +383,41 @@ function App() {
   // When tester changes stage4StepIndex or crackStage
   const handleTesterSetStage = (stg) => {
     setIsTesterAutoPlaying(false);
+    setCurrentSoloBeam(null);
     setLokiCrackStage(stg);
+    
+    // Auto-sync checked beams according to the selected stage!
+    if (stg <= 2) {
+      setActiveBeams([]);
+    } else if (stg === 3) {
+      // Tap 3: ONLY the 2 volumetric light cones from center!
+      setActiveBeams([101, 102]);
+    } else if (stg >= 4) {
+      // Tap 4 Step 1 default: Outer perimeter edge beams
+      setActiveBeams([1, 2, 3, 4, 5, 6]);
+      setStage4StepIndex(1);
+    }
   };
 
   const handleTesterSetStep = (step) => {
     setIsTesterAutoPlaying(false);
+    setCurrentSoloBeam(null);
     setLokiCrackStage(4);
     setStage4StepIndex(step);
-    if (step === 4) {
+    
+    // Auto-sync checked beams step-by-step in Stage 4:
+    if (step === 1) {
+      // Step 4.1: Edge & Corner Beams
+      setActiveBeams([1, 2, 3, 4, 5, 6]);
+    } else if (step === 2) {
+      // Step 4.2: Outer beams + Center wave
+      setActiveBeams([1, 2, 3, 4, 5, 6]);
+    } else if (step === 3) {
+      // Step 4.3: Center Laser Bursts (7 to 12) + Outer beams
+      setActiveBeams([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    } else if (step === 4) {
+      // Step 4.4: All beams active then shatter
+      setActiveBeams([101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
       setTimeout(() => setLokiCrackStage(5), 400);
     }
   };
