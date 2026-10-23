@@ -267,16 +267,17 @@ export default function LokiStage4Tester({
 
       {/* ============================================================ */}
       {/* TOOL 2: LIGHT BEAMS CHECKLIST & NOTES (DRAGGABLE 2-COLUMN VIEW) */}
-      {/* Left side: Checked Beams | Right side: Unchecked Beams */}
+      {/* Show Tool 2 strictly from Stage 3 (T3) onwards! */}
       {/* ============================================================ */}
-      <motion.div
-        drag
-        dragMomentum={false}
-        initial={pos2}
-        animate={pos2}
-        onDragEnd={(_, info) => handleDragEnd('pos2', info)}
-        className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-amber-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(245,158,11,0.25)] text-white w-[540px] max-h-[82vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700"
-      >
+      {crackStage >= 3 && (
+        <motion.div
+          drag
+          dragMomentum={false}
+          initial={pos2}
+          animate={pos2}
+          onDragEnd={(_, info) => handleDragEnd('pos2', info)}
+          className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-amber-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(245,158,11,0.25)] text-white w-[540px] max-h-[82vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700"
+        >
         {/* Drag Handle Bar */}
         <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-700/80 cursor-grab active:cursor-grabbing sticky top-0 bg-neutral-900/95 z-10 pt-0.5">
           <div className="flex items-center gap-2">
@@ -289,17 +290,15 @@ export default function LokiStage4Tester({
             {/* View All Beams ON / OFF in Screen */}
             <button
               onClick={onAllPreviewOn}
-              disabled={previewBeams.size === LIGHT_BEAMS_LIST.length}
-              title={previewBeams.size === LIGHT_BEAMS_LIST.length ? "All beams are already ON" : "Turn ON preview for all beams"}
-              className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 hover:bg-emerald-900 disabled:opacity-30 disabled:pointer-events-none transition-colors font-medium"
+              title="Turn ON preview for all beams"
+              className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 hover:bg-emerald-900 transition-colors font-medium"
             >
               All ON
             </button>
             <button
               onClick={onAllPreviewOff}
-              disabled={previewBeams.size === 0 && !currentSoloBeam}
-              title={previewBeams.size === 0 && !currentSoloBeam ? "All beams are already OFF" : "Turn OFF preview for all beams"}
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 disabled:opacity-30 disabled:pointer-events-none transition-colors font-medium"
+              title="Turn OFF preview for all beams"
+              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors font-medium"
             >
               All OFF
             </button>
@@ -307,17 +306,15 @@ export default function LokiStage4Tester({
             {/* Checkbox All Check / Clear for 3D Angle Tool */}
             <button
               onClick={onSelectAllBeams}
-              disabled={activeBeams && activeBeams.length === LIGHT_BEAMS_LIST.length}
-              title={activeBeams && activeBeams.length === LIGHT_BEAMS_LIST.length ? "All beams are already checked" : "Check all beams into 3D Angle list"}
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+              title="Check all beams into 3D Angle list"
+              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
             >
               Check All
             </button>
             <button
               onClick={onDeselectAllBeams}
-              disabled={!activeBeams || activeBeams.length === 0}
-              title={!activeBeams || activeBeams.length === 0 ? "Already cleared" : "Clear all checked beams from 3D Angle list"}
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+              title="Clear all checked beams from 3D Angle list"
+              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
             >
               Clear
             </button>
@@ -557,18 +554,21 @@ export default function LokiStage4Tester({
           );
         })()}
       </motion.div>
+      )}
 
       {/* ============================================================ */}
       {/* TOOL 3: 3D ANGLE & DIRECTION TUNER (DRAGGABLE) */}
+      {/* Show Tool 3 strictly from Stage 3 (T3) onwards! */}
       {/* ============================================================ */}
-      <motion.div
-        drag
-        dragMomentum={false}
-        initial={pos3}
-        animate={pos3}
-        onDragEnd={(_, info) => handleDragEnd('pos3', info)}
-        className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-cyan-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(6,182,212,0.3)] text-white w-76 select-none font-sans text-xs"
-      >
+      {crackStage >= 3 && (
+        <motion.div
+          drag
+          dragMomentum={false}
+          initial={pos3}
+          animate={pos3}
+          onDragEnd={(_, info) => handleDragEnd('pos3', info)}
+          className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-cyan-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(6,182,212,0.3)] text-white w-76 select-none font-sans text-xs"
+        >
         {/* Drag Handle Bar */}
         <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-700/80 cursor-grab active:cursor-grabbing">
           <div className="flex items-center gap-2">
@@ -757,6 +757,7 @@ export default function LokiStage4Tester({
           <span className="font-mono text-neutral-400">Shift + T</span>
         </div>
       </motion.div>
+      )}
     </>
   );
 }

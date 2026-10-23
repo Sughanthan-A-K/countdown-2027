@@ -311,6 +311,8 @@ function App() {
   // Active light beams control in Stage 3 & Stage 4 (null = all active by default, or array of active beam IDs)
   const [activeBeams, setActiveBeams] = useState(() => [101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   const [currentSoloBeam, setCurrentSoloBeam] = useState(null);
+  // Whether preview mode has turned all beams OFF
+  const [isAllPreviewOff, setIsAllPreviewOff] = useState(false);
   // Independent preview beam toggles: Set of beam IDs that are explicitly turned ON for testing
   const [previewBeams, setPreviewBeams] = useState(() => new Set());
   // Dynamic 3D / Directional beam transforms { global: { angle, scaleX, scaleY, offsetX, offsetY }, [beamId]: { ... } }
@@ -360,6 +362,8 @@ function App() {
   };
 
   const handleTogglePreviewBeam = (beamId) => {
+    setIsAllPreviewOff(false);
+    setCurrentSoloBeam(null);
     setPreviewBeams(prev => {
       const next = new Set(prev);
       if (next.has(beamId)) {
@@ -372,16 +376,20 @@ function App() {
   };
 
   const handleAllPreviewOn = () => {
+    setIsAllPreviewOff(false);
+    setCurrentSoloBeam(null);
     setPreviewBeams(new Set([101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]));
   };
 
   const handleAllPreviewOff = () => {
+    setIsAllPreviewOff(true);
     setPreviewBeams(new Set());
     setCurrentSoloBeam(null);
   };
 
   const handleSetSoloBeam = (beamId) => {
-    // If the clicked beam is already in solo mode, clicking eye again turns off solo and restores saved checked beams!
+    setIsAllPreviewOff(false);
+    // If the clicked beam is already in solo mode, clicking again turns off solo
     if (currentSoloBeam === beamId) {
       setCurrentSoloBeam(null);
     } else {
@@ -405,6 +413,7 @@ function App() {
   const handleTesterSetStage = (stg) => {
     setIsTesterAutoPlaying(false);
     setCurrentSoloBeam(null);
+    setIsAllPreviewOff(false);
     setPreviewBeams(new Set());
     setLokiCrackStage(stg);
     
@@ -424,6 +433,7 @@ function App() {
   const handleTesterSetStep = (step) => {
     setIsTesterAutoPlaying(false);
     setCurrentSoloBeam(null);
+    setIsAllPreviewOff(false);
     setPreviewBeams(new Set());
     setLokiCrackStage(4);
     setStage4StepIndex(step);
@@ -1768,11 +1778,13 @@ function App() {
                       stage4Step={page.index === 0 && showStage4Tester && lokiCrackStage === 4 ? stage4StepIndex : null}
                       activeBeams={
                         page.index === 0 && showStage4Tester 
-                          ? (currentSoloBeam 
-                              ? [currentSoloBeam] 
-                              : (previewBeams.size > 0 
-                                  ? Array.from(previewBeams) 
-                                  : activeBeams)) 
+                          ? (isAllPreviewOff
+                              ? (previewBeams.size > 0 ? Array.from(previewBeams) : [])
+                              : (currentSoloBeam 
+                                  ? [currentSoloBeam] 
+                                  : (previewBeams.size > 0 
+                                      ? Array.from(previewBeams) 
+                                      : activeBeams))) 
                           : null
                       }
                       beamTransforms={page.index === 0 && showStage4Tester ? beamTransforms : null}
