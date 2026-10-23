@@ -2,25 +2,22 @@ import React, { useRef, useState, useMemo } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 /**
- * Loki God of Stories Life Magic: Single Continuous Smooth Organic Flow
+ * LokiLifePowerSingleFlow
  * 
- * Directly matching media_1792721643396_05468f26.png and media_1792721370573_168b0385.jpg:
- * 1. ZERO SEAMS / JOINTS: Uses the exact original branch pathData continuously.
- *    Dual feathered progressive masks expand outward from tap point (t0 in [0,1]) to 0 (left) and 1 (right)
- *    in lockstep, completely eliminating overlapping stroke caps or joints!
- * 2. As the luminous energy advances along the branch, the branch behind it stays alive in rich emerald green
- *    (transforming permanently from dead black into glowing dark emerald, exactly like in the user's second image).
- * 3. Volumetric emerald atmospheric glow envelope with soft feathered leading edge entering the dark branch.
+ * Exact match to user's specification and attached diagram:
+ * - Single continuous path (no joint or duplicate overlay at tap point).
+ * - Reveals smoothly from user's tap point outwards using SVG stroke-dashoffset / pathLength.
+ * - Single flowing wave (no second lagging trail - "antha 2nd la irukuratha thookidu one pona pothum").
+ * - As the wave travels:
+ *   1. Glowing green head (vibrant emerald, lime, glowing mint/white core and volumetric aura).
+ *   2. Directly turns the branch from dark/black into soft, living awakened emerald-green in its wake!
  */
-function ContinuousLivingBranchEnergy({ pathData, tapRatio = 0.5, isEnergized }) {
+function LokiLifePowerSingleFlow({ pathData, tapRatio = 0.5, isEnergized }) {
   if (!isEnergized || !pathData) return null;
-
-  // Slow, smooth cinematic spread duration
-  const duration = 18.0;
 
   return (
     <g>
-      {/* 1. Broad Volumetric Emerald Aurora Atmospheric Glow */}
+      {/* 1. Volumetric Ethereal Green Atmosphere (Huge soft bloom following the front) */}
       <motion.path
         d={pathData}
         fill="none"
@@ -29,68 +26,88 @@ function ContinuousLivingBranchEnergy({ pathData, tapRatio = 0.5, isEnergized })
         strokeLinecap="round"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.4 }}
-        transition={{ duration: 1.5 }}
-        style={{ filter: "blur(10px)" }}
+        transition={{ duration: 3.0, ease: "easeOut" }}
+        style={{ filter: "blur(14px)" }}
       />
 
-      {/* 2. Permanent awakened rich emerald body (Turns branch from dead black to rich living green) */}
+      {/* 2. Living Awakened Branch Body: Seamlessly transforms from dead black into deep living emerald */}
       <motion.path
         d={pathData}
         fill="none"
         stroke="#047857"
-        strokeWidth="13"
+        strokeWidth="9"
         strokeLinecap="round"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.95 }}
-        transition={{ duration: 2.0 }}
+        animate={{ opacity: 0.9 }}
+        transition={{ duration: 4.0, ease: "easeOut" }}
       />
       <motion.path
         d={pathData}
         fill="none"
         stroke="#10b981"
-        strokeWidth="9"
+        strokeWidth="4.5"
         strokeLinecap="round"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.7 }}
-        transition={{ duration: 2.5 }}
+        animate={{ opacity: 0.85 }}
+        transition={{ duration: 4.0, ease: "easeOut" }}
       />
 
-      {/* 3. Outer Bright Lime living aura */}
+      {/* 3. The Traveling Glowing Green Wave Pulse (Single continuous traveling head) */}
+      {/* Outer green pulse aura */}
+      <motion.path
+        d={pathData}
+        fill="none"
+        stroke="#22c55e"
+        strokeWidth="16"
+        strokeLinecap="round"
+        strokeDasharray="260 2200"
+        initial={{ strokeDashoffset: Math.round(1800 * (1 - tapRatio) + 260) }}
+        animate={{ strokeDashoffset: -2200 }}
+        transition={{ duration: 22.0, ease: "easeOut" }}
+        opacity={0.8}
+        style={{ filter: "blur(3px)" }}
+      />
+
+      {/* Vibrant Lime Strand */}
       <motion.path
         d={pathData}
         fill="none"
         stroke="#4ade80"
-        strokeWidth="6"
+        strokeWidth="8"
         strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.9 }}
-        transition={{ duration: 2.0 }}
+        strokeDasharray="220 2200"
+        initial={{ strokeDashoffset: Math.round(1800 * (1 - tapRatio) + 220) }}
+        animate={{ strokeDashoffset: -2200 }}
+        transition={{ duration: 22.0, ease: "easeOut" }}
+        opacity={0.95}
       />
 
-      {/* 4. Warm Chartreuse / Golden-Green living fiber */}
+      {/* Radiant Yellow-Gold Filament */}
       <motion.path
         d={pathData}
         fill="none"
-        stroke="#bef264"
-        strokeWidth="3.5"
+        stroke="#facc15"
+        strokeWidth="4.5"
         strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.8 }}
+        strokeDasharray="180 2200"
+        initial={{ strokeDashoffset: Math.round(1800 * (1 - tapRatio) + 180) }}
+        animate={{ strokeDashoffset: -2200 }}
+        transition={{ duration: 22.0, ease: "easeOut" }}
+        opacity={1}
       />
 
-      {/* 5. Pure White-Mint Brilliant Core Luminous Filament */}
+      {/* Blinding White Core Filament */}
       <motion.path
         d={pathData}
         fill="none"
         stroke="#ffffff"
-        strokeWidth="1.8"
+        strokeWidth="2.2"
         strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0.85, 1, 0.85] }}
-        transition={{ 
-          opacity: { duration: 3.0, repeat: Infinity, ease: "easeInOut" }
-        }}
+        strokeDasharray="140 2200"
+        initial={{ strokeDashoffset: Math.round(1800 * (1 - tapRatio) + 140) }}
+        animate={{ strokeDashoffset: -2200 }}
+        transition={{ duration: 22.0, ease: "easeOut" }}
+        opacity={1}
       />
     </g>
   );
@@ -114,6 +131,8 @@ function DraggableBranch({
   const isDragging = useRef(false);
   const branchPathRef = useRef(null);
 
+  const [tapRatio, setTapRatio] = useState(0.5);
+
   const handlePointerDown = (e) => {
     isDragging.current = true;
     const startClientX = e.clientX;
@@ -132,6 +151,26 @@ function DraggableBranch({
       const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
       clickX = svgP.x;
       clickY = svgP.y;
+    }
+
+    // Determine normalized tap ratio along path
+    if (branchPathRef.current) {
+      const pathEl = branchPathRef.current;
+      const totalLen = pathEl.getTotalLength();
+      let bestLen = 0;
+      let minDistance = Infinity;
+
+      const steps = 50;
+      for (let i = 0; i <= steps; i++) {
+        const len = (i / steps) * totalLen;
+        const p = pathEl.getPointAtLength(len);
+        const dist = Math.hypot(p.x - clickX, p.y - clickY);
+        if (dist < minDistance) {
+          minDistance = dist;
+          bestLen = len;
+        }
+      }
+      setTapRatio(bestLen / totalLen);
     }
 
     if (onEnergize) {
@@ -180,19 +219,19 @@ function DraggableBranch({
         onPointerDown={handlePointerDown}
         className="pointer-events-auto cursor-grab active:cursor-grabbing select-none"
       >
+        {/* Hidden reference path to compute exact total length and subpaths on click */}
         <path ref={branchPathRef} d={pathData} fill="none" stroke="none" />
 
         {children}
 
         {/* --- LOKI GOD OF STORIES MAGIC LIFE POWER FLOW OVERLAY --- */}
-        {/* Continuous single organic path revealed seamlessly outward from tap point via mask */}
+        {/* Single continuous path, zero joints, smoothly turns branch from black to green */}
         {energizedData && (
-          <g mask={`url(#loki-live-mask-${id})`}>
-            <ContinuousLivingBranchEnergy 
-              pathData={pathData} 
-              isEnergized={true} 
-            />
-          </g>
+          <LokiLifePowerSingleFlow 
+            pathData={pathData}
+            tapRatio={tapRatio}
+            isEnergized={true} 
+          />
         )}
       </motion.g>
     </motion.g>
@@ -386,26 +425,24 @@ export default function LokiTimelinePortal() {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Progressive Ethereal Masks for Each Branch Centered at Tap Point */}
+          {/* Dynamic Expanding Circular Clip-Paths for Each Branch Centered at User Tap Point */}
           {['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'].map(bId => {
             const data = energizedBranches[bId];
             return (
-              <mask id={`loki-live-mask-${bId}`} key={`mask-${bId}`}>
-                {/* Everything starts black (hidden) */}
-                <rect x="-200" y="-200" width="1400" height="1400" fill="black" />
+              <clipPath id={`power-reveal-${bId}`} key={`clip-${bId}`}>
                 {data ? (
-                  /* Ultra-smooth feathered radial reveal starting at click location with soft blurred edge */
                   <motion.circle
                     cx={data.x || 500}
                     cy={data.y || 500}
                     initial={{ r: 0 }}
                     animate={{ r: 1600 }}
-                    transition={{ duration: 16.0, ease: [0.16, 0.95, 0.35, 1] }}
-                    fill="white"
-                    style={{ filter: 'blur(35px)' }}
+                    // Ultra deep slow motion over 45 seconds - meditative and ultra gradual
+                    transition={{ duration: 45.0, ease: [0.16, 0.95, 0.35, 1] }}
                   />
-                ) : null}
-              </mask>
+                ) : (
+                  <circle cx="500" cy="500" r="0" />
+                )}
+              </clipPath>
             );
           })}
         </defs>
