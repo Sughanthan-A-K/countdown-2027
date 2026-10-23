@@ -63,6 +63,42 @@ export default function LokiStage4Tester({
   const [tuneTarget, setTuneTarget] = useState('global');
   const [copiedConfig, setCopiedConfig] = useState(false);
 
+  // Remember tool window positions in localStorage so they stay exactly where user dragged them!
+  const [pos1, setPos1] = useState(() => {
+    try {
+      const saved = localStorage.getItem('loki_tester_pos1');
+      return saved ? JSON.parse(saved) : { x: 24, y: 70 };
+    } catch (_) { return { x: 24, y: 70 }; }
+  });
+
+  const [pos2, setPos2] = useState(() => {
+    try {
+      const saved = localStorage.getItem('loki_tester_pos2');
+      return saved ? JSON.parse(saved) : { x: 320, y: 70 };
+    } catch (_) { return { x: 320, y: 70 }; }
+  });
+
+  const [pos3, setPos3] = useState(() => {
+    try {
+      const saved = localStorage.getItem('loki_tester_pos3');
+      return saved ? JSON.parse(saved) : { x: 880, y: 70 };
+    } catch (_) { return { x: 880, y: 70 }; }
+  });
+
+  const handleDragEnd = (toolKey, info) => {
+    const updater = (prev) => {
+      const nextPos = {
+        x: Math.round((prev?.x || 0) + info.offset.x),
+        y: Math.round((prev?.y || 0) + info.offset.y)
+      };
+      localStorage.setItem(`loki_tester_${toolKey}`, JSON.stringify(nextPos));
+      return nextPos;
+    };
+    if (toolKey === 'pos1') setPos1(updater);
+    if (toolKey === 'pos2') setPos2(updater);
+    if (toolKey === 'pos3') setPos3(updater);
+  };
+
   // Joystick dragging state
   const joystickRef = useRef(null);
   const [isDraggingJoystick, setIsDraggingJoystick] = useState(false);
@@ -134,7 +170,9 @@ export default function LokiStage4Tester({
       <motion.div
         drag
         dragMomentum={false}
-        initial={{ x: 24, y: 70 }}
+        initial={pos1}
+        animate={pos1}
+        onDragEnd={(_, info) => handleDragEnd('pos1', info)}
         className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-emerald-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(16,185,129,0.3)] text-white w-72 select-none font-sans text-xs"
       >
         {/* Drag Handle Bar */}
@@ -234,7 +272,9 @@ export default function LokiStage4Tester({
       <motion.div
         drag
         dragMomentum={false}
-        initial={{ x: 320, y: 70 }}
+        initial={pos2}
+        animate={pos2}
+        onDragEnd={(_, info) => handleDragEnd('pos2', info)}
         className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-amber-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(245,158,11,0.25)] text-white w-[540px] max-h-[82vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700"
       >
         {/* Drag Handle Bar */}
@@ -520,7 +560,9 @@ export default function LokiStage4Tester({
       <motion.div
         drag
         dragMomentum={false}
-        initial={{ x: 670, y: 70 }}
+        initial={pos3}
+        animate={pos3}
+        onDragEnd={(_, info) => handleDragEnd('pos3', info)}
         className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-cyan-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(6,182,212,0.3)] text-white w-76 select-none font-sans text-xs"
       >
         {/* Drag Handle Bar */}
