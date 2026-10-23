@@ -371,7 +371,8 @@ function App() {
   // Keyboard shortcut Shift+T to toggle stage 4 tester
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.shiftKey && (e.key === 'T' || e.key === 't')) {
+      // Check Shift + T
+      if (e.shiftKey && (e.key === 'T' || e.key === 't' || e.code === 'KeyT')) {
         e.preventDefault();
         setShowStage4Tester(prev => !prev);
       }
@@ -1466,6 +1467,22 @@ function App() {
               >
                 <Info size={20} />
               </motion.button>
+              
+              {/* Developer Mode On-Screen Quick Toggle for Tester (Always available on screen) */}
+              {isDevMode && (
+                <button
+                  onClick={() => setShowStage4Tester(prev => !prev)}
+                  title="Toggle Loki Beam & Stage Tester (or press Shift+T)"
+                  className={`absolute top-8 left-40 z-[60] px-3 py-2 rounded-full border-2 text-xs font-bold shadow-md transition-all flex items-center gap-1.5 ${
+                    showStage4Tester 
+                      ? 'bg-emerald-500 text-black border-emerald-400 shadow-[0_0_12px_#10b981]' 
+                      : (isDarkMode ? 'bg-neutral-900 border-neutral-600 text-emerald-400 hover:border-emerald-500' : 'bg-white border-neutral-800 text-emerald-600 hover:border-emerald-600')
+                  }`}
+                >
+                  <span>⚡</span>
+                  <span>Tester</span>
+                </button>
+              )}
               
               {isDevMode && (
                 <button 
