@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight, X, CheckSquare, Square, Eye, FileText, CheckCircle2, Compass, Copy, Check, GripHorizontal } from 'lucide-react';
+import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight, X, CheckSquare, Square, Eye, FileText, CheckCircle2, Compass, Copy, Check, GripHorizontal, ListFilter, SlidersHorizontal, Minimize2, Maximize2 } from 'lucide-react';
 
 export const STAGE_4_STEPS = [
   { id: 1, name: "4.1: Edge & Corner Beams", desc: "Outer cracks emit light shafts (0.6s - 2.85s)" },
@@ -84,6 +84,30 @@ export default function LokiStage4Tester({
       return saved ? JSON.parse(saved) : { x: 880, y: 70 };
     } catch (_) { return { x: 880, y: 70 }; }
   });
+
+  // Minimize / Maximize states for Tool 2 and Tool 3
+  const [isTool2Minimized, setIsTool2Minimized] = useState(() => {
+    return localStorage.getItem('loki_tester_tool2_minimized') === 'true';
+  });
+  const [isTool3Minimized, setIsTool3Minimized] = useState(() => {
+    return localStorage.getItem('loki_tester_tool3_minimized') === 'true';
+  });
+
+  const handleToggleTool2Minimize = () => {
+    setIsTool2Minimized(prev => {
+      const next = !prev;
+      localStorage.setItem('loki_tester_tool2_minimized', String(next));
+      return next;
+    });
+  };
+
+  const handleToggleTool3Minimize = () => {
+    setIsTool3Minimized(prev => {
+      const next = !prev;
+      localStorage.setItem('loki_tester_tool3_minimized', String(next));
+      return next;
+    });
+  };
 
   const handleDragEnd = (toolKey, info) => {
     const updater = (prev) => {
@@ -181,13 +205,49 @@ export default function LokiStage4Tester({
             <GripHorizontal size={14} className="text-emerald-400" />
             <span className="font-bold tracking-wide text-emerald-300 text-[11px]">1. STAGE & TIMELINE</span>
           </div>
-          <button 
-            onClick={onClose}
-            className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
-            title="Close All (Shift+T)"
-          >
-            <X size={14} />
-          </button>
+
+          <div className="flex items-center gap-1.5">
+            {/* Quick Toggle Icon for Tool 2 (Beams Selector) */}
+            {crackStage >= 3 && (
+              <button
+                onClick={handleToggleTool2Minimize}
+                title={isTool2Minimized ? "Expand Tool 2 (Beams Selector)" : "Minimize Tool 2"}
+                className={`p-1 rounded-lg border transition-all flex items-center gap-0.5 text-[9px] font-bold ${
+                  !isTool2Minimized 
+                    ? 'bg-amber-950/80 text-amber-300 border-amber-600/60 shadow-[0_0_6px_rgba(245,158,11,0.3)]' 
+                    : 'bg-neutral-800 text-neutral-400 border-neutral-700 hover:text-white'
+                }`}
+              >
+                <ListFilter size={11} className={!isTool2Minimized ? 'text-amber-400' : 'text-neutral-400'} />
+                <span>T2</span>
+              </button>
+            )}
+
+            {/* Quick Toggle Icon for Tool 3 (3D Angle & Direction) */}
+            {crackStage >= 3 && (
+              <button
+                onClick={handleToggleTool3Minimize}
+                title={isTool3Minimized ? "Expand Tool 3 (3D Angle & Direction)" : "Minimize Tool 3"}
+                className={`p-1 rounded-lg border transition-all flex items-center gap-0.5 text-[9px] font-bold ${
+                  !isTool3Minimized 
+                    ? 'bg-cyan-950/80 text-cyan-300 border-cyan-600/60 shadow-[0_0_6px_rgba(6,182,212,0.3)]' 
+                    : 'bg-neutral-800 text-neutral-400 border-neutral-700 hover:text-white'
+                }`}
+              >
+                <Compass size={11} className={!isTool3Minimized ? 'text-cyan-400' : 'text-neutral-400'} />
+                <span>T3</span>
+              </button>
+            )}
+
+            {/* Close All (Shift + T) */}
+            <button 
+              onClick={onClose}
+              className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors ml-0.5"
+              title="Close All (Shift+T)"
+            >
+              <X size={14} />
+            </button>
+          </div>
         </div>
 
         {/* Main Stage Selectors */}
@@ -276,52 +336,75 @@ export default function LokiStage4Tester({
           initial={pos2}
           animate={pos2}
           onDragEnd={(_, info) => handleDragEnd('pos2', info)}
-          className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-amber-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(245,158,11,0.25)] text-white w-[540px] max-h-[82vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700"
+          className={`fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-amber-500/50 rounded-2xl shadow-[0_0_30px_rgba(245,158,11,0.25)] text-white select-none font-sans text-xs transition-all ${
+            isTool2Minimized 
+              ? 'p-2 w-auto' 
+              : 'p-3.5 w-[540px] max-h-[82vh] overflow-y-auto scrollbar-thin scrollbar-thumb-neutral-700'
+          }`}
         >
         {/* Drag Handle Bar */}
-        <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-700/80 cursor-grab active:cursor-grabbing sticky top-0 bg-neutral-900/95 z-10 pt-0.5">
+        <div className={`flex items-center justify-between cursor-grab active:cursor-grabbing sticky top-0 bg-neutral-900/95 z-10 ${
+          isTool2Minimized ? '' : 'pb-2 mb-2 border-b border-neutral-700/80 pt-0.5'
+        }`}>
           <div className="flex items-center gap-2">
             <GripHorizontal size={14} className="text-amber-400" />
             <span className="font-bold tracking-wide text-amber-300 text-[11px]">
-              2. BEAMS SELECTOR ({LIGHT_BEAMS_LIST.length})
+              2. BEAMS SELECTOR {isTool2Minimized ? '' : `(${LIGHT_BEAMS_LIST.length})`}
             </span>
           </div>
-          <div className="flex items-center gap-1">
-            {/* View All Beams ON / OFF in Screen */}
+
+          <div className="flex items-center gap-1.5 ml-3">
+            {!isTool2Minimized && (
+              <>
+                {/* View All Beams ON / OFF in Screen */}
+                <button
+                  onClick={onAllPreviewOn}
+                  title="Turn ON preview for all beams"
+                  className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 hover:bg-emerald-900 transition-colors font-medium"
+                >
+                  All ON
+                </button>
+                <button
+                  onClick={onAllPreviewOff}
+                  title="Turn OFF preview for all beams"
+                  className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors font-medium"
+                >
+                  All OFF
+                </button>
+                <div className="w-px h-3 bg-neutral-700 mx-0.5" />
+                {/* Checkbox All Check / Clear for 3D Angle Tool */}
+                <button
+                  onClick={onSelectAllBeams}
+                  title="Check all beams into 3D Angle list"
+                  className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+                >
+                  Check All
+                </button>
+                <button
+                  onClick={onDeselectAllBeams}
+                  title="Clear all checked beams from 3D Angle list"
+                  className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+                >
+                  Clear
+                </button>
+              </>
+            )}
+
+            {/* Window Minimize / Maximize Button */}
             <button
-              onClick={onAllPreviewOn}
-              title="Turn ON preview for all beams"
-              className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 hover:bg-emerald-900 transition-colors font-medium"
+              onClick={handleToggleTool2Minimize}
+              className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors ml-1"
+              title={isTool2Minimized ? "Maximize Tool 2" : "Minimize Tool 2"}
             >
-              All ON
-            </button>
-            <button
-              onClick={onAllPreviewOff}
-              title="Turn OFF preview for all beams"
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors font-medium"
-            >
-              All OFF
-            </button>
-            <div className="w-px h-3 bg-neutral-700 mx-0.5" />
-            {/* Checkbox All Check / Clear for 3D Angle Tool */}
-            <button
-              onClick={onSelectAllBeams}
-              title="Check all beams into 3D Angle list"
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
-            >
-              Check All
-            </button>
-            <button
-              onClick={onDeselectAllBeams}
-              title="Clear all checked beams from 3D Angle list"
-              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
-            >
-              Clear
+              {isTool2Minimized ? <Maximize2 size={13} className="text-amber-400" /> : <Minimize2 size={13} />}
             </button>
           </div>
         </div>
 
-        {/* Solo Beam Stepper: Prev / Next scoped strictly to current relevant beams */}
+        {/* Content hidden if minimized */}
+        {!isTool2Minimized && (
+          <>
+            {/* Solo Beam Stepper: Prev / Next scoped strictly to current relevant beams */}
         {(() => {
           // Identify relevant beams strictly for current stage / step
           let stepBeams = LIGHT_BEAMS_LIST;
@@ -553,6 +636,8 @@ export default function LokiStage4Tester({
             </div>
           );
         })()}
+          </>
+        )}
       </motion.div>
       )}
 
@@ -567,40 +652,61 @@ export default function LokiStage4Tester({
           initial={pos3}
           animate={pos3}
           onDragEnd={(_, info) => handleDragEnd('pos3', info)}
-          className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-cyan-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(6,182,212,0.3)] text-white w-76 select-none font-sans text-xs"
+          className={`fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-cyan-500/50 rounded-2xl shadow-[0_0_30px_rgba(6,182,212,0.3)] text-white select-none font-sans text-xs transition-all ${
+            isTool3Minimized ? 'p-2 w-auto' : 'p-3.5 w-76'
+          }`}
         >
         {/* Drag Handle Bar */}
-        <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-700/80 cursor-grab active:cursor-grabbing">
+        <div className={`flex items-center justify-between cursor-grab active:cursor-grabbing ${
+          isTool3Minimized ? '' : 'pb-2 mb-2 border-b border-neutral-700/80'
+        }`}>
           <div className="flex items-center gap-2">
             <GripHorizontal size={14} className="text-cyan-400" />
             <span className="font-bold tracking-wide text-cyan-300 text-[11px] flex items-center gap-1">
-              <Compass size={12} /> 3. 3D ANGLE & DIRECTION
+              <Compass size={12} /> 3. 3D ANGLE {isTool3Minimized ? '' : '& DIRECTION'}
             </span>
           </div>
 
-          {/* Target Selector: Global vs Target Beam */}
-          <div className="flex items-center gap-1 bg-neutral-950 p-0.5 rounded-lg border border-neutral-800">
+          <div className="flex items-center gap-1.5 ml-3">
+            {!isTool3Minimized && (
+              /* Target Selector: Global vs Target Beam */
+              <div className="flex items-center gap-1 bg-neutral-950 p-0.5 rounded-lg border border-neutral-800">
+                <button
+                  onClick={() => setTuneTarget('global')}
+                  className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition-colors ${
+                    tuneTarget === 'global' ? 'bg-cyan-500 text-black shadow-[0_0_6px_#06b6d4]' : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => {
+                    const targetId = currentSoloBeam || (activeBeams && activeBeams[0]) || 1;
+                    setTuneTarget(targetId);
+                  }}
+                  className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition-colors ${
+                    tuneTarget !== 'global' ? 'bg-amber-500 text-black shadow-[0_0_6px_#f59e0b]' : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                >
+                  {tuneTarget !== 'global' ? `#${tuneTarget}` : 'Target'}
+                </button>
+              </div>
+            )}
+
+            {/* Window Minimize / Maximize Button */}
             <button
-              onClick={() => setTuneTarget('global')}
-              className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition-colors ${
-                tuneTarget === 'global' ? 'bg-cyan-500 text-black shadow-[0_0_6px_#06b6d4]' : 'text-neutral-400 hover:text-neutral-200'
-              }`}
+              onClick={handleToggleTool3Minimize}
+              className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+              title={isTool3Minimized ? "Maximize Tool 3" : "Minimize Tool 3"}
             >
-              All
-            </button>
-            <button
-              onClick={() => {
-                const targetId = currentSoloBeam || (activeBeams && activeBeams[0]) || 1;
-                setTuneTarget(targetId);
-              }}
-              className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition-colors ${
-                tuneTarget !== 'global' ? 'bg-amber-500 text-black shadow-[0_0_6px_#f59e0b]' : 'text-neutral-400 hover:text-neutral-200'
-              }`}
-            >
-              {tuneTarget !== 'global' ? `#${tuneTarget}` : 'Target'}
+              {isTool3Minimized ? <Maximize2 size={13} className="text-cyan-400" /> : <Minimize2 size={13} />}
             </button>
           </div>
         </div>
+
+        {/* Content hidden if minimized */}
+        {!isTool3Minimized && (
+          <>
 
         {/* If target beam is active, show ONLY checked beams as quick selector pills */}
         {tuneTarget !== 'global' && (() => {
@@ -756,6 +862,8 @@ export default function LokiStage4Tester({
           <span>Draggable Modal</span>
           <span className="font-mono text-neutral-400">Shift + T</span>
         </div>
+          </>
+        )}
       </motion.div>
       )}
     </>
