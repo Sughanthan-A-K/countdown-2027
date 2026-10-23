@@ -39,9 +39,8 @@ function App() {
   });
   const [starVisible, setStarVisible] = useState(() => {
     const isDone = localStorage.getItem('onboardingDone') === 'true';
-    const hasTorn = localStorage.getItem('hasFirstTearAfterOnboarding') === 'true';
     const hasKey = localStorage.getItem('hasGandhiKey') === 'true';
-    return isDone && hasTorn && !hasKey && isKeyEligible();
+    return isDone && !hasKey && isKeyEligible();
   });
   const [shouldAnimateStarFlight, setShouldAnimateStarFlight] = useState(false);
   const [finalHintStep, setFinalHintStep] = useState('none');
@@ -787,7 +786,7 @@ function App() {
        return false;
     }
 
-    const isStarCardBlocked = tutorialState === -1 && !hasGandhiKey && isKeyEligible() && hasFirstTearAfterOnboarding && !isSpecialCardDate(calendarDate);
+    const isStarCardBlocked = tutorialState === -1 && !hasGandhiKey && isKeyEligible() && !isSpecialCardDate(calendarDate);
     if (isStarCardBlocked) {
        setBubbleText(globalLang === "english" ? "Something is sparkling in the corner... Tap to see what it is" : "Corner-la oru natchathiram minunguthe... enna nu Tap panni paarunga");
        setBubblePosition('bottom');

@@ -70,6 +70,17 @@ export function getOnboardingTier(date = null) {
  */
 export function isKeyEligible() {
   if (typeof window === 'undefined') return true;
+
+  // 1. If onboardingDoneDate was stored when user finished onboarding, that is the true onboarding timestamp
+  const storedOnboardDate = localStorage.getItem('onboardingDoneDate');
+  if (storedOnboardDate) {
+    const d = new Date(parseInt(storedOnboardDate, 10));
+    if (d.getFullYear() > 2026) return false;
+    if (d.getMonth() === 11 && d.getDate() > 14) return false;
+    return true;
+  }
+
+  // 2. Fallback to devOverrideDate if in Dev mode
   const isDev = localStorage.getItem('isDevMode') === 'true';
   const devDateStr = localStorage.getItem('devOverrideDate');
   if (isDev && devDateStr) {
@@ -79,14 +90,7 @@ export function isKeyEligible() {
     return true;
   }
 
-  const storedOnboardDate = localStorage.getItem('onboardingDoneDate');
-  if (storedOnboardDate) {
-    const d = new Date(parseInt(storedOnboardDate, 10));
-    if (d.getFullYear() > 2026) return false;
-    if (d.getMonth() === 11 && d.getDate() > 14) return false;
-    return true;
-  }
-  // If not recorded yet, check current date
+  // 3. If not recorded yet, check current date
   const now = new Date();
   if (now.getFullYear() > 2026) return false;
   if (now.getMonth() === 11 && now.getDate() > 14) return false;
