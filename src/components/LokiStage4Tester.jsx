@@ -44,6 +44,10 @@ export default function LokiStage4Tester({
   onDeselectAllBeams,
   currentSoloBeam,
   onSetSoloBeam,
+  previewBeams = new Set(),
+  onTogglePreviewBeam,
+  onAllPreviewOn,
+  onAllPreviewOff,
   beamTransforms = {},
   onUpdateBeamTransform,
   onResetBeamTransform,
@@ -241,18 +245,37 @@ export default function LokiStage4Tester({
               2. BEAMS SELECTOR ({LIGHT_BEAMS_LIST.length})
             </span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
+            {/* View All Beams ON / OFF in Screen */}
             <button
-              onClick={onSelectAllBeams}
-              className="text-[9px] px-2 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+              onClick={onAllPreviewOn}
+              title="Turn ON preview for all beams"
+              className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 hover:bg-emerald-900 transition-colors font-medium"
             >
               All ON
             </button>
             <button
-              onClick={onDeselectAllBeams}
-              className="text-[9px] px-2 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+              onClick={onAllPreviewOff}
+              title="Turn OFF preview for all beams"
+              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors font-medium"
             >
               All OFF
+            </button>
+            <div className="w-px h-3 bg-neutral-700 mx-0.5" />
+            {/* Checkbox All Check / Clear for 3D Angle Tool */}
+            <button
+              onClick={onSelectAllBeams}
+              title="Check all beams into 3D Angle list"
+              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+            >
+              Check All
+            </button>
+            <button
+              onClick={onDeselectAllBeams}
+              title="Clear all checked beams from 3D Angle list"
+              className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+            >
+              Clear
             </button>
           </div>
         </div>
@@ -337,6 +360,8 @@ export default function LokiStage4Tester({
 
           const renderBeamItem = (beam, isChecked) => {
             const isSolo = currentSoloBeam === beam.id;
+            const isPreviewOn = previewBeams.has(beam.id);
+            const isViewing = isSolo || isPreviewOn;
             const isViewed = viewedBeams.has(beam.id);
             const hasNote = Boolean(beamNotes[beam.id]?.trim());
             const isEditingNote = editingNoteBeamId === beam.id;
@@ -345,7 +370,7 @@ export default function LokiStage4Tester({
               <div
                 key={`beam-${beam.id}`}
                 className={`rounded-lg border transition-all ${
-                  isSolo
+                  isViewing
                     ? 'bg-amber-950/70 border-amber-500/90 text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.3)] ring-1 ring-amber-400/50'
                     : isChecked
                     ? (isViewed 
@@ -355,12 +380,16 @@ export default function LokiStage4Tester({
                 }`}
               >
                 <div 
-                  onClick={(e) => handleRowTapPreview(e, beam.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setViewedBeams(prev => new Set(prev).add(beam.id));
+                    onTogglePreviewBeam(beam.id);
+                  }}
                   className="flex items-center justify-between p-1.5 cursor-pointer"
                 >
                   <div className="flex items-center gap-1.5 overflow-hidden flex-1">
                     <span className={`text-[10px] font-mono font-bold w-5 h-5 flex-shrink-0 flex items-center justify-center rounded transition-all ${
-                      isSolo
+                      isViewing
                         ? 'bg-amber-500 text-black font-extrabold shadow-[0_0_8px_#f59e0b]'
                         : isChecked 
                         ? (isViewed 
@@ -373,12 +402,12 @@ export default function LokiStage4Tester({
                     <div className="truncate flex-1">
                       <div className="text-[10px] font-medium leading-tight truncate flex items-center gap-1">
                         <span className="truncate">{beam.name}</span>
-                        {isSolo && (
+                        {isViewing && (
                           <span className="text-[8px] px-1 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-600 font-sans font-bold animate-pulse">
-                            Viewing
+                            ON
                           </span>
                         )}
-                        {!isSolo && isViewed && (
+                        {!isViewing && isViewed && (
                           <span className="text-[8px] px-1 py-0.2 rounded bg-sky-950 text-sky-300 border border-sky-700/60 font-sans font-semibold">
                             Viewed
                           </span>

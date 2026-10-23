@@ -308,9 +308,11 @@ function App() {
   const [showStage4Tester, setShowStage4Tester] = useState(false);
   const [stage4StepIndex, setStage4StepIndex] = useState(1);
   const [isTesterAutoPlaying, setIsTesterAutoPlaying] = useState(false);
-  // Active light beams control in Stage 3 & Stage 4 (empty by default so user enables beams intentionally)
-  const [activeBeams, setActiveBeams] = useState(() => []);
+  // Active light beams control in Stage 3 & Stage 4 (null = all active by default, or array of active beam IDs)
+  const [activeBeams, setActiveBeams] = useState(() => [101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   const [currentSoloBeam, setCurrentSoloBeam] = useState(null);
+  // Independent preview beam toggles: Set of beam IDs that are explicitly turned ON for testing
+  const [previewBeams, setPreviewBeams] = useState(() => new Set());
   // Dynamic 3D / Directional beam transforms { global: { angle, scaleX, scaleY, offsetX, offsetY }, [beamId]: { ... } }
   const [beamTransforms, setBeamTransforms] = useState(() => ({
     global: { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
@@ -350,13 +352,32 @@ function App() {
   };
 
   const handleSelectAllBeams = () => {
-    setCurrentSoloBeam(null);
     setActiveBeams([101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   };
 
   const handleDeselectAllBeams = () => {
-    setCurrentSoloBeam(null);
     setActiveBeams([]);
+  };
+
+  const handleTogglePreviewBeam = (beamId) => {
+    setPreviewBeams(prev => {
+      const next = new Set(prev);
+      if (next.has(beamId)) {
+        next.delete(beamId);
+      } else {
+        next.add(beamId);
+      }
+      return next;
+    });
+  };
+
+  const handleAllPreviewOn = () => {
+    setPreviewBeams(new Set([101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]));
+  };
+
+  const handleAllPreviewOff = () => {
+    setPreviewBeams(new Set());
+    setCurrentSoloBeam(null);
   };
 
   const handleSetSoloBeam = (beamId) => {
@@ -384,21 +405,42 @@ function App() {
   const handleTesterSetStage = (stg) => {
     setIsTesterAutoPlaying(false);
     setCurrentSoloBeam(null);
+    setPreviewBeams(new Set());
     setLokiCrackStage(stg);
     
-    // Auto-sync checked beams: Start with EMPTY array so user tests beams one by one!
-    setActiveBeams([]);
+    // Auto-sync checked beams according to the selected stage!
+    if (stg <= 2) {
+      setActiveBeams([]);
+    } else if (stg === 3) {
+      // Tap 3: ONLY the 2 volumetric light cones from center!
+      setActiveBeams([101, 102]);
+    } else if (stg >= 4) {
+      // Tap 4 Step 1 default: Outer perimeter edge beams
+      setActiveBeams([1, 2, 3, 4, 5, 6]);
+      setStage4StepIndex(1);
+    }
   };
 
   const handleTesterSetStep = (step) => {
     setIsTesterAutoPlaying(false);
     setCurrentSoloBeam(null);
+    setPreviewBeams(new Set());
     setLokiCrackStage(4);
     setStage4StepIndex(step);
     
-    // Auto-sync checked beams: Start with EMPTY array so user can check/uncheck cleanly!
-    setActiveBeams([]);
-    if (step === 4) {
+    // Auto-sync checked beams step-by-step in Stage 4:
+    if (step === 1) {
+      // Step 4.1: Edge & Corner Beams
+      setActiveBeams([1, 2, 3, 4, 5, 6]);
+    } else if (step === 2) {
+      // Step 4.2: Outer beams + Center wave
+      setActiveBeams([1, 2, 3, 4, 5, 6]);
+    } else if (step === 3) {
+      // Step 4.3: Center Laser Bursts (7 to 12) + Outer beams
+      setActiveBeams([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    } else if (step === 4) {
+      // Step 4.4: All beams active then shatter
+      setActiveBeams([101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
       setTimeout(() => setLokiCrackStage(5), 400);
     }
   };
@@ -1726,7 +1768,11 @@ function App() {
                       stage4Step={page.index === 0 && showStage4Tester && lokiCrackStage === 4 ? stage4StepIndex : null}
                       activeBeams={
                         page.index === 0 && showStage4Tester 
-                          ? (currentSoloBeam ? [currentSoloBeam] : activeBeams) 
+                          ? (currentSoloBeam 
+                              ? [currentSoloBeam] 
+                              : (previewBeams.size > 0 
+                                  ? Array.from(previewBeams) 
+                                  : activeBeams)) 
                           : null
                       }
                       beamTransforms={page.index === 0 && showStage4Tester ? beamTransforms : null}
@@ -1879,6 +1925,10 @@ function App() {
           onDeselectAllBeams={handleDeselectAllBeams}
           currentSoloBeam={currentSoloBeam}
           onSetSoloBeam={handleSetSoloBeam}
+          previewBeams={previewBeams}
+          onTogglePreviewBeam={handleTogglePreviewBeam}
+          onAllPreviewOn={handleAllPreviewOn}
+          onAllPreviewOff={handleAllPreviewOff}
           beamTransforms={beamTransforms}
           onUpdateBeamTransform={handleUpdateBeamTransform}
           onResetBeamTransform={handleResetBeamTransform}
