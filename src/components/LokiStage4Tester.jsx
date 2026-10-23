@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight, X, CheckSquare, Square, Eye } from 'lucide-react';
+import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight, X, CheckSquare, Square, Eye, FileText, CheckCircle2 } from 'lucide-react';
 
 export const STAGE_4_STEPS = [
   { id: 1, name: "4.1: Edge & Corner Beams", desc: "Outer cracks emit light shafts (0.6s - 2.85s)" },
@@ -45,6 +45,24 @@ export default function LokiStage4Tester({
   onSetSoloBeam,
   onClose
 }) {
+  // Track beams that user has inspected with the Eye icon
+  const [viewedBeams, setViewedBeams] = useState(() => new Set());
+  // Store user notes for each beam { [beamId]: "note text" }
+  const [beamNotes, setBeamNotes] = useState(() => ({}));
+  const [editingNoteBeamId, setEditingNoteBeamId] = useState(null);
+
+  const handleEyeClick = (e, beamId) => {
+    e.stopPropagation();
+    setViewedBeams(prev => new Set(prev).add(beamId));
+    onSetSoloBeam(beamId);
+  };
+
+  const handleUpdateNote = (beamId, text) => {
+    setBeamNotes(prev => ({
+      ...prev,
+      [beamId]: text
+    }));
+  };
   return (
     <div className="fixed top-16 left-6 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-emerald-500/50 rounded-2xl p-4 shadow-[0_0_35px_rgba(16,185,129,0.35)] text-white w-80 max-h-[88vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700">
       
@@ -198,57 +216,108 @@ export default function LokiStage4Tester({
 
           const renderBeamItem = (beam, isChecked) => {
             const isSolo = currentSoloBeam === beam.id;
+            const isViewed = viewedBeams.has(beam.id);
+            const hasNote = Boolean(beamNotes[beam.id]?.trim());
+            const isEditingNote = editingNoteBeamId === beam.id;
+
             return (
               <div
                 key={`beam-${beam.id}`}
-                onClick={() => onToggleBeam(beam.id)}
-                className={`flex items-center justify-between p-1.5 rounded-lg border cursor-pointer transition-all ${
+                className={`rounded-lg border transition-all ${
                   isSolo
                     ? 'bg-amber-950/70 border-amber-500/90 text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.3)] ring-1 ring-amber-400/50'
+                    : isViewed
+                    ? 'bg-sky-950/40 border-sky-500/60 text-sky-100 shadow-[0_0_8px_rgba(14,165,233,0.18)]'
                     : isChecked
                     ? 'bg-emerald-950/40 border-emerald-500/50 hover:border-emerald-400 text-neutral-100 shadow-[0_0_6px_rgba(16,185,129,0.15)]'
                     : 'bg-neutral-950/50 border-neutral-800/80 text-neutral-500 opacity-60 hover:opacity-100'
                 }`}
               >
-                <div className="flex items-center gap-2 overflow-hidden">
-                  <span className={`text-[10px] font-mono font-bold w-5 h-5 flex items-center justify-center rounded ${
-                    isSolo
-                      ? 'bg-amber-500 text-black font-extrabold shadow-[0_0_6px_#f59e0b]'
-                      : isChecked 
-                      ? 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60' 
-                      : 'bg-neutral-800 text-neutral-400'
-                  }`}>
-                    {beam.id}
-                  </span>
-                  <div className="truncate">
-                    <div className="text-[11px] font-medium leading-tight truncate">
-                      {beam.name}
+                <div 
+                  onClick={() => onToggleBeam(beam.id)}
+                  className="flex items-center justify-between p-1.5 cursor-pointer"
+                >
+                  <div className="flex items-center gap-2 overflow-hidden flex-1">
+                    <span className={`text-[10px] font-mono font-bold w-5 h-5 flex items-center justify-center rounded transition-all ${
+                      isSolo
+                        ? 'bg-amber-500 text-black font-extrabold shadow-[0_0_6px_#f59e0b]'
+                        : isViewed
+                        ? 'bg-sky-500 text-black font-bold shadow-[0_0_6px_rgba(14,165,233,0.6)]'
+                        : isChecked 
+                        ? 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60' 
+                        : 'bg-neutral-800 text-neutral-400'
+                    }`}>
+                      {beam.id}
+                    </span>
+                    <div className="truncate flex-1">
+                      <div className="text-[11px] font-medium leading-tight truncate flex items-center gap-1.5">
+                        <span className="truncate">{beam.name}</span>
+                        {isViewed && (
+                          <span className="text-[9px] px-1 py-0.2 rounded bg-sky-900/80 text-sky-300 border border-sky-600/50 flex items-center gap-0.5 font-sans font-semibold">
+                            <CheckCircle2 size={9} /> Viewed
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[9px] text-neutral-400 font-mono">
+                        {beam.delay} • {beam.origin}
+                      </div>
                     </div>
-                    <div className="text-[9px] text-neutral-400 font-mono">
-                      {beam.delay} • {beam.origin}
+                  </div>
+
+                  <div className="flex items-center gap-1 pl-2">
+                    {/* Note Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingNoteBeamId(isEditingNote ? null : beam.id);
+                      }}
+                      title={hasNote ? `Note: ${beamNotes[beam.id]}` : "Add test note for this beam"}
+                      className={`p-1 rounded transition-colors ${
+                        hasNote 
+                          ? 'text-amber-400 bg-amber-950/80 border border-amber-600/40' 
+                          : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
+                      }`}
+                    >
+                      <FileText size={12} />
+                    </button>
+
+                    {/* Eye Solo Button */}
+                    <button
+                      onClick={(e) => handleEyeClick(e, beam.id)}
+                      title={isSolo ? "Turn Off Solo Preview" : "Preview this beam (Solo View & Marks as Viewed)"}
+                      className={`p-1 rounded transition-all ${
+                        isSolo 
+                          ? 'bg-amber-500 text-black shadow-[0_0_8px_#f59e0b]' 
+                          : isViewed
+                          ? 'text-sky-300 hover:text-amber-300 hover:bg-neutral-800'
+                          : 'text-neutral-500 hover:text-amber-300 hover:bg-neutral-800'
+                      }`}
+                    >
+                      <Eye size={13} />
+                    </button>
+
+                    {/* Checkbox */}
+                    <div className={isChecked ? 'text-emerald-400' : 'text-neutral-600'}>
+                      {isChecked ? <CheckSquare size={14} /> : <Square size={14} />}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 pl-2">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSetSoloBeam(beam.id);
-                    }}
-                    title={isSolo ? "Turn Off Solo Preview" : "Preview this beam (Solo View)"}
-                    className={`p-1 rounded transition-all ${
-                      isSolo 
-                        ? 'bg-amber-500 text-black shadow-[0_0_8px_#f59e0b]' 
-                        : 'text-neutral-500 hover:text-amber-300 hover:bg-neutral-800'
-                    }`}
+                {/* Inline Note Box */}
+                {(isEditingNote || hasNote) && (
+                  <div 
+                    onClick={(e) => e.stopPropagation()} 
+                    className="px-2 pb-2 pt-1 border-t border-neutral-800/80 bg-neutral-950/60 rounded-b-lg"
                   >
-                    <Eye size={13} />
-                  </button>
-                  <div className={isChecked ? 'text-emerald-400' : 'text-neutral-600'}>
-                    {isChecked ? <CheckSquare size={14} /> : <Square size={14} />}
+                    <input
+                      type="text"
+                      value={beamNotes[beam.id] || ''}
+                      onChange={(e) => handleUpdateNote(beam.id, e.target.value)}
+                      placeholder="Add note (e.g. good / angle too wide / remove)..."
+                      className="w-full bg-neutral-900 border border-neutral-700/80 rounded px-2 py-1 text-[10px] text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-sky-500 font-sans"
+                    />
                   </div>
-                </div>
+                )}
               </div>
             );
           };
