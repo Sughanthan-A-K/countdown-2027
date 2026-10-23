@@ -349,7 +349,7 @@ export default function LokiStage4Tester({
                 }`}
               >
                 <div 
-                  onClick={() => onToggleBeam(beam.id)}
+                  onClick={(e) => handleEyeClick(e, beam.id)}
                   className="flex items-center justify-between p-1.5 cursor-pointer"
                 >
                   <div className="flex items-center gap-1.5 overflow-hidden flex-1">
@@ -411,8 +411,15 @@ export default function LokiStage4Tester({
                       <Eye size={12} />
                     </button>
 
-                    {/* Checkbox */}
-                    <div className={isChecked ? 'text-emerald-400' : 'text-neutral-600'}>
+                    {/* Checkbox (Clicking directly on checkbox toggles check on/off) */}
+                    <div 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleBeam(beam.id);
+                      }}
+                      title={isChecked ? "Uncheck beam" : "Check beam"}
+                      className={`p-0.5 rounded hover:bg-neutral-800 cursor-pointer ${isChecked ? 'text-emerald-400' : 'text-neutral-600'}`}
+                    >
                       {isChecked ? <CheckSquare size={13} /> : <Square size={13} />}
                     </div>
                   </div>
