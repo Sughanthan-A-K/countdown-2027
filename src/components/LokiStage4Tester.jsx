@@ -287,8 +287,14 @@ export default function LokiStage4Tester({
 
         {/* 2-COLUMN VIEW: LEFT = CHECKED BEAMS | RIGHT = UNCHECKED BEAMS */}
         {(() => {
-          const selectedBeams = LIGHT_BEAMS_LIST.filter(b => activeBeams ? activeBeams.includes(b.id) : true);
-          const unselectedBeams = LIGHT_BEAMS_LIST.filter(b => activeBeams ? !activeBeams.includes(b.id) : false);
+          // When crackStage === 3 (T3), ONLY show Tap 3 beams (101 & 102)
+          // When crackStage >= 4, show Tap 4 beams (1 to 12) + Tap 3 beams
+          const relevantBeams = crackStage === 3 
+            ? LIGHT_BEAMS_LIST.filter(b => b.group === "Tap 3")
+            : LIGHT_BEAMS_LIST;
+
+          const selectedBeams = relevantBeams.filter(b => activeBeams ? activeBeams.includes(b.id) : true);
+          const unselectedBeams = relevantBeams.filter(b => activeBeams ? !activeBeams.includes(b.id) : false);
 
           const renderBeamItem = (beam, isChecked) => {
             const isSolo = currentSoloBeam === beam.id;
@@ -412,7 +418,7 @@ export default function LokiStage4Tester({
                     <CheckSquare size={11} /> Checked ({selectedBeams.length})
                   </span>
                   <span className="text-[8px] text-emerald-400/70 font-mono">
-                    LEFT SIDE
+                    {crackStage === 3 ? 'T3 ACTIVE' : 'LEFT SIDE'}
                   </span>
                 </div>
                 {selectedBeams.length === 0 ? (
@@ -438,7 +444,7 @@ export default function LokiStage4Tester({
                 </div>
                 {unselectedBeams.length === 0 ? (
                   <div className="text-[10px] text-neutral-500 italic py-6 text-center">
-                    All beams are currently checked!
+                    {crackStage === 3 ? 'Both T3 Beams Active!' : 'All beams are currently checked!'}
                   </div>
                 ) : (
                   <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
