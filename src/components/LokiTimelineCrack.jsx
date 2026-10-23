@@ -523,30 +523,6 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null })
                 style={{ mixBlendMode: "screen" }}
               />
             )}
-
-            {/* 2. Final Climax Flash: At 5.0s, the entire card achieves 100% white-emerald glow right at explosion moment */}
-            {showCenterBursts && (
-              <motion.rect
-                x="0"
-                y="0"
-                width="200"
-                height="400"
-                rx="16"
-                fill="#ffffff"
-                initial={{ opacity: 0 }}
-                animate={isStepMode ? {
-                  opacity: 0.9
-                } : {
-                  opacity: [0, 0, 0, 0.3, 0.95]
-                }}
-                transition={{
-                  duration: isStepMode ? 0.2 : 5.1,
-                  times: isStepMode ? undefined : [0, 0.7, 0.85, 0.95, 1.0],
-                  ease: "easeIn"
-                }}
-                style={{ mixBlendMode: "screen" }}
-              />
-            )}
           </g>
         )}
 
