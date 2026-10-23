@@ -256,198 +256,102 @@ export default function LokiStage4Tester({
           </div>
         </div>
 
-        {/* Solo Beam Stepper: Prev / Next */}
-        <div className="flex items-center gap-1.5 mb-2.5 bg-neutral-950/80 p-1.5 rounded-xl border border-neutral-800">
-          <button
-            onClick={() => {
-              const current = currentSoloBeam || 1;
-              const prev = current <= 1 ? LIGHT_BEAMS_LIST.length : current - 1;
-              onSetSoloBeam(prev);
-            }}
-            className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-200 transition-colors"
-          >
-            <ChevronLeft size={13} />
-            Prev Beam
-          </button>
-          <div className="text-[10px] font-mono px-3 py-0.5 rounded bg-amber-950/70 border border-amber-600/40 text-amber-300 font-bold whitespace-nowrap">
-            {currentSoloBeam ? `Solo Beam #${currentSoloBeam}` : 'Multiple Beams Active'}
-          </div>
-          <button
-            onClick={() => {
-              const current = currentSoloBeam || 0;
-              const next = current >= LIGHT_BEAMS_LIST.length ? 1 : current + 1;
-              onSetSoloBeam(next);
-            }}
-            className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-200 transition-colors"
-          >
-            Next Beam
-            <ChevronRight size={13} />
-          </button>
-        </div>
-
         {/* 2-COLUMN VIEW: LEFT = CHECKED BEAMS | RIGHT = UNCHECKED BEAMS */}
         {(() => {
           // When crackStage === 3 (T3), ONLY show Tap 3 beams (101 & 102)
-          // When crackStage >= 4, show Tap 4 beams (1 to 12) + Tap 3 beams
+          // When crackStage >= 4, show beams relevant to current stage/step
           const relevantBeams = crackStage === 3 
             ? LIGHT_BEAMS_LIST.filter(b => b.group === "Tap 3")
-            : LIGHT_BEAMS_LIST;
+            : (crackStage === 4 && stepIndex === 1 
+                ? LIGHT_BEAMS_LIST.filter(b => b.group === "Outer")
+                : (crackStage === 4 && stepIndex === 3 
+                    ? LIGHT_BEAMS_LIST.filter(b => b.group === "Outer" || b.group === "Center")
+                    : LIGHT_BEAMS_LIST));
 
           const selectedBeams = relevantBeams.filter(b => activeBeams ? activeBeams.includes(b.id) : true);
           const unselectedBeams = relevantBeams.filter(b => activeBeams ? !activeBeams.includes(b.id) : false);
 
-          const renderBeamItem = (beam, isChecked) => {
-            const isSolo = currentSoloBeam === beam.id;
-            const isViewed = viewedBeams.has(beam.id);
-            const hasNote = Boolean(beamNotes[beam.id]?.trim());
-            const isEditingNote = editingNoteBeamId === beam.id;
-
-            return (
-              <div
-                key={`beam-${beam.id}`}
-                className={`rounded-lg border transition-all ${
-                  isSolo
-                    ? 'bg-amber-950/70 border-amber-500/90 text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.3)] ring-1 ring-amber-400/50'
-                    : isChecked
-                    ? (isViewed 
-                        ? 'bg-sky-950/40 border-sky-500/60 text-sky-100 shadow-[0_0_8px_rgba(14,165,233,0.18)]' 
-                        : 'bg-emerald-950/40 border-emerald-500/50 hover:border-emerald-400 text-neutral-100 shadow-[0_0_6px_rgba(16,185,129,0.15)]')
-                    : 'bg-neutral-950/60 border-neutral-800 text-neutral-500 hover:text-neutral-300 hover:border-neutral-700'
-                }`}
-              >
-                <div 
-                  onClick={() => onToggleBeam(beam.id)}
-                  className="flex items-center justify-between p-1.5 cursor-pointer"
-                >
-                  <div className="flex items-center gap-1.5 overflow-hidden flex-1">
-                    <span className={`text-[10px] font-mono font-bold w-5 h-5 flex-shrink-0 flex items-center justify-center rounded transition-all ${
-                      isSolo
-                        ? 'bg-amber-500 text-black font-extrabold shadow-[0_0_6px_#f59e0b]'
-                        : isChecked
-                        ? (isViewed 
-                            ? 'bg-sky-500 text-black font-bold shadow-[0_0_6px_rgba(14,165,233,0.6)]' 
-                            : 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60')
-                        : 'bg-neutral-800 text-neutral-400 border border-neutral-700/60'
-                    }`}>
-                      {beam.id}
-                    </span>
-                    <div className="truncate flex-1">
-                      <div className="text-[10px] font-medium leading-tight truncate flex items-center gap-1">
-                        <span className="truncate">{beam.name}</span>
-                        {isChecked && isViewed && (
-                          <span className="text-[8px] px-1 py-0.2 rounded bg-sky-950 text-sky-300 border border-sky-700/60 font-sans font-semibold">
-                            Viewed
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-[8px] font-mono text-neutral-500">
-                        {beam.delay}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-1 pl-1">
-                    {/* Note Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEditingNoteBeamId(isEditingNote ? null : beam.id);
-                      }}
-                      title={hasNote ? `Note: ${beamNotes[beam.id]}` : "Add test note"}
-                      className={`p-1 rounded transition-colors ${
-                        hasNote 
-                          ? 'text-amber-400 bg-amber-950/80 border border-amber-600/40' 
-                          : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
-                      }`}
-                    >
-                      <FileText size={11} />
-                    </button>
-
-                    {/* Eye Solo Button */}
-                    <button
-                      onClick={(e) => handleEyeClick(e, beam.id)}
-                      title={isSolo ? "Turn Off Solo Preview" : "Preview this beam (Solo View)"}
-                      className={`p-1 rounded transition-all ${
-                        isSolo 
-                          ? 'bg-amber-500 text-black shadow-[0_0_8px_#f59e0b]' 
-                          : isViewed
-                          ? 'text-sky-300 hover:text-amber-300 hover:bg-neutral-800'
-                          : 'text-neutral-500 hover:text-amber-300 hover:bg-neutral-800'
-                      }`}
-                    >
-                      <Eye size={12} />
-                    </button>
-
-                    {/* Checkbox */}
-                    <div className={isChecked ? 'text-emerald-400' : 'text-neutral-600'}>
-                      {isChecked ? <CheckSquare size={13} /> : <Square size={13} />}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Inline Note Box */}
-                {(isEditingNote || hasNote) && (
-                  <div 
-                    onClick={(e) => e.stopPropagation()} 
-                    className="px-2 pb-1.5 pt-1 border-t border-neutral-800/80 bg-neutral-950/60 rounded-b-lg"
-                  >
-                    <input
-                      type="text"
-                      value={beamNotes[beam.id] || ''}
-                      onChange={(e) => handleUpdateNote(beam.id, e.target.value)}
-                      placeholder="Add note..."
-                      className="w-full bg-neutral-900 border border-neutral-700/80 rounded px-1.5 py-0.5 text-[9px] text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-sky-500 font-sans"
-                    />
-                  </div>
-                )}
-              </div>
-            );
-          };
-
           return (
-            <div className="grid grid-cols-2 gap-2.5">
-              {/* LEFT SIDE: CHECKED BEAMS */}
-              <div className="bg-neutral-950/90 p-2 rounded-xl border border-emerald-500/40 flex flex-col">
-                <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-emerald-900/50">
-                  <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold flex items-center gap-1">
-                    <CheckSquare size={11} /> Checked ({selectedBeams.length})
-                  </span>
-                  <span className="text-[8px] text-emerald-400/70 font-mono">
-                    {crackStage === 3 ? 'T3 ACTIVE' : 'LEFT SIDE'}
-                  </span>
+            <>
+              {/* Solo Beam Stepper: Prev / Next scoped STRICTLY to currently relevant beams */}
+              <div className="flex items-center gap-1.5 mb-2.5 bg-neutral-950/80 p-1.5 rounded-xl border border-neutral-800">
+                <button
+                  onClick={() => {
+                    const ids = relevantBeams.map(b => b.id);
+                    if (ids.length === 0) return;
+                    const idx = ids.indexOf(currentSoloBeam);
+                    const prevId = idx <= 0 ? ids[ids.length - 1] : ids[idx - 1];
+                    onSetSoloBeam(prevId);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-200 transition-colors"
+                >
+                  <ChevronLeft size={13} />
+                  Prev Beam
+                </button>
+                <div className="text-[10px] font-mono px-3 py-0.5 rounded bg-amber-950/70 border border-amber-600/40 text-amber-300 font-bold whitespace-nowrap">
+                  {currentSoloBeam && relevantBeams.some(b => b.id === currentSoloBeam)
+                    ? `Solo Beam #${currentSoloBeam}` 
+                    : 'All Active'}
                 </div>
-                {selectedBeams.length === 0 ? (
-                  <div className="text-[10px] text-neutral-500 italic py-6 text-center">
-                    No beams checked.<br/>Click on right side to add.
-                  </div>
-                ) : (
-                  <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
-                    {selectedBeams.map((beam) => renderBeamItem(beam, true))}
-                  </div>
-                )}
+                <button
+                  onClick={() => {
+                    const ids = relevantBeams.map(b => b.id);
+                    if (ids.length === 0) return;
+                    const idx = ids.indexOf(currentSoloBeam);
+                    const nextId = idx === -1 || idx >= ids.length - 1 ? ids[0] : ids[idx + 1];
+                    onSetSoloBeam(nextId);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-200 transition-colors"
+                >
+                  Next Beam
+                  <ChevronRight size={13} />
+                </button>
               </div>
 
-              {/* RIGHT SIDE: UNCHECKED BEAMS */}
-              <div className="bg-neutral-950/40 p-2 rounded-xl border border-neutral-800 flex flex-col">
-                <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-neutral-800">
-                  <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold flex items-center gap-1">
-                    <Square size={11} /> Unchecked / Off ({unselectedBeams.length})
-                  </span>
-                  <span className="text-[8px] text-neutral-500 font-mono">
-                    OFF
-                  </span>
+              <div className="grid grid-cols-2 gap-2.5">
+                {/* LEFT SIDE: CHECKED BEAMS */}
+                <div className="bg-neutral-950/90 p-2 rounded-xl border border-emerald-500/40 flex flex-col">
+                  <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-emerald-900/50">
+                    <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold flex items-center gap-1">
+                      <CheckSquare size={11} /> Checked ({selectedBeams.length})
+                    </span>
+                    <span className="text-[8px] text-emerald-400/70 font-mono">
+                      {crackStage === 3 ? 'T3 ACTIVE' : `STEP ${stepIndex}`}
+                    </span>
+                  </div>
+                  {selectedBeams.length === 0 ? (
+                    <div className="text-[10px] text-neutral-500 italic py-6 text-center">
+                      No beams checked.<br/>Click on right side to add.
+                    </div>
+                  ) : (
+                    <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
+                      {selectedBeams.map((beam) => renderBeamItem(beam, true))}
+                    </div>
+                  )}
                 </div>
-                {unselectedBeams.length === 0 ? (
-                  <div className="text-[10px] text-neutral-500 italic py-6 text-center">
-                    {crackStage === 3 ? 'Both T3 Beams Active!' : 'All beams are currently checked!'}
+
+                {/* RIGHT SIDE: UNCHECKED BEAMS */}
+                <div className="bg-neutral-950/40 p-2 rounded-xl border border-neutral-800 flex flex-col">
+                  <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-neutral-800">
+                    <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold flex items-center gap-1">
+                      <Square size={11} /> Unchecked / Off ({unselectedBeams.length})
+                    </span>
+                    <span className="text-[8px] text-neutral-500 font-mono">
+                      OFF
+                    </span>
                   </div>
-                ) : (
-                  <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
-                    {unselectedBeams.map((beam) => renderBeamItem(beam, false))}
-                  </div>
-                )}
+                  {unselectedBeams.length === 0 ? (
+                    <div className="text-[10px] text-neutral-500 italic py-6 text-center">
+                      {crackStage === 3 ? 'Both T3 Beams Active!' : 'All relevant beams checked!'}
+                    </div>
+                  ) : (
+                    <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
+                      {unselectedBeams.map((beam) => renderBeamItem(beam, false))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            </>
           );
         })()}
       </motion.div>
