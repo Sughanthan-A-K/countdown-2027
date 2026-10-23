@@ -474,52 +474,79 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 4: ESCALATING BRIGHT CORE AT EXACT CARD CENTER (100, 200) */}
-        {/* Card glows intensely bright during the 1.5s holding period before exploding */}
+        {/* TAP 4: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
+        {/* Light spreads smoothly from center to encompass the FULL card before exploding */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-center-bright-core">
             <defs>
+              {/* Radial gradient that grows seamlessly from pure white core to full card emerald light */}
               <radialGradient id="exactCardCenterCore" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="55%" stopColor="#34d399" stopOpacity="0.75" />
-                <stop offset="85%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+                <stop offset="30%" stopColor="#d1fae5" stopOpacity="0.95" />
+                <stop offset="60%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="85%" stopColor="#10b981" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0.4" />
               </radialGradient>
             </defs>
-            {/* Center Core Expanding */}
+
+            {/* 1. Concentric Radial Wave expanding from Center to engulf the entire card uniformly */}
             <motion.circle
               cx="100"
               cy="200"
-              r="40"
+              r="220"
               fill="url(#exactCardCenterCore)"
-              filter="url(#pureGreenGlow)"
-              initial={{ scale: 0.3, opacity: 0 }}
+              initial={{ scale: 0.1, opacity: 0 }}
               animate={{
-                scale: [0.4, 0.9, 1.4, 3.2],
-                opacity: [0, 0.5, 0.85, 1.0]
+                scale: [0.1, 0.4, 0.8, 1.4],
+                opacity: [0, 0.4, 0.85, 1.0]
               }}
-              transition={{ duration: 4.8, ease: [0.15, 0.85, 0.35, 1] }}
+              transition={{
+                duration: 5.0,
+                times: [0, 0.65, 0.85, 1.0],
+                ease: [0.25, 1, 0.5, 1]
+              }}
+              style={{ mixBlendMode: "screen" }}
             />
-            {/* Swelling Flash: The entire card brightens intensely for 1.5s before blast */}
+
+            {/* 2. Full-Card Uniform Glowing Veil: Every single corner, top, and edge washes in pure luminous light */}
             <motion.rect
               x="0"
               y="0"
               width="200"
               height="400"
               rx="16"
-              fill="#d1fae5"
+              fill="#ecfdf5"
               initial={{ opacity: 0 }}
               animate={{
-                opacity: [0, 0, 0.15, 0.75, 0.98]
+                opacity: [0, 0, 0.25, 0.8, 1.0]
               }}
               transition={{
                 duration: 5.0,
-                times: [0, 0.65, 0.75, 0.92, 1.0],
+                times: [0, 0.65, 0.78, 0.92, 1.0],
                 ease: "easeInOut"
               }}
-              style={{ mixBlendMode: "screen", filter: "blur(6px)" }}
+              style={{ mixBlendMode: "screen" }}
+            />
+
+            {/* 3. Final Climax Flash: At 5.0s, the entire card achieves 100% white-emerald glow right at explosion moment */}
+            <motion.rect
+              x="0"
+              y="0"
+              width="200"
+              height="400"
+              rx="16"
+              fill="#ffffff"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0, 0, 0, 0.3, 0.95]
+              }}
+              transition={{
+                duration: 5.1,
+                times: [0, 0.7, 0.85, 0.95, 1.0],
+                ease: "easeIn"
+              }}
+              style={{ mixBlendMode: "screen" }}
             />
           </g>
         )}
