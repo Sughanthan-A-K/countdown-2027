@@ -1595,13 +1595,13 @@ function App() {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
                           const next = Math.min(prev + 1, 4);
-                          // On 4th tap (outer beams start with delays, then center accelerates fast right before shatter):
+                          // On 4th tap (all green lights emerge, then card holds & glows intensely bright for 1.5s before exploding into stage 5):
                           if (next === 4) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 3600);
+                            }, 5100); // 3.6s beam emergence + 1.5s intense swelling burst
                           }
                           return next;
                         });

@@ -475,19 +475,20 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
 
         {/* ============================================================ */}
         {/* TAP 4: ESCALATING BRIGHT CORE AT EXACT CARD CENTER (100, 200) */}
-        {/* SVG coordinates-la exact Card Center (50%, 50%) = (100, 200) */}
+        {/* Card glows intensely bright during the 1.5s holding period before exploding */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-center-bright-core">
             <defs>
               <radialGradient id="exactCardCenterCore" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.9" />
-                <stop offset="55%" stopColor="#34d399" stopOpacity="0.65" />
-                <stop offset="85%" stopColor="#10b981" stopOpacity="0.25" />
+                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="55%" stopColor="#34d399" stopOpacity="0.75" />
+                <stop offset="85%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </radialGradient>
             </defs>
+            {/* Center Core Expanding */}
             <motion.circle
               cx="100"
               cy="200"
@@ -496,10 +497,29 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               filter="url(#pureGreenGlow)"
               initial={{ scale: 0.3, opacity: 0 }}
               animate={{
-                scale: [0.4, 0.9, 1.4, 2.0],
+                scale: [0.4, 0.9, 1.4, 3.2],
                 opacity: [0, 0.5, 0.85, 1.0]
               }}
-              transition={{ duration: 2.1, ease: [0.12, 0.8, 0.2, 1] }}
+              transition={{ duration: 4.8, ease: [0.15, 0.85, 0.35, 1] }}
+            />
+            {/* Swelling Flash: The entire card brightens intensely for 1.5s before blast */}
+            <motion.rect
+              x="0"
+              y="0"
+              width="200"
+              height="400"
+              rx="16"
+              fill="#d1fae5"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0, 0, 0.15, 0.75, 0.98]
+              }}
+              transition={{
+                duration: 5.0,
+                times: [0, 0.65, 0.75, 0.92, 1.0],
+                ease: "easeInOut"
+              }}
+              style={{ mixBlendMode: "screen", filter: "blur(6px)" }}
             />
           </g>
         )}
