@@ -452,24 +452,36 @@ export default function LokiStage4Tester({
           </div>
         </div>
 
-        {/* If target beam is active, show target quick selector pills */}
-        {tuneTarget !== 'global' && (
-          <div className="flex items-center gap-1 mb-2 overflow-x-auto pb-1 scrollbar-none">
-            {LIGHT_BEAMS_LIST.map((b) => (
-              <button
-                key={`pill-${b.id}`}
-                onClick={() => setTuneTarget(b.id)}
-                className={`px-1.5 py-0.5 rounded text-[9px] font-mono whitespace-nowrap transition-colors ${
-                  tuneTarget === b.id 
-                    ? 'bg-amber-500 text-black font-bold shadow-[0_0_6px_#f59e0b]' 
-                    : 'bg-neutral-800 text-neutral-400 hover:text-neutral-200'
-                }`}
-              >
-                #{b.id}
-              </button>
-            ))}
-          </div>
-        )}
+        {/* If target beam is active, show ONLY checked beams as quick selector pills */}
+        {tuneTarget !== 'global' && (() => {
+          const availableTargetBeams = LIGHT_BEAMS_LIST.filter(b => activeBeams ? activeBeams.includes(b.id) : true);
+
+          if (availableTargetBeams.length === 0) {
+            return (
+              <div className="text-[10px] text-neutral-500 italic mb-2 py-1 bg-neutral-950/60 rounded-lg px-2 border border-neutral-800 text-center">
+                Check beams in the list above to tune their angles
+              </div>
+            );
+          }
+
+          return (
+            <div className="flex items-center gap-1 mb-2 overflow-x-auto pb-1 scrollbar-none">
+              {availableTargetBeams.map((b) => (
+                <button
+                  key={`pill-${b.id}`}
+                  onClick={() => setTuneTarget(b.id)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-mono whitespace-nowrap transition-colors ${
+                    tuneTarget === b.id 
+                      ? 'bg-amber-500 text-black font-bold shadow-[0_0_6px_#f59e0b]' 
+                      : 'bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700/60'
+                  }`}
+                >
+                  #{b.id}
+                </button>
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Interactive 3D Gimbal / Joystick Pad */}
         <div className="bg-neutral-950/80 p-2.5 rounded-xl border border-neutral-800 flex items-center gap-3">
