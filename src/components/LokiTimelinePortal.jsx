@@ -349,7 +349,7 @@ export default function LokiTimelinePortal() {
               : '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 110px #10b981'
           }}
           transition={{
-            width: { duration: 2.8, ease: [0.16, 1, 0.3, 1] },
+            width: { duration: 6.0, ease: [0.16, 1, 0.3, 1] },
             opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" }
           }}
           className="absolute h-[110vh] pointer-events-none rounded-[50%]"
@@ -379,8 +379,8 @@ export default function LokiTimelinePortal() {
                     cy={data.y || 500}
                     initial={{ r: 0 }}
                     animate={{ r: 1600 }}
-                    // Slow, smooth cinematic energy wave travelling out like water ripple
-                    transition={{ duration: 5.5, ease: [0.12, 0.8, 0.25, 1] }}
+                    // Ultra-slow, majestic cosmic life growth over 11 seconds
+                    transition={{ duration: 11.0, ease: [0.16, 0.85, 0.35, 1] }}
                   />
                 ) : (
                   <circle cx="500" cy="500" r="0" />
