@@ -27,12 +27,11 @@ import { motion } from 'framer-motion';
 export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null }) {
   if (crackStage <= 0) return null;
 
-  // If stage4Step is explicitly controlled (e.g. 1 to 5), use it; otherwise default to full normal behavior (null = full)
+  // If stage4Step is explicitly controlled (e.g. 1 to 4), use it; otherwise default to full normal behavior (null = full)
   const isStepMode = crackStage === 4 && stage4Step !== null;
   const showOuterBeams = crackStage >= 4 && (!isStepMode || stage4Step >= 1);
   const showRadialWave = crackStage >= 4 && (!isStepMode || stage4Step >= 2);
-  const showVeil = crackStage >= 4 && (!isStepMode || stage4Step >= 3);
-  const showCenterBursts = crackStage >= 4 && (!isStepMode || stage4Step >= 4);
+  const showCenterBursts = crackStage >= 4 && (!isStepMode || stage4Step >= 3);
 
   // Single clean fissure stroke & gap width
   const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : (crackStage === 3 ? 3.2 : 4.4));
@@ -525,31 +524,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null })
               />
             )}
 
-            {/* 2. Full-Card Uniform Glowing Veil: Every single corner, top, and edge washes in pure luminous light */}
-            {showVeil && (
-              <motion.rect
-                x="0"
-                y="0"
-                width="200"
-                height="400"
-                rx="16"
-                fill="#ecfdf5"
-                initial={{ opacity: 0 }}
-                animate={isStepMode ? {
-                  opacity: 0.95
-                } : {
-                  opacity: [0, 0, 0.25, 0.8, 1.0]
-                }}
-                transition={{
-                  duration: isStepMode ? 0.3 : 5.0,
-                  times: isStepMode ? undefined : [0, 0.65, 0.78, 0.92, 1.0],
-                  ease: "easeInOut"
-                }}
-                style={{ mixBlendMode: "screen" }}
-              />
-            )}
-
-            {/* 3. Final Climax Flash: At 5.0s, the entire card achieves 100% white-emerald glow right at explosion moment */}
+            {/* 2. Final Climax Flash: At 5.0s, the entire card achieves 100% white-emerald glow right at explosion moment */}
             {showCenterBursts && (
               <motion.rect
                 x="0"

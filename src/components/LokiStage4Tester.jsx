@@ -4,9 +4,8 @@ import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight, X } from 'lucide-rea
 export const STAGE_4_STEPS = [
   { id: 1, name: "4.1: Edge & Corner Beams", desc: "Outer cracks emit light shafts (0.6s - 2.85s)" },
   { id: 2, name: "4.2: Center Radial Wave", desc: "Concentric white/emerald core wave swells (5.0s)" },
-  { id: 3, name: "4.3: Full-Card Glowing Veil", desc: "Whole card washes in pure luminous light" },
-  { id: 4, name: "4.4: Center Laser Burst", desc: "Central fissures burst mega high-speed beams (3.0s - 3.48s)" },
-  { id: 5, name: "4.5: Shatter into Portal", desc: "Stage 5 Multiverse Portal Breach" },
+  { id: 3, name: "4.3: Center Laser Burst", desc: "Central fissures burst mega high-speed beams (3.0s - 3.48s)" },
+  { id: 4, name: "4.4: Shatter into Portal", desc: "Stage 5 Multiverse Portal Breach" },
 ];
 
 export default function LokiStage4Tester({
@@ -63,7 +62,7 @@ export default function LokiStage4Tester({
             Stage 4 Breakdown
           </span>
           <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/40 font-mono">
-            Step {stepIndex} / 5
+            Step {stepIndex} / 4
           </span>
         </div>
 
@@ -98,8 +97,8 @@ export default function LokiStage4Tester({
             {isAutoPlaying ? <Pause size={14} /> : <Play size={14} />}
           </button>
           <button
-            onClick={() => onSetStepIndex(Math.min(5, stepIndex + 1))}
-            disabled={stepIndex >= 5}
+            onClick={() => onSetStepIndex(Math.min(4, stepIndex + 1))}
+            disabled={stepIndex >= 4}
             className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 disabled:hover:bg-neutral-800 transition-colors font-medium text-xs"
           >
             Next

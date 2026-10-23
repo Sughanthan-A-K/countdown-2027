@@ -331,7 +331,7 @@ function App() {
     setIsTesterAutoPlaying(false);
     setLokiCrackStage(4);
     setStage4StepIndex(step);
-    if (step === 5) {
+    if (step === 4) {
       setTimeout(() => setLokiCrackStage(5), 400);
     }
   };
@@ -340,19 +340,19 @@ function App() {
     setIsTesterAutoPlaying(prev => !prev);
   };
 
-  // Auto-play interval for stepping through 4.1 to 4.5
+  // Auto-play interval for stepping through 4.1 to 4.4
   useEffect(() => {
     let interval = null;
     if (isTesterAutoPlaying) {
       interval = setInterval(() => {
         setStage4StepIndex(prev => {
-          if (prev >= 5) {
+          if (prev >= 4) {
             setIsTesterAutoPlaying(false);
             setLokiCrackStage(5);
-            return 5;
+            return 4;
           }
           const next = prev + 1;
-          if (next === 5) {
+          if (next === 4) {
             setTimeout(() => setLokiCrackStage(5), 400);
           }
           return next;
