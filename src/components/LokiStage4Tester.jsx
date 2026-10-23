@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight, X, CheckSquare, Square, Eye, FileText, CheckCircle2, Compass, Copy, Check } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight, X, CheckSquare, Square, Eye, FileText, CheckCircle2, Compass, Copy, Check, GripHorizontal } from 'lucide-react';
 
 export const STAGE_4_STEPS = [
   { id: 1, name: "4.1: Edge & Corner Beams", desc: "Outer cracks emit light shafts (0.6s - 2.85s)" },
@@ -121,105 +122,123 @@ export default function LokiStage4Tester({
     });
   };
   return (
-    <div className="fixed top-16 left-6 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-emerald-500/50 rounded-2xl p-4 shadow-[0_0_35px_rgba(16,185,129,0.35)] text-white w-80 max-h-[88vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700">
-      
-      {/* Header */}
-      <div className="flex items-center justify-between pb-2 mb-3 border-b border-neutral-700/80 sticky top-0 bg-neutral-900/95 z-10 pt-0.5">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
-          <span className="font-bold tracking-wide text-emerald-300">LOKI STAGE & BEAM TESTER</span>
+    <>
+      {/* ============================================================ */}
+      {/* TOOL 1: STAGE & STEP CONTROLLER (DRAGGABLE) */}
+      {/* ============================================================ */}
+      <motion.div
+        drag
+        dragMomentum={false}
+        initial={{ x: 24, y: 70 }}
+        className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-emerald-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(16,185,129,0.3)] text-white w-72 select-none font-sans text-xs"
+      >
+        {/* Drag Handle Bar */}
+        <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-neutral-700/80 cursor-grab active:cursor-grabbing">
+          <div className="flex items-center gap-2">
+            <GripHorizontal size={14} className="text-emerald-400" />
+            <span className="font-bold tracking-wide text-emerald-300 text-[11px]">1. STAGE & TIMELINE</span>
+          </div>
+          <button 
+            onClick={onClose}
+            className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+            title="Close All (Shift+T)"
+          >
+            <X size={14} />
+          </button>
         </div>
-        <button 
-          onClick={onClose}
-          className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
-          title="Close (Shift+T)"
-        >
-          <X size={15} />
-        </button>
-      </div>
 
-      {/* Main Stage Selectors */}
-      <div className="mb-3">
-        <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold mb-1.5">
-          Main Stages (0 - 5)
+        {/* Main Stage Selectors */}
+        <div className="mb-2.5">
+          <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold mb-1">
+            Crack Stages (0 - 5)
+          </div>
+          <div className="grid grid-cols-6 gap-1">
+            {[0, 1, 2, 3, 4, 5].map((stg) => (
+              <button
+                key={`stg-${stg}`}
+                onClick={() => onSetCrackStage(stg)}
+                className={`py-1 rounded-lg font-bold transition-all text-xs ${
+                  crackStage === stg 
+                    ? 'bg-emerald-500 text-black shadow-[0_0_10px_#10b981]' 
+                    : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300'
+                }`}
+              >
+                {stg === 0 ? 'Off' : (stg === 5 ? 'Portal' : `T${stg}`)}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-6 gap-1">
-          {[0, 1, 2, 3, 4, 5].map((stg) => (
+
+        {/* Tap 4 Sub-Step Stepper */}
+        <div className="pt-2 border-t border-neutral-800">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold">
+              Stage 4 Sequence
+            </span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/40 font-mono">
+              Step {stepIndex} / {STAGE_4_STEPS.length}
+            </span>
+          </div>
+
+          <div className="bg-neutral-950/80 p-2 rounded-xl border border-neutral-800 mb-2">
+            <div className="font-semibold text-emerald-300 text-[11px]">
+              {STAGE_4_STEPS[stepIndex - 1]?.name}
+            </div>
+            <div className="text-[10px] text-neutral-400 mt-0.5 leading-tight">
+              {STAGE_4_STEPS[stepIndex - 1]?.desc}
+            </div>
+          </div>
+
+          {/* Stepper Controls */}
+          <div className="flex items-center gap-1.5">
             <button
-              key={`stg-${stg}`}
-              onClick={() => onSetCrackStage(stg)}
-              className={`py-1.5 rounded-lg font-bold transition-all text-xs ${
-                crackStage === stg 
-                  ? 'bg-emerald-500 text-black shadow-[0_0_12px_#10b981]' 
-                  : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300'
-              }`}
+              onClick={() => onSetStepIndex(Math.max(1, stepIndex - 1))}
+              disabled={stepIndex <= 1}
+              className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 transition-colors font-medium text-xs"
             >
-              {stg === 0 ? 'Off' : (stg === 5 ? 'Portal' : `T${stg}`)}
+              <ChevronLeft size={13} />
+              Prev
             </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Tap 4 Sub-Step Stepper */}
-      <div className="mb-3 pt-2.5 border-t border-neutral-800">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold">
-            Stage 4 Breakdown
-          </span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/40 font-mono">
-            Step {stepIndex} / {STAGE_4_STEPS.length}
-          </span>
-        </div>
-
-        <div className="bg-neutral-950/80 p-2.5 rounded-xl border border-neutral-800 mb-2">
-          <div className="font-semibold text-emerald-300 text-xs">
-            {STAGE_4_STEPS[stepIndex - 1]?.name}
-          </div>
-          <div className="text-[11px] text-neutral-400 mt-0.5 leading-snug">
-            {STAGE_4_STEPS[stepIndex - 1]?.desc}
+            <button
+              onClick={onToggleAutoPlay}
+              className={`px-3 py-1.5 rounded-lg flex items-center justify-center transition-colors ${
+                isAutoPlaying 
+                  ? 'bg-amber-500 text-black font-semibold shadow-[0_0_10px_#f59e0b]' 
+                  : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-200'
+              }`}
+              title={isAutoPlaying ? "Pause Auto-play" : "Play Sequence"}
+            >
+              {isAutoPlaying ? <Pause size={13} /> : <Play size={13} />}
+            </button>
+            <button
+              onClick={() => onSetStepIndex(Math.min(STAGE_4_STEPS.length, stepIndex + 1))}
+              disabled={stepIndex >= STAGE_4_STEPS.length}
+              className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 transition-colors font-medium text-xs"
+            >
+              Next
+              <ChevronRight size={13} />
+            </button>
           </div>
         </div>
-
-        {/* Stepper Controls */}
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => onSetStepIndex(Math.max(1, stepIndex - 1))}
-            disabled={stepIndex <= 1}
-            className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 disabled:hover:bg-neutral-800 transition-colors font-medium text-xs"
-          >
-            <ChevronLeft size={14} />
-            Prev
-          </button>
-          <button
-            onClick={onToggleAutoPlay}
-            className={`px-3 py-1.5 rounded-lg flex items-center justify-center transition-colors ${
-              isAutoPlaying 
-                ? 'bg-amber-500 text-black font-semibold shadow-[0_0_10px_#f59e0b]' 
-                : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-200'
-            }`}
-            title={isAutoPlaying ? "Pause Auto-play" : "Play Continuous Sequence"}
-          >
-            {isAutoPlaying ? <Pause size={14} /> : <Play size={14} />}
-          </button>
-          <button
-            onClick={() => onSetStepIndex(Math.min(STAGE_4_STEPS.length, stepIndex + 1))}
-            disabled={stepIndex >= STAGE_4_STEPS.length}
-            className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 disabled:hover:bg-neutral-800 transition-colors font-medium text-xs"
-          >
-            Next
-            <ChevronRight size={14} />
-          </button>
-        </div>
-      </div>
+      </motion.div>
 
       {/* ============================================================ */}
-      {/* NEW TOOL: INDIVIDUAL LIGHT BEAMS CONTROLLER (BOTTOM OF PANEL) */}
+      {/* TOOL 2: LIGHT BEAMS CHECKLIST & NOTES (DRAGGABLE) */}
       {/* ============================================================ */}
-      <div className="pt-2.5 border-t border-neutral-800">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1">
-            <span>⚡</span> Light Beams Selector ({LIGHT_BEAMS_LIST.length})
-          </span>
+      <motion.div
+        drag
+        dragMomentum={false}
+        initial={{ x: 330, y: 70 }}
+        className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-amber-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(245,158,11,0.25)] text-white w-80 max-h-[82vh] overflow-y-auto select-none font-sans text-xs scrollbar-thin scrollbar-thumb-neutral-700"
+      >
+        {/* Drag Handle Bar */}
+        <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-700/80 cursor-grab active:cursor-grabbing sticky top-0 bg-neutral-900/95 z-10 pt-0.5">
+          <div className="flex items-center gap-2">
+            <GripHorizontal size={14} className="text-amber-400" />
+            <span className="font-bold tracking-wide text-amber-300 text-[11px]">
+              2. BEAMS SELECTOR ({LIGHT_BEAMS_LIST.length})
+            </span>
+          </div>
           <div className="flex items-center gap-1">
             <button
               onClick={onSelectAllBeams}
@@ -237,7 +256,7 @@ export default function LokiStage4Tester({
         </div>
 
         {/* Solo Beam Stepper: Prev / Next */}
-        <div className="flex items-center gap-1.5 mb-2.5 bg-neutral-950/80 p-1.5 rounded-xl border border-neutral-800">
+        <div className="flex items-center gap-1.5 mb-2 bg-neutral-950/80 p-1.5 rounded-xl border border-neutral-800">
           <button
             onClick={() => {
               const current = currentSoloBeam || 1;
@@ -247,9 +266,9 @@ export default function LokiStage4Tester({
             className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-200 transition-colors"
           >
             <ChevronLeft size={13} />
-            Prev Beam
+            Prev
           </button>
-          <div className="text-[10px] font-mono px-2 py-1 rounded bg-amber-950/70 border border-amber-600/40 text-amber-300 font-bold whitespace-nowrap">
+          <div className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/70 border border-amber-600/40 text-amber-300 font-bold whitespace-nowrap">
             {currentSoloBeam ? `#${currentSoloBeam}` : 'Custom'}
           </div>
           <button
@@ -260,13 +279,12 @@ export default function LokiStage4Tester({
             }}
             className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-200 transition-colors"
           >
-            Next Beam
+            Next
             <ChevronRight size={13} />
           </button>
         </div>
 
         {/* List of 14 Light Beams with individual checkboxes & sequence number */}
-        {/* Selected beams pinned to the top in a distinct highlight container */}
         {(() => {
           const selectedBeams = LIGHT_BEAMS_LIST.filter(b => activeBeams ? activeBeams.includes(b.id) : true);
           const unselectedBeams = LIGHT_BEAMS_LIST.filter(b => activeBeams ? !activeBeams.includes(b.id) : false);
@@ -370,7 +388,7 @@ export default function LokiStage4Tester({
                       type="text"
                       value={beamNotes[beam.id] || ''}
                       onChange={(e) => handleUpdateNote(beam.id, e.target.value)}
-                      placeholder="Add note (e.g. good / angle too wide / remove)..."
+                      placeholder="Add note (e.g. good / angle too wide)..."
                       className="w-full bg-neutral-900 border border-neutral-700/80 rounded px-2 py-1 text-[10px] text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-sky-500 font-sans"
                     />
                   </div>
@@ -380,12 +398,12 @@ export default function LokiStage4Tester({
           };
 
           return (
-            <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
               {/* PINNED CHECKED BEAMS SECTION (TOP) */}
               <div className="bg-neutral-950/90 p-2 rounded-xl border border-emerald-500/40">
                 <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-emerald-900/50">
                   <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold flex items-center gap-1">
-                    <CheckSquare size={11} /> Active / Checked Beams ({selectedBeams.length})
+                    <CheckSquare size={11} /> Checked ({selectedBeams.length})
                   </span>
                   {selectedBeams.length > 0 && (
                     <span className="text-[9px] text-emerald-300 font-mono">
@@ -418,17 +436,27 @@ export default function LokiStage4Tester({
             </div>
           );
         })()}
-      </div>
+      </motion.div>
 
       {/* ============================================================ */}
-      {/* 3D DIRECTION & ANGLE TUNER (JOYSTICK + SLIDERS + COPY CONFIG) */}
+      {/* TOOL 3: 3D ANGLE & DIRECTION TUNER (DRAGGABLE) */}
       {/* ============================================================ */}
-      <div className="pt-2.5 mt-2.5 border-t border-neutral-800">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1">
-            <Compass size={13} className="text-cyan-400" /> 3D Beam Angle & Direction
-          </span>
-          {/* Target Selector: Global vs Current Selected Beam */}
+      <motion.div
+        drag
+        dragMomentum={false}
+        initial={{ x: 670, y: 70 }}
+        className="fixed top-0 left-0 z-[9999] pointer-events-auto bg-neutral-900/95 backdrop-blur-md border border-cyan-500/50 rounded-2xl p-3.5 shadow-[0_0_30px_rgba(6,182,212,0.3)] text-white w-76 select-none font-sans text-xs"
+      >
+        {/* Drag Handle Bar */}
+        <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-700/80 cursor-grab active:cursor-grabbing">
+          <div className="flex items-center gap-2">
+            <GripHorizontal size={14} className="text-cyan-400" />
+            <span className="font-bold tracking-wide text-cyan-300 text-[11px] flex items-center gap-1">
+              <Compass size={12} /> 3. 3D ANGLE & DIRECTION
+            </span>
+          </div>
+
+          {/* Target Selector: Global vs Target Beam */}
           <div className="flex items-center gap-1 bg-neutral-950 p-0.5 rounded-lg border border-neutral-800">
             <button
               onClick={() => setTuneTarget('global')}
@@ -436,7 +464,7 @@ export default function LokiStage4Tester({
                 tuneTarget === 'global' ? 'bg-cyan-500 text-black shadow-[0_0_6px_#06b6d4]' : 'text-neutral-400 hover:text-neutral-200'
               }`}
             >
-              All Beams
+              All
             </button>
             <button
               onClick={() => {
@@ -447,7 +475,7 @@ export default function LokiStage4Tester({
                 tuneTarget !== 'global' ? 'bg-amber-500 text-black shadow-[0_0_6px_#f59e0b]' : 'text-neutral-400 hover:text-neutral-200'
               }`}
             >
-              {tuneTarget !== 'global' ? `Beam #${tuneTarget}` : 'Target Beam'}
+              {tuneTarget !== 'global' ? `#${tuneTarget}` : 'Target'}
             </button>
           </div>
         </div>
@@ -459,7 +487,7 @@ export default function LokiStage4Tester({
           if (availableTargetBeams.length === 0) {
             return (
               <div className="text-[10px] text-neutral-500 italic mb-2 py-1 bg-neutral-950/60 rounded-lg px-2 border border-neutral-800 text-center">
-                Check beams in the list above to tune their angles
+                Check beams in Tool 2 to tune angles
               </div>
             );
           }
@@ -502,7 +530,7 @@ export default function LokiStage4Tester({
               setIsDraggingJoystick(false);
               try { e.currentTarget.releasePointerCapture(e.pointerId); } catch (_) {}
             }}
-            className="w-20 h-20 rounded-full bg-neutral-900 border-2 border-dashed border-cyan-500/40 relative flex items-center justify-center cursor-crosshair select-none shadow-[inset_0_0_12px_rgba(0,0,0,0.8)]"
+            className="w-18 h-18 rounded-full bg-neutral-900 border-2 border-dashed border-cyan-500/40 relative flex items-center justify-center cursor-crosshair select-none shadow-[inset_0_0_12px_rgba(0,0,0,0.8)]"
             title="Drag joystick to rotate & direct light rays in 3D"
           >
             {/* Crosshairs */}
@@ -517,9 +545,9 @@ export default function LokiStage4Tester({
 
             {/* Draggable Knob */}
             <div
-              className="w-5 h-5 rounded-full bg-gradient-to-tr from-cyan-500 to-emerald-400 shadow-[0_0_10px_#06b6d4] flex items-center justify-center pointer-events-none transition-transform"
+              className="w-4.5 h-4.5 rounded-full bg-gradient-to-tr from-cyan-500 to-emerald-400 shadow-[0_0_8px_#06b6d4] flex items-center justify-center pointer-events-none transition-transform"
               style={{
-                transform: `translate(${(activeTransform.offsetX || 0) * 0.6}px, ${(activeTransform.offsetY || 0) * 0.6}px)`
+                transform: `translate(${(activeTransform.offsetX || 0) * 0.5}px, ${(activeTransform.offsetY || 0) * 0.5}px)`
               }}
             >
               <div className="w-1.5 h-1.5 rounded-full bg-white" />
@@ -527,7 +555,7 @@ export default function LokiStage4Tester({
           </div>
 
           {/* Precision Values & Sliders */}
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 space-y-1.5">
             {/* Angle Slider */}
             <div>
               <div className="flex items-center justify-between text-[10px] text-neutral-400 mb-0.5">
@@ -547,7 +575,7 @@ export default function LokiStage4Tester({
             {/* Spread / Scale Width Slider */}
             <div>
               <div className="flex items-center justify-between text-[10px] text-neutral-400 mb-0.5">
-                <span>Spread / Width:</span>
+                <span>Spread:</span>
                 <span className="font-mono text-emerald-300 font-bold">{(activeTransform.scaleX || 1).toFixed(1)}x</span>
               </div>
               <input
@@ -570,7 +598,7 @@ export default function LokiStage4Tester({
                 onClick={() => onResetBeamTransform(tuneTarget)}
                 className="text-[9px] text-neutral-400 hover:text-rose-400 transition-colors flex items-center gap-0.5"
               >
-                <RotateCcw size={10} /> Reset Angle
+                <RotateCcw size={10} /> Reset
               </button>
             </div>
           </div>
@@ -587,7 +615,7 @@ export default function LokiStage4Tester({
             }`}
           >
             {copiedConfig ? <Check size={14} /> : <Copy size={14} />}
-            {copiedConfig ? "Config Copied! Send to Assistant" : "Copy Live Beam Angles & Config"}
+            {copiedConfig ? "Config Copied! Paste Here" : "Copy Live Angles & Config"}
           </button>
           
           <button
@@ -598,15 +626,13 @@ export default function LokiStage4Tester({
             <RotateCcw size={14} />
           </button>
         </div>
-      </div>
 
-      {/* Quick Action Footer */}
-      <div className="flex items-center justify-between pt-2.5 mt-2.5 border-t border-neutral-800 text-[10px] text-neutral-400">
-        <span>Toggle Shortcut:</span>
-        <span className="font-mono bg-neutral-800 px-1.5 py-0.5 rounded text-neutral-300 border border-neutral-700">
-          Shift + T
-        </span>
-      </div>
-    </div>
+        {/* Footer info */}
+        <div className="flex items-center justify-between pt-2 mt-2 border-t border-neutral-800 text-[9px] text-neutral-500">
+          <span>Draggable Modal</span>
+          <span className="font-mono text-neutral-400">Shift + T</span>
+        </div>
+      </motion.div>
+    </>
   );
 }
