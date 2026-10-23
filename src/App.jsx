@@ -335,8 +335,12 @@ function App() {
   };
 
   const handleSetSoloBeam = (beamId) => {
-    setCurrentSoloBeam(beamId);
-    setActiveBeams([beamId]);
+    // If the clicked beam is already in solo mode, clicking eye again turns off solo and restores saved checked beams!
+    if (currentSoloBeam === beamId) {
+      setCurrentSoloBeam(null);
+    } else {
+      setCurrentSoloBeam(beamId);
+    }
   };
 
   // Keyboard shortcut Shift+T to toggle stage 4 tester
@@ -1687,7 +1691,11 @@ function App() {
                       isDec16Blocked={page.index === 0 && isDec16Card}
                       lokiCrackStage={page.index === 0 ? lokiCrackStage : 0}
                       stage4Step={page.index === 0 && showStage4Tester && lokiCrackStage === 4 ? stage4StepIndex : null}
-                      activeBeams={page.index === 0 && showStage4Tester ? activeBeams : null}
+                      activeBeams={
+                        page.index === 0 && showStage4Tester 
+                          ? (currentSoloBeam ? [currentSoloBeam] : activeBeams) 
+                          : null
+                      }
                       isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);

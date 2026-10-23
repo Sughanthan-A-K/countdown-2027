@@ -204,7 +204,7 @@ export default function LokiStage4Tester({
                 onClick={() => onToggleBeam(beam.id)}
                 className={`flex items-center justify-between p-1.5 rounded-lg border cursor-pointer transition-all ${
                   isSolo
-                    ? 'bg-amber-950/70 border-amber-500/90 text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.3)]'
+                    ? 'bg-amber-950/70 border-amber-500/90 text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.3)] ring-1 ring-amber-400/50'
                     : isChecked
                     ? 'bg-emerald-950/40 border-emerald-500/50 hover:border-emerald-400 text-neutral-100 shadow-[0_0_6px_rgba(16,185,129,0.15)]'
                     : 'bg-neutral-950/50 border-neutral-800/80 text-neutral-500 opacity-60 hover:opacity-100'
@@ -212,7 +212,11 @@ export default function LokiStage4Tester({
               >
                 <div className="flex items-center gap-2 overflow-hidden">
                   <span className={`text-[10px] font-mono font-bold w-5 h-5 flex items-center justify-center rounded ${
-                    isChecked ? 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60' : 'bg-neutral-800 text-neutral-400'
+                    isSolo
+                      ? 'bg-amber-500 text-black font-extrabold shadow-[0_0_6px_#f59e0b]'
+                      : isChecked 
+                      ? 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60' 
+                      : 'bg-neutral-800 text-neutral-400'
                   }`}>
                     {beam.id}
                   </span>
@@ -232,12 +236,14 @@ export default function LokiStage4Tester({
                       e.stopPropagation();
                       onSetSoloBeam(beam.id);
                     }}
-                    title="Solo this beam"
-                    className={`p-1 rounded hover:bg-neutral-700 transition-colors ${
-                      isSolo ? 'text-amber-400' : 'text-neutral-500 hover:text-neutral-300'
+                    title={isSolo ? "Turn Off Solo Preview" : "Preview this beam (Solo View)"}
+                    className={`p-1 rounded transition-all ${
+                      isSolo 
+                        ? 'bg-amber-500 text-black shadow-[0_0_8px_#f59e0b]' 
+                        : 'text-neutral-500 hover:text-amber-300 hover:bg-neutral-800'
                     }`}
                   >
-                    <Eye size={12} />
+                    <Eye size={13} />
                   </button>
                   <div className={isChecked ? 'text-emerald-400' : 'text-neutral-600'}>
                     {isChecked ? <CheckSquare size={14} /> : <Square size={14} />}
