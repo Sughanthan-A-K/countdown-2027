@@ -1,81 +1,103 @@
 import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-function WovenLifePowerStrands({ pathData }) {
+function WovenLifePowerStrands({ pathData, branchLength = 1400 }) {
+  // A traveling segment (slug) of ~350px with tapered feathering at both ends
+  // Traveling continuously along the branch and leaving vibrant emerald alive in its wake
+  const dashLength = 340;
+  const gapLength = branchLength + 500;
+
   return (
     <g>
-      {/* 1. Deep Celestial Emerald Radial Bloom */}
-      <motion.path
-        d={pathData}
-        fill="none"
-        stroke="#10b981"
-        strokeWidth="16"
-        strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0.75, 1, 0.75] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* 2. Main Glowing Emerald Conduit */}
+      {/* 1. Permanent Wake: Once the pulse sweeps through, the branch remains alive with soft emerald glow */}
       <motion.path
         d={pathData}
         fill="none"
         stroke="#059669"
+        strokeWidth="9"
+        strokeLinecap="round"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.85 }}
+        transition={{ duration: 6.0, ease: "easeOut", delay: 1.0 }}
+      />
+      <motion.path
+        d={pathData}
+        fill="none"
+        stroke="#10b981"
+        strokeWidth="14"
+        strokeLinecap="round"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.6 }}
+        transition={{ duration: 6.0, ease: "easeOut", delay: 1.0 }}
+      />
+
+      {/* 2. THE TRAVELING 1-METER POWER PULSE (Tapered slug moving slowly along the branch) */}
+      {/* Outer vivid green aurora glow envelope */}
+      <motion.path
+        d={pathData}
+        fill="none"
+        stroke="#10b981"
+        strokeWidth="20"
+        strokeLinecap="round"
+        strokeDasharray={`${dashLength} ${gapLength}`}
+        initial={{ strokeDashoffset: dashLength }}
+        animate={{ strokeDashoffset: [-dashLength, -gapLength] }}
+        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
+        opacity={0.9}
+      />
+
+      {/* Mid vibrant lime/yellow-green core (Exact match with reference image media_1792720403066_1352b878.png) */}
+      <motion.path
+        d={pathData}
+        fill="none"
+        stroke="#4ade80"
         strokeWidth="11"
         strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.95 }}
-        transition={{ duration: 1.2, ease: "easeInOut" }}
+        strokeDasharray={`${dashLength - 20} ${gapLength + 20}`}
+        initial={{ strokeDashoffset: dashLength - 20 }}
+        animate={{ strokeDashoffset: [-(dashLength - 20), -gapLength] }}
+        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
+        opacity={0.95}
       />
 
-      {/* 3. Braided Warm Golden-Yellow Magic Strand (Continuously weaving along the branch) */}
+      {/* Bright chartreuse-gold inner energy layer */}
       <motion.path
         d={pathData}
         fill="none"
-        stroke="#eab308"
-        strokeWidth="3.8"
-        strokeDasharray="16 14"
+        stroke="#a3e635"
+        strokeWidth="6"
         strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ 
-          opacity: 0.95,
-          strokeDashoffset: [-120, 120]
-        }}
-        transition={{ 
-          opacity: { duration: 1.2, ease: "easeInOut" },
-          strokeDashoffset: { duration: 4.5, repeat: Infinity, ease: "linear" }
-        }}
+        strokeDasharray={`${dashLength - 40} ${gapLength + 40}`}
+        initial={{ strokeDashoffset: dashLength - 40 }}
+        animate={{ strokeDashoffset: [-(dashLength - 40), -gapLength] }}
+        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
+        opacity={1}
       />
 
-      {/* 4. Braided Lime-Green Electric Fiber (Counter-twisting helix pattern) */}
+      {/* Blinding white-yellow center filament (Tapered tips on both ends) */}
       <motion.path
         d={pathData}
         fill="none"
-        stroke="#84cc16"
-        strokeWidth="3.2"
-        strokeDasharray="12 16"
+        stroke="#fef08a"
+        strokeWidth="2.8"
         strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ 
-          opacity: 1,
-          strokeDashoffset: [120, -120]
-        }}
-        transition={{ 
-          opacity: { duration: 1.2, ease: "easeInOut" },
-          strokeDashoffset: { duration: 3.8, repeat: Infinity, ease: "linear" }
-        }}
+        strokeDasharray={`${dashLength - 60} ${gapLength + 60}`}
+        initial={{ strokeDashoffset: dashLength - 60 }}
+        animate={{ strokeDashoffset: [-(dashLength - 60), -gapLength] }}
+        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
+        opacity={1}
       />
-
-      {/* 5. Pure White-Mint Crackling Core Filament */}
       <motion.path
         d={pathData}
         fill="none"
-        stroke="#f0fdf4"
-        strokeWidth="2.0"
+        stroke="#ffffff"
+        strokeWidth="1.6"
         strokeLinecap="round"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0.85, 1, 0.85] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        strokeDasharray={`${dashLength - 80} ${gapLength + 80}`}
+        initial={{ strokeDashoffset: dashLength - 80 }}
+        animate={{ strokeDashoffset: [-(dashLength - 80), -gapLength] }}
+        transition={{ duration: 18.0, repeat: Infinity, ease: "linear" }}
+        opacity={1}
       />
     </g>
   );
