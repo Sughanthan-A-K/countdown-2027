@@ -2,132 +2,154 @@ import React, { useRef, useState, useMemo } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 /**
- * WovenLifePowerStrands - "Train" Traveling Pulse on Braided Vines
+ * WovenLifePowerStrands - Exact Loki God of Stories Life Magic
  * 
- * Implements Loki's God of Stories life magic as described:
- * 1. Dual pulses travel outward from the tap point: one Leftwards, one Rightwards with EQUAL timing & speed.
- * 2. Train slug concept: A fixed-length segment (~320px) travels along the branch like a train on a track.
- * 3. Soft tapered ends: Head and tail fade smoothly into the branch.
- * 4. Braided organic clump ("murukki pinniya wire"): Multiple intertwined filaments of emerald, vibrant lime, 
- *    golden-chartreuse, and white core highlight.
- * 5. Track behind train: Behind the passing slug, the branch leaves its dark/black organic body with a 
- *    subtle, rich dark-emerald living awakening glow.
+ * Based on the reference frames (media_1792721370556_1c28e435.png & media_1792721370573_168b0385.jpg):
+ * - Tap point acts as Loki's hand grabbing the branch.
+ * - The dead rope/branch is composed of multiple twisted dark fibers/wires.
+ * - When touched, it doesn't just shoot a cartoon dot. The braided fibers themselves light up with living magic!
+ * - Green ethereal fog/haze blooms out around the branch (large volumetric soft green glow).
+ * - Individual twisted strands: bright lime, yellow-gold, emerald, and glowing white core threads braided around each other.
+ * - The front edge tapers off into individual twisting threads entering the dark dead branch fibers.
+ * - Spreads out smoothly, symmetrically, and meditatively in both directions from the tap point.
  */
 function WovenLifePowerStrands({ forwardPath, backwardPath, isEnergized }) {
   if (!isEnergized || !forwardPath || !backwardPath) return null;
 
-  const trainLength = 320;
-  const pathLength = 1600;
-  // Slow, smooth travel duration (equal for both directions)
-  const duration = 28.0;
+  // Slow, meditative, organic spread
+  const duration = 16.0;
 
-  const renderPulseDirection = (pathD, keyPrefix) => (
+  const renderBraidedEnergy = (pathD, keyPrefix) => (
     <g key={keyPrefix}>
-      {/* Behind the train: Awakened dark emerald trace that gradually breathes life */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#064e3b"
-        strokeWidth="11"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.55 }}
-        transition={{ duration, ease: "easeOut" }}
-      />
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#022c22"
-        strokeWidth="6"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.8 }}
-        transition={{ duration, ease: "easeOut" }}
-      />
-
-      {/* --- THE TRAVELING TRAIN SLUG (Simultaneous bi-directional) --- */}
-      {/* 1. Outermost soft atmospheric emerald haze */}
+      {/* 1. Volumetric Ethereal Green Atmosphere (The huge soft emerald bloom seen in reference image 1) */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#10b981"
-        strokeWidth="26"
+        strokeWidth="48"
         strokeLinecap="round"
-        strokeDasharray={`${trainLength} ${pathLength}`}
-        initial={{ strokeDashoffset: trainLength }}
-        animate={{ strokeDashoffset: -pathLength }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={0.35}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.35 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        style={{ filter: "blur(12px)" }}
       />
-
-      {/* 2. Deep vibrant green auroral sleeve */}
       <motion.path
         d={pathD}
         fill="none"
-        stroke="#059669"
-        strokeWidth="16"
+        stroke="#22c55e"
+        strokeWidth="28"
         strokeLinecap="round"
-        strokeDasharray={`${trainLength - 20} ${pathLength + 20}`}
-        initial={{ strokeDashoffset: trainLength - 20 }}
-        animate={{ strokeDashoffset: -pathLength }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={0.8}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.55 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        style={{ filter: "blur(6px)" }}
       />
 
-      {/* 3. Braided Vine Strand A: Vibrant Lime (#84cc16 / #4ade80) */}
+      {/* 2. Base vibrant emerald awakened body */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#15803d"
+        strokeWidth="14"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.9 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+      />
+
+      {/* 3. Braided Twisted Fiber 1: Bright Lime Green Vine (#4ade80) */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#4ade80"
-        strokeWidth="9"
+        strokeWidth="6.5"
         strokeLinecap="round"
-        strokeDasharray={`${trainLength - 40} ${pathLength + 40}`}
-        initial={{ strokeDashoffset: trainLength - 40 }}
-        animate={{ strokeDashoffset: -pathLength }}
-        transition={{ duration, ease: "easeOut" }}
+        strokeDasharray="28 14 42 10"
+        initial={{ pathLength: 0, strokeDashoffset: 0 }}
+        animate={{ 
+          pathLength: 1,
+          strokeDashoffset: [0, -300]
+        }}
+        transition={{ 
+          pathLength: { duration, ease: [0.25, 0.1, 0.25, 1] },
+          strokeDashoffset: { duration: 12, repeat: Infinity, ease: "linear" }
+        }}
         opacity={0.95}
       />
 
-      {/* 4. Braided Vine Strand B: Warm golden-chartreuse interwoven fiber (#a3e635 / #eab308) */}
+      {/* 4. Braided Twisted Fiber 2: Warm Golden-Green Strand (#a3e635) */}
       <motion.path
         d={pathD}
         fill="none"
-        stroke="#bef264"
-        strokeWidth="5"
+        stroke="#a3e635"
+        strokeWidth="4.5"
         strokeLinecap="round"
-        strokeDasharray={`${trainLength - 70} 12 ${trainLength - 100} ${pathLength}`}
-        initial={{ strokeDashoffset: trainLength - 60 }}
-        animate={{ strokeDashoffset: -pathLength }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={1}
+        strokeDasharray="18 22 36 16"
+        initial={{ pathLength: 0, strokeDashoffset: 40 }}
+        animate={{ 
+          pathLength: 1,
+          strokeDashoffset: [40, -260]
+        }}
+        transition={{ 
+          pathLength: { duration, ease: [0.25, 0.1, 0.25, 1] },
+          strokeDashoffset: { duration: 10, repeat: Infinity, ease: "linear" }
+        }}
+        opacity={0.9}
       />
 
-      {/* 5. Braided Vine Strand C: Intense yellow-green life filament (#facc15) */}
+      {/* 5. Braided Twisted Fiber 3: Vibrant Chartreuse / Yellow Life Fiber (#facc15) */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#fde047"
         strokeWidth="3.2"
         strokeLinecap="round"
-        strokeDasharray={`${trainLength - 90} 8 60 ${pathLength}`}
-        initial={{ strokeDashoffset: trainLength - 80 }}
-        animate={{ strokeDashoffset: -pathLength }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={1}
+        strokeDasharray="32 18 20 25"
+        initial={{ pathLength: 0, strokeDashoffset: 80 }}
+        animate={{ 
+          pathLength: 1,
+          strokeDashoffset: [80, -220]
+        }}
+        transition={{ 
+          pathLength: { duration, ease: [0.25, 0.1, 0.25, 1] },
+          strokeDashoffset: { duration: 14, repeat: Infinity, ease: "linear" }
+        }}
+        opacity={0.95}
       />
 
-      {/* 6. Core white-mint luminous filament (Tapered softly at both ends) */}
+      {/* 6. Braided Twisted Fiber 4: Intense White-Green Central Energy Core (#ffffff) */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#ffffff"
-        strokeWidth="1.8"
+        strokeWidth="2.2"
         strokeLinecap="round"
-        strokeDasharray={`${trainLength - 130} ${pathLength + 130}`}
-        initial={{ strokeDashoffset: trainLength - 110 }}
-        animate={{ strokeDashoffset: -pathLength }}
-        transition={{ duration, ease: "easeOut" }}
+        strokeDasharray="45 25 30 35"
+        initial={{ pathLength: 0, strokeDashoffset: 0 }}
+        animate={{ 
+          pathLength: 1,
+          strokeDashoffset: [0, -400]
+        }}
+        transition={{ 
+          pathLength: { duration, ease: [0.25, 0.1, 0.25, 1] },
+          strokeDashoffset: { duration: 11, repeat: Infinity, ease: "linear" }
+        }}
         opacity={1}
+      />
+
+      {/* 7. Traveling Leading Tapered Edge: Soft bright pulse at the front tip as it enters the dark rope */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#dcfce7"
+        strokeWidth="8"
+        strokeLinecap="round"
+        strokeDasharray="120 1800"
+        initial={{ strokeDashoffset: 120 }}
+        animate={{ strokeDashoffset: -1600 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        opacity={0.8}
+        style={{ filter: "blur(2px)" }}
       />
     </g>
   );
@@ -135,9 +157,9 @@ function WovenLifePowerStrands({ forwardPath, backwardPath, isEnergized }) {
   return (
     <g>
       {/* Equal bi-directional spread: Right/Forward direction */}
-      {renderPulseDirection(forwardPath, "pulse-forward")}
+      {renderBraidedEnergy(forwardPath, "energy-fwd")}
       {/* Equal bi-directional spread: Left/Backward direction */}
-      {renderPulseDirection(backwardPath, "pulse-backward")}
+      {renderBraidedEnergy(backwardPath, "energy-bwd")}
     </g>
   );
 }
