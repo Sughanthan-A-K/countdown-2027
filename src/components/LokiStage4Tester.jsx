@@ -71,10 +71,10 @@ export default function LokiStage4Tester({
     offsetY: 0
   };
 
-  const handleEyeClick = (e, beamId) => {
+  const handleBeamToggle = (e, beamId) => {
     e.stopPropagation();
     setViewedBeams(prev => new Set(prev).add(beamId));
-    onSetSoloBeam(beamId);
+    onToggleBeam(beamId);
   };
 
   const handleUpdateNote = (beamId, text) => {
@@ -349,14 +349,12 @@ export default function LokiStage4Tester({
                 }`}
               >
                 <div 
-                  onClick={(e) => handleEyeClick(e, beam.id)}
+                  onClick={(e) => handleBeamToggle(e, beam.id)}
                   className="flex items-center justify-between p-1.5 cursor-pointer"
                 >
                   <div className="flex items-center gap-1.5 overflow-hidden flex-1">
                     <span className={`text-[10px] font-mono font-bold w-5 h-5 flex-shrink-0 flex items-center justify-center rounded transition-all ${
-                      isSolo
-                        ? 'bg-amber-500 text-black font-extrabold shadow-[0_0_6px_#f59e0b]'
-                        : isChecked
+                      isChecked 
                         ? (isViewed 
                             ? 'bg-sky-500 text-black font-bold shadow-[0_0_6px_rgba(14,165,233,0.6)]' 
                             : 'bg-emerald-900/90 text-emerald-300 border border-emerald-500/60')
@@ -396,31 +394,9 @@ export default function LokiStage4Tester({
                       <FileText size={11} />
                     </button>
 
-                    {/* Eye Solo Button */}
-                    <button
-                      onClick={(e) => handleEyeClick(e, beam.id)}
-                      title={isSolo ? "Turn Off Solo Preview" : "Preview this beam (Solo View)"}
-                      className={`p-1 rounded transition-all ${
-                        isSolo 
-                          ? 'bg-amber-500 text-black shadow-[0_0_8px_#f59e0b]' 
-                          : isViewed
-                          ? 'text-sky-300 hover:text-amber-300 hover:bg-neutral-800'
-                          : 'text-neutral-500 hover:text-amber-300 hover:bg-neutral-800'
-                      }`}
-                    >
-                      <Eye size={12} />
-                    </button>
-
-                    {/* Checkbox (Clicking directly on checkbox toggles check on/off) */}
-                    <div 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleBeam(beam.id);
-                      }}
-                      title={isChecked ? "Uncheck beam" : "Check beam"}
-                      className={`p-0.5 rounded hover:bg-neutral-800 cursor-pointer ${isChecked ? 'text-emerald-400' : 'text-neutral-600'}`}
-                    >
-                      {isChecked ? <CheckSquare size={13} /> : <Square size={13} />}
+                    {/* Checkbox Icon */}
+                    <div className={isChecked ? 'text-emerald-400' : 'text-neutral-600'}>
+                      {isChecked ? <CheckSquare size={14} /> : <Square size={14} />}
                     </div>
                   </div>
                 </div>
