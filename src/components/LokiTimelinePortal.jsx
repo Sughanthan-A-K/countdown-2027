@@ -44,88 +44,89 @@ function LokiLifePowerSpread({ branchPathRef, tapRatio = 0.5, isEnergized, allEn
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Behind the pulse: Awakened subtle living dark-green body */}
+      {/* 1. Behind the pulse: Awakened subtle living dark-green body (No marks at tap point - smooth seamless fade-in) */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#064e3b"
-        strokeWidth="10"
+        strokeWidth="9"
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration, ease: "easeOut" }}
-        opacity={0.85}
+        opacity={0.8}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#047857"
-        strokeWidth="5"
+        strokeWidth="4"
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration, ease: "easeOut" }}
-        opacity={0.7}
+        opacity={0.65}
       />
 
-      {/* 2. The Traveling Green Pulse with Mint-White Core (Symmetrical on both sides) */}
-      {/* Outer soft emerald bloom */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#10b981"
-        strokeWidth="24"
-        strokeLinecap="round"
-        strokeDasharray={`${pulseLen} ${distance + 500}`}
-        initial={{ strokeDashoffset: pulseLen }}
-        animate={{ strokeDashoffset: -(distance + 100) }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={0.6}
-        style={{ filter: "blur(6px)" }}
-      />
+      {/* 2. The Traveling Pulse - ALL LAYERS SAME UNIFORM LENGTH with Venom-tendril organic edge */}
+      <g style={{ filter: "url(#venomPulseDistort)" }}>
+        {/* Layer A: Atmospheric emerald volumetric aura bloom (SAME length pulseLen) */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#10b981"
+          strokeWidth="20"
+          strokeLinecap="butt"
+          strokeDasharray={`${pulseLen} ${distance + 500}`}
+          initial={{ strokeDashoffset: pulseLen }}
+          animate={{ strokeDashoffset: -(distance + 100) }}
+          transition={{ duration, ease: "easeOut" }}
+          opacity={0.55}
+          style={{ filter: "blur(5px)" }}
+        />
 
-      {/* Radiant Emerald / Lime sleeve */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#22c55e"
-        strokeWidth="13"
-        strokeLinecap="round"
-        strokeDasharray={`${pulseLen - 20} ${distance + 500}`}
-        initial={{ strokeDashoffset: pulseLen - 20 }}
-        animate={{ strokeDashoffset: -(distance + 100) }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={0.85}
-        style={{ filter: "blur(2px)" }}
-      />
+        {/* Layer B: Deep vibrant emerald/lime body (SAME length pulseLen) */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#22c55e"
+          strokeWidth="11"
+          strokeLinecap="butt"
+          strokeDasharray={`${pulseLen} ${distance + 500}`}
+          initial={{ strokeDashoffset: pulseLen }}
+          animate={{ strokeDashoffset: -(distance + 100) }}
+          transition={{ duration, ease: "easeOut" }}
+          opacity={0.85}
+        />
 
-      {/* Vibrant Lime Strand */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#84cc16"
-        strokeWidth="7"
-        strokeLinecap="round"
-        strokeDasharray={`${pulseLen - 40} ${distance + 500}`}
-        initial={{ strokeDashoffset: pulseLen - 40 }}
-        animate={{ strokeDashoffset: -(distance + 100) }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={0.95}
-      />
+        {/* Layer C: Vibrant bright lime core (SAME length pulseLen) */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#84cc16"
+          strokeWidth="6"
+          strokeLinecap="butt"
+          strokeDasharray={`${pulseLen} ${distance + 500}`}
+          initial={{ strokeDashoffset: pulseLen }}
+          animate={{ strokeDashoffset: -(distance + 100) }}
+          transition={{ duration, ease: "easeOut" }}
+          opacity={0.95}
+        />
 
-      {/* White-Mint Core Head */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#f0fdf4"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeDasharray={`${pulseLen - 70} ${distance + 500}`}
-        initial={{ strokeDashoffset: pulseLen - 70 }}
-        animate={{ strokeDashoffset: -(distance + 100) }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={1}
-      />
+        {/* Layer D: Intense white-mint core filament (SAME length pulseLen - zero step-down!) */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth="2.5"
+          strokeLinecap="butt"
+          strokeDasharray={`${pulseLen} ${distance + 500}`}
+          initial={{ strokeDashoffset: pulseLen }}
+          animate={{ strokeDashoffset: -(distance + 100) }}
+          transition={{ duration, ease: "easeOut" }}
+          opacity={1}
+        />
+      </g>
     </g>
   );
 
@@ -377,6 +378,12 @@ export default function LokiTimelinePortal() {
 
           <filter id="smoothBranchGlow" x="-30%" y="-30%" width="160%" height="160%">
             <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#010f0b" floodOpacity="0.9" />
+          </filter>
+
+          {/* Venom tendril organic distortion for the traveling life pulse */}
+          <filter id="venomPulseDistort" x="-20%" y="-40%" width="140%" height="180%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04 0.12" numOctaves="3" result="venomNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="9" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
       </svg>
