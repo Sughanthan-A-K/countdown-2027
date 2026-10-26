@@ -24,10 +24,33 @@ import { motion } from 'framer-motion';
  *   - 1.0s: Final perimeter cracks reach outer corners.
  *   - 1.5s: Glass completely shatters into the portal!
  */
-export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, activeBeams = null, beamTransforms = null }) {
+export default function LokiTimelineCrack({ 
+  crackStage = 0, 
+  stage4Step = null, 
+  activeBeams = null, 
+  beamTransforms = null,
+  radialWaveConfig = { enabled: true, radius: 220, delay: 0.8, duration: 4.0 },
+  previewAllBeams = false,
+  timelineConfig = null
+}) {
   if (crackStage <= 0) return null;
 
-  // Helper to check if a specific beam is enabled (null = all enabled by default)
+  // Helper to dynamically get delay & duration from timelineConfig if configured
+  const getBeamDelay = (beamId, defaultDelaySec) => {
+    if (previewAllBeams) return 0;
+    if (timelineConfig?.delays && timelineConfig.delays[beamId] !== undefined) {
+      return timelineConfig.delays[beamId];
+    }
+    return defaultDelaySec;
+  };
+
+  const getBeamDuration = (beamId, defaultDurSec) => {
+    if (timelineConfig?.durations && timelineConfig.durations[beamId] !== undefined) {
+      return timelineConfig.durations[beamId];
+    }
+    return defaultDurSec;
+  };
+
   const isBeamActive = (beamId) => {
     if (!activeBeams) return true;
     return activeBeams.includes(beamId);
@@ -82,11 +105,12 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
     return `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${newP3} ${newP4}`;
   };
 
-  // If stage4Step is explicitly controlled (e.g. 1 to 4), use it; otherwise default to full normal behavior (null = full)
+  // If stage4Step is explicitly controlled (e.g. 1 to 5), use it; otherwise default to full normal behavior (null = full)
   const isStepMode = crackStage === 4 && stage4Step !== null;
-  const showOuterBeams = crackStage >= 4 && (!isStepMode || stage4Step >= 1);
-  const showRadialWave = crackStage >= 4 && (!isStepMode || stage4Step >= 2);
-  const showCenterBursts = crackStage >= 4 && (!isStepMode || stage4Step >= 3);
+  const showOuterBeams = previewAllBeams || (crackStage >= 4 && (!isStepMode || stage4Step >= 1)) || (crackStage === 3 && activeBeams && activeBeams.some(id => id >= 1 && id <= 6));
+  const showRadialWave = (radialWaveConfig?.enabled !== false) && ((crackStage >= 4 && (!isStepMode || stage4Step >= 2)) || (crackStage === 3 && activeBeams && activeBeams.length > 0));
+  const showCenterBursts = previewAllBeams || (crackStage >= 4 && (!isStepMode || stage4Step >= 3)) || (crackStage === 3 && activeBeams && activeBeams.some(id => id >= 7 && id <= 12));
+  const showMegaClimaxBeam = previewAllBeams || (crackStage >= 4 && (!isStepMode || stage4Step >= 4)) || (crackStage === 3 && activeBeams && activeBeams.includes(12));
 
   // Single clean fissure stroke & gap width
   const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : (crackStage === 3 ? 3.2 : 4.4));
@@ -125,7 +149,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
       {/* TAP 3 & TAP 4: OUTWARD 3D LIGHT BEAMS FROM CRACK SEAM SEGMENTS */}
       {/* Card-kulla irukura exact crack line/fissure-la irunthu thaan light screen-ku veliya pogum */}
       {/* ============================================================ */}
-      {crackStage >= 3 && (
+      {(crackStage >= 3 || previewAllBeams) && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
           <svg 
             viewBox="0 0 200 400" 
@@ -376,7 +400,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 filter="url(#outwardBeamGlow)"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.1, ease: "easeOut" }}
+                transition={{ duration: getBeamDuration(101, 0.1), delay: getBeamDelay(101, 0), ease: "easeOut" }}
               />
             )}
 
@@ -388,7 +412,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                 filter="url(#outwardBeamGlow)"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
+                transition={{ duration: getBeamDuration(102, 0.1), delay: getBeamDelay(102, 0.03), ease: "easeOut" }}
               />
             )}
 
@@ -408,7 +432,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
-                    transition={{ duration: 0.25, delay: isStepMode ? 0 : 0.65, ease: "easeOut" }}
+                    transition={{ duration: getBeamDuration(1, 0.25), delay: getBeamDelay(1, isStepMode ? 0 : 0.65), ease: "easeOut" }}
                   />
                 )}
 
@@ -420,7 +444,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
-                    transition={{ duration: 0.25, delay: isStepMode ? 0.05 : 1.20, ease: "easeOut" }}
+                    transition={{ duration: getBeamDuration(2, 0.25), delay: getBeamDelay(2, isStepMode ? 0.05 : 1.20), ease: "easeOut" }}
                   />
                 )}
 
@@ -432,7 +456,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.85 }}
-                    transition={{ duration: 0.22, delay: isStepMode ? 0.1 : 1.75, ease: "easeOut" }}
+                    transition={{ duration: getBeamDuration(3, 0.22), delay: getBeamDelay(3, isStepMode ? 0.1 : 1.75), ease: "easeOut" }}
                   />
                 )}
 
@@ -444,7 +468,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.88 }}
-                    transition={{ duration: 0.20, delay: isStepMode ? 0.15 : 2.20, ease: "easeOut" }}
+                    transition={{ duration: getBeamDuration(4, 0.20), delay: getBeamDelay(4, isStepMode ? 0.15 : 2.20), ease: "easeOut" }}
                   />
                 )}
 
@@ -456,7 +480,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.85 }}
-                    transition={{ duration: 0.18, delay: isStepMode ? 0.2 : 2.55, ease: "easeOut" }}
+                    transition={{ duration: getBeamDuration(5, 0.18), delay: getBeamDelay(5, isStepMode ? 0.2 : 2.55), ease: "easeOut" }}
                   />
                 )}
 
@@ -468,7 +492,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.92 }}
-                    transition={{ duration: 0.14, delay: isStepMode ? 0.25 : 2.85, ease: "easeOut" }}
+                    transition={{ duration: getBeamDuration(6, 0.14), delay: getBeamDelay(6, isStepMode ? 0.25 : 2.85), ease: "easeOut" }}
                   />
                 )}
 
@@ -483,7 +507,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.92 }}
-                        transition={{ duration: 0.10, delay: isStepMode ? 0 : 3.05, ease: "easeOut" }}
+                        transition={{ duration: getBeamDuration(7, 0.10), delay: getBeamDelay(7, isStepMode ? 0 : 3.05), ease: "easeOut" }}
                       />
                     )}
 
@@ -495,7 +519,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.92 }}
-                        transition={{ duration: 0.08, delay: isStepMode ? 0.05 : 3.18, ease: "easeOut" }}
+                        transition={{ duration: getBeamDuration(8, 0.08), delay: getBeamDelay(8, isStepMode ? 0.05 : 3.18), ease: "easeOut" }}
                       />
                     )}
 
@@ -507,7 +531,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.95 }}
-                        transition={{ duration: 0.08, delay: isStepMode ? 0.1 : 3.28, ease: "easeOut" }}
+                        transition={{ duration: getBeamDuration(9, 0.08), delay: getBeamDelay(9, isStepMode ? 0.1 : 3.28), ease: "easeOut" }}
                       />
                     )}
 
@@ -519,7 +543,7 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.95 }}
-                        transition={{ duration: 0.07, delay: isStepMode ? 0.15 : 3.36, ease: "easeOut" }}
+                        transition={{ duration: getBeamDuration(10, 0.07), delay: getBeamDelay(10, isStepMode ? 0.15 : 3.36), ease: "easeOut" }}
                       />
                     )}
 
@@ -531,19 +555,19 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.95 }}
-                        transition={{ duration: 0.06, delay: isStepMode ? 0.2 : 3.42, ease: "easeOut" }}
+                        transition={{ duration: getBeamDuration(11, 0.06), delay: getBeamDelay(11, isStepMode ? 0.2 : 3.42), ease: "easeOut" }}
                       />
                     )}
 
-                    {/* Beam 12: FINAL MEGA CENTER CLIMAX BEAM (3.48s) */}
-                    {isBeamActive(12) && (
+                    {/* Beam 12: FINAL MEGA CENTER CLIMAX BEAM (3.48s) - Enabled in Step 4.4 */}
+                    {showMegaClimaxBeam && isBeamActive(12) && (
                       <motion.polygon
                         points={getDynamicBeamPoints(12, "102,185 140,152 4800,-400 3800,-1600")}
                         fill="url(#climaxCenterInfiniteBeam)"
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1.0 }}
-                        transition={{ duration: 0.06, delay: isStepMode ? 0.25 : 3.48, ease: "easeOut" }}
+                        transition={{ duration: getBeamDuration(12, 0.06), delay: getBeamDelay(12, isStepMode ? 0.05 : 3.48), ease: "easeOut" }}
                       />
                     )}
                   </>
@@ -567,10 +591,10 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 4: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
+        {/* TAP 3 / TAP 4: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
         {/* Light spreads smoothly from center to encompass the FULL card before exploding */}
         {/* ============================================================ */}
-        {crackStage >= 4 && (
+        {showRadialWave && (
           <g key="crack-stage-4-center-bright-core">
             <defs>
               {/* Radial gradient that grows seamlessly from pure white core to full card emerald light */}
@@ -586,21 +610,20 @@ export default function LokiTimelineCrack({ crackStage = 0, stage4Step = null, a
             {/* 1. Concentric Radial Wave expanding from Center to engulf the entire card uniformly */}
             {showRadialWave && (
               <motion.circle
+                key={`radial-wave-anim-${radialWaveConfig?.delay ?? 0.8}-${radialWaveConfig?.duration ?? 4.0}`}
                 cx="100"
                 cy="200"
-                r="220"
+                r={radialWaveConfig?.radius || 220}
                 fill="url(#exactCardCenterCore)"
                 initial={{ scale: 0.1, opacity: 0 }}
-                animate={isStepMode ? {
-                  scale: 0.95,
-                  opacity: 0.9
-                } : {
+                animate={{
                   scale: [0.1, 0.4, 0.8, 1.4],
                   opacity: [0, 0.4, 0.85, 1.0]
                 }}
                 transition={{
-                  duration: isStepMode ? 0.3 : 5.0,
-                  times: isStepMode ? undefined : [0, 0.65, 0.85, 1.0],
+                  duration: radialWaveConfig?.duration !== undefined ? radialWaveConfig.duration : 4.0,
+                  delay: radialWaveConfig?.delay !== undefined ? radialWaveConfig.delay : 0.8,
+                  times: [0, 0.65, 0.85, 1.0],
                   ease: [0.25, 1, 0.5, 1]
                 }}
                 style={{ mixBlendMode: "screen" }}
