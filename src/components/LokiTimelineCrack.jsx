@@ -24,93 +24,8 @@ import { motion } from 'framer-motion';
  *   - 1.0s: Final perimeter cracks reach outer corners.
  *   - 1.5s: Glass completely shatters into the portal!
  */
-export default function LokiTimelineCrack({ 
-  crackStage = 0, 
-  stage4Step = null, 
-  activeBeams = null, 
-  beamTransforms = null,
-  radialWaveConfig = { enabled: true, radius: 220, delay: 0.8, duration: 4.0 },
-  previewAllBeams = false,
-  timelineConfig = null
-}) {
+export default function LokiTimelineCrack({ crackStage = 0 }) {
   if (crackStage <= 0) return null;
-
-  // Helper to dynamically get delay & duration from timelineConfig if configured
-  const getBeamDelay = (beamId, defaultDelaySec) => {
-    if (previewAllBeams) return 0;
-    if (timelineConfig?.delays && timelineConfig.delays[beamId] !== undefined) {
-      return timelineConfig.delays[beamId];
-    }
-    return defaultDelaySec;
-  };
-
-  const getBeamDuration = (beamId, defaultDurSec) => {
-    if (timelineConfig?.durations && timelineConfig.durations[beamId] !== undefined) {
-      return timelineConfig.durations[beamId];
-    }
-    return defaultDurSec;
-  };
-
-  const isBeamActive = (beamId) => {
-    if (!activeBeams) return true;
-    return activeBeams.includes(beamId);
-  };
-
-  // Helper to dynamically swing ONLY the outer projection points of a beam,
-  // keeping the base seam points [p1, p2] 100% physically fixed on the crack fracture!
-  const getDynamicBeamPoints = (beamId, defaultPointsStr) => {
-    // defaultPointsStr format: "p1x,p1y p2x,p2y p3x,p3y p4x,p4y"
-    // p1, p2 = fixed crack seam points on the card
-    // p3, p4 = outer piercing projection points traveling far out onto the screen
-    if (!beamTransforms) return defaultPointsStr;
-    const globalT = beamTransforms.global || { angle: 0, scaleX: 1, scaleY: 1 };
-    const beamT = beamTransforms[beamId] || { angle: 0, scaleX: 1, scaleY: 1 };
-
-    const totalAngle = (globalT.angle || 0) + (beamT.angle || 0);
-    const totalScale = (globalT.scaleX || 1) * (beamT.scaleX || 1);
-
-    if (totalAngle === 0 && totalScale === 1) {
-      return defaultPointsStr;
-    }
-
-    const pts = defaultPointsStr.trim().split(/\s+/).map(pair => {
-      const [x, y] = pair.split(',').map(Number);
-      return [x, y];
-    });
-
-    if (pts.length < 4) return defaultPointsStr;
-
-    // Anchor is the EXACT midpoint of the crack seam segment (p1 and p2)
-    const [p1, p2, p3, p4] = pts;
-    const anchorX = (p1[0] + p2[0]) / 2;
-    const anchorY = (p1[1] + p2[1]) / 2;
-
-    const rad = (totalAngle * Math.PI) / 180;
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-
-    // Rotate & scale ONLY the outer piercing points (p3 and p4) around the crack seam anchor
-    const rotatePoint = ([px, py]) => {
-      const dx = (px - anchorX) * totalScale;
-      const dy = (py - anchorY) * totalScale;
-      const rx = anchorX + (dx * cos - dy * sin);
-      const ry = anchorY + (dx * sin + dy * cos);
-      return `${Math.round(rx)},${Math.round(ry)}`;
-    };
-
-    const newP3 = rotatePoint(p3);
-    const newP4 = rotatePoint(p4);
-
-    // Points p1 and p2 remain 100% UNCHANGED and locked into the crack seam!
-    return `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${newP3} ${newP4}`;
-  };
-
-  // If stage4Step is explicitly controlled (e.g. 1 to 5), use it; otherwise default to full normal behavior (null = full)
-  const isStepMode = crackStage === 4 && stage4Step !== null;
-  const showOuterBeams = previewAllBeams || (crackStage >= 4 && (!isStepMode || stage4Step >= 1)) || (crackStage === 3 && activeBeams && activeBeams.some(id => id >= 1 && id <= 6));
-  const showRadialWave = (radialWaveConfig?.enabled !== false) && ((crackStage >= 4 && (!isStepMode || stage4Step >= 2)) || (crackStage === 3 && activeBeams && activeBeams.length > 0));
-  const showCenterBursts = previewAllBeams || (crackStage >= 4 && (!isStepMode || stage4Step >= 3)) || (crackStage === 3 && activeBeams && activeBeams.some(id => id >= 7 && id <= 12));
-  const showMegaClimaxBeam = previewAllBeams || (crackStage >= 4 && (!isStepMode || stage4Step >= 4)) || (crackStage === 3 && activeBeams && activeBeams.includes(12));
 
   // Single clean fissure stroke & gap width
   const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : (crackStage === 3 ? 3.2 : 4.4));
@@ -149,7 +64,7 @@ export default function LokiTimelineCrack({
       {/* TAP 3 & TAP 4: OUTWARD 3D LIGHT BEAMS FROM CRACK SEAM SEGMENTS */}
       {/* Card-kulla irukura exact crack line/fissure-la irunthu thaan light screen-ku veliya pogum */}
       {/* ============================================================ */}
-      {(crackStage >= 3 || previewAllBeams) && (
+      {crackStage >= 3 && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
           <svg 
             viewBox="0 0 200 400" 
@@ -393,185 +308,153 @@ export default function LokiTimelineCrack({
             </defs>
 
             {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding INFINITELY across screen --- */}
-            {isBeamActive(101) && (
-              <motion.polygon
-                points={getDynamicBeamPoints(101, "102,185 140,152 4200,-1600 3200,-2200")}
-                fill="url(#outwardBeam1)"
-                filter="url(#outwardBeamGlow)"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: getBeamDuration(101, 0.1), delay: getBeamDelay(101, 0), ease: "easeOut" }}
-              />
-            )}
+            <motion.polygon
+              points="102,185 140,152 4200,-1600 3200,-2200"
+              fill="url(#outwardBeam1)"
+              filter="url(#outwardBeamGlow)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, ease: "easeOut" }}
+            />
 
             {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
-            {isBeamActive(102) && (
-              <motion.polygon
-                points={getDynamicBeamPoints(102, "102,185 85,248 -2600,4500 -3200,3800")}
-                fill="url(#outwardBeam2)"
-                filter="url(#outwardBeamGlow)"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: getBeamDuration(102, 0.1), delay: getBeamDelay(102, 0.03), ease: "easeOut" }}
-              />
-            )}
+            <motion.polygon
+              points="102,185 85,248 -2600,4500 -3200,3800"
+              fill="url(#outwardBeam2)"
+              filter="url(#outwardBeamGlow)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
+            />
 
             {/* ============================================================ */}
             {/* TAP 4: NATURAL PROGRESSION */}
             {/* Phase 1: Surrounding cracks radiate FIRST with organic delays (0.6s -> 2.6s) */}
             {/* Phase 2: Center cracks burst rapidly & FAST (3.0s -> 3.48s) leading into 3.6s Shatter! */}
             {/* ============================================================ */}
-            {showOuterBeams && (
+            {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
                 {/* --- 1. SURROUNDING OUTER CRACKS RADIATE FIRST WITH DELAYS (0.6s - 2.6s) --- */}
-                {/* Beam 1: Upper-Left Corner Beam (0.65s) */}
-                {isBeamActive(1) && (
-                  <motion.polygon
-                    points={getDynamicBeamPoints(1, "76,100 45,108 -3400,-2600 -2400,-3600")}
-                    fill="url(#outwardBeamUpperLeft)"
-                    filter="url(#outwardBeamGlow)"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.9 }}
-                    transition={{ duration: getBeamDuration(1, 0.25), delay: getBeamDelay(1, isStepMode ? 0 : 0.65), ease: "easeOut" }}
-                  />
-                )}
+                {/* Upper-Left Corner Beam (0.65s) */}
+                <motion.polygon
+                  points="76,100 45,108 -3400,-2600 -2400,-3600"
+                  fill="url(#outwardBeamUpperLeft)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.9 }}
+                  transition={{ duration: 0.25, delay: 0.65, ease: "easeOut" }}
+                />
 
-                {/* Beam 2: Blade Beam Mid-Right (1.20s) */}
-                {isBeamActive(2) && (
-                  <motion.polygon
-                    points={getDynamicBeamPoints(2, "165,138 182,148 4500,1800 4200,300")}
-                    fill="url(#outwardBeamMidRightSeam)"
-                    filter="url(#outwardBeamGlow)"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.9 }}
-                    transition={{ duration: getBeamDuration(2, 0.25), delay: getBeamDelay(2, isStepMode ? 0.05 : 1.20), ease: "easeOut" }}
-                  />
-                )}
+                {/* Blade Beam Mid-Right (1.20s) */}
+                <motion.polygon
+                  points="165,138 4200,300 4500,1800 182,148"
+                  fill="url(#outwardBeamMidRightSeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.9 }}
+                  transition={{ duration: 0.25, delay: 1.20, ease: "easeOut" }}
+                />
 
-                {/* Beam 3: Upper-Right Corner Gap (1.75s) */}
-                {isBeamActive(3) && (
-                  <motion.polygon
-                    points={getDynamicBeamPoints(3, "168,22 200,5 3800,-1600 3200,-2400")}
-                    fill="url(#microBeamTopRight)"
-                    filter="url(#outwardBeamGlow)"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.85 }}
-                    transition={{ duration: getBeamDuration(3, 0.22), delay: getBeamDelay(3, isStepMode ? 0.1 : 1.75), ease: "easeOut" }}
-                  />
-                )}
+                {/* Upper-Right Corner Gap (1.75s) */}
+                <motion.polygon
+                  points="168,22 200,5 3800,-1600 3200,-2400"
+                  fill="url(#microBeamTopRight)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.22, delay: 1.75, ease: "easeOut" }}
+                />
 
-                {/* Beam 4: Lower-Right Corner Beam (2.20s) */}
-                {isBeamActive(4) && (
-                  <motion.polygon
-                    points={getDynamicBeamPoints(4, "85,248 126,274 3800,4200 3000,4800")}
-                    fill="url(#outwardBeamLowerRightSeam)"
-                    filter="url(#outwardBeamGlow)"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.88 }}
-                    transition={{ duration: getBeamDuration(4, 0.20), delay: getBeamDelay(4, isStepMode ? 0.15 : 2.20), ease: "easeOut" }}
-                  />
-                )}
+                {/* Lower-Right Corner Beam (2.20s) */}
+                <motion.polygon
+                  points="85,248 126,274 3800,4200 3000,4800"
+                  fill="url(#outwardBeamLowerRightSeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.20, delay: 2.20, ease: "easeOut" }}
+                />
 
-                {/* Beam 5: Bottom-Left Corner Gap (2.55s) */}
-                {isBeamActive(5) && (
-                  <motion.polygon
-                    points={getDynamicBeamPoints(5, "14,382 0,400 -2600,4800 -3400,4000")}
-                    fill="url(#microBeamBottomCorner)"
-                    filter="url(#outwardBeamGlow)"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.85 }}
-                    transition={{ duration: getBeamDuration(5, 0.18), delay: getBeamDelay(5, isStepMode ? 0.2 : 2.55), ease: "easeOut" }}
-                  />
-                )}
+                {/* Bottom-Left Corner Gap (2.55s) */}
+                <motion.polygon
+                  points="14,382 0,400 -2600,4800 -3400,4000"
+                  fill="url(#microBeamBottomCorner)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.18, delay: 2.55, ease: "easeOut" }}
+                />
 
-                {/* Beam 6: South Spine Off-Center Beam (2.85s) */}
-                {isBeamActive(6) && (
-                  <motion.polygon
-                    points={getDynamicBeamPoints(6, "96,350 102,400 1200,4500 200,4500")}
-                    fill="url(#outwardBeamBottomSpineSeam)"
-                    filter="url(#outwardBeamGlow)"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.92 }}
-                    transition={{ duration: getBeamDuration(6, 0.14), delay: getBeamDelay(6, isStepMode ? 0.25 : 2.85), ease: "easeOut" }}
-                  />
-                )}
+                {/* South Spine Off-Center Beam (2.85s) */}
+                <motion.polygon
+                  points="96,350 102,400 1200,4500 200,4500"
+                  fill="url(#outwardBeamBottomSpineSeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.92 }}
+                  transition={{ duration: 0.14, delay: 2.85, ease: "easeOut" }}
+                />
 
                 {/* --- 2. CENTER CRACKS BURST RAPID & FAST (3.05s - 3.48s) --- */}
-                {showCenterBursts && (
-                  <>
-                    {/* Beam 7: Upper Center Spine Fissure (3.05s) */}
-                    {isBeamActive(7) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(7, "108,78 92,122 -4200,-1800 -3800,-3200")}
-                        fill="url(#beamRedLine2)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.92 }}
-                        transition={{ duration: getBeamDuration(7, 0.10), delay: getBeamDelay(7, isStepMode ? 0 : 3.05), ease: "easeOut" }}
-                      />
-                    )}
+                {/* Upper Center Spine Fissure (3.05s) */}
+                <motion.polygon
+                  points="108,78 -3800,-3200 -4200,-1800 92,122"
+                  fill="url(#beamRedLine2)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.92 }}
+                  transition={{ duration: 0.10, delay: 3.05, ease: "easeOut" }}
+                />
 
-                    {/* Beam 8: Steep Upward Top Spine Shaft (3.18s) */}
-                    {isBeamActive(8) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(8, "104,65 108,78 400,-4200 -800,-3800")}
-                        fill="url(#outwardBeamTopSpine)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.92 }}
-                        transition={{ duration: getBeamDuration(8, 0.08), delay: getBeamDelay(8, isStepMode ? 0.05 : 3.18), ease: "easeOut" }}
-                      />
-                    )}
+                {/* Steep Upward Top Spine Shaft (3.18s) */}
+                <motion.polygon
+                  points="104,65 108,78 400,-4200 -800,-3800"
+                  fill="url(#outwardBeamTopSpine)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.92 }}
+                  transition={{ duration: 0.08, delay: 3.18, ease: "easeOut" }}
+                />
 
-                    {/* Beam 9: Left side Center Fissure (3.28s) */}
-                    {isBeamActive(9) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(9, "92,122 64,146 -4500,-600 -4200,-1800")}
-                        fill="url(#climaxLeftInfiniteBeam)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.95 }}
-                        transition={{ duration: getBeamDuration(9, 0.08), delay: getBeamDelay(9, isStepMode ? 0.1 : 3.28), ease: "easeOut" }}
-                      />
-                    )}
+                {/* Left side Center Fissure (3.28s) */}
+                <motion.polygon
+                  points="92,122 64,146 -4500,-600 -4200,-1800"
+                  fill="url(#climaxLeftInfiniteBeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.95 }}
+                  transition={{ duration: 0.08, delay: 3.28, ease: "easeOut" }}
+                />
 
-                    {/* Beam 10: Center Fissures Red Line 1 (3.36s) */}
-                    {isBeamActive(10) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(10, "92,122 102,185 -4500,1800 -4500,600")}
-                        fill="url(#beamRedLine1)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.95 }}
-                        transition={{ duration: getBeamDuration(10, 0.07), delay: getBeamDelay(10, isStepMode ? 0.15 : 3.36), ease: "easeOut" }}
-                      />
-                    )}
+                {/* Center Fissures Red Line 1 (3.36s) */}
+                <motion.polygon
+                  points="92,122 -4500,600 -4500,1800 102,185"
+                  fill="url(#beamRedLine1)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.95 }}
+                  transition={{ duration: 0.07, delay: 3.36, ease: "easeOut" }}
+                />
 
-                    {/* Beam 11: Center Fissures Red Line 5 (3.42s) */}
-                    {isBeamActive(11) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(11, "140,152 155,210 4500,3800 4200,2400")}
-                        fill="url(#beamRedLine5)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.95 }}
-                        transition={{ duration: getBeamDuration(11, 0.06), delay: getBeamDelay(11, isStepMode ? 0.2 : 3.42), ease: "easeOut" }}
-                      />
-                    )}
+                {/* Center Fissures Red Line 5 (3.42s) */}
+                <motion.polygon
+                  points="140,152 4200,2400 4500,3800 155,210"
+                  fill="url(#beamRedLine5)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.95 }}
+                  transition={{ duration: 0.06, delay: 3.42, ease: "easeOut" }}
+                />
 
-                    {/* Beam 12: FINAL MEGA CENTER CLIMAX BEAM (3.48s) - Enabled in Step 4.4 */}
-                    {showMegaClimaxBeam && isBeamActive(12) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(12, "102,185 140,152 4800,-400 3800,-1600")}
-                        fill="url(#climaxCenterInfiniteBeam)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1.0 }}
-                        transition={{ duration: getBeamDuration(12, 0.06), delay: getBeamDelay(12, isStepMode ? 0.05 : 3.48), ease: "easeOut" }}
-                      />
-                    )}
-                  </>
-                )}
+                {/* FINAL MEGA CENTER CLIMAX BEAM (3.48s): Central Hub Peak Laser -> Directly triggering 3.6s Shatter! */}
+                <motion.polygon
+                  points="102,185 140,152 4800,-400 3800,-1600"
+                  fill="url(#climaxCenterInfiniteBeam)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1.0 }}
+                  transition={{ duration: 0.06, delay: 3.48, ease: "easeOut" }}
+                />
               </g>
             )}
           </svg>
@@ -591,10 +474,10 @@ export default function LokiTimelineCrack({
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 3 / TAP 4: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
+        {/* TAP 4: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
         {/* Light spreads smoothly from center to encompass the FULL card before exploding */}
         {/* ============================================================ */}
-        {showRadialWave && (
+        {crackStage >= 4 && (
           <g key="crack-stage-4-center-bright-core">
             <defs>
               {/* Radial gradient that grows seamlessly from pure white core to full card emerald light */}
@@ -608,27 +491,63 @@ export default function LokiTimelineCrack({
             </defs>
 
             {/* 1. Concentric Radial Wave expanding from Center to engulf the entire card uniformly */}
-            {showRadialWave && (
-              <motion.circle
-                key={`radial-wave-anim-${radialWaveConfig?.delay ?? 0.8}-${radialWaveConfig?.duration ?? 4.0}`}
-                cx="100"
-                cy="200"
-                r={radialWaveConfig?.radius || 220}
-                fill="url(#exactCardCenterCore)"
-                initial={{ scale: 0.1, opacity: 0 }}
-                animate={{
-                  scale: [0.1, 0.4, 0.8, 1.4],
-                  opacity: [0, 0.4, 0.85, 1.0]
-                }}
-                transition={{
-                  duration: radialWaveConfig?.duration !== undefined ? radialWaveConfig.duration : 4.0,
-                  delay: radialWaveConfig?.delay !== undefined ? radialWaveConfig.delay : 0.8,
-                  times: [0, 0.65, 0.85, 1.0],
-                  ease: [0.25, 1, 0.5, 1]
-                }}
-                style={{ mixBlendMode: "screen" }}
-              />
-            )}
+            <motion.circle
+              cx="100"
+              cy="200"
+              r="220"
+              fill="url(#exactCardCenterCore)"
+              initial={{ scale: 0.1, opacity: 0 }}
+              animate={{
+                scale: [0.1, 0.4, 0.8, 1.4],
+                opacity: [0, 0.4, 0.85, 1.0]
+              }}
+              transition={{
+                duration: 5.0,
+                times: [0, 0.65, 0.85, 1.0],
+                ease: [0.25, 1, 0.5, 1]
+              }}
+              style={{ mixBlendMode: "screen" }}
+            />
+
+            {/* 2. Full-Card Uniform Glowing Veil: Every single corner, top, and edge washes in pure luminous light */}
+            <motion.rect
+              x="0"
+              y="0"
+              width="200"
+              height="400"
+              rx="16"
+              fill="#ecfdf5"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0, 0, 0.25, 0.8, 1.0]
+              }}
+              transition={{
+                duration: 5.0,
+                times: [0, 0.65, 0.78, 0.92, 1.0],
+                ease: "easeInOut"
+              }}
+              style={{ mixBlendMode: "screen" }}
+            />
+
+            {/* 3. Final Climax Flash: At 5.0s, the entire card achieves 100% white-emerald glow right at explosion moment */}
+            <motion.rect
+              x="0"
+              y="0"
+              width="200"
+              height="400"
+              rx="16"
+              fill="#ffffff"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0, 0, 0, 0.3, 0.95]
+              }}
+              transition={{
+                duration: 5.1,
+                times: [0, 0.7, 0.85, 0.95, 1.0],
+                ease: "easeIn"
+              }}
+              style={{ mixBlendMode: "screen" }}
+            />
           </g>
         )}
 

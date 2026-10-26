@@ -7,7 +7,6 @@ import ConfettiBurst from './components/ConfettiBurst';
 import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
 import LokiTimelinePortal from './components/LokiTimelinePortal';
-import LokiStage4Tester from './components/LokiStage4Tester';
 import confetti from 'canvas-confetti';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier, isSpecialCardDate, isKeyEligible } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
@@ -153,18 +152,9 @@ function App() {
   });
 
   const isSharedCardView = !!sharedCardData;
-  // If system date has advanced to Dec 17 (or later in 2026), but the user is still on Dec 16 card (since it cannot be torn),
-  // Dec 16 card MUST be strictly presented in Dark Mode for all users!
-  const isDec16CardLockedDark = (
-    calendarDate.getFullYear() === 2026 && 
-    calendarDate.getMonth() === 11 && 
-    calendarDate.getDate() === 16 &&
-    actualToday >= new Date(2026, 11, 17)
-  );
-
   const effectiveDarkMode = isSharedCardView 
     ? (sharedCardData?.type === 'diwali' ? isDarkMode : false) 
-    : (isDec16CardLockedDark ? true : isDarkMode);
+    : isDarkMode;
 
   const [shareToastText, setShareToastText] = useState("");
   const [showShareToast, setShowShareToast] = useState(false);
@@ -304,184 +294,6 @@ function App() {
   const [showDiwaliEvent, setShowDiwaliEvent] = useState(false);
   const [diwaliPhase, setDiwaliPhase] = useState(0);
   const [lokiCrackStage, setLokiCrackStage] = useState(0); // 0 = normal, 1 = first crack, 2 = deep branching, 3 = full cosmos breach
-  // Stage 4 tester states (System keyboard shortcut Shift+T)
-  const [showStage4Tester, setShowStage4Tester] = useState(false);
-  const [stage4StepIndex, setStage4StepIndex] = useState(1);
-  const [isTesterAutoPlaying, setIsTesterAutoPlaying] = useState(false);
-  // Active light beams control in Stage 3 & Stage 4 (null = all active by default, or array of active beam IDs)
-  const [activeBeams, setActiveBeams] = useState(() => [101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-  const [currentSoloBeam, setCurrentSoloBeam] = useState(null);
-  // Whether preview mode has turned all beams OFF
-  const [isAllPreviewOff, setIsAllPreviewOff] = useState(false);
-  // Independent preview beam toggles: Set of beam IDs that are explicitly turned ON for testing
-  const [previewBeams, setPreviewBeams] = useState(() => new Set());
-  // Dynamic 3D / Directional beam transforms { global: { angle, scaleX, scaleY, offsetX, offsetY }, [beamId]: { ... } }
-  const [beamTransforms, setBeamTransforms] = useState(() => ({
-    global: { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
-  }));
-
-  const handleUpdateBeamTransform = (targetKey, changes) => {
-    setBeamTransforms(prev => ({
-      ...prev,
-      [targetKey]: {
-        ...(prev[targetKey] || { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }),
-        ...changes
-      }
-    }));
-  };
-
-  const handleResetBeamTransform = (targetKey) => {
-    setBeamTransforms(prev => {
-      const next = { ...prev };
-      if (targetKey === 'all') {
-        return { global: { angle: 0, scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 } };
-      }
-      delete next[targetKey];
-      return next;
-    });
-  };
-
-  const handleToggleBeam = (beamId) => {
-    setCurrentSoloBeam(null);
-    setActiveBeams(prev => {
-      const list = prev || [101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-      if (list.includes(beamId)) {
-        return list.filter(id => id !== beamId);
-      } else {
-        return [...list, beamId].sort((a, b) => a - b);
-      }
-    });
-  };
-
-  const handleSelectAllBeams = () => {
-    setActiveBeams([101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-  };
-
-  const handleDeselectAllBeams = () => {
-    setActiveBeams([]);
-  };
-
-  const handleTogglePreviewBeam = (beamId) => {
-    setIsAllPreviewOff(false);
-    setCurrentSoloBeam(null);
-    setPreviewBeams(prev => {
-      const next = new Set(prev);
-      if (next.has(beamId)) {
-        next.delete(beamId);
-      } else {
-        next.add(beamId);
-      }
-      return next;
-    });
-  };
-
-  const handleAllPreviewOn = () => {
-    setIsAllPreviewOff(false);
-    setCurrentSoloBeam(null);
-    setPreviewBeams(new Set([101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]));
-  };
-
-  const handleAllPreviewOff = () => {
-    setIsAllPreviewOff(true);
-    setPreviewBeams(new Set());
-    setCurrentSoloBeam(null);
-  };
-
-  const handleSetSoloBeam = (beamId) => {
-    setIsAllPreviewOff(false);
-    // If the clicked beam is already in solo mode, clicking again turns off solo
-    if (currentSoloBeam === beamId) {
-      setCurrentSoloBeam(null);
-    } else {
-      setCurrentSoloBeam(beamId);
-    }
-  };
-
-  // Keyboard shortcut Shift+T to toggle stage 4 tester
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.shiftKey && (e.key === 'T' || e.key === 't')) {
-        e.preventDefault();
-        setShowStage4Tester(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // When tester changes stage4StepIndex or crackStage
-  const handleTesterSetStage = (stg) => {
-    setIsTesterAutoPlaying(false);
-    setCurrentSoloBeam(null);
-    setIsAllPreviewOff(false);
-    setPreviewBeams(new Set());
-    setLokiCrackStage(stg);
-    
-    // Auto-sync checked beams according to the selected stage!
-    if (stg <= 2) {
-      setActiveBeams([]);
-    } else if (stg === 3) {
-      // Tap 3: ONLY the 2 volumetric light cones from center!
-      setActiveBeams([101, 102]);
-    } else if (stg >= 4) {
-      // Tap 4 Step 1 default: Outer perimeter edge beams
-      setActiveBeams([1, 2, 3, 4, 5, 6]);
-      setStage4StepIndex(1);
-    }
-  };
-
-  const handleTesterSetStep = (step) => {
-    setIsTesterAutoPlaying(false);
-    setCurrentSoloBeam(null);
-    setIsAllPreviewOff(false);
-    setPreviewBeams(new Set());
-    setLokiCrackStage(4);
-    setStage4StepIndex(step);
-    
-    // Auto-sync checked beams step-by-step in Stage 4:
-    if (step === 1) {
-      // Step 4.1: Edge & Corner Beams
-      setActiveBeams([1, 2, 3, 4, 5, 6]);
-    } else if (step === 2) {
-      // Step 4.2: Outer beams + Center wave
-      setActiveBeams([1, 2, 3, 4, 5, 6]);
-    } else if (step === 3) {
-      // Step 4.3: Center Laser Bursts (7 to 12) + Outer beams
-      setActiveBeams([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-    } else if (step === 4) {
-      // Step 4.4: All beams active then shatter
-      setActiveBeams([101, 102, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-      setTimeout(() => setLokiCrackStage(5), 400);
-    }
-  };
-
-  const handleToggleAutoPlay = () => {
-    setIsTesterAutoPlaying(prev => !prev);
-  };
-
-  // Auto-play interval for stepping through 4.1 to 4.4
-  useEffect(() => {
-    let interval = null;
-    if (isTesterAutoPlaying) {
-      interval = setInterval(() => {
-        setStage4StepIndex(prev => {
-          if (prev >= 4) {
-            setIsTesterAutoPlaying(false);
-            setLokiCrackStage(5);
-            return 4;
-          }
-          const next = prev + 1;
-          if (next === 4) {
-            setTimeout(() => setLokiCrackStage(5), 400);
-          }
-          return next;
-        });
-      }, 1500);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isTesterAutoPlaying]);
 
   // Ensure Loki crack stage is strictly 0 whenever we are NOT on Dec 16 (or if dev mode is off)
   // Loki Multiverse easter egg is only active when in devMode OR on actual Dec 16 date
@@ -1382,7 +1194,8 @@ function App() {
 
           {!isSharedCardView && (
             <>
-              {isDevMode && (
+              {/* Dev Mode Reset Button (or during Loki Multiverse portal stage 5) */}
+              {(isDevMode || (isDec16Card && lokiCrackStage >= 5)) && (
                 <button 
                   onClick={() => {
                     // Reset Vijayadashami / special festival progress in dev mode on single click
@@ -1390,6 +1203,9 @@ function App() {
                       localStorage.removeItem('vijayadashamiEventDone_2026');
                       localStorage.removeItem('ayudhaPoojaEventDone_2026');
                     } catch (e) {}
+
+                    // Reset Dec 16 crack / Loki portal stages on refresh button
+                    setLokiCrackStage(0);
 
                     const stored = localStorage.getItem('devOverrideDate');
                     if (stored) {
@@ -1404,7 +1220,7 @@ function App() {
 
                     if (navigator.vibrate) navigator.vibrate([50]);
                   }}
-                  className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
+                  className={`absolute top-8 right-24 z-[100] p-3 rounded-full border-2 shadow-md ${
                     isDarkMode 
                       ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
                       : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
@@ -1702,8 +1518,8 @@ function App() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }} 
             className={`relative w-full max-w-[400px] h-[60vh] min-h-[450px] flex items-center justify-center perspective-[1200px] ${
-              isDec16Card && lokiCrackStage >= 5 ? 'pointer-events-none' : ''
-            } ${diwaliPhase >= 1 ? 'z-[1000]' : 'z-[60]'}`}
+              isDec16Card && lokiCrackStage >= 5 ? 'z-[95]' : (diwaliPhase >= 1 ? 'z-[1000]' : 'z-[60]')
+            }`}
           >
             <AnimatePresence>
                 {isSharedCardView ? (
@@ -1775,19 +1591,6 @@ function App() {
                       globalLang={globalLang}
                       isDec16Blocked={page.index === 0 && isDec16Card}
                       lokiCrackStage={page.index === 0 ? lokiCrackStage : 0}
-                      stage4Step={page.index === 0 && showStage4Tester && lokiCrackStage === 4 ? stage4StepIndex : null}
-                      activeBeams={
-                        page.index === 0 && showStage4Tester 
-                          ? (isAllPreviewOff
-                              ? (previewBeams.size > 0 ? Array.from(previewBeams) : [])
-                              : (currentSoloBeam 
-                                  ? [currentSoloBeam] 
-                                  : (previewBeams.size > 0 
-                                      ? Array.from(previewBeams) 
-                                      : activeBeams))) 
-                          : null
-                      }
-                      beamTransforms={page.index === 0 && showStage4Tester ? beamTransforms : null}
                       isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
@@ -1920,32 +1723,6 @@ function App() {
           setShowDiwaliEvent(false);
           if (!isDevMode && !isSharedCardView) localStorage.setItem('diwaliEventDone_2026', 'true');
         }} />
-      )}
-
-      {/* Loki Stage 4 Developer Testing Floating Stepper (Shortcut: Shift + T) */}
-      {showStage4Tester && (
-        <LokiStage4Tester 
-          crackStage={lokiCrackStage}
-          onSetCrackStage={handleTesterSetStage}
-          stepIndex={stage4StepIndex}
-          onSetStepIndex={handleTesterSetStep}
-          isAutoPlaying={isTesterAutoPlaying}
-          onToggleAutoPlay={handleToggleAutoPlay}
-          activeBeams={activeBeams}
-          onToggleBeam={handleToggleBeam}
-          onSelectAllBeams={handleSelectAllBeams}
-          onDeselectAllBeams={handleDeselectAllBeams}
-          currentSoloBeam={currentSoloBeam}
-          onSetSoloBeam={handleSetSoloBeam}
-          previewBeams={previewBeams}
-          onTogglePreviewBeam={handleTogglePreviewBeam}
-          onAllPreviewOn={handleAllPreviewOn}
-          onAllPreviewOff={handleAllPreviewOff}
-          beamTransforms={beamTransforms}
-          onUpdateBeamTransform={handleUpdateBeamTransform}
-          onResetBeamTransform={handleResetBeamTransform}
-          onClose={() => setShowStage4Tester(false)}
-        />
       )}
     </>
   );
