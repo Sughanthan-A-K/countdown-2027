@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { GripHorizontal, X, RotateCcw, CheckSquare, Square, Eye, EyeOff, Sliders, Sparkles, Lock, Check } from 'lucide-react';
+import { GripHorizontal, X, RotateCcw, CheckSquare, Square, Eye, EyeOff, Sliders, Sparkles, Lock, Check, Copy } from 'lucide-react';
 
 export const LIGHT_BEAMS_LIST = [
   // Outer Beams (1 to 6)
@@ -40,6 +40,7 @@ export default function LokiLightMasterToolbox({
   // Target beam for Angle & Spread tuning: defaults to first checked beam or 1
   const [tuneTarget, setTuneTarget] = useState(1);
   const [isLockedSuccess, setIsLockedSuccess] = useState(false);
+  const [isCopiedSuccess, setIsCopiedSuccess] = useState(false);
   const joystickRef = useRef(null);
   const [isDraggingJoystick, setIsDraggingJoystick] = useState(false);
 
@@ -98,6 +99,33 @@ export default function LokiLightMasterToolbox({
     };
   }, [isDraggingJoystick, tuneTarget]);
 
+  // Copy all checked light angles and configuration to clipboard
+  const handleCopyConfig = () => {
+    const configToExport = {
+      checkedBeams: checkedBeams || [],
+      circleRadius: circleRadius,
+      beamAngles: (checkedBeams || []).map(beamId => {
+        const b = LIGHT_BEAMS_LIST.find(item => item.id === beamId);
+        const t = beamTransforms?.[beamId] || { angle: 0, scaleX: 1 };
+        return {
+          id: beamId,
+          name: b?.name || `Beam ${beamId}`,
+          angle: t.angle || 0,
+          spread: t.scaleX || 1
+        };
+      }),
+      rawTransforms: beamTransforms || {}
+    };
+
+    const text = JSON.stringify(configToExport, null, 2);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        setIsCopiedSuccess(true);
+        setTimeout(() => setIsCopiedSuccess(false), 2200);
+      });
+    }
+  };
+
   return (
     <motion.div
       drag
@@ -148,23 +176,39 @@ export default function LokiLightMasterToolbox({
           </button>
         </div>
 
-        {/* Master LOCK Button */}
-        <button
-          onClick={() => {
-            onLockConfiguration?.();
-            setIsLockedSuccess(true);
-            setTimeout(() => setIsLockedSuccess(false), 2200);
-          }}
-          className={`flex items-center gap-1 px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
-            isLockedSuccess
-              ? 'bg-emerald-500 text-black shadow-[0_0_12px_#10b981]'
-              : 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-[0_0_10px_rgba(16,185,129,0.4)]'
-          }`}
-          title="Lock selected checked lights and their angles permanently into normal card flow"
-        >
-          {isLockedSuccess ? <Check size={12} /> : <Lock size={12} />}
-          <span>{isLockedSuccess ? 'LOCKED & SAVED!' : 'LOCK & SAVE'}</span>
-        </button>
+        <div className="flex items-center gap-1.5">
+          {/* COPY CONFIG BUTTON */}
+          <button
+            onClick={handleCopyConfig}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all ${
+              isCopiedSuccess
+                ? 'bg-cyan-500 text-black border-cyan-400 shadow-[0_0_10px_#06b6d4]'
+                : 'bg-neutral-800 text-cyan-300 border-cyan-500/40 hover:bg-neutral-700 hover:text-white'
+            }`}
+            title="Copy all checked lights and their tuned angles to clipboard"
+          >
+            {isCopiedSuccess ? <Check size={11} /> : <Copy size={11} />}
+            <span>{isCopiedSuccess ? 'COPIED!' : 'COPY ANGLES'}</span>
+          </button>
+
+          {/* Master LOCK Button */}
+          <button
+            onClick={() => {
+              onLockConfiguration?.();
+              setIsLockedSuccess(true);
+              setTimeout(() => setIsLockedSuccess(false), 2200);
+            }}
+            className={`flex items-center gap-1 px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
+              isLockedSuccess
+                ? 'bg-emerald-500 text-black shadow-[0_0_12px_#10b981]'
+                : 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-[0_0_10px_rgba(16,185,129,0.4)]'
+            }`}
+            title="Lock selected checked lights and their angles permanently into normal card flow"
+          >
+            {isLockedSuccess ? <Check size={12} /> : <Lock size={12} />}
+            <span>{isLockedSuccess ? 'LOCKED!' : 'LOCK & SAVE'}</span>
+          </button>
+        </div>
       </div>
 
       {/* 3D DIRECTION & ANGLE TUNER (Physical Seam Anchored) */}
