@@ -299,13 +299,6 @@ function App() {
   // Single Master Light Toolbox State (Shortcut: Shift + T)
   const [showLightToolbox, setShowLightToolbox] = useState(false);
   
-  // When toolbox is opened, automatically set stage to 4 (vedikurathuku munnadi moment)
-  const handleOpenLightToolbox = () => {
-    setShowLightToolbox(true);
-    setLokiCrackStage(4);
-    setIsPreviewAllMode(true);
-  };
-  
   // Checked beams: Beams that are marked "OK / Approved". Persists even when toolbox closes!
   const [checkedBeams, setCheckedBeams] = useState(() => {
     try {
@@ -393,6 +386,7 @@ function App() {
   };
 
   // Keyboard shortcut Shift + T to toggle single master toolbox
+  // When toolbox opens: directly go to the moment right before shatter (vedikurathuku munnadi moment)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.shiftKey && (e.key === 'T' || e.key === 't')) {
@@ -400,9 +394,14 @@ function App() {
         setShowLightToolbox(prev => {
           const willOpen = !prev;
           if (willOpen) {
-            // "antha tool box la ah naa open pannale vedikurahtuku munadi mument la poi ninudum"
+            // Freeze right before explosion!
+            setIsDarkMode(true);
             setLokiCrackStage(4);
             setIsPreviewAllMode(true);
+            // Default all lights to ON for instant visibility
+            setActivePreviewBeams([1, 2, 3, 4, 5, 6, 101, 102, 7, 8, 9, 10, 11, 12]);
+          } else {
+            setIsPreviewAllMode(false);
           }
           return willOpen;
         });
@@ -1312,52 +1311,35 @@ function App() {
           {!isSharedCardView && (
             <>
               {isDevMode && (
-                <>
-                  {/* Dev Mode Reset Button */}
-                  <button 
-                    onClick={() => {
-                      // Reset Vijayadashami / special festival progress in dev mode on single click
-                      try {
-                        localStorage.removeItem('vijayadashamiEventDone_2026');
-                        localStorage.removeItem('ayudhaPoojaEventDone_2026');
-                      } catch (e) {}
+                <button 
+                  onClick={() => {
+                    // Reset Vijayadashami / special festival progress in dev mode on single click
+                    try {
+                      localStorage.removeItem('vijayadashamiEventDone_2026');
+                      localStorage.removeItem('ayudhaPoojaEventDone_2026');
+                    } catch (e) {}
 
-                      const stored = localStorage.getItem('devOverrideDate');
-                      if (stored) {
-                        const selected = new Date(parseInt(stored, 10));
-                        selected.setHours(0, 0, 0, 0);
-                        // Create a new fresh Date object reference to trigger complete React state re-render
-                        setCalendarDate(new Date(selected.getTime()));
-                      } else {
-                        const today = normalizeDate(new Date());
-                        setCalendarDate(new Date(today.getTime()));
-                      }
+                    const stored = localStorage.getItem('devOverrideDate');
+                    if (stored) {
+                      const selected = new Date(parseInt(stored, 10));
+                      selected.setHours(0, 0, 0, 0);
+                      // Create a new fresh Date object reference to trigger complete React state re-render
+                      setCalendarDate(new Date(selected.getTime()));
+                    } else {
+                      const today = normalizeDate(new Date());
+                      setCalendarDate(new Date(today.getTime()));
+                    }
 
-                      if (navigator.vibrate) navigator.vibrate([50]);
-                    }}
-                    className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
-                      isDarkMode 
-                        ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
-                        : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
-                    }`}
-                  >
-                    <RotateCcw size={20} />
-                  </button>
-
-                  {/* Dev Mode Quick Light Toolbox Button (Shift + T) */}
-                  <button
-                    onClick={handleOpenLightToolbox}
-                    className={`absolute top-8 right-40 z-[50] px-3 py-2 rounded-full border-2 shadow-md flex items-center gap-1.5 font-bold text-[11px] transition-colors ${
-                      showLightToolbox 
-                        ? 'bg-emerald-500 text-black border-emerald-400 shadow-[0_0_15px_#10b981]' 
-                        : (isDarkMode ? 'bg-neutral-900 border-neutral-700 text-emerald-400 hover:border-emerald-500' : 'bg-white border-neutral-800 text-emerald-600 hover:bg-neutral-100')
-                    }`}
-                    title="Open Single Light Master Toolbox (Shift + T)"
-                  >
-                    <Sparkles size={14} />
-                    <span>Tool</span>
-                  </button>
-                </>
+                    if (navigator.vibrate) navigator.vibrate([50]);
+                  }}
+                  className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
+                    isDarkMode 
+                      ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
+                      : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
+                  }`}
+                >
+                  <RotateCcw size={20} />
+                </button>
               )}
 
               {/* Theme Toggle Button (Flies away like glass explosion on Dec 16 Stage 4) */}
