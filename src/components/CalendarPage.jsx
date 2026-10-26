@@ -14,7 +14,7 @@ import LokiTimelinePortal from './LokiTimelinePortal';
 import LokiMindStoneShatter from './LokiMindStoneShatter';
 import { incrementGlobalWish, isWishAllowed } from '../utils/wishesService';
 
-export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady, isDec16Blocked, lokiCrackStage = 0, onLokiCardTap, isDec16UnderlyingHidden }) {
+export default function CalendarPage({ dateText, daysRemaining, index, onTear, onEyeClick, isTop, isDarkMode, isTearLocked, isGandhiJayanti, isBirthday, onBirthdaySecret, isDiwali, forceDiwaliMode, diwaliPhase, diwaliRevealed, onCalendarReveal, diwaliPhoto, hasGandhiKey, hasCornerStar, onStarClick, shouldAnimateStarFlight, onDevTap, onDevHoldStart, onDevHoldEnd, onShareSpecialCard, globalLang, isSharedCardView, forceShowShareHint, isAyudhaPooja, isVijayadashami, onCtaReady, isDec16Blocked, lokiCrackStage = 0, onLokiCardTap, isDec16UnderlyingHidden, activeBeams = null, beamTransforms = null, circleRadius = 98, previewAllBeams = false }) {
   const [exitX, setExitX] = useState(0);
   const [exitY, setExitY] = useState(0);
   const [exitRotate, setExitRotate] = useState(0);
@@ -325,9 +325,15 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             display: isTop && isDec16Blocked && lokiCrackStage >= 5 ? 'none' : 'flex'
           }}
         >
-          {/* Dec 16 Loki Multiverse Crack (Progressive Tap Stages 1 to 4) */}
-          {isTop && isDec16Blocked && lokiCrackStage > 0 && (
-            <LokiTimelineCrack crackStage={lokiCrackStage} />
+          {/* Dec 16 Loki Multiverse Crack (Progressive Tap Stages 1 to 4 or Preview Mode) */}
+          {isTop && isDec16Blocked && (lokiCrackStage > 0 || previewAllBeams) && (
+            <LokiTimelineCrack 
+              crackStage={lokiCrackStage} 
+              activeBeams={activeBeams}
+              beamTransforms={beamTransforms}
+              circleRadius={circleRadius}
+              previewAllBeams={previewAllBeams}
+            />
           )}
           {isTop && !isAyudhaWishActive && (
             <motion.div 
