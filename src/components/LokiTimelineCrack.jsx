@@ -127,19 +127,19 @@ export default function LokiTimelineCrack({
         />
       )}
 
-      {/* Internal Glass Reflection Glow on Tap 3 / Climax: Volumetric anime neon-green & pure white energy radiation */}
+      {/* Internal Glass Reflection Glow on Tap 3 / Climax: Volumetric anime neon-green radiation preserving card text readability */}
       {(crackStage >= 3 || previewAllBeams) && (
         <motion.div
           initial={{ opacity: 0 }}
-          animate={previewAllBeams ? { opacity: 0.35 } : {
-            opacity: [0, 0.25, 0.5, 0.75, 0.95, 1.0],
+          animate={previewAllBeams ? { opacity: 0.25 } : {
+            opacity: [0, 0.2, 0.4, 0.6, 0.72, 0.75],
             background: [
               "radial-gradient(circle at 50% 46%, rgba(16,185,129,0.3) 0%, rgba(5,150,105,0.15) 45%, transparent 75%)",
-              "radial-gradient(circle at 50% 46%, rgba(52,211,153,0.5) 0%, rgba(16,185,129,0.3) 50%, transparent 80%)",
-              "radial-gradient(circle at 50% 46%, rgba(167,243,208,0.7) 0%, rgba(52,211,153,0.45) 45%, rgba(16,185,129,0.2) 70%, transparent 90%)",
-              "radial-gradient(circle at 50% 46%, #ffffff 0%, rgba(209,250,229,0.85) 30%, rgba(52,211,153,0.6) 60%, rgba(16,185,129,0.25) 85%, transparent 100%)",
-              "radial-gradient(circle at 50% 46%, #ffffff 0%, rgba(240,253,244,0.95) 40%, rgba(110,231,183,0.8) 70%, rgba(16,185,129,0.4) 90%, transparent 100%)",
-              "radial-gradient(circle at 50% 46%, #ffffff 0%, rgba(240,253,244,0.95) 50%, rgba(110,231,183,0.85) 75%, rgba(16,185,129,0.45) 95%, transparent 100%)"
+              "radial-gradient(circle at 50% 46%, rgba(52,211,153,0.45) 0%, rgba(16,185,129,0.25) 50%, transparent 80%)",
+              "radial-gradient(circle at 50% 46%, rgba(110,231,183,0.6) 0%, rgba(52,211,153,0.38) 45%, rgba(16,185,129,0.18) 70%, transparent 90%)",
+              "radial-gradient(circle at 50% 46%, rgba(209,250,229,0.7) 0%, rgba(52,211,153,0.5) 40%, rgba(16,185,129,0.22) 75%, transparent 100%)",
+              "radial-gradient(circle at 50% 46%, rgba(236,253,245,0.8) 0%, rgba(110,231,183,0.65) 45%, rgba(16,185,129,0.35) 80%, transparent 100%)",
+              "radial-gradient(circle at 50% 46%, rgba(236,253,245,0.82) 0%, rgba(110,231,183,0.68) 48%, rgba(16,185,129,0.38) 85%, transparent 100%)"
             ]
           }}
           transition={previewAllBeams ? { duration: 0.3 } : {
@@ -148,7 +148,7 @@ export default function LokiTimelineCrack({
             ease: "easeInOut"
           }}
           className="absolute inset-0 pointer-events-none z-[45]"
-          style={{ mixBlendMode: "screen", filter: "blur(12px)" }}
+          style={{ mixBlendMode: "screen", filter: "blur(14px)" }}
         />
       )}
 
@@ -604,19 +604,19 @@ export default function LokiTimelineCrack({
                 </feMerge>
               </filter>
 
-              {/* Anime High-Energy Neon: Pure white-hot center core bleeding into electric green aura */}
+              {/* Anime High-Energy Neon: Vibrant emerald & mint aura with balanced white specular highlight (protects text contrast) */}
               <radialGradient id="animeNeonGreenCore" cx="50%" cy="48%" r="50%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.85" />
-                <stop offset="55%" stopColor="#34d399" stopOpacity="0.65" />
-                <stop offset="80%" stopColor="#10b981" stopOpacity="0.35" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
+                <stop offset="18%" stopColor="#a7f3d0" stopOpacity="0.75" />
+                <stop offset="45%" stopColor="#34d399" stopOpacity="0.55" />
+                <stop offset="75%" stopColor="#10b981" stopOpacity="0.3" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </radialGradient>
               <radialGradient id="animeSupernovaBurst" cx="50%" cy="48%" r="50%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="35%" stopColor="#ecfdf5" stopOpacity="0.95" />
-                <stop offset="65%" stopColor="#6ee7b7" stopOpacity="0.75" />
-                <stop offset="85%" stopColor="#10b981" stopOpacity="0.4" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+                <stop offset="22%" stopColor="#d1fae5" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#34d399" stopOpacity="0.65" />
+                <stop offset="80%" stopColor="#10b981" stopOpacity="0.35" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
             </defs>
@@ -628,15 +628,15 @@ export default function LokiTimelineCrack({
                 cy="195"
                 r={circleRadius || 160}
                 fill="url(#animeNeonGreenCore)"
-                initial={{ scale: previewAllBeams ? 1.0 : 0.15, opacity: previewAllBeams ? 0.8 : 0 }}
+                initial={{ scale: previewAllBeams ? 1.0 : 0.15, opacity: previewAllBeams ? 0.7 : 0 }}
                 animate={previewAllBeams ? {
                   scale: 1.0,
-                  opacity: 0.85,
+                  opacity: 0.72,
                   fill: "url(#animeNeonGreenCore)"
                 } : {
-                  // Starts small green (0.15) at 0s, expands with accelerating Tak lights up to 2.4s, reaches 1.0 at 2.6s, morphs to anime blast energy and holds for 2s!
+                  // Starts small green (0.15) at 0s, expands with accelerating Tak lights up to 2.4s, reaches 1.0 at 2.6s, rich electric neon green hold!
                   scale: [0.15, 0.35, 0.65, 0.95, 1.0, 1.05],
-                  opacity: [0, 0.5, 0.7, 0.85, 0.95, 1.0],
+                  opacity: [0, 0.4, 0.58, 0.72, 0.8, 0.82],
                   fill: [
                     "url(#animeNeonGreenCore)",
                     "url(#animeNeonGreenCore)",
