@@ -457,9 +457,11 @@ function App() {
   // Ensure Loki crack stage is strictly 0 whenever we are NOT on Dec 16 (or if dev mode is off)
   // Loki Multiverse easter egg is only active when in devMode OR on actual Dec 16 date
   const isDec16Card = isDevMode && calendarDate.getFullYear() === 2026 && calendarDate.getMonth() === 11 && calendarDate.getDate() === 16;
+  const [showPortalStage, setShowPortalStage] = useState(false);
   useEffect(() => {
     if (!isDec16Card && lokiCrackStage !== 0) {
       setLokiCrackStage(0);
+      setShowPortalStage(false);
     }
   }, [isDec16Card, lokiCrackStage]);
   
@@ -1344,7 +1346,7 @@ function App() {
               )}
 
               {/* Loki Time Portal on stage 5: Rendered directly at root level with fixed inset-0 to ensure 100% full screen coverage without any top/bottom dead bars */}
-              {lokiCrackStage >= 5 && (
+              {lokiCrackStage >= 5 && showPortalStage && (
                 <LokiTimelinePortal />
               )}
             </>
@@ -1762,17 +1764,23 @@ function App() {
                         setLokiCrackStage(prev => {
                           const next = Math.min(prev + 1, 3);
                           // TAP 3 IS THE FINAL CLIMAX! (No Tap 4 needed)
-                          // When user hits Tap 3:
-                          // 1. Dark mode activates
-                          // 2. All user-checked beams radiate with their locked angles
-                          // 3. Center circle (160px) swells up smoothly
-                          // 4. Then at ~3.4s, intense shockwave shatter blast transitions directly into Stage 5 (Loki Portal)!
+                          // 1. Cracks crackle takk-takk-takk across card with portal light piercing through
+                          // 2. Lights escalate slow to fast, radiating all user-locked angles
+                          // 3. Green morphs seamlessly into intense pure supernova white
+                          // 4. Circle radius (160px) swells smoothly to full width
+                          // 5. At 3.4s, card blasts into 16 slow-mo flying glass shards!
+                          // 6. Flying blast remains visible for 1.8 seconds, THEN portal opens!
                           if (next === 3) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
+                              // Trigger glass shatter explosion
                               setLokiCrackStage(5);
-                            }, 3600);
+                              // Allow glass pieces to fly and be admired for 1.8 seconds before portal appears
+                              setTimeout(() => {
+                                setShowPortalStage(true);
+                              }, 1800);
+                            }, 3400);
                           }
                           return next;
                         });

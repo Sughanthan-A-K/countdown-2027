@@ -362,6 +362,12 @@ export default function LokiTimelineCrack({
                 <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
+              <linearGradient id="beamEmeraldToWhiteGrad" gradientUnits="userSpaceOnUse" x1="100" y1="200" x2="1000" y2="1000">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="35%" stopColor="#d1fae5" stopOpacity="0.95" />
+                <stop offset="70%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#10b981" stopOpacity="0.3" />
+              </linearGradient>
 
               {/* Crisp piercing beam glow */}
               <filter id="outwardBeamGlow" x="-50%" y="-50%" width="200%" height="200%">
@@ -382,8 +388,11 @@ export default function LokiTimelineCrack({
                 fill="url(#outwardBeam1)"
                 filter="url(#outwardBeamGlow)"
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.1, ease: "easeOut" }}
+                animate={{ 
+                  opacity: previewAllBeams ? 1.0 : [0, 0.85, 1.0, 1.0],
+                  filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.2) drop-shadow(0 0 45px #ffffff)"]
+                }}
+                transition={{ duration: previewAllBeams ? 0.2 : 3.4, delay: previewAllBeams ? 0 : 0.05, ease: "easeOut" }}
               />
             )}
 
@@ -394,163 +403,200 @@ export default function LokiTimelineCrack({
                 fill="url(#outwardBeam2)"
                 filter="url(#outwardBeamGlow)"
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
+                animate={{ 
+                  opacity: previewAllBeams ? 1.0 : [0, 0.85, 1.0, 1.0],
+                  filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.2) drop-shadow(0 0 45px #ffffff)"]
+                }}
+                transition={{ duration: previewAllBeams ? 0.2 : 3.4, delay: previewAllBeams ? 0 : 0.15, ease: "easeOut" }}
               />
             )}
 
             {/* ============================================================ */}
-            {/* TAP 4: NATURAL PROGRESSION */}
-            {/* Phase 1: Surrounding cracks radiate FIRST with organic delays (0.6s -> 2.6s) */}
-            {/* Phase 2: Center cracks burst rapidly & FAST (3.0s -> 3.48s) leading into 3.6s Shatter! */}
+            {/* TAP 3 / CLIMAX PROGRESSION: SURROUNDING BEAMS RADIATE (SLOW TO FAST) */}
+            {/* Then smoothly escalate from Emerald Green -> Pure Blinding White right before shatter! */}
             {/* ============================================================ */}
             {showOuterBeams && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- 1. SURROUNDING OUTER CRACKS RADIATE FIRST WITH DELAYS (0.6s - 2.6s) --- */}
-                {/* Beam 1: Upper-Left Corner Beam (0.65s) */}
+                {/* Beam 1: Upper-Left Corner Beam */}
                 {isBeamActive(1) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(1, "76,100 45,108 -3400,-2600 -2400,-3600")}
                     fill="url(#outwardBeamUpperLeft)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.9 }}
-                    transition={{ duration: 0.25, delay: isStepMode ? 0 : 0.65, ease: "easeOut" }}
+                    animate={{ 
+                      opacity: previewAllBeams ? 0.9 : [0, 0.7, 0.95, 1.0],
+                      filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.2) drop-shadow(0 0 45px #ffffff)"]
+                    }}
+                    transition={{ duration: previewAllBeams ? 0.2 : 3.0, delay: previewAllBeams ? 0 : 0.35, ease: "easeOut" }}
                   />
                 )}
 
-                {/* Beam 2: Blade Beam Mid-Right (1.20s) */}
+                {/* Beam 2: Blade Beam Mid-Right */}
                 {isBeamActive(2) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(2, "165,138 182,148 4500,1800 4200,300")}
                     fill="url(#outwardBeamMidRightSeam)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.9 }}
-                    transition={{ duration: 0.25, delay: isStepMode ? 0.05 : 1.20, ease: "easeOut" }}
+                    animate={{ 
+                      opacity: previewAllBeams ? 0.9 : [0, 0.75, 0.95, 1.0],
+                      filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.2) drop-shadow(0 0 45px #ffffff)"]
+                    }}
+                    transition={{ duration: previewAllBeams ? 0.2 : 2.8, delay: previewAllBeams ? 0 : 0.65, ease: "easeOut" }}
                   />
                 )}
 
-                {/* Beam 3: Upper-Right Corner Gap (1.75s) */}
+                {/* Beam 3: Upper-Right Corner Gap */}
                 {isBeamActive(3) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(3, "168,22 200,5 3800,-1600 3200,-2400")}
                     fill="url(#microBeamTopRight)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.85 }}
-                    transition={{ duration: 0.22, delay: isStepMode ? 0.1 : 1.75, ease: "easeOut" }}
+                    animate={{ 
+                      opacity: previewAllBeams ? 0.85 : [0, 0.7, 0.9, 1.0],
+                      filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.2) drop-shadow(0 0 45px #ffffff)"]
+                    }}
+                    transition={{ duration: previewAllBeams ? 0.2 : 2.5, delay: previewAllBeams ? 0 : 0.95, ease: "easeOut" }}
                   />
                 )}
 
-                {/* Beam 4: Lower-Right Corner Beam (2.20s) */}
+                {/* Beam 4: Lower-Right Corner Beam */}
                 {isBeamActive(4) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(4, "85,248 126,274 3800,4200 3000,4800")}
                     fill="url(#outwardBeamLowerRightSeam)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.88 }}
-                    transition={{ duration: 0.20, delay: isStepMode ? 0.15 : 2.20, ease: "easeOut" }}
+                    animate={{ 
+                      opacity: previewAllBeams ? 0.88 : [0, 0.7, 0.92, 1.0],
+                      filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.2) drop-shadow(0 0 45px #ffffff)"]
+                    }}
+                    transition={{ duration: previewAllBeams ? 0.2 : 2.2, delay: previewAllBeams ? 0 : 1.25, ease: "easeOut" }}
                   />
                 )}
 
-                {/* Beam 5: Bottom-Left Corner Gap (2.55s) */}
+                {/* Beam 5: Bottom-Left Corner Gap */}
                 {isBeamActive(5) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(5, "14,382 0,400 -2600,4800 -3400,4000")}
                     fill="url(#microBeamBottomCorner)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.85 }}
-                    transition={{ duration: 0.18, delay: isStepMode ? 0.2 : 2.55, ease: "easeOut" }}
+                    animate={{ 
+                      opacity: previewAllBeams ? 0.85 : [0, 0.7, 0.9, 1.0],
+                      filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.2) drop-shadow(0 0 45px #ffffff)"]
+                    }}
+                    transition={{ duration: previewAllBeams ? 0.2 : 2.0, delay: previewAllBeams ? 0 : 1.55, ease: "easeOut" }}
                   />
                 )}
 
-                {/* Beam 6: South Spine Off-Center Beam (2.85s) */}
+                {/* Beam 6: South Spine Off-Center Beam */}
                 {isBeamActive(6) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(6, "96,350 102,400 1200,4500 200,4500")}
                     fill="url(#outwardBeamBottomSpineSeam)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.92 }}
-                    transition={{ duration: 0.14, delay: isStepMode ? 0.25 : 2.85, ease: "easeOut" }}
+                    animate={{ 
+                      opacity: previewAllBeams ? 0.92 : [0, 0.75, 0.95, 1.0],
+                      filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.2) drop-shadow(0 0 45px #ffffff)"]
+                    }}
+                    transition={{ duration: previewAllBeams ? 0.2 : 1.8, delay: previewAllBeams ? 0 : 1.85, ease: "easeOut" }}
                   />
                 )}
 
-                {/* --- 2. CENTER CRACKS BURST RAPID & FAST (3.05s - 3.48s) --- */}
+                {/* --- 2. ACCELERATING CENTER LASER BURSTS (Rapidly escalating into Pure White Supernova) --- */}
                 {showCenterBursts && (
                   <>
-                    {/* Beam 7: Upper Center Spine Fissure (3.05s) */}
+                    {/* Beam 7: Upper Center Spine Fissure */}
                     {isBeamActive(7) && (
                       <motion.polygon
                         points={getDynamicBeamPoints(7, "108,78 92,122 -4200,-1800 -3800,-3200")}
                         fill="url(#beamRedLine2)"
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.92 }}
-                        transition={{ duration: 0.10, delay: isStepMode ? 0 : 3.05, ease: "easeOut" }}
+                        animate={{ 
+                          opacity: previewAllBeams ? 0.92 : [0, 0.8, 1.0],
+                          filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.4) drop-shadow(0 0 50px #ffffff)"]
+                        }}
+                        transition={{ duration: previewAllBeams ? 0.15 : 1.4, delay: previewAllBeams ? 0 : 2.15, ease: "easeOut" }}
                       />
                     )}
 
-                    {/* Beam 8: Steep Upward Top Spine Shaft (3.18s) */}
+                    {/* Beam 8: Steep Upward Top Spine Shaft */}
                     {isBeamActive(8) && (
                       <motion.polygon
                         points={getDynamicBeamPoints(8, "104,65 108,78 400,-4200 -800,-3800")}
                         fill="url(#outwardBeamTopSpine)"
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.92 }}
-                        transition={{ duration: 0.08, delay: isStepMode ? 0.05 : 3.18, ease: "easeOut" }}
+                        animate={{ 
+                          opacity: previewAllBeams ? 0.92 : [0, 0.85, 1.0],
+                          filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.4) drop-shadow(0 0 50px #ffffff)"]
+                        }}
+                        transition={{ duration: previewAllBeams ? 0.15 : 1.2, delay: previewAllBeams ? 0 : 2.35, ease: "easeOut" }}
                       />
                     )}
 
-                    {/* Beam 9: Left side Center Fissure (3.28s) */}
+                    {/* Beam 9: Left side Center Fissure */}
                     {isBeamActive(9) && (
                       <motion.polygon
                         points={getDynamicBeamPoints(9, "92,122 64,146 -4500,-600 -4200,-1800")}
                         fill="url(#climaxLeftInfiniteBeam)"
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.95 }}
-                        transition={{ duration: 0.08, delay: isStepMode ? 0.1 : 3.28, ease: "easeOut" }}
+                        animate={{ 
+                          opacity: previewAllBeams ? 0.95 : [0, 0.9, 1.0],
+                          filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.4) drop-shadow(0 0 50px #ffffff)"]
+                        }}
+                        transition={{ duration: previewAllBeams ? 0.15 : 1.0, delay: previewAllBeams ? 0 : 2.55, ease: "easeOut" }}
                       />
                     )}
 
-                    {/* Beam 10: Center Fissures Red Line 1 (3.36s) */}
+                    {/* Beam 10: Center Fissures Red Line 1 */}
                     {isBeamActive(10) && (
                       <motion.polygon
                         points={getDynamicBeamPoints(10, "92,122 102,185 -4500,1800 -4500,600")}
                         fill="url(#beamRedLine1)"
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.95 }}
-                        transition={{ duration: 0.07, delay: isStepMode ? 0.15 : 3.36, ease: "easeOut" }}
+                        animate={{ 
+                          opacity: previewAllBeams ? 0.95 : [0, 0.9, 1.0],
+                          filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.5) drop-shadow(0 0 55px #ffffff)"]
+                        }}
+                        transition={{ duration: previewAllBeams ? 0.15 : 0.8, delay: previewAllBeams ? 0 : 2.75, ease: "easeOut" }}
                       />
                     )}
 
-                    {/* Beam 11: Center Fissures Red Line 5 (3.42s) */}
+                    {/* Beam 11: Center Fissures Red Line 5 */}
                     {isBeamActive(11) && (
                       <motion.polygon
                         points={getDynamicBeamPoints(11, "140,152 155,210 4500,3800 4200,2400")}
                         fill="url(#beamRedLine5)"
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.95 }}
-                        transition={{ duration: 0.06, delay: isStepMode ? 0.2 : 3.42, ease: "easeOut" }}
+                        animate={{ 
+                          opacity: previewAllBeams ? 0.95 : [0, 0.9, 1.0],
+                          filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(2.5) drop-shadow(0 0 55px #ffffff)"]
+                        }}
+                        transition={{ duration: previewAllBeams ? 0.15 : 0.6, delay: previewAllBeams ? 0 : 2.95, ease: "easeOut" }}
                       />
                     )}
 
-                    {/* Beam 12: FINAL MEGA CENTER CLIMAX BEAM (3.48s) */}
+                    {/* Beam 12: FINAL MEGA CENTER CLIMAX BEAM (Peak Blinding Laser right at blast moment!) */}
                     {isBeamActive(12) && (
                       <motion.polygon
                         points={getDynamicBeamPoints(12, "102,185 140,152 4800,-400 3800,-1600")}
                         fill="url(#climaxCenterInfiniteBeam)"
                         filter="url(#outwardBeamGlow)"
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1.0 }}
-                        transition={{ duration: 0.06, delay: isStepMode ? 0.25 : 3.48, ease: "easeOut" }}
+                        animate={{ 
+                          opacity: previewAllBeams ? 1.0 : [0, 0.95, 1.0],
+                          filter: previewAllBeams ? "url(#outwardBeamGlow)" : ["url(#outwardBeamGlow)", "url(#outwardBeamGlow)", "brightness(3.0) drop-shadow(0 0 65px #ffffff)"]
+                        }}
+                        transition={{ duration: previewAllBeams ? 0.15 : 0.45, delay: previewAllBeams ? 0 : 3.15, ease: "easeOut" }}
                       />
                     )}
                   </>
@@ -595,20 +641,20 @@ export default function LokiTimelineCrack({
               <motion.circle
                 cx="100"
                 cy="200"
-                r={circleRadius || 220}
+                r={circleRadius || 160}
                 fill="url(#exactCardCenterCore)"
-                initial={{ scale: previewAllBeams ? 0.95 : 0.1, opacity: previewAllBeams ? 0.9 : 0 }}
-                animate={isStepMode || previewAllBeams ? {
-                  scale: 0.95,
-                  opacity: 0.9
+                initial={{ scale: previewAllBeams ? 1.0 : 0.05, opacity: previewAllBeams ? 0.95 : 0 }}
+                animate={previewAllBeams ? {
+                  scale: 1.0,
+                  opacity: 0.95
                 } : {
-                  scale: [0.1, 0.4, 0.8, 1.4],
-                  opacity: [0, 0.4, 0.85, 1.0]
+                  scale: [0.05, 0.35, 0.7, 1.0, 1.05],
+                  opacity: [0, 0.5, 0.85, 0.95, 1.0]
                 }}
                 transition={{
-                  duration: isStepMode || previewAllBeams ? 0.3 : 5.0,
-                  times: isStepMode || previewAllBeams ? undefined : [0, 0.65, 0.85, 1.0],
-                  ease: [0.25, 1, 0.5, 1]
+                  duration: previewAllBeams ? 0.3 : 3.2,
+                  times: previewAllBeams ? undefined : [0, 0.35, 0.65, 0.9, 1.0],
+                  ease: [0.16, 0.85, 0.35, 1]
                 }}
                 style={{ mixBlendMode: "screen" }}
               />
@@ -723,64 +769,39 @@ export default function LokiTimelineCrack({
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: SPREADING TO ALL REMAINING CORNERS & EMPTY EDGE SPACES */}
+        {/* TAP 3: INTENSE CRACK BRANCHES SPREADING ACROSS THE CARD */}
         {/* ============================================================ */}
-        {crackStage >= 4 && (
-          <g key="crack-stage-4-empty-spaces">
-            {/* --- WAVE 1 (0.0s): Spreading into Upper-Left & Upper-Right Empty Spaces --- */}
+        {(crackStage >= 3 || previewAllBeams) && (
+          <g key="crack-stage-3-and-4-fractures">
+            {/* Wave 1: Rapid fracture lines cracking outward across the card */}
             <motion.path
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
-              stroke="#10b981"
-              strokeWidth="2.5"
+              stroke="#a7f3d0"
+              strokeWidth="2.8"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              transition={{ duration: 0.35, delay: 0.1, ease: "easeOut" }}
             />
             <motion.path
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#ffffff"
-              strokeWidth="1.2"
+              strokeWidth="1.4"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              transition={{ duration: 0.35, delay: 0.1, ease: "easeOut" }}
             />
 
-            {/* --- WAVE 2 (after 0.5s): Spreading into Mid-Left (Behind "TODAY") & Mid-Right (Behind "th day") Empty Spaces --- */}
+            {/* Wave 2 (0.6s delay): Mid & Side fissures opening up violently */}
             <motion.path
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
-              stroke="#10b981"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              filter="url(#pureGreenGlow)"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
-            />
-            <motion.path
-              d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
-              stroke="#ffffff"
-              strokeWidth="1.1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
-            />
-
-            {/* --- WAVE 3 (after 0.5s = 1.0s): Spreading into Bottom-Left & Bottom-Right Empty Corner Spaces --- */}
-            <motion.path
-              d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
-              stroke="#10b981"
+              stroke="#34d399"
               strokeWidth="2.6"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -788,18 +809,43 @@ export default function LokiTimelineCrack({
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
+              transition={{ duration: 0.35, delay: 0.65, ease: "easeOut" }}
             />
             <motion.path
-              d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
+              d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#ffffff"
-              strokeWidth="1.3"
+              strokeWidth="1.2"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
+              transition={{ duration: 0.35, delay: 0.65, ease: "easeOut" }}
+            />
+
+            {/* Wave 3 (1.2s delay): Full Corner to Corner perimeter breach */}
+            <motion.path
+              d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
+              stroke="#a7f3d0"
+              strokeWidth="3.0"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              filter="url(#pureGreenGlow)"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.35, delay: 1.25, ease: "easeOut" }}
+            />
+            <motion.path
+              d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
+              stroke="#ffffff"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.35, delay: 1.25, ease: "easeOut" }}
             />
           </g>
         )}
