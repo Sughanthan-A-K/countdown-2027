@@ -89,15 +89,15 @@ export default function LokiTimelineCrack({
     return `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${newP3} ${newP4}`;
   };
 
-  // If stage4Step is explicitly controlled (e.g. 1 to 4), use it; otherwise default to full normal behavior (null = full)
+  // TAP 3 IS FINAL CLIMAX: Outer beams, center radial wave (160px), and climax bursts all activate on Tap 3!
   const isStepMode = crackStage === 4 && stage4Step !== null;
-  const showOuterBeams = previewAllBeams || (crackStage >= 4 && (!isStepMode || stage4Step >= 1));
-  const showRadialWave = previewAllBeams || (crackStage >= 4 && (!isStepMode || stage4Step >= 2));
-  const showCenterBursts = previewAllBeams || (crackStage >= 4 && (!isStepMode || stage4Step >= 3));
+  const showOuterBeams = previewAllBeams || crackStage >= 3;
+  const showRadialWave = previewAllBeams || crackStage >= 3;
+  const showCenterBursts = previewAllBeams || crackStage >= 3;
 
   // Single clean fissure stroke & gap width
-  const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : (crackStage === 3 ? 3.2 : 4.4));
-  const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 14));
+  const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : 3.8);
+  const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : 10);
 
   return (
     <div className="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
@@ -574,10 +574,10 @@ export default function LokiTimelineCrack({
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 4: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
+        {/* TAP 3: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
         {/* Light spreads smoothly from center to encompass the FULL card before exploding */}
         {/* ============================================================ */}
-        {(crackStage >= 4 || previewAllBeams) && (
+        {(crackStage >= 3 || previewAllBeams) && (
           <g key="crack-stage-4-center-bright-core">
             <defs>
               {/* Radial gradient that grows seamlessly from pure white core to full card emerald light */}

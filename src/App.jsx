@@ -299,18 +299,18 @@ function App() {
   // Single Master Light Toolbox State (Shortcut: Shift + T)
   const [showLightToolbox, setShowLightToolbox] = useState(false);
   
-  // Checked beams: Beams that are marked "OK / Approved". Persists even when toolbox closes!
+  // Checked beams: User locked beams strictly [4, 6, 101, 102, 7, 9, 10, 11, 12, 8, 1, 2]
   const [checkedBeams, setCheckedBeams] = useState(() => {
     try {
       const saved = localStorage.getItem('loki_checked_beams');
-      return saved ? JSON.parse(saved) : [1, 2, 3, 4, 5, 6, 101, 102, 7, 8, 9, 10, 11, 12];
+      return saved ? JSON.parse(saved) : [4, 6, 101, 102, 7, 9, 10, 11, 12, 8, 1, 2];
     } catch (_) {
-      return [1, 2, 3, 4, 5, 6, 101, 102, 7, 8, 9, 10, 11, 12];
+      return [4, 6, 101, 102, 7, 9, 10, 11, 12, 8, 1, 2];
     }
   });
 
-  // Active Preview Beams: Which lights are currently turned ON/OFF to test visibility/angles
-  const [activePreviewBeams, setActivePreviewBeams] = useState(() => [1, 2, 3, 4, 5, 6, 101, 102, 7, 8, 9, 10, 11, 12]);
+  // Active Preview Beams: Defaults to user's checked beams
+  const [activePreviewBeams, setActivePreviewBeams] = useState(() => [4, 6, 101, 102, 7, 9, 10, 11, 12, 8, 1, 2]);
   
   // Checked preview mode: When true, forces preview of all lights on screen without needing tap sequence
   const [isPreviewAllMode, setIsPreviewAllMode] = useState(false);
@@ -319,19 +319,49 @@ function App() {
   const [beamTransforms, setBeamTransforms] = useState(() => {
     try {
       const saved = localStorage.getItem('loki_beam_transforms');
-      return saved ? JSON.parse(saved) : {};
+      return saved ? JSON.parse(saved) : {
+        "1": { "angle": 12, "scaleX": 1 },
+        "2": { "angle": -18, "scaleX": 1 },
+        "3": { "angle": -50, "scaleX": 1 },
+        "4": { "angle": 0, "scaleX": 1 },
+        "5": { "angle": 35, "scaleX": 1 },
+        "6": { "angle": 20, "scaleX": 1 },
+        "7": { "angle": -2, "scaleX": 1 },
+        "8": { "angle": 2, "scaleX": 1 },
+        "9": { "angle": -5, "scaleX": 1 },
+        "10": { "angle": -7, "scaleX": 1 },
+        "11": { "angle": 0, "scaleX": 1 },
+        "12": { "angle": -37, "scaleX": 1 },
+        "101": { "angle": 0, "scaleX": 1 },
+        "102": { "angle": 0, "scaleX": 1 }
+      };
     } catch (_) {
-      return {};
+      return {
+        "1": { "angle": 12, "scaleX": 1 },
+        "2": { "angle": -18, "scaleX": 1 },
+        "3": { "angle": -50, "scaleX": 1 },
+        "4": { "angle": 0, "scaleX": 1 },
+        "5": { "angle": 35, "scaleX": 1 },
+        "6": { "angle": 20, "scaleX": 1 },
+        "7": { "angle": -2, "scaleX": 1 },
+        "8": { "angle": 2, "scaleX": 1 },
+        "9": { "angle": -5, "scaleX": 1 },
+        "10": { "angle": -7, "scaleX": 1 },
+        "11": { "angle": 0, "scaleX": 1 },
+        "12": { "angle": -37, "scaleX": 1 },
+        "101": { "angle": 0, "scaleX": 1 },
+        "102": { "angle": 0, "scaleX": 1 }
+      };
     }
   });
 
-  // Center Circle Radius (Default 98px fits 200px card width perfectly)
+  // Center Circle Radius (User locked at 160px)
   const [circleRadius, setCircleRadius] = useState(() => {
     try {
       const saved = localStorage.getItem('loki_circle_radius');
-      return saved ? parseInt(saved, 10) : 98;
+      return saved ? parseInt(saved, 10) : 160;
     } catch (_) {
-      return 98;
+      return 160;
     }
   });
 
@@ -1730,17 +1760,19 @@ function App() {
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
-                          const next = Math.min(prev + 1, 4);
-                          // On 4th tap:
-                          // All lights radiate and the inner circle swells smoothly to full card size (~2.6s)
-                          // Then all lights stay continuously blazing for ~2s while morphing from emerald to bright supernova white
-                          // At 4.8s, the universe star explosion shatters the card completely into Stage 5!
-                          if (next === 4) {
+                          const next = Math.min(prev + 1, 3);
+                          // TAP 3 IS THE FINAL CLIMAX! (No Tap 4 needed)
+                          // When user hits Tap 3:
+                          // 1. Dark mode activates
+                          // 2. All user-checked beams radiate with their locked angles
+                          // 3. Center circle (160px) swells up smoothly
+                          // 4. Then at ~3.4s, intense shockwave shatter blast transitions directly into Stage 5 (Loki Portal)!
+                          if (next === 3) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 4800);
+                            }, 3600);
                           }
                           return next;
                         });
