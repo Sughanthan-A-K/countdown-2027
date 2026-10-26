@@ -1349,6 +1349,7 @@ function App() {
 
           {!isSharedCardView && (
             <>
+              {/* Refresh / Reset Button: Always available for Dev Mode, and kept on-screen even during Stage 5 Portal */}
               {isDevMode && (
                 <button 
                   onClick={() => {
@@ -1357,6 +1358,9 @@ function App() {
                       localStorage.removeItem('vijayadashamiEventDone_2026');
                       localStorage.removeItem('ayudhaPoojaEventDone_2026');
                     } catch (e) {}
+
+                    // Reset Loki Multiverse crack stages
+                    setLokiCrackStage(0);
 
                     const stored = localStorage.getItem('devOverrideDate');
                     if (stored) {
@@ -1371,7 +1375,7 @@ function App() {
 
                     if (navigator.vibrate) navigator.vibrate([50]);
                   }}
-                  className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
+                  className={`absolute top-8 right-24 z-[150] p-3 rounded-full border-2 shadow-md ${
                     isDarkMode 
                       ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
                       : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
@@ -1467,6 +1471,7 @@ function App() {
                 <Info size={20} />
               </motion.button>
               
+              {/* Dev Datepicker Button: Always accessible (z-[150]) even during Stage 5 Multiverse Portal! */}
               {isDevMode && (
                 <button 
                   onClick={(e) => {
@@ -1479,7 +1484,7 @@ function App() {
                       }
                     }
                   }}
-                  className={`absolute top-8 left-24 z-[50] p-3 rounded-full border-2 shadow-md flex items-center justify-center ${
+                  className={`absolute top-8 left-24 z-[150] p-3 rounded-full border-2 shadow-md flex items-center justify-center ${
                     isDarkMode 
                       ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
                       : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'

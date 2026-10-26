@@ -46,78 +46,89 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
 
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible">
-      {/* 0. BLINDING ANIME SUPERNOVA EPICENTER BURST */}
+      {/* 0. FULL-SCREEN BLINDING COSMIC SCREEN FLASH OVERLAY (Spreads across 100vw x 100vh) */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: [0, 0.95, 0.7, 0] 
+        }}
+        transition={{ duration: 0.85, times: [0, 0.08, 0.25, 1], ease: "easeOut" }}
+        className="fixed inset-0 pointer-events-none z-[150] bg-radial from-white via-emerald-400/60 to-black/80"
+        style={{ mixBlendMode: 'screen' }}
+      />
+
+      {/* 0B. Card Center Blinding Supernova Epicenter Burst */}
       <motion.div
         initial={{ opacity: 1, scale: 0.05 }}
         animate={{ 
           opacity: [1, 1, 0], 
-          scale: [0.05, 3.8, 6.0] 
+          scale: [0.05, 4.5, 7.5] 
         }}
-        transition={{ duration: 0.5, ease: [0.02, 0.98, 0.15, 1] }}
-        className="absolute w-72 h-72 rounded-full bg-white blur-xl pointer-events-none"
+        transition={{ duration: 0.6, ease: [0.02, 0.98, 0.15, 1] }}
+        className="absolute w-80 h-80 rounded-full bg-white blur-2xl pointer-events-none z-[120]"
       />
       <motion.div
         initial={{ opacity: 1, scale: 0.1 }}
         animate={{ 
           opacity: [1, 0.85, 0], 
-          scale: [0.1, 4.5, 7.5] 
+          scale: [0.1, 5.5, 9.0] 
         }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        className="absolute w-88 h-88 rounded-full bg-emerald-400/90 blur-3xl pointer-events-none"
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="absolute w-96 h-96 rounded-full bg-emerald-400/90 blur-3xl pointer-events-none z-[110]"
       />
 
-      {/* 1. Fast High-Velocity Laser Shockwave Ring */}
+      {/* 1. Fast Full-Screen High-Velocity Shockwave Ring Expanding outward past screen */}
       <motion.div
-        initial={{ scale: 0.05, opacity: 1, borderWidth: '36px' }}
+        initial={{ scale: 0.05, opacity: 1, borderWidth: '40px' }}
         animate={{ 
-          scale: [0.05, 5.0], 
+          scale: [0.05, 8.5], 
           opacity: [1, 0.9, 0],
-          borderWidth: ['36px', '1px']
+          borderWidth: ['40px', '1px']
         }}
         transition={{ 
-          duration: 1.1, 
+          duration: 1.2, 
           ease: [0.02, 0.9, 0.2, 1] 
         }}
-        className="absolute rounded-full border-white shadow-[0_0_100px_#34d399,_inset_0_0_60px_#a7f3d0] pointer-events-none"
+        className="absolute rounded-full border-white shadow-[0_0_120px_#34d399,_inset_0_0_80px_#a7f3d0] pointer-events-none z-[100]"
         style={{
           width: '320px',
           height: '320px',
         }}
       />
 
-      {/* 2. Secondary Emerald Expansion Shockwave */}
+      {/* 2. Secondary Emerald Expansion Shockwave sweeping entire display */}
       <motion.div
-        initial={{ scale: 0.05, opacity: 1, borderWidth: '30px' }}
+        initial={{ scale: 0.05, opacity: 1, borderWidth: '32px' }}
         animate={{ 
-          scale: [0.05, 6.2], 
-          opacity: [1, 0.7, 0],
-          borderWidth: ['30px', '2px']
+          scale: [0.05, 9.8], 
+          opacity: [1, 0.75, 0],
+          borderWidth: ['32px', '2px']
         }}
         transition={{ 
-          duration: 1.3, 
+          duration: 1.4, 
           delay: 0.03,
           ease: [0.05, 0.92, 0.25, 1] 
         }}
-        className="absolute rounded-full border-teal-200 shadow-[0_0_110px_#10b981] pointer-events-none"
+        className="absolute rounded-full border-teal-200 shadow-[0_0_140px_#10b981] pointer-events-none z-[95]"
         style={{
           width: '280px',
           height: '280px',
         }}
       />
 
-      {/* 3. Volumetric Jade Atmosphere Wave */}
+      {/* 3. Volumetric Jade Atmosphere Wave Covering screen to reveal portal */}
       <motion.div
         initial={{ scale: 0.1, opacity: 0.95 }}
         animate={{ 
-          scale: [0.1, 5.5], 
+          scale: [0.1, 8.0], 
           opacity: [0.95, 0] 
         }}
         transition={{ 
-          duration: 1.5, 
+          duration: 1.6, 
           delay: 0.05,
           ease: "easeOut" 
         }}
-        className="absolute rounded-full bg-radial from-emerald-300/70 via-teal-500/40 to-transparent blur-2xl pointer-events-none"
+        className="absolute rounded-full bg-radial from-emerald-300/80 via-teal-500/50 to-transparent blur-3xl pointer-events-none z-[90]"
         style={{
           width: '360px',
           height: '360px',

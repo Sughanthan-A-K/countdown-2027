@@ -590,7 +590,7 @@ export default function LokiTimelineCrack({
 
         {/* ============================================================ */}
         {/* TAP 3 / CLIMAX: ESCALATING ANIME NEON GREEN & WHITE SWELLING OVER THE CARD */}
-        {/* Blends smoothly from epicenter (100, 195) with zero box boundaries */}
+        {/* Blends smoothly from epicenter (100, 195) with pre-blast screen-pulsing buildup */}
         {/* ============================================================ */}
         {(crackStage >= 3 || previewAllBeams) && (
           <g key="crack-stage-3-center-bright-core">
@@ -613,15 +613,15 @@ export default function LokiTimelineCrack({
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </radialGradient>
               <radialGradient id="animeSupernovaBurst" cx="50%" cy="48%" r="50%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
-                <stop offset="22%" stopColor="#d1fae5" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#34d399" stopOpacity="0.65" />
-                <stop offset="80%" stopColor="#10b981" stopOpacity="0.35" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="22%" stopColor="#d1fae5" stopOpacity="0.85" />
+                <stop offset="50%" stopColor="#34d399" stopOpacity="0.7" />
+                <stop offset="80%" stopColor="#10b981" stopOpacity="0.4" />
                 <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
             </defs>
 
-            {/* 1. Concentric Radial Wave: Feathered organically across card without hard clipping box */}
+            {/* 1. Concentric Radial Wave: Feathered organically across card with rapid pre-blast pulsing */}
             <g filter="url(#naturalGlassRefractGlow)">
               <motion.circle
                 cx="100"
@@ -634,13 +634,16 @@ export default function LokiTimelineCrack({
                   opacity: 0.72,
                   fill: "url(#animeNeonGreenCore)"
                 } : {
-                  // Starts small green (0.15) at 0s, expands with accelerating Tak lights up to 2.4s, reaches 1.0 at 2.6s, rich electric neon green hold!
-                  scale: [0.15, 0.35, 0.65, 0.95, 1.0, 1.05],
-                  opacity: [0, 0.4, 0.58, 0.72, 0.8, 0.82],
+                  // Starts small green (0.15) at 0s, expands with accelerating Tak lights up to 2.4s, reaches 1.0 at 2.6s, then does an intense rapid pre-blast energetic pulse (3.5s - 4.5s)!
+                  scale: [0.15, 0.35, 0.65, 0.95, 1.0, 1.02, 1.08, 1.04, 1.15],
+                  opacity: [0, 0.4, 0.58, 0.72, 0.8, 0.85, 0.95, 0.88, 1.0],
                   fill: [
                     "url(#animeNeonGreenCore)",
                     "url(#animeNeonGreenCore)",
                     "url(#animeNeonGreenCore)",
+                    "url(#animeSupernovaBurst)",
+                    "url(#animeSupernovaBurst)",
+                    "url(#animeSupernovaBurst)",
                     "url(#animeSupernovaBurst)",
                     "url(#animeSupernovaBurst)",
                     "url(#animeSupernovaBurst)"
@@ -648,7 +651,7 @@ export default function LokiTimelineCrack({
                 }}
                 transition={previewAllBeams ? { duration: 0.3 } : {
                   duration: 4.5,
-                  times: [0, 0.25, 0.45, 0.6, 0.75, 1.0],
+                  times: [0, 0.25, 0.45, 0.6, 0.75, 0.82, 0.88, 0.94, 1.0],
                   ease: "easeInOut"
                 }}
                 style={{ mixBlendMode: "screen" }}
