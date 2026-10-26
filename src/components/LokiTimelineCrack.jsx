@@ -127,19 +127,19 @@ export default function LokiTimelineCrack({
         />
       )}
 
-      {/* Internal Glass Reflection Flash overlay on Tap 3: Card surface illuminates from deep green to pure blinding white before blast */}
+      {/* Internal Glass Reflection Glow on Tap 3 / Climax: Volumetric anime neon-green & pure white energy radiation */}
       {(crackStage >= 3 || previewAllBeams) && (
         <motion.div
           initial={{ opacity: 0 }}
-          animate={previewAllBeams ? { opacity: 0.25 } : {
-            opacity: [0, 0.15, 0.35, 0.65, 0.85, 0.9],
-            backgroundColor: [
-              "rgba(5, 150, 105, 0.2)",
-              "rgba(16, 185, 129, 0.35)",
-              "rgba(52, 211, 153, 0.55)",
-              "rgba(209, 250, 229, 0.75)",
-              "rgba(255, 255, 255, 0.88)",
-              "rgba(255, 255, 255, 0.95)"
+          animate={previewAllBeams ? { opacity: 0.35 } : {
+            opacity: [0, 0.25, 0.5, 0.75, 0.95, 1.0],
+            background: [
+              "radial-gradient(circle at 50% 46%, rgba(16,185,129,0.3) 0%, rgba(5,150,105,0.15) 45%, transparent 75%)",
+              "radial-gradient(circle at 50% 46%, rgba(52,211,153,0.5) 0%, rgba(16,185,129,0.3) 50%, transparent 80%)",
+              "radial-gradient(circle at 50% 46%, rgba(167,243,208,0.7) 0%, rgba(52,211,153,0.45) 45%, rgba(16,185,129,0.2) 70%, transparent 90%)",
+              "radial-gradient(circle at 50% 46%, #ffffff 0%, rgba(209,250,229,0.85) 30%, rgba(52,211,153,0.6) 60%, rgba(16,185,129,0.25) 85%, transparent 100%)",
+              "radial-gradient(circle at 50% 46%, #ffffff 0%, rgba(240,253,244,0.95) 40%, rgba(110,231,183,0.8) 70%, rgba(16,185,129,0.4) 90%, transparent 100%)",
+              "radial-gradient(circle at 50% 46%, #ffffff 0%, rgba(240,253,244,0.95) 50%, rgba(110,231,183,0.85) 75%, rgba(16,185,129,0.45) 95%, transparent 100%)"
             ]
           }}
           transition={previewAllBeams ? { duration: 0.3 } : {
@@ -147,8 +147,8 @@ export default function LokiTimelineCrack({
             times: [0, 0.25, 0.45, 0.65, 0.85, 1.0],
             ease: "easeInOut"
           }}
-          className="absolute inset-0 pointer-events-none z-[45] rounded-3xl"
-          style={{ mixBlendMode: "screen" }}
+          className="absolute inset-0 pointer-events-none z-[45]"
+          style={{ mixBlendMode: "screen", filter: "blur(12px)" }}
         />
       )}
 
@@ -589,66 +589,61 @@ export default function LokiTimelineCrack({
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 3 / CLIMAX: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
-        {/* Light spreads smoothly from center to encompass the FULL card before exploding */}
+        {/* TAP 3 / CLIMAX: ESCALATING ANIME NEON GREEN & WHITE SWELLING OVER THE CARD */}
+        {/* Blends smoothly from epicenter (100, 195) with zero box boundaries */}
         {/* ============================================================ */}
         {(crackStage >= 3 || previewAllBeams) && (
           <g key="crack-stage-3-center-bright-core">
             <defs>
-              {/* Card rounded boundary clip so the glowing radial wave stays 100% INSIDE the card and never spills outside */}
-              <clipPath id="cardRoundedGlassClip">
-                <rect x="0" y="0" width="200" height="400" rx="16" />
-              </clipPath>
-
               {/* Natural behind-the-glass blur filter for organic glass depth */}
-              <filter id="naturalGlassRefractGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="10" result="softBlur" />
+              <filter id="naturalGlassRefractGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="14" result="softBlur" />
                 <feMerge>
                   <feMergeNode in="softBlur" />
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
 
-              {/* Radial gradient that grows seamlessly from green into pure supernova white */}
-              <radialGradient id="exactCardCenterCore" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
-                <stop offset="30%" stopColor="#d1fae5" stopOpacity="0.75" />
-                <stop offset="60%" stopColor="#34d399" stopOpacity="0.55" />
-                <stop offset="85%" stopColor="#10b981" stopOpacity="0.35" />
+              {/* Anime High-Energy Neon: Pure white-hot center core bleeding into electric green aura */}
+              <radialGradient id="animeNeonGreenCore" cx="50%" cy="48%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.85" />
+                <stop offset="55%" stopColor="#34d399" stopOpacity="0.65" />
+                <stop offset="80%" stopColor="#10b981" stopOpacity="0.35" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </radialGradient>
-              <radialGradient id="supernovaWhiteCore" cx="50%" cy="50%" r="50%">
+              <radialGradient id="animeSupernovaBurst" cx="50%" cy="48%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="40%" stopColor="#ffffff" stopOpacity="0.95" />
-                <stop offset="75%" stopColor="#ecfdf5" stopOpacity="0.8" />
-                <stop offset="90%" stopColor="#a7f3d0" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#34d399" stopOpacity="0" />
+                <stop offset="35%" stopColor="#ecfdf5" stopOpacity="0.95" />
+                <stop offset="65%" stopColor="#6ee7b7" stopOpacity="0.75" />
+                <stop offset="85%" stopColor="#10b981" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
             </defs>
 
-            {/* 1. Concentric Radial Wave: Clipped strictly inside card boundary with soft glass glow */}
-            <g clipPath="url(#cardRoundedGlassClip)" filter="url(#naturalGlassRefractGlow)">
+            {/* 1. Concentric Radial Wave: Feathered organically across card without hard clipping box */}
+            <g filter="url(#naturalGlassRefractGlow)">
               <motion.circle
                 cx="100"
-                cy="200"
+                cy="195"
                 r={circleRadius || 160}
-                fill="url(#exactCardCenterCore)"
+                fill="url(#animeNeonGreenCore)"
                 initial={{ scale: previewAllBeams ? 1.0 : 0.15, opacity: previewAllBeams ? 0.8 : 0 }}
                 animate={previewAllBeams ? {
                   scale: 1.0,
-                  opacity: 0.8,
-                  fill: "url(#exactCardCenterCore)"
+                  opacity: 0.85,
+                  fill: "url(#animeNeonGreenCore)"
                 } : {
-                  // Starts small green (0.15) at 0s, expands with accelerating Tak lights up to 2.4s, reaches 1.0 at 2.6s, morphs to blinding white and holds for 2s!
+                  // Starts small green (0.15) at 0s, expands with accelerating Tak lights up to 2.4s, reaches 1.0 at 2.6s, morphs to anime blast energy and holds for 2s!
                   scale: [0.15, 0.35, 0.65, 0.95, 1.0, 1.05],
-                  opacity: [0, 0.45, 0.65, 0.8, 0.9, 0.95],
+                  opacity: [0, 0.5, 0.7, 0.85, 0.95, 1.0],
                   fill: [
-                    "url(#exactCardCenterCore)",
-                    "url(#exactCardCenterCore)",
-                    "url(#exactCardCenterCore)",
-                    "url(#supernovaWhiteCore)",
-                    "url(#supernovaWhiteCore)",
-                    "url(#supernovaWhiteCore)"
+                    "url(#animeNeonGreenCore)",
+                    "url(#animeNeonGreenCore)",
+                    "url(#animeNeonGreenCore)",
+                    "url(#animeSupernovaBurst)",
+                    "url(#animeSupernovaBurst)",
+                    "url(#animeSupernovaBurst)"
                   ]
                 }}
                 transition={previewAllBeams ? { duration: 0.3 } : {
