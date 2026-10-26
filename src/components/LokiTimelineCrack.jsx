@@ -110,20 +110,45 @@ export default function LokiTimelineCrack({
         className="absolute inset-0 bg-black/50 pointer-events-none rounded-3xl"
       />
 
-      {/* Behind-the-glass pure emerald ambient light - Escalates naturally on Tap 4 */}
-      {crackStage >= 2 && (
+      {/* Behind-the-glass pure emerald ambient light - Escalates with reflection on Tap 3 */}
+      {(crackStage >= 2 || previewAllBeams) && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ 
-            opacity: crackStage >= 4 ? 0.95 : (crackStage === 3 ? 0.8 : 0.45),
-            scale: crackStage >= 4 ? 1.4 : (crackStage === 3 ? 1.2 : 1.0),
+            opacity: (crackStage >= 3 || previewAllBeams) ? 0.95 : (crackStage === 2 ? 0.45 : 0.08),
+            scale: (crackStage >= 3 || previewAllBeams) ? 1.35 : (crackStage === 2 ? 1.0 : 0.8),
           }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
           className="absolute w-80 h-96 rounded-full pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.45) 50%, transparent 75%)',
             filter: 'blur(35px)'
           }}
+        />
+      )}
+
+      {/* Internal Glass Reflection Flash overlay on Tap 3: Card surface illuminates from deep green to pure blinding white before blast */}
+      {(crackStage >= 3 || previewAllBeams) && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={previewAllBeams ? { opacity: 0.25 } : {
+            opacity: [0, 0.15, 0.35, 0.65, 0.85, 0.9],
+            backgroundColor: [
+              "rgba(5, 150, 105, 0.2)",
+              "rgba(16, 185, 129, 0.35)",
+              "rgba(52, 211, 153, 0.55)",
+              "rgba(209, 250, 229, 0.75)",
+              "rgba(255, 255, 255, 0.88)",
+              "rgba(255, 255, 255, 0.95)"
+            ]
+          }}
+          transition={previewAllBeams ? { duration: 0.3 } : {
+            duration: 4.5,
+            times: [0, 0.25, 0.45, 0.65, 0.85, 1.0],
+            ease: "easeInOut"
+          }}
+          className="absolute inset-0 pointer-events-none z-[45] rounded-3xl"
+          style={{ mixBlendMode: "screen" }}
         />
       )}
 
@@ -570,54 +595,70 @@ export default function LokiTimelineCrack({
         {(crackStage >= 3 || previewAllBeams) && (
           <g key="crack-stage-3-center-bright-core">
             <defs>
+              {/* Card rounded boundary clip so the glowing radial wave stays 100% INSIDE the card and never spills outside */}
+              <clipPath id="cardRoundedGlassClip">
+                <rect x="0" y="0" width="200" height="400" rx="16" />
+              </clipPath>
+
+              {/* Natural behind-the-glass blur filter for organic glass depth */}
+              <filter id="naturalGlassRefractGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="10" result="softBlur" />
+                <feMerge>
+                  <feMergeNode in="softBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+
               {/* Radial gradient that grows seamlessly from green into pure supernova white */}
               <radialGradient id="exactCardCenterCore" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="30%" stopColor="#d1fae5" stopOpacity="0.95" />
-                <stop offset="60%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="85%" stopColor="#10b981" stopOpacity="0.7" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0.4" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
+                <stop offset="30%" stopColor="#d1fae5" stopOpacity="0.75" />
+                <stop offset="60%" stopColor="#34d399" stopOpacity="0.55" />
+                <stop offset="85%" stopColor="#10b981" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </radialGradient>
               <radialGradient id="supernovaWhiteCore" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="35%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="70%" stopColor="#ecfdf5" stopOpacity="0.95" />
-                <stop offset="90%" stopColor="#a7f3d0" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#34d399" stopOpacity="0.5" />
+                <stop offset="40%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="75%" stopColor="#ecfdf5" stopOpacity="0.8" />
+                <stop offset="90%" stopColor="#a7f3d0" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#34d399" stopOpacity="0" />
               </radialGradient>
             </defs>
 
-            {/* 1. Concentric Radial Wave: Starts tiny (scale 0.15), swells steadily to 160px (scale 1.0), and holds bright white before blast */}
-            <motion.circle
-              cx="100"
-              cy="200"
-              r={circleRadius || 160}
-              fill="url(#exactCardCenterCore)"
-              initial={{ scale: previewAllBeams ? 1.0 : 0.15, opacity: previewAllBeams ? 0.95 : 0 }}
-              animate={previewAllBeams ? {
-                scale: 1.0,
-                opacity: 0.95,
-                fill: "url(#exactCardCenterCore)"
-              } : {
-                // Starts small green (0.15) at 0s, expands with accelerating Tak lights up to 2.4s, reaches 1.0 at 2.6s, morphs to blinding white and holds for 2s!
-                scale: [0.15, 0.35, 0.65, 0.95, 1.0, 1.05],
-                opacity: [0, 0.5, 0.8, 0.95, 1.0, 1.0],
-                fill: [
-                  "url(#exactCardCenterCore)",
-                  "url(#exactCardCenterCore)",
-                  "url(#exactCardCenterCore)",
-                  "url(#supernovaWhiteCore)",
-                  "url(#supernovaWhiteCore)",
-                  "url(#supernovaWhiteCore)"
-                ]
-              }}
-              transition={previewAllBeams ? { duration: 0.3 } : {
-                duration: 4.5,
-                times: [0, 0.25, 0.45, 0.6, 0.75, 1.0],
-                ease: "easeInOut"
-              }}
-              style={{ mixBlendMode: "screen" }}
-            />
+            {/* 1. Concentric Radial Wave: Clipped strictly inside card boundary with soft glass glow */}
+            <g clipPath="url(#cardRoundedGlassClip)" filter="url(#naturalGlassRefractGlow)">
+              <motion.circle
+                cx="100"
+                cy="200"
+                r={circleRadius || 160}
+                fill="url(#exactCardCenterCore)"
+                initial={{ scale: previewAllBeams ? 1.0 : 0.15, opacity: previewAllBeams ? 0.8 : 0 }}
+                animate={previewAllBeams ? {
+                  scale: 1.0,
+                  opacity: 0.8,
+                  fill: "url(#exactCardCenterCore)"
+                } : {
+                  // Starts small green (0.15) at 0s, expands with accelerating Tak lights up to 2.4s, reaches 1.0 at 2.6s, morphs to blinding white and holds for 2s!
+                  scale: [0.15, 0.35, 0.65, 0.95, 1.0, 1.05],
+                  opacity: [0, 0.45, 0.65, 0.8, 0.9, 0.95],
+                  fill: [
+                    "url(#exactCardCenterCore)",
+                    "url(#exactCardCenterCore)",
+                    "url(#exactCardCenterCore)",
+                    "url(#supernovaWhiteCore)",
+                    "url(#supernovaWhiteCore)",
+                    "url(#supernovaWhiteCore)"
+                  ]
+                }}
+                transition={previewAllBeams ? { duration: 0.3 } : {
+                  duration: 4.5,
+                  times: [0, 0.25, 0.45, 0.6, 0.75, 1.0],
+                  ease: "easeInOut"
+                }}
+                style={{ mixBlendMode: "screen" }}
+              />
+            </g>
           </g>
         )}
 
