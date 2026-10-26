@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { GripHorizontal, X, RotateCcw, CheckSquare, Square, Eye, EyeOff, Sliders, Sparkles, ChevronRight, ChevronLeft } from 'lucide-react';
+import { GripHorizontal, X, RotateCcw, CheckSquare, Square, Eye, EyeOff, Sliders, Sparkles, Lock, Check } from 'lucide-react';
 
 export const LIGHT_BEAMS_LIST = [
   // Outer Beams (1 to 6)
@@ -34,10 +34,12 @@ export default function LokiLightMasterToolbox({
   onResetBeamTransform,
   circleRadius,
   onChangeCircleRadius,
+  onLockConfiguration,
   onClose
 }) {
   // Target beam for Angle & Spread tuning: defaults to first checked beam or 1
   const [tuneTarget, setTuneTarget] = useState(1);
+  const [isLockedSuccess, setIsLockedSuccess] = useState(false);
   const joystickRef = useRef(null);
   const [isDraggingJoystick, setIsDraggingJoystick] = useState(false);
 
@@ -129,25 +131,40 @@ export default function LokiLightMasterToolbox({
         </button>
       </div>
 
-      {/* Global Quick Action Bar: All ON / All OFF */}
+      {/* Global Quick Action Bar: All ON / All OFF + Lock Button */}
       <div className="p-2 rounded-xl bg-neutral-950/80 border border-neutral-800 flex items-center justify-between gap-2">
-        <span className="text-[10px] uppercase font-bold text-neutral-400 flex items-center gap-1">
-          <Eye size={12} className="text-emerald-400" /> All Lights:
-        </span>
         <div className="flex items-center gap-1.5">
           <button
             onClick={onAllPreviewOn}
-            className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-600/30 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-600/50 transition-colors"
+            className="px-2 py-1 rounded-lg text-[10px] font-bold bg-emerald-600/30 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-600/50 transition-colors"
           >
             ALL ON
           </button>
           <button
             onClick={onAllPreviewOff}
-            className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors"
+            className="px-2 py-1 rounded-lg text-[10px] font-bold bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors"
           >
             ALL OFF
           </button>
         </div>
+
+        {/* Master LOCK Button */}
+        <button
+          onClick={() => {
+            onLockConfiguration?.();
+            setIsLockedSuccess(true);
+            setTimeout(() => setIsLockedSuccess(false), 2200);
+          }}
+          className={`flex items-center gap-1 px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
+            isLockedSuccess
+              ? 'bg-emerald-500 text-black shadow-[0_0_12px_#10b981]'
+              : 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-[0_0_10px_rgba(16,185,129,0.4)]'
+          }`}
+          title="Lock selected checked lights and their angles permanently into normal card flow"
+        >
+          {isLockedSuccess ? <Check size={12} /> : <Lock size={12} />}
+          <span>{isLockedSuccess ? 'LOCKED & SAVED!' : 'LOCK & SAVE'}</span>
+        </button>
       </div>
 
       {/* 3D DIRECTION & ANGLE TUNER (Physical Seam Anchored) */}

@@ -385,6 +385,19 @@ function App() {
     localStorage.setItem('loki_circle_radius', val.toString());
   };
 
+  // Lock configuration: Locks checked lights, angles, and circle radius into normal flow
+  const handleLockConfiguration = () => {
+    // Only checked beams are allowed to remain!
+    const activeCheckedOnly = checkedBeams || [];
+    localStorage.setItem('loki_checked_beams', JSON.stringify(activeCheckedOnly));
+    localStorage.setItem('loki_beam_transforms', JSON.stringify(beamTransforms));
+    localStorage.setItem('loki_circle_radius', circleRadius.toString());
+
+    // Filter activePreviewBeams to only checked beams so unselected beams instantly disappear
+    setActivePreviewBeams(activeCheckedOnly);
+    setCheckedBeams(activeCheckedOnly);
+  };
+
   // Keyboard shortcut Shift + T to toggle single master toolbox
   // When toolbox opens: directly go to the moment right before shatter (vedikurathuku munnadi moment)
   useEffect(() => {
@@ -1866,6 +1879,7 @@ function App() {
           onResetBeamTransform={handleResetBeamTransform}
           circleRadius={circleRadius}
           onChangeCircleRadius={handleChangeCircleRadius}
+          onLockConfiguration={handleLockConfiguration}
           onClose={() => setShowLightToolbox(false)}
         />
       )}
