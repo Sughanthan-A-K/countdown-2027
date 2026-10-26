@@ -307,94 +307,80 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               </filter>
             </defs>
 
-            {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding INFINITELY across screen --- */}
-            <motion.polygon
-              points="102,185 140,152 4200,-1600 3200,-2200"
-              fill="url(#outwardBeam1)"
-              filter="url(#outwardBeamGlow)"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.1, ease: "easeOut" }}
-            />
-
-            {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
-            <motion.polygon
-              points="102,185 85,248 -2600,4500 -3200,3800"
-              fill="url(#outwardBeam2)"
-              filter="url(#outwardBeamGlow)"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
-            />
-
             {/* ============================================================ */}
-            {/* TAP 4: NATURAL PROGRESSION */}
-            {/* Phase 1: Surrounding cracks radiate FIRST with organic delays (0.6s -> 2.6s) */}
-            {/* Phase 2: Center cracks burst rapidly & FAST (3.0s -> 3.48s) leading into 3.6s Shatter! */}
+            {/* TAP 3: 6 NATURAL OUTER LIGHT BEAMS PIERCING FROM SURROUNDING CRACKS */}
+            {/* Emerges organically one-by-one around the card: Top-Left, Mid-Right, Top-Right, Bottom-Right, Bottom-Left, South */}
+            {/* NO Center Circle in Tap 3! */}
             {/* ============================================================ */}
-            {crackStage >= 4 && (
-              <g key="tap-4-cascading-light-shafts">
-                {/* --- 1. SURROUNDING OUTER CRACKS RADIATE FIRST WITH DELAYS (0.6s - 2.6s) --- */}
-                {/* Upper-Left Corner Beam (0.65s) */}
+            {crackStage >= 3 && (
+              <g key="tap-3-outer-beams-progression">
+                {/* 1. Upper-Left Corner Beam (Instant / 0.05s) */}
                 <motion.polygon
                   points="76,100 45,108 -3400,-2600 -2400,-3600"
                   fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.25, delay: 0.65, ease: "easeOut" }}
+                  transition={{ duration: 0.22, delay: 0.05, ease: "easeOut" }}
                 />
 
-                {/* Blade Beam Mid-Right (1.20s) */}
+                {/* 2. Blade Beam Mid-Right (0.35s delay) */}
                 <motion.polygon
                   points="165,138 4200,300 4500,1800 182,148"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.25, delay: 1.20, ease: "easeOut" }}
+                  transition={{ duration: 0.22, delay: 0.35, ease: "easeOut" }}
                 />
 
-                {/* Upper-Right Corner Gap (1.75s) */}
+                {/* 3. Upper-Right Corner Gap (0.65s delay) */}
                 <motion.polygon
                   points="168,22 200,5 3800,-1600 3200,-2400"
                   fill="url(#microBeamTopRight)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.22, delay: 1.75, ease: "easeOut" }}
+                  animate={{ opacity: 0.88 }}
+                  transition={{ duration: 0.20, delay: 0.65, ease: "easeOut" }}
                 />
 
-                {/* Lower-Right Corner Beam (2.20s) */}
+                {/* 4. Lower-Right Corner Beam (0.95s delay) */}
                 <motion.polygon
                   points="85,248 126,274 3800,4200 3000,4800"
                   fill="url(#outwardBeamLowerRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.20, delay: 2.20, ease: "easeOut" }}
+                  transition={{ duration: 0.20, delay: 0.95, ease: "easeOut" }}
                 />
 
-                {/* Bottom-Left Corner Gap (2.55s) */}
+                {/* 5. Bottom-Left Corner Gap (1.25s delay) */}
                 <motion.polygon
                   points="14,382 0,400 -2600,4800 -3400,4000"
                   fill="url(#microBeamBottomCorner)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.18, delay: 2.55, ease: "easeOut" }}
+                  transition={{ duration: 0.18, delay: 1.25, ease: "easeOut" }}
                 />
 
-                {/* South Spine Off-Center Beam (2.85s) */}
+                {/* 6. South Spine Off-Center Beam (1.55s delay) */}
                 <motion.polygon
                   points="96,350 102,400 1200,4500 200,4500"
                   fill="url(#outwardBeamBottomSpineSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.14, delay: 2.85, ease: "easeOut" }}
+                  transition={{ duration: 0.16, delay: 1.55, ease: "easeOut" }}
                 />
+              </g>
+            )}
 
+            {/* ============================================================ */}
+            {/* TAP 4: RAPID CENTER BURSTS & MEGA CLIMAX (3.0s -> 3.48s) leading to Shatter */}
+            {/* ============================================================ */}
+            {crackStage >= 4 && (
+              <g key="tap-4-cascading-light-shafts">
                 {/* --- 2. CENTER CRACKS BURST RAPID & FAST (3.05s - 3.48s) --- */}
                 {/* Upper Center Spine Fissure (3.05s) */}
                 <motion.polygon
