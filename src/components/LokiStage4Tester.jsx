@@ -284,49 +284,6 @@ export default function LokiStage4Tester({
     });
   };
 
-  // Close / minimize tool on clicking outside
-  const tool1Ref = useRef(null);
-  const tool2Ref = useRef(null);
-  const tool3Ref = useRef(null);
-  const tool4Ref = useRef(null);
-
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      // Check for each tool if it's currently open (not minimized) and click was outside of it
-      if (tool1Ref.current && !minimizedTools[1] && !tool1Ref.current.contains(e.target)) {
-        setMinimizedTools(prev => {
-          const next = { ...prev, 1: true };
-          localStorage.setItem('loki_tester_minimized', JSON.stringify(next));
-          return next;
-        });
-      }
-      if (tool2Ref.current && !minimizedTools[2] && !tool2Ref.current.contains(e.target)) {
-        setMinimizedTools(prev => {
-          const next = { ...prev, 2: true };
-          localStorage.setItem('loki_tester_minimized', JSON.stringify(next));
-          return next;
-        });
-      }
-      if (tool3Ref.current && !minimizedTools[3] && !tool3Ref.current.contains(e.target)) {
-        setMinimizedTools(prev => {
-          const next = { ...prev, 3: true };
-          localStorage.setItem('loki_tester_minimized', JSON.stringify(next));
-          return next;
-        });
-      }
-      if (tool4Ref.current && !minimizedTools[4] && !tool4Ref.current.contains(e.target)) {
-        setMinimizedTools(prev => {
-          const next = { ...prev, 4: true };
-          localStorage.setItem('loki_tester_minimized', JSON.stringify(next));
-          return next;
-        });
-      }
-    };
-
-    window.addEventListener('pointerdown', handleOutsideClick);
-    return () => window.removeEventListener('pointerdown', handleOutsideClick);
-  }, [minimizedTools]);
-
   const handleDragEnd = (toolKey, info) => {
     const updater = (prev) => {
       const nextPos = {
