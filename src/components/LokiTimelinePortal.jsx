@@ -609,7 +609,7 @@ export default function LokiTimelinePortal() {
             );
           })}
         </defs>
-        {/* Branch 1: The Massive Foreground Branch Cluster (Near screen on Top-Left: thick trunk clump with multiple braided roots) */}
+        {/* Branch 1: Single smooth, continuous 3D vine tapering naturally from thick (near screen left) to thin (far right) */}
         <DraggableBranch
           id="branch-1"
           pathData="M -150 220 Q 250 340, 500 370 T 1150 390"
@@ -620,7 +620,7 @@ export default function LokiTimelinePortal() {
           isFinalBranch={lastTappedBranchId === 'branch-1'}
           flyOut3D={trigger3DFlyOut}
           flyOutDelay={0}
-          scaleFactor={2.2}
+          scaleFactor={1.3}
           windConfig={{
             y: [-14, 14, -14],
             x: [-8, 8, -8],
@@ -635,52 +635,26 @@ export default function LokiTimelinePortal() {
             fill="none"
             stroke="#000000"
             strokeOpacity="0.001"
-            strokeWidth="110"
+            strokeWidth="90"
             strokeLinecap="round"
           />
-          {/* Ambient drop shadow with heavy 3D depth for close foreground trunk */}
+          {/* Single clean soft ambient shadow */}
           <path
             d="M -150 220 Q 250 340, 500 370 T 1150 390"
             fill="none"
             stroke="#000000"
-            strokeWidth="35"
+            strokeWidth="18"
             strokeLinecap="round"
-            opacity="0.95"
-            style={{ filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.95))" }}
+            opacity="0.9"
+            style={{ filter: "drop-shadow(0 8px 14px rgba(0,0,0,0.75))" }}
           />
 
-          {/* MASSIVE FOREGROUND TRUNK CLUMP (Top-Left near camera: up to 55px thick, tapering to 9px in distance) */}
-          {/* Outer cluster base silhouette */}
-          <path
-            d="M -150 180 Q 150 280, 420 350"
-            fill="none"
-            stroke="url(#branch1_depth_grad)"
-            strokeWidth="38"
-            strokeLinecap="round"
-            opacity="0.85"
-          />
-          <path
-            d="M -150 250 Q 180 320, 450 365"
-            fill="none"
-            stroke="url(#branch1_depth_grad)"
-            strokeWidth="32"
-            strokeLinecap="round"
-            opacity="0.8"
-          />
-          {/* Main Huge Root Trunk extending towards portal */}
-          <path
-            d="M -150 220 Q 250 340, 500 370"
-            fill="none"
-            stroke="url(#branch1_depth_grad)"
-            strokeWidth="48"
-            strokeLinecap="round"
-          />
-          {/* Main Continuous Spine tapering smoothly towards the distant portal */}
+          {/* SINGLE CLEAN CONTINUOUS BRANCH BODY (No overlapping steps, no cut pieces) */}
           <path
             d="M -150 220 Q 250 340, 500 370 T 1150 390"
             fill="none"
             stroke="url(#branch1_depth_grad)"
-            strokeWidth="14"
+            strokeWidth="15"
             strokeLinecap="round"
           />
           {/* Subtle Darkest Emerald Edge Glint */}
@@ -688,9 +662,9 @@ export default function LokiTimelinePortal() {
             d="M -150 219 Q 250 339, 500 369 T 1150 389"
             fill="none"
             stroke="#062d22"
-            strokeWidth="3.5"
+            strokeWidth="2.5"
             strokeLinecap="round"
-            opacity="0.65"
+            opacity="0.6"
           />
         </DraggableBranch>
 
