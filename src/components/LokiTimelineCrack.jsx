@@ -377,69 +377,89 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
             )}
 
             {/* ============================================================ */}
-            {/* TAP 4: RAPID CENTER BURSTS & MEGA CLIMAX (3.0s -> 3.48s) leading to Shatter */}
+            {/* TAP 4: RAPID CENTER BURSTS & MEGA CLIMAX (1.8s -> 2.6s) */}
+            {/* Emerge organically with natural delays leading to 3.0s supernova transition */}
             {/* ============================================================ */}
             {crackStage >= 4 && (
               <g key="tap-4-cascading-light-shafts">
-                {/* --- 2. CENTER CRACKS BURST RAPID & FAST (3.05s - 3.48s) --- */}
-                {/* Upper Center Spine Fissure (3.05s) */}
+                {/* 7. Tap 3 Original Beam 1 (0.2s) */}
+                <motion.polygon
+                  points="102,185 140,152 4200,-1600 3200,-2200"
+                  fill="url(#outwardBeam1)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.25, delay: 0.2, ease: "easeOut" }}
+                />
+
+                {/* 8. Tap 3 Original Beam 2 (0.5s) */}
+                <motion.polygon
+                  points="102,185 85,248 -2600,4500 -3200,3800"
+                  fill="url(#outwardBeam2)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.25, delay: 0.5, ease: "easeOut" }}
+                />
+
+                {/* 9. Upper Center Spine Fissure (0.9s) */}
                 <motion.polygon
                   points="108,78 -3800,-3200 -4200,-1800 92,122"
                   fill="url(#beamRedLine2)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.10, delay: 3.05, ease: "easeOut" }}
+                  animate={{ opacity: 0.95 }}
+                  transition={{ duration: 0.22, delay: 0.9, ease: "easeOut" }}
                 />
 
-                {/* Steep Upward Top Spine Shaft (3.18s) */}
+                {/* 10. Steep Upward Top Spine Shaft (1.3s) */}
                 <motion.polygon
                   points="104,65 108,78 400,-4200 -800,-3800"
                   fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 3.18, ease: "easeOut" }}
+                  animate={{ opacity: 0.95 }}
+                  transition={{ duration: 0.20, delay: 1.3, ease: "easeOut" }}
                 />
 
-                {/* Left side Center Fissure (3.28s) */}
+                {/* 11. Left side Center Fissure (1.7s) */}
                 <motion.polygon
                   points="92,122 64,146 -4500,-600 -4200,-1800"
                   fill="url(#climaxLeftInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.08, delay: 3.28, ease: "easeOut" }}
+                  transition={{ duration: 0.18, delay: 1.7, ease: "easeOut" }}
                 />
 
-                {/* Center Fissures Red Line 1 (3.36s) */}
+                {/* 12. Center Fissures Red Line 1 (2.0s) */}
                 <motion.polygon
                   points="92,122 -4500,600 -4500,1800 102,185"
                   fill="url(#beamRedLine1)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.07, delay: 3.36, ease: "easeOut" }}
+                  transition={{ duration: 0.16, delay: 2.0, ease: "easeOut" }}
                 />
 
-                {/* Center Fissures Red Line 5 (3.42s) */}
+                {/* 13. Center Fissures Red Line 5 (2.3s) */}
                 <motion.polygon
                   points="140,152 4200,2400 4500,3800 155,210"
                   fill="url(#beamRedLine5)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.06, delay: 3.42, ease: "easeOut" }}
+                  transition={{ duration: 0.15, delay: 2.3, ease: "easeOut" }}
                 />
 
-                {/* FINAL MEGA CENTER CLIMAX BEAM (3.48s): Central Hub Peak Laser -> Directly triggering 3.6s Shatter! */}
+                {/* 14. FINAL MEGA CENTER CLIMAX BEAM (2.6s) */}
                 <motion.polygon
                   points="102,185 140,152 4800,-400 3800,-1600"
                   fill="url(#climaxCenterInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1.0 }}
-                  transition={{ duration: 0.06, delay: 3.48, ease: "easeOut" }}
+                  transition={{ duration: 0.15, delay: 2.6, ease: "easeOut" }}
                 />
               </g>
             )}
@@ -460,32 +480,54 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 4: ESCALATING BRIGHT CORE AT EXACT CARD CENTER (100, 200) */}
-        {/* SVG coordinates-la exact Card Center (50%, 50%) = (100, 200) */}
+        {/* TAP 4: ESCALATING BRIGHT SWELLING CIRCLE AT CARD CENTER (100, 200) */}
+        {/* Scaled to fill card strictly inside card boundaries (radius 100 fits 200w card perfectly) */}
+        {/* Swells smoothly over 2.6s from emerald to pure glowing supernova white, holds for 2s before star explosion! */}
         {/* ============================================================ */}
         {crackStage >= 4 && (
           <g key="crack-stage-4-center-bright-core">
             <defs>
               <radialGradient id="exactCardCenterCore" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.9" />
-                <stop offset="55%" stopColor="#34d399" stopOpacity="0.65" />
-                <stop offset="85%" stopColor="#10b981" stopOpacity="0.25" />
+                <stop offset="25%" stopColor="#d1fae5" stopOpacity="0.95" />
+                <stop offset="55%" stopColor="#34d399" stopOpacity="0.8" />
+                <stop offset="85%" stopColor="#10b981" stopOpacity="0.4" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </radialGradient>
+              <radialGradient id="supernovaWhiteCore" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="35%" stopColor="#ffffff" stopOpacity="0.98" />
+                <stop offset="65%" stopColor="#ecfdf5" stopOpacity="0.9" />
+                <stop offset="85%" stopColor="#a7f3d0" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#34d399" stopOpacity="0" />
+              </radialGradient>
             </defs>
+            {/* Smooth emerald-to-white expanding circle perfectly bound inside the card */}
             <motion.circle
               cx="100"
               cy="200"
-              r="40"
+              r="98"
               fill="url(#exactCardCenterCore)"
               filter="url(#pureGreenGlow)"
-              initial={{ scale: 0.3, opacity: 0 }}
+              initial={{ scale: 0.1, opacity: 0 }}
               animate={{
-                scale: [0.4, 0.9, 1.4, 2.0],
-                opacity: [0, 0.5, 0.85, 1.0]
+                scale: [0.1, 0.45, 0.85, 1.0, 1.02, 1.05],
+                opacity: [0, 0.6, 0.85, 0.95, 1.0, 1.0],
+                fill: [
+                  "url(#exactCardCenterCore)",
+                  "url(#exactCardCenterCore)",
+                  "url(#exactCardCenterCore)",
+                  "url(#supernovaWhiteCore)",
+                  "url(#supernovaWhiteCore)",
+                  "url(#supernovaWhiteCore)"
+                ]
               }}
-              transition={{ duration: 2.1, ease: [0.12, 0.8, 0.2, 1] }}
+              transition={{
+                duration: 4.8,
+                times: [0, 0.35, 0.55, 0.65, 0.85, 1.0],
+                ease: "easeInOut"
+              }}
+              style={{ mixBlendMode: "screen" }}
             />
           </g>
         )}

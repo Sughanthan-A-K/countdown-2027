@@ -1592,13 +1592,16 @@ function App() {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
                           const next = Math.min(prev + 1, 4);
-                          // On 4th tap (outer beams start with delays, then center accelerates fast right before shatter):
+                          // On 4th tap:
+                          // All lights radiate and the inner circle swells smoothly to full card size (~2.6s)
+                          // Then all lights stay continuously blazing for ~2s while morphing from emerald to bright supernova white
+                          // At 4.8s, the universe star explosion shatters the card completely into Stage 5!
                           if (next === 4) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 3600);
+                            }, 4800);
                           }
                           return next;
                         });
