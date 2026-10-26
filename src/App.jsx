@@ -1591,14 +1591,16 @@ function App() {
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
-                          const next = Math.min(prev + 1, 4);
-                          // On 4th tap (outer beams start with delays, then center accelerates fast right before shatter):
-                          if (next === 4) {
+                          const next = Math.min(prev + 1, 3);
+                          // On 3rd tap: 10-second tension escalation!
+                          // 10 lights slowly wake up across all cracks, pulsing center core, building tension...
+                          // Exactly at ~10 seconds, card shatters directly into Stage 5 (Blast/Portal)!
+                          if (next === 3) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 3600);
+                            }, 10000);
                           }
                           return next;
                         });

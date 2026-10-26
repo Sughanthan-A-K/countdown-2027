@@ -307,153 +307,110 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               </filter>
             </defs>
 
-            {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding INFINITELY across screen --- */}
-            <motion.polygon
-              points="102,185 140,152 4200,-1600 3200,-2200"
-              fill="url(#outwardBeam1)"
-              filter="url(#outwardBeamGlow)"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.1, ease: "easeOut" }}
-            />
-
-            {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
-            <motion.polygon
-              points="102,185 85,248 -2600,4500 -3200,3800"
-              fill="url(#outwardBeam2)"
-              filter="url(#outwardBeamGlow)"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.1, delay: 0.03, ease: "easeOut" }}
-            />
-
             {/* ============================================================ */}
-            {/* TAP 4: NATURAL PROGRESSION */}
-            {/* Phase 1: Surrounding cracks radiate FIRST with organic delays (0.6s -> 2.6s) */}
-            {/* Phase 2: Center cracks burst rapidly & FAST (3.0s -> 3.48s) leading into 3.6s Shatter! */}
+            {/* TAP 3: CINEMATIC 10-BEAM TENSION ESCALATION (10 SECONDS BUILD-UP) */}
+            {/* Light emerges smoothly from crack fissures one-by-one, escalating tension right before blast! */}
             {/* ============================================================ */}
-            {crackStage >= 4 && (
-              <g key="tap-4-cascading-light-shafts">
-                {/* --- 1. SURROUNDING OUTER CRACKS RADIATE FIRST WITH DELAYS (0.6s - 2.6s) --- */}
-                {/* Upper-Left Corner Beam (0.65s) */}
+            {crackStage >= 3 && (
+              <g key="tap-3-tension-light-shafts">
+                {/* 1. Center Seam Core Beam (Starts at 0.4s) - Piercing North-East */}
+                <motion.polygon
+                  points="102,185 140,152 4200,-1600 3200,-2200"
+                  fill="url(#outwardBeam1)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.4, 0.85, 1] }}
+                  transition={{ duration: 1.8, delay: 0.4, ease: "easeInOut" }}
+                />
+
+                {/* 2. Lower Spine Seam Beam (Starts at 1.4s) - Piercing South-West */}
+                <motion.polygon
+                  points="102,185 85,248 -2600,4500 -3200,3800"
+                  fill="url(#outwardBeam2)"
+                  filter="url(#outwardBeamGlow)"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.4, 0.85, 0.95] }}
+                  transition={{ duration: 1.8, delay: 1.4, ease: "easeInOut" }}
+                />
+
+                {/* 3. Upper-Left Corner Fissure (Starts at 2.4s) - Piercing Top-Left */}
                 <motion.polygon
                   points="76,100 45,108 -3400,-2600 -2400,-3600"
                   fill="url(#outwardBeamUpperLeft)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.25, delay: 0.65, ease: "easeOut" }}
+                  animate={{ opacity: [0, 0.4, 0.85, 0.95] }}
+                  transition={{ duration: 1.6, delay: 2.4, ease: "easeInOut" }}
                 />
 
-                {/* Blade Beam Mid-Right (1.20s) */}
+                {/* 4. Mid-Right Branch Seam (Starts at 3.4s) - Piercing Mid-Right */}
                 <motion.polygon
                   points="165,138 4200,300 4500,1800 182,148"
                   fill="url(#outwardBeamMidRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.9 }}
-                  transition={{ duration: 0.25, delay: 1.20, ease: "easeOut" }}
+                  animate={{ opacity: [0, 0.4, 0.85, 0.92] }}
+                  transition={{ duration: 1.5, delay: 3.4, ease: "easeInOut" }}
                 />
 
-                {/* Upper-Right Corner Gap (1.75s) */}
+                {/* 5. Upper-Right Top Gap (Starts at 4.4s) - Piercing North-North-East */}
                 <motion.polygon
                   points="168,22 200,5 3800,-1600 3200,-2400"
                   fill="url(#microBeamTopRight)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.22, delay: 1.75, ease: "easeOut" }}
+                  animate={{ opacity: [0, 0.35, 0.8, 0.9] }}
+                  transition={{ duration: 1.4, delay: 4.4, ease: "easeInOut" }}
                 />
 
-                {/* Lower-Right Corner Beam (2.20s) */}
+                {/* 6. Lower-Right Branch Seam (Starts at 5.4s) - Piercing South-East */}
                 <motion.polygon
                   points="85,248 126,274 3800,4200 3000,4800"
                   fill="url(#outwardBeamLowerRightSeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.88 }}
-                  transition={{ duration: 0.20, delay: 2.20, ease: "easeOut" }}
+                  animate={{ opacity: [0, 0.35, 0.8, 0.9] }}
+                  transition={{ duration: 1.3, delay: 5.4, ease: "easeInOut" }}
                 />
 
-                {/* Bottom-Left Corner Gap (2.55s) */}
+                {/* 7. Bottom-Left Corner Crack (Starts at 6.3s) - Piercing South-West */}
                 <motion.polygon
                   points="14,382 0,400 -2600,4800 -3400,4000"
                   fill="url(#microBeamBottomCorner)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.85 }}
-                  transition={{ duration: 0.18, delay: 2.55, ease: "easeOut" }}
+                  animate={{ opacity: [0, 0.35, 0.8, 0.9] }}
+                  transition={{ duration: 1.2, delay: 6.3, ease: "easeInOut" }}
                 />
 
-                {/* South Spine Off-Center Beam (2.85s) */}
-                <motion.polygon
-                  points="96,350 102,400 1200,4500 200,4500"
-                  fill="url(#outwardBeamBottomSpineSeam)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.14, delay: 2.85, ease: "easeOut" }}
-                />
-
-                {/* --- 2. CENTER CRACKS BURST RAPID & FAST (3.05s - 3.48s) --- */}
-                {/* Upper Center Spine Fissure (3.05s) */}
-                <motion.polygon
-                  points="108,78 -3800,-3200 -4200,-1800 92,122"
-                  fill="url(#beamRedLine2)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.10, delay: 3.05, ease: "easeOut" }}
-                />
-
-                {/* Steep Upward Top Spine Shaft (3.18s) */}
+                {/* 8. Top Spine Fissure (Starts at 7.2s) - Piercing Pure North */}
                 <motion.polygon
                   points="104,65 108,78 400,-4200 -800,-3800"
                   fill="url(#outwardBeamTopSpine)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.92 }}
-                  transition={{ duration: 0.08, delay: 3.18, ease: "easeOut" }}
+                  animate={{ opacity: [0, 0.4, 0.85, 0.95] }}
+                  transition={{ duration: 1.1, delay: 7.2, ease: "easeInOut" }}
                 />
 
-                {/* Left side Center Fissure (3.28s) */}
-                <motion.polygon
-                  points="92,122 64,146 -4500,-600 -4200,-1800"
-                  fill="url(#climaxLeftInfiniteBeam)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.08, delay: 3.28, ease: "easeOut" }}
-                />
-
-                {/* Center Fissures Red Line 1 (3.36s) */}
+                {/* 9. Center-Left Fissure Red Line 1 (Starts at 8.0s) - Piercing West */}
                 <motion.polygon
                   points="92,122 -4500,600 -4500,1800 102,185"
                   fill="url(#beamRedLine1)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.07, delay: 3.36, ease: "easeOut" }}
+                  animate={{ opacity: [0, 0.5, 0.9, 1] }}
+                  transition={{ duration: 1.0, delay: 8.0, ease: "easeInOut" }}
                 />
 
-                {/* Center Fissures Red Line 5 (3.42s) */}
-                <motion.polygon
-                  points="140,152 4200,2400 4500,3800 155,210"
-                  fill="url(#beamRedLine5)"
-                  filter="url(#outwardBeamGlow)"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.06, delay: 3.42, ease: "easeOut" }}
-                />
-
-                {/* FINAL MEGA CENTER CLIMAX BEAM (3.48s): Central Hub Peak Laser -> Directly triggering 3.6s Shatter! */}
+                {/* 10. FINAL CLIMAX CENTER SUPER-BEAM (Starts at 8.8s) - Blasting center outward right before 10s Shatter! */}
                 <motion.polygon
                   points="102,185 140,152 4800,-400 3800,-1600"
                   fill="url(#climaxCenterInfiniteBeam)"
                   filter="url(#outwardBeamGlow)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 1.0 }}
-                  transition={{ duration: 0.06, delay: 3.48, ease: "easeOut" }}
+                  animate={{ opacity: [0, 0.6, 1, 1] }}
+                  transition={{ duration: 0.9, delay: 8.8, ease: "easeOut" }}
                 />
               </g>
             )}
@@ -474,17 +431,17 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 4: ESCALATING BRIGHT CORE AT EXACT CARD CENTER (100, 200) */}
-        {/* SVG coordinates-la exact Card Center (50%, 50%) = (100, 200) */}
+        {/* TAP 3: INTENSE PULSING CORE AT EXACT CARD CENTER (100, 200) */}
+        {/* Escalates smoothly as the 10 light beams radiate out before explosion */}
         {/* ============================================================ */}
-        {crackStage >= 4 && (
-          <g key="crack-stage-4-center-bright-core">
+        {crackStage >= 3 && (
+          <g key="crack-stage-3-center-bright-core">
             <defs>
               <radialGradient id="exactCardCenterCore" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="25%" stopColor="#a7f3d0" stopOpacity="0.9" />
-                <stop offset="55%" stopColor="#34d399" stopOpacity="0.65" />
-                <stop offset="85%" stopColor="#10b981" stopOpacity="0.25" />
+                <stop offset="25%" stopColor="#d1fae5" stopOpacity="0.95" />
+                <stop offset="55%" stopColor="#34d399" stopOpacity="0.75" />
+                <stop offset="85%" stopColor="#10b981" stopOpacity="0.4" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </radialGradient>
             </defs>
@@ -494,12 +451,12 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               r="40"
               fill="url(#exactCardCenterCore)"
               filter="url(#pureGreenGlow)"
-              initial={{ scale: 0.3, opacity: 0 }}
+              initial={{ scale: 0.2, opacity: 0 }}
               animate={{
-                scale: [0.4, 0.9, 1.4, 2.0],
-                opacity: [0, 0.5, 0.85, 1.0]
+                scale: [0.3, 0.7, 1.2, 1.8, 2.4],
+                opacity: [0, 0.4, 0.7, 0.9, 1.0]
               }}
-              transition={{ duration: 2.1, ease: [0.12, 0.8, 0.2, 1] }}
+              transition={{ duration: 9.8, ease: "easeInOut" }}
             />
           </g>
         )}
@@ -611,11 +568,11 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: SPREADING TO ALL REMAINING CORNERS & EMPTY EDGE SPACES */}
+        {/* TAP 3: SPREADING TO ALL CORNERS & EMPTY EDGE FISSURES (TENSION BUILD-UP) */}
         {/* ============================================================ */}
-        {crackStage >= 4 && (
-          <g key="crack-stage-4-empty-spaces">
-            {/* --- WAVE 1 (0.0s): Spreading into Upper-Left & Upper-Right Empty Spaces --- */}
+        {crackStage >= 3 && (
+          <g key="crack-stage-3-empty-spaces">
+            {/* --- WAVE 1 (Starts 1.0s): Spreading into Upper-Left & Upper-Right Empty Spaces --- */}
             <motion.path
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#10b981"
@@ -626,7 +583,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              transition={{ duration: 2.2, delay: 1.0, ease: "easeOut" }}
             />
             <motion.path
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
@@ -637,10 +594,10 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              transition={{ duration: 2.2, delay: 1.0, ease: "easeOut" }}
             />
 
-            {/* --- WAVE 2 (after 0.5s): Spreading into Mid-Left (Behind "TODAY") & Mid-Right (Behind "th day") Empty Spaces --- */}
+            {/* --- WAVE 2 (Starts 3.5s): Spreading into Mid-Left (Behind "TODAY") & Mid-Right (Behind "th day") Spaces --- */}
             <motion.path
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#10b981"
@@ -651,7 +608,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
+              transition={{ duration: 2.2, delay: 3.5, ease: "easeOut" }}
             />
             <motion.path
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
@@ -662,10 +619,10 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
+              transition={{ duration: 2.2, delay: 3.5, ease: "easeOut" }}
             />
 
-            {/* --- WAVE 3 (after 0.5s = 1.0s): Spreading into Bottom-Left & Bottom-Right Empty Corner Spaces --- */}
+            {/* --- WAVE 3 (Starts 5.8s): Spreading into Bottom-Left & Bottom-Right Empty Corner Spaces --- */}
             <motion.path
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
               stroke="#10b981"
@@ -676,7 +633,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
+              transition={{ duration: 2.5, delay: 5.8, ease: [0.12, 1, 0.28, 1] }}
             />
             <motion.path
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
@@ -687,7 +644,7 @@ export default function LokiTimelineCrack({ crackStage = 0 }) {
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
+              transition={{ duration: 2.5, delay: 5.8, ease: [0.12, 1, 0.28, 1] }}
             />
           </g>
         )}
