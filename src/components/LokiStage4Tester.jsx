@@ -284,6 +284,11 @@ export default function LokiStage4Tester({
     });
   };
 
+  const tool1Ref = useRef(null);
+  const tool2Ref = useRef(null);
+  const tool3Ref = useRef(null);
+  const tool4Ref = useRef(null);
+
   const handleDragEnd = (toolKey, info) => {
     const updater = (prev) => {
       const nextPos = {
