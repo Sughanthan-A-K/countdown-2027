@@ -1203,9 +1203,6 @@ function App() {
                       localStorage.removeItem('ayudhaPoojaEventDone_2026');
                     } catch (e) {}
 
-                    // Reset Dec 16 crack / Loki portal stages on refresh button
-                    setLokiCrackStage(0);
-
                     const stored = localStorage.getItem('devOverrideDate');
                     if (stored) {
                       const selected = new Date(parseInt(stored, 10));
@@ -1219,7 +1216,7 @@ function App() {
 
                     if (navigator.vibrate) navigator.vibrate([50]);
                   }}
-                  className={`absolute top-8 right-24 z-[90] p-3 rounded-full border-2 shadow-md ${
+                  className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
                     isDarkMode 
                       ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
                       : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
@@ -1516,7 +1513,9 @@ function App() {
             initial={tutorialState === 1 && tutorialTears === 0 ? { opacity: 0, y: 150, scale: 0.9 } : false}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }} 
-            className={`relative w-full max-w-[400px] h-[60vh] min-h-[450px] flex items-center justify-center perspective-[1200px] ${diwaliPhase >= 1 ? 'z-[1000]' : 'z-[60]'}`}
+            className={`relative w-full max-w-[400px] h-[60vh] min-h-[450px] flex items-center justify-center perspective-[1200px] ${
+              isDec16Card && lokiCrackStage >= 5 ? 'pointer-events-none' : ''
+            } ${diwaliPhase >= 1 ? 'z-[1000]' : 'z-[60]'}`}
           >
             <AnimatePresence>
                 {isSharedCardView ? (
