@@ -299,18 +299,18 @@ function App() {
   // Single Master Light Toolbox State (Shortcut: Shift + T)
   const [showLightToolbox, setShowLightToolbox] = useState(false);
   
-  // Checked beams: User locked beams strictly [4, 6, 101, 102, 7, 9, 10, 11, 12, 8, 1, 2]
+  // Checked beams: Beams that are marked "OK / Approved". Persists even when toolbox closes!
   const [checkedBeams, setCheckedBeams] = useState(() => {
     try {
       const saved = localStorage.getItem('loki_checked_beams');
-      return saved ? JSON.parse(saved) : [4, 6, 101, 102, 7, 9, 10, 11, 12, 8, 1, 2];
+      return saved ? JSON.parse(saved) : [4, 6, 102, 7, 9, 10, 11, 12, 8, 1, 2];
     } catch (_) {
-      return [4, 6, 101, 102, 7, 9, 10, 11, 12, 8, 1, 2];
+      return [4, 6, 102, 7, 9, 10, 11, 12, 8, 1, 2];
     }
   });
 
-  // Active Preview Beams: Defaults to user's checked beams
-  const [activePreviewBeams, setActivePreviewBeams] = useState(() => [4, 6, 101, 102, 7, 9, 10, 11, 12, 8, 1, 2]);
+  // Active Preview Beams: Which lights are currently turned ON/OFF to test visibility/angles
+  const [activePreviewBeams, setActivePreviewBeams] = useState(() => [4, 6, 102, 7, 9, 10, 11, 12, 8, 1, 2]);
   
   // Checked preview mode: When true, forces preview of all lights on screen without needing tap sequence
   const [isPreviewAllMode, setIsPreviewAllMode] = useState(false);
@@ -323,7 +323,6 @@ function App() {
         "1": { "angle": 12, "scaleX": 1 },
         "2": { "angle": -18, "scaleX": 1 },
         "3": { "angle": -50, "scaleX": 1 },
-        "4": { "angle": 0, "scaleX": 1 },
         "5": { "angle": 35, "scaleX": 1 },
         "6": { "angle": 20, "scaleX": 1 },
         "7": { "angle": -2, "scaleX": 1 },
@@ -332,15 +331,13 @@ function App() {
         "10": { "angle": -7, "scaleX": 1 },
         "11": { "angle": 0, "scaleX": 1 },
         "12": { "angle": -37, "scaleX": 1 },
-        "101": { "angle": 0, "scaleX": 1 },
-        "102": { "angle": 0, "scaleX": 1 }
+        "101": { "angle": -50, "scaleX": 1 }
       };
     } catch (_) {
       return {
         "1": { "angle": 12, "scaleX": 1 },
         "2": { "angle": -18, "scaleX": 1 },
         "3": { "angle": -50, "scaleX": 1 },
-        "4": { "angle": 0, "scaleX": 1 },
         "5": { "angle": 35, "scaleX": 1 },
         "6": { "angle": 20, "scaleX": 1 },
         "7": { "angle": -2, "scaleX": 1 },
@@ -349,13 +346,12 @@ function App() {
         "10": { "angle": -7, "scaleX": 1 },
         "11": { "angle": 0, "scaleX": 1 },
         "12": { "angle": -37, "scaleX": 1 },
-        "101": { "angle": 0, "scaleX": 1 },
-        "102": { "angle": 0, "scaleX": 1 }
+        "101": { "angle": -50, "scaleX": 1 }
       };
     }
   });
 
-  // Center Circle Radius (User locked at 160px)
+  // Center Circle Radius (Default 160px from user locked data)
   const [circleRadius, setCircleRadius] = useState(() => {
     try {
       const saved = localStorage.getItem('loki_circle_radius');
@@ -457,11 +453,9 @@ function App() {
   // Ensure Loki crack stage is strictly 0 whenever we are NOT on Dec 16 (or if dev mode is off)
   // Loki Multiverse easter egg is only active when in devMode OR on actual Dec 16 date
   const isDec16Card = isDevMode && calendarDate.getFullYear() === 2026 && calendarDate.getMonth() === 11 && calendarDate.getDate() === 16;
-  const [showPortalStage, setShowPortalStage] = useState(false);
   useEffect(() => {
     if (!isDec16Card && lokiCrackStage !== 0) {
       setLokiCrackStage(0);
-      setShowPortalStage(false);
     }
   }, [isDec16Card, lokiCrackStage]);
   
@@ -1346,7 +1340,7 @@ function App() {
               )}
 
               {/* Loki Time Portal on stage 5: Rendered directly at root level with fixed inset-0 to ensure 100% full screen coverage without any top/bottom dead bars */}
-              {lokiCrackStage >= 5 && showPortalStage && (
+              {lokiCrackStage >= 5 && (
                 <LokiTimelinePortal />
               )}
             </>
@@ -1763,24 +1757,17 @@ function App() {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
                           const next = Math.min(prev + 1, 3);
-                          // TAP 3 IS THE FINAL CLIMAX! (No Tap 4 needed)
-                          // 1. Cracks crackle takk-takk-takk across card with portal light piercing through
-                          // 2. Lights escalate slow to fast, radiating all user-locked angles
-                          // 3. Green morphs seamlessly into intense pure supernova white
-                          // 4. Circle radius (160px) swells smoothly to full width
-                          // 5. At 3.4s, card blasts into 16 slow-mo flying glass shards!
-                          // 6. Flying blast remains visible for 1.8 seconds, THEN portal opens!
+                          // On 3rd tap (Tap 3 is now the Climax!):
+                          // 1. Surrounding & center cracks spread with Tak... Tak, Tak, Tak acceleration
+                          // 2. Center green radial circle grows from small to full 160px size
+                          // 3. All lights morph smoothly from vibrant sacred green into pure supernova white
+                          // 4. At 4.5s (giving full 1.8s intense pure white blinding power hold), glass shatters into Stage 5 Multiverse Portal!
                           if (next === 3) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
-                              // Trigger glass shatter explosion
                               setLokiCrackStage(5);
-                              // Allow glass pieces to fly and be admired for 1.8 seconds before portal appears
-                              setTimeout(() => {
-                                setShowPortalStage(true);
-                              }, 1800);
-                            }, 3400);
+                            }, 4600);
                           }
                           return next;
                         });

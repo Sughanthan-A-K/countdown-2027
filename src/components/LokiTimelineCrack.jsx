@@ -89,15 +89,14 @@ export default function LokiTimelineCrack({
     return `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${newP3} ${newP4}`;
   };
 
-  // TAP 3 IS FINAL CLIMAX: Outer beams, center radial wave (160px), and climax bursts all activate on Tap 3!
-  const isStepMode = crackStage === 4 && stage4Step !== null;
+  // In Tap 3 (Climax), all outer beams, center bursts, and radial wave swell together with Tak... Tak, Tak, Tak timing!
   const showOuterBeams = previewAllBeams || crackStage >= 3;
   const showRadialWave = previewAllBeams || crackStage >= 3;
   const showCenterBursts = previewAllBeams || crackStage >= 3;
 
   // Single clean fissure stroke & gap width
-  const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : 3.8);
-  const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : 10);
+  const spineStroke = crackStage === 1 ? 1.4 : (crackStage === 2 ? 2.2 : (crackStage === 3 ? 3.2 : 4.4));
+  const glowWidth = crackStage === 1 ? 0 : (crackStage === 2 ? 4 : (crackStage === 3 ? 8 : 14));
 
   return (
     <div className="absolute inset-0 z-[70] flex items-center justify-center pointer-events-none overflow-visible rounded-3xl">
@@ -140,15 +139,6 @@ export default function LokiTimelineCrack({
             style={{ mixBlendMode: 'screen' }}
           >
             <defs>
-              {/* WHITE SUPERNOVA BURST OVERRIDE GRADIENT FOR FINAL BLINDING FLASH */}
-              <linearGradient id="pureWhiteSupernovaBeam" gradientUnits="userSpaceOnUse" x1="100" y1="200" x2="4500" y2="4500">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="25%" stopColor="#ffffff" stopOpacity="0.98" />
-                <stop offset="60%" stopColor="#f0fdf4" stopOpacity="0.95" />
-                <stop offset="85%" stopColor="#d1fae5" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#34d399" stopOpacity="0.5" />
-              </linearGradient>
-
               {/* --- TAP 3 ORIGINAL 2 BEAMS (Infinite Screen Piercing) --- */}
               {/* Beam 1: Origin at crack seam (102, 185) -> (140, 152), shoots OUTWARDS past screen */}
               <linearGradient 
@@ -320,10 +310,10 @@ export default function LokiTimelineCrack({
               {/* Climax Final Infinite Beam 3 (Center Aperture Core): Origin at Center Hub (102, 185) -> blasting East-North-East */}
               <linearGradient id="climaxCenterInfiniteBeam" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="4800" y2="-800">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
-                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
-                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+                <stop offset="6%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="25%" stopColor="#d1fae5" stopOpacity="0.95" />
+                <stop offset="60%" stopColor="#34d399" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#10b981" stopOpacity="0.5" />
               </linearGradient>
 
               {/* --- 5 NEW CRACK LIGHT GRADIENTS (From user red-marked fissures) --- */}
@@ -384,299 +374,176 @@ export default function LokiTimelineCrack({
               </filter>
             </defs>
 
-            {/* --- TAP 3 BEAM 1: From crack seam (102, 185) -> (140, 152) expanding INFINITELY across screen --- */}
-            {/* Speed progression: Tak (0.15s), morphs emerald to pure white on circle climax */}
-            {isBeamActive(101) && (
-              <motion.polygon
-                points={getDynamicBeamPoints(101, "102,185 140,152 4200,-1600 3200,-2200")}
-                fill="url(#outwardBeam1)"
-                filter="url(#outwardBeamGlow)"
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: previewAllBeams ? 1 : [0, 0.95, 0.95, 1.0],
-                  fill: previewAllBeams ? "url(#outwardBeam1)" : ["url(#outwardBeam1)", "url(#outwardBeam1)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                }}
-                transition={{
-                  duration: previewAllBeams ? 0.1 : 3.4,
-                  delay: previewAllBeams ? 0 : 0.15,
-                  times: [0, 0.05, 0.65, 1.0],
-                  ease: "easeOut"
-                }}
-              />
-            )}
-
-            {/* --- TAP 3 BEAM 2: From spine crack seam (102, 185) -> (85, 248) expanding INFINITELY across screen --- */}
-            {/* Speed progression: Tak, Tak (0.50s) */}
-            {isBeamActive(102) && (
-              <motion.polygon
-                points={getDynamicBeamPoints(102, "102,185 85,248 -2600,4500 -3200,3800")}
-                fill="url(#outwardBeam2)"
-                filter="url(#outwardBeamGlow)"
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: previewAllBeams ? 1 : [0, 0.95, 0.95, 1.0],
-                  fill: previewAllBeams ? "url(#outwardBeam2)" : ["url(#outwardBeam2)", "url(#outwardBeam2)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                }}
-                transition={{
-                  duration: previewAllBeams ? 0.1 : 3.0,
-                  delay: previewAllBeams ? 0 : 0.50,
-                  times: [0, 0.05, 0.60, 1.0],
-                  ease: "easeOut"
-                }}
-              />
-            )}
-
             {/* ============================================================ */}
-            {/* TAP 3 CINEMATIC CASCADE: TAK -> TAK, TAK, TAK, TAK, TAK SPEED ACCELERATION */}
-            {/* Phase 1: Slow deliberate taps (0.15s, 0.50s, 0.85s) */}
-            {/* Phase 2: Rapid fire escalation (1.15s, 1.40s, 1.62s, 1.80s, 1.95s, 2.08s, 2.18s, 2.26s, 2.32s) */}
-            {/* Phase 3: ALL 12 BEAMS ON -> Circle appears -> ALL BEAMS MORPH TO WHITE -> SUPERNOVA EXPLOSION! */}
+            {/* TAP 3 CLIMAX SEQUENCE: ACCELERATING TAK... TAK, TAK, TAK! */}
+            {/* 11 Checked Lights emerge with organic accelerating rhythm: */}
+            {/* Starts steady (0.15s, 0.70s) -> then faster (1.15s, 1.50s) -> then rapid (1.80s, 2.05s, 2.25s) -> then lightning bursts (2.42s, 2.56s, 2.68s, 2.78s)! */}
+            {/* Once emerged, every light blazes and smoothly morphs into pure blinding supernova white! */}
             {/* ============================================================ */}
             {showOuterBeams && (
-              <g key="tap-4-cascading-light-shafts">
-                {/* Beam 1: Upper-Left Corner Beam (0.85s) */}
+              <g key="tap-3-climax-light-shafts">
+                {/* 1. Beam 102: Tap 3 Beam 2 Lower-Left Spine Seam (0.15s) - TAK! */}
+                {isBeamActive(102) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(102, "102,185 85,248 -2600,4500 -3200,3800")}
+                    fill="url(#outwardBeam2)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.9, 1.0] }}
+                    transition={{ duration: 0.25, delay: previewAllBeams ? 0 : 0.15, ease: "easeOut" }}
+                  />
+                )}
+
+                {/* 2. Beam 1: Upper-Left Corner Beam (0.70s) - ...TAK! */}
                 {isBeamActive(1) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(1, "76,100 45,108 -3400,-2600 -2400,-3600")}
                     fill="url(#outwardBeamUpperLeft)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: previewAllBeams ? 0.9 : [0, 0.9, 0.9, 1.0],
-                      fill: previewAllBeams ? "url(#outwardBeamUpperLeft)" : ["url(#outwardBeamUpperLeft)", "url(#outwardBeamUpperLeft)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                    }}
-                    transition={{
-                      duration: previewAllBeams ? 0.25 : 2.7,
-                      delay: previewAllBeams ? 0 : (isStepMode ? 0 : 0.85),
-                      times: [0, 0.06, 0.55, 1.0],
-                      ease: "easeOut"
-                    }}
+                    animate={{ opacity: [0, 0.88, 1.0] }}
+                    transition={{ duration: 0.22, delay: previewAllBeams ? 0 : 0.70, ease: "easeOut" }}
                   />
                 )}
 
-                {/* Beam 2: Blade Beam Mid-Right (1.15s) */}
+                {/* 3. Beam 2: Blade Beam Mid-Right (1.15s) - TAK! */}
                 {isBeamActive(2) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(2, "165,138 182,148 4500,1800 4200,300")}
                     fill="url(#outwardBeamMidRightSeam)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: previewAllBeams ? 0.9 : [0, 0.9, 0.9, 1.0],
-                      fill: previewAllBeams ? "url(#outwardBeamMidRightSeam)" : ["url(#outwardBeamMidRightSeam)", "url(#outwardBeamMidRightSeam)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                    }}
-                    transition={{
-                      duration: previewAllBeams ? 0.25 : 2.4,
-                      delay: previewAllBeams ? 0 : (isStepMode ? 0.05 : 1.15),
-                      times: [0, 0.06, 0.50, 1.0],
-                      ease: "easeOut"
-                    }}
+                    animate={{ opacity: [0, 0.88, 1.0] }}
+                    transition={{ duration: 0.20, delay: previewAllBeams ? 0 : 1.15, ease: "easeOut" }}
                   />
                 )}
 
-                {/* Beam 3: Upper-Right Corner Gap (1.40s) */}
-                {isBeamActive(3) && (
-                  <motion.polygon
-                    points={getDynamicBeamPoints(3, "168,22 200,5 3800,-1600 3200,-2400")}
-                    fill="url(#microBeamTopRight)"
-                    filter="url(#outwardBeamGlow)"
-                    initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: previewAllBeams ? 0.85 : [0, 0.85, 0.85, 1.0],
-                      fill: previewAllBeams ? "url(#microBeamTopRight)" : ["url(#microBeamTopRight)", "url(#microBeamTopRight)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                    }}
-                    transition={{
-                      duration: previewAllBeams ? 0.22 : 2.2,
-                      delay: previewAllBeams ? 0 : (isStepMode ? 0.1 : 1.40),
-                      times: [0, 0.06, 0.45, 1.0],
-                      ease: "easeOut"
-                    }}
-                  />
-                )}
-
-                {/* Beam 4: Lower-Right Corner Beam (1.62s) */}
+                {/* 4. Beam 4: Lower-Right Corner Beam (1.50s) - TAK! */}
                 {isBeamActive(4) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(4, "85,248 126,274 3800,4200 3000,4800")}
                     fill="url(#outwardBeamLowerRightSeam)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: previewAllBeams ? 0.88 : [0, 0.88, 0.88, 1.0],
-                      fill: previewAllBeams ? "url(#outwardBeamLowerRightSeam)" : ["url(#outwardBeamLowerRightSeam)", "url(#outwardBeamLowerRightSeam)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                    }}
-                    transition={{
-                      duration: previewAllBeams ? 0.20 : 2.0,
-                      delay: previewAllBeams ? 0 : (isStepMode ? 0.15 : 1.62),
-                      times: [0, 0.06, 0.40, 1.0],
-                      ease: "easeOut"
-                    }}
+                    animate={{ opacity: [0, 0.9, 1.0] }}
+                    transition={{ duration: 0.18, delay: previewAllBeams ? 0 : 1.50, ease: "easeOut" }}
                   />
                 )}
 
-                {/* Beam 5: Bottom-Left Corner Gap (1.80s) */}
-                {isBeamActive(5) && (
-                  <motion.polygon
-                    points={getDynamicBeamPoints(5, "14,382 0,400 -2600,4800 -3400,4000")}
-                    fill="url(#microBeamBottomCorner)"
-                    filter="url(#outwardBeamGlow)"
-                    initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: previewAllBeams ? 0.85 : [0, 0.85, 0.85, 1.0],
-                      fill: previewAllBeams ? "url(#microBeamBottomCorner)" : ["url(#microBeamBottomCorner)", "url(#microBeamBottomCorner)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                    }}
-                    transition={{
-                      duration: previewAllBeams ? 0.18 : 1.8,
-                      delay: previewAllBeams ? 0 : (isStepMode ? 0.2 : 1.80),
-                      times: [0, 0.06, 0.35, 1.0],
-                      ease: "easeOut"
-                    }}
-                  />
-                )}
-
-                {/* Beam 6: South Spine Off-Center Beam (1.95s) */}
+                {/* 5. Beam 6: South Spine Off-Center Beam (1.80s) - TAK! */}
                 {isBeamActive(6) && (
                   <motion.polygon
                     points={getDynamicBeamPoints(6, "96,350 102,400 1200,4500 200,4500")}
                     fill="url(#outwardBeamBottomSpineSeam)"
                     filter="url(#outwardBeamGlow)"
                     initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: previewAllBeams ? 0.92 : [0, 0.92, 0.92, 1.0],
-                      fill: previewAllBeams ? "url(#outwardBeamBottomSpineSeam)" : ["url(#outwardBeamBottomSpineSeam)", "url(#outwardBeamBottomSpineSeam)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                    }}
-                    transition={{
-                      duration: previewAllBeams ? 0.14 : 1.65,
-                      delay: previewAllBeams ? 0 : (isStepMode ? 0.25 : 1.95),
-                      times: [0, 0.06, 0.30, 1.0],
-                      ease: "easeOut"
-                    }}
+                    animate={{ opacity: [0, 0.92, 1.0] }}
+                    transition={{ duration: 0.15, delay: previewAllBeams ? 0 : 1.80, ease: "easeOut" }}
                   />
                 )}
 
-                {/* --- CENTER CRACKS RAPID FIRE ACCELERATION (2.08s -> 2.32s) --- */}
-                {showCenterBursts && (
-                  <>
-                    {/* Beam 7: Upper Center Spine Fissure (2.08s) */}
-                    {isBeamActive(7) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(7, "108,78 92,122 -4200,-1800 -3800,-3200")}
-                        fill="url(#beamRedLine2)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{
-                          opacity: previewAllBeams ? 0.92 : [0, 0.92, 0.92, 1.0],
-                          fill: previewAllBeams ? "url(#beamRedLine2)" : ["url(#beamRedLine2)", "url(#beamRedLine2)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                        }}
-                        transition={{
-                          duration: previewAllBeams ? 0.10 : 1.5,
-                          delay: previewAllBeams ? 0 : (isStepMode ? 0 : 2.08),
-                          times: [0, 0.05, 0.25, 1.0],
-                          ease: "easeOut"
-                        }}
-                      />
-                    )}
+                {/* 6. Beam 7: Upper Center Spine Fissure (2.05s) - TAK! */}
+                {isBeamActive(7) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(7, "108,78 92,122 -4200,-1800 -3800,-3200")}
+                    fill="url(#beamRedLine2)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.92, 1.0] }}
+                    transition={{ duration: 0.12, delay: previewAllBeams ? 0 : 2.05, ease: "easeOut" }}
+                  />
+                )}
 
-                    {/* Beam 8: Steep Upward Top Spine Shaft (2.16s) */}
-                    {isBeamActive(8) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(8, "104,65 108,78 400,-4200 -800,-3800")}
-                        fill="url(#outwardBeamTopSpine)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{
-                          opacity: previewAllBeams ? 0.92 : [0, 0.92, 0.92, 1.0],
-                          fill: previewAllBeams ? "url(#outwardBeamTopSpine)" : ["url(#outwardBeamTopSpine)", "url(#outwardBeamTopSpine)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                        }}
-                        transition={{
-                          duration: previewAllBeams ? 0.08 : 1.45,
-                          delay: previewAllBeams ? 0 : (isStepMode ? 0.05 : 2.16),
-                          times: [0, 0.05, 0.22, 1.0],
-                          ease: "easeOut"
-                        }}
-                      />
-                    )}
+                {/* 7. Beam 8: Steep Upward Top Spine Shaft (2.25s) - TAK! */}
+                {isBeamActive(8) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(8, "104,65 108,78 400,-4200 -800,-3800")}
+                    fill="url(#outwardBeamTopSpine)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.93, 1.0] }}
+                    transition={{ duration: 0.10, delay: previewAllBeams ? 0 : 2.25, ease: "easeOut" }}
+                  />
+                )}
 
-                    {/* Beam 9: Left side Center Fissure (2.22s) */}
-                    {isBeamActive(9) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(9, "92,122 64,146 -4500,-600 -4200,-1800")}
-                        fill="url(#climaxLeftInfiniteBeam)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{
-                          opacity: previewAllBeams ? 0.95 : [0, 0.95, 0.95, 1.0],
-                          fill: previewAllBeams ? "url(#climaxLeftInfiniteBeam)" : ["url(#climaxLeftInfiniteBeam)", "url(#climaxLeftInfiniteBeam)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                        }}
-                        transition={{
-                          duration: previewAllBeams ? 0.08 : 1.4,
-                          delay: previewAllBeams ? 0 : (isStepMode ? 0.1 : 2.22),
-                          times: [0, 0.05, 0.20, 1.0],
-                          ease: "easeOut"
-                        }}
-                      />
-                    )}
+                {/* 8. Beam 9: Left-side Center Fissure (2.42s) - TAK! */}
+                {isBeamActive(9) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(9, "92,122 64,146 -4500,-600 -4200,-1800")}
+                    fill="url(#climaxLeftInfiniteBeam)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.95, 1.0] }}
+                    transition={{ duration: 0.08, delay: previewAllBeams ? 0 : 2.42, ease: "easeOut" }}
+                  />
+                )}
 
-                    {/* Beam 10: Center Fissures Red Line 1 (2.26s) */}
-                    {isBeamActive(10) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(10, "92,122 102,185 -4500,1800 -4500,600")}
-                        fill="url(#beamRedLine1)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{
-                          opacity: previewAllBeams ? 0.95 : [0, 0.95, 0.95, 1.0],
-                          fill: previewAllBeams ? "url(#beamRedLine1)" : ["url(#beamRedLine1)", "url(#beamRedLine1)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                        }}
-                        transition={{
-                          duration: previewAllBeams ? 0.07 : 1.35,
-                          delay: previewAllBeams ? 0 : (isStepMode ? 0.15 : 2.26),
-                          times: [0, 0.05, 0.18, 1.0],
-                          ease: "easeOut"
-                        }}
-                      />
-                    )}
+                {/* 9. Beam 10: Center Fissures Red Line 1 (2.56s) - TAK! */}
+                {isBeamActive(10) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(10, "92,122 102,185 -4500,1800 -4500,600")}
+                    fill="url(#beamRedLine1)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.95, 1.0] }}
+                    transition={{ duration: 0.07, delay: previewAllBeams ? 0 : 2.56, ease: "easeOut" }}
+                  />
+                )}
 
-                    {/* Beam 11: Center Fissures Red Line 5 (2.30s) */}
-                    {isBeamActive(11) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(11, "140,152 155,210 4500,3800 4200,2400")}
-                        fill="url(#beamRedLine5)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{
-                          opacity: previewAllBeams ? 0.95 : [0, 0.95, 0.95, 1.0],
-                          fill: previewAllBeams ? "url(#beamRedLine5)" : ["url(#beamRedLine5)", "url(#beamRedLine5)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                        }}
-                        transition={{
-                          duration: previewAllBeams ? 0.06 : 1.3,
-                          delay: previewAllBeams ? 0 : (isStepMode ? 0.2 : 2.30),
-                          times: [0, 0.05, 0.16, 1.0],
-                          ease: "easeOut"
-                        }}
-                      />
-                    )}
+                {/* 10. Beam 11: Center Fissures Red Line 5 (2.68s) - TAK! */}
+                {isBeamActive(11) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(11, "140,152 155,210 4500,3800 4200,2400")}
+                    fill="url(#beamRedLine5)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.95, 1.0] }}
+                    transition={{ duration: 0.06, delay: previewAllBeams ? 0 : 2.68, ease: "easeOut" }}
+                  />
+                )}
 
-                    {/* Beam 12: FINAL MEGA CENTER CLIMAX BEAM (2.33s - ALL LIGHTS NOW FULLY ON!) */}
-                    {isBeamActive(12) && (
-                      <motion.polygon
-                        points={getDynamicBeamPoints(12, "102,185 140,152 4800,-400 3800,-1600")}
-                        fill="url(#climaxCenterInfiniteBeam)"
-                        filter="url(#outwardBeamGlow)"
-                        initial={{ opacity: 0 }}
-                        animate={{
-                          opacity: previewAllBeams ? 1.0 : [0, 1.0, 1.0, 1.0],
-                          fill: previewAllBeams ? "url(#climaxCenterInfiniteBeam)" : ["url(#climaxCenterInfiniteBeam)", "url(#climaxCenterInfiniteBeam)", "url(#pureWhiteSupernovaBeam)", "url(#pureWhiteSupernovaBeam)"]
-                        }}
-                        transition={{
-                          duration: previewAllBeams ? 0.06 : 1.25,
-                          delay: previewAllBeams ? 0 : (isStepMode ? 0.25 : 2.33),
-                          times: [0, 0.05, 0.14, 1.0],
-                          ease: "easeOut"
-                        }}
-                      />
-                    )}
-                  </>
+                {/* 11. Beam 12: FINAL MEGA CLIMAX LASER (2.78s) - MEGA TAK BURST! */}
+                {isBeamActive(12) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(12, "102,185 140,152 4800,-400 3800,-1600")}
+                    fill="url(#climaxCenterInfiniteBeam)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1.0] }}
+                    transition={{ duration: 0.06, delay: previewAllBeams ? 0 : 2.78, ease: "easeOut" }}
+                  />
+                )}
+
+                {/* Optional Fallback if user explicitly enables 101, 3, or 5 in tool */}
+                {isBeamActive(101) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(101, "102,185 140,152 4200,-1600 3200,-2200")}
+                    fill="url(#outwardBeam1)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.1, delay: previewAllBeams ? 0 : 0.35, ease: "easeOut" }}
+                  />
+                )}
+                {isBeamActive(3) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(3, "168,22 200,5 3800,-1600 3200,-2400")}
+                    fill="url(#microBeamTopRight)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.85 }}
+                    transition={{ duration: 0.22, delay: previewAllBeams ? 0 : 1.35, ease: "easeOut" }}
+                  />
+                )}
+                {isBeamActive(5) && (
+                  <motion.polygon
+                    points={getDynamicBeamPoints(5, "14,382 0,400 -2600,4800 -3400,4000")}
+                    fill="url(#microBeamBottomCorner)"
+                    filter="url(#outwardBeamGlow)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.85 }}
+                    transition={{ duration: 0.18, delay: previewAllBeams ? 0 : 1.65, ease: "easeOut" }}
+                  />
                 )}
               </g>
             )}
@@ -697,13 +564,13 @@ export default function LokiTimelineCrack({
         </defs>
 
         {/* ============================================================ */}
-        {/* TAP 3: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
+        {/* TAP 3 / CLIMAX: ESCALATING BRIGHT SWELLING OVER THE ENTIRE CARD */}
         {/* Light spreads smoothly from center to encompass the FULL card before exploding */}
         {/* ============================================================ */}
         {(crackStage >= 3 || previewAllBeams) && (
-          <g key="crack-stage-4-center-bright-core">
+          <g key="crack-stage-3-center-bright-core">
             <defs>
-              {/* Radial gradient that grows seamlessly from pure white core to full card emerald light */}
+              {/* Radial gradient that grows seamlessly from green into pure supernova white */}
               <radialGradient id="exactCardCenterCore" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="30%" stopColor="#d1fae5" stopOpacity="0.95" />
@@ -711,48 +578,46 @@ export default function LokiTimelineCrack({
                 <stop offset="85%" stopColor="#10b981" stopOpacity="0.7" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0.4" />
               </radialGradient>
-
-              {/* Pure Supernova White Core: Transitions all emerald light into pure blinding white right at blast moment */}
               <radialGradient id="supernovaWhiteCore" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="40%" stopColor="#ffffff" stopOpacity="0.98" />
-                <stop offset="70%" stopColor="#f0fdf4" stopOpacity="0.95" />
-                <stop offset="90%" stopColor="#d1fae5" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#a7f3d0" stopOpacity="0.6" />
+                <stop offset="35%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="70%" stopColor="#ecfdf5" stopOpacity="0.95" />
+                <stop offset="90%" stopColor="#a7f3d0" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#34d399" stopOpacity="0.5" />
               </radialGradient>
             </defs>
 
-            {/* 1. Concentric Radial Wave: Starts ONLY AFTER ALL LIGHTS ARE ON (delay: 2.38s)! */}
-            {/* Morphing from vibrant green -> pure blinding white over 1.2s right before glass explodes! */}
-            {showRadialWave && (
-              <motion.circle
-                cx="100"
-                cy="200"
-                r={circleRadius || 160}
-                fill="url(#exactCardCenterCore)"
-                initial={{ scale: previewAllBeams ? 0.95 : 0.05, opacity: previewAllBeams ? 0.9 : 0 }}
-                animate={isStepMode || previewAllBeams ? {
-                  scale: 0.95,
-                  opacity: 0.9
-                } : {
-                  scale: [0.05, 0.45, 0.85, 1.25],
-                  opacity: [0, 0.5, 0.9, 1.0],
-                  fill: [
-                    "url(#exactCardCenterCore)",
-                    "url(#exactCardCenterCore)",
-                    "url(#supernovaWhiteCore)",
-                    "url(#supernovaWhiteCore)"
-                  ]
-                }}
-                transition={{
-                  duration: isStepMode || previewAllBeams ? 0.3 : 1.25,
-                  delay: isStepMode || previewAllBeams ? 0 : 2.38,
-                  times: [0, 0.4, 0.75, 1.0],
-                  ease: [0.22, 1, 0.36, 1]
-                }}
-                style={{ mixBlendMode: "screen" }}
-              />
-            )}
+            {/* 1. Concentric Radial Wave: Starts tiny (scale 0.15), swells steadily to 160px (scale 1.0), and holds bright white before blast */}
+            <motion.circle
+              cx="100"
+              cy="200"
+              r={circleRadius || 160}
+              fill="url(#exactCardCenterCore)"
+              initial={{ scale: previewAllBeams ? 1.0 : 0.15, opacity: previewAllBeams ? 0.95 : 0 }}
+              animate={previewAllBeams ? {
+                scale: 1.0,
+                opacity: 0.95,
+                fill: "url(#exactCardCenterCore)"
+              } : {
+                // Starts small green (0.15) at 0s, expands with accelerating Tak lights up to 2.4s, reaches 1.0 at 2.6s, morphs to blinding white and holds for 2s!
+                scale: [0.15, 0.35, 0.65, 0.95, 1.0, 1.05],
+                opacity: [0, 0.5, 0.8, 0.95, 1.0, 1.0],
+                fill: [
+                  "url(#exactCardCenterCore)",
+                  "url(#exactCardCenterCore)",
+                  "url(#exactCardCenterCore)",
+                  "url(#supernovaWhiteCore)",
+                  "url(#supernovaWhiteCore)",
+                  "url(#supernovaWhiteCore)"
+                ]
+              }}
+              transition={previewAllBeams ? { duration: 0.3 } : {
+                duration: 4.5,
+                times: [0, 0.25, 0.45, 0.6, 0.75, 1.0],
+                ease: "easeInOut"
+              }}
+              style={{ mixBlendMode: "screen" }}
+            />
           </g>
         )}
 
@@ -863,11 +728,12 @@ export default function LokiTimelineCrack({
         )}
 
         {/* ============================================================ */}
-        {/* TAP 4: SPREADING TO ALL REMAINING CORNERS & EMPTY EDGE SPACES */}
+        {/* TAP 3 / CLIMAX SPREADING TO ALL CORNERS & EMPTY EDGE SPACES */}
+        {/* Spreads seamlessly with accelerating Tak waves on Tap 3 */}
         {/* ============================================================ */}
-        {crackStage >= 4 && (
-          <g key="crack-stage-4-empty-spaces">
-            {/* --- WAVE 1 (0.0s): Spreading into Upper-Left & Upper-Right Empty Spaces --- */}
+        {(crackStage >= 3 || previewAllBeams) && (
+          <g key="crack-stage-3-empty-spaces">
+            {/* --- WAVE 1 (0.15s): Spreading into Upper-Left & Upper-Right Empty Spaces --- */}
             <motion.path
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
               stroke="#10b981"
@@ -877,8 +743,12 @@ export default function LokiTimelineCrack({
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              animate={{ 
+                pathLength: 1,
+                stroke: ["#10b981", "#34d399", "#d1fae5", "#ffffff"],
+                strokeWidth: [2.5, 4.5]
+              }}
+              transition={{ duration: 3.2, delay: previewAllBeams ? 0 : 0.15, ease: "easeOut" }}
             />
             <motion.path
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
@@ -889,10 +759,10 @@ export default function LokiTimelineCrack({
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              transition={{ duration: 0.6, delay: previewAllBeams ? 0 : 0.15, ease: "easeOut" }}
             />
 
-            {/* --- WAVE 2 (after 0.5s): Spreading into Mid-Left (Behind "TODAY") & Mid-Right (Behind "th day") Empty Spaces --- */}
+            {/* --- WAVE 2 (after 0.8s): Spreading into Mid-Left (Behind "TODAY") & Mid-Right (Behind "th day") Empty Spaces --- */}
             <motion.path
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
               stroke="#10b981"
@@ -902,8 +772,12 @@ export default function LokiTimelineCrack({
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
+              animate={{ 
+                pathLength: 1,
+                stroke: ["#10b981", "#34d399", "#d1fae5", "#ffffff"],
+                strokeWidth: [2.2, 4.2]
+              }}
+              transition={{ duration: 2.8, delay: previewAllBeams ? 0 : 0.8, ease: "easeOut" }}
             />
             <motion.path
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
@@ -914,10 +788,10 @@ export default function LokiTimelineCrack({
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.5, delay: previewAllBeams ? 0 : 0.8, ease: "easeOut" }}
             />
 
-            {/* --- WAVE 3 (after 0.5s = 1.0s): Spreading into Bottom-Left & Bottom-Right Empty Corner Spaces --- */}
+            {/* --- WAVE 3 (after 1.5s): Spreading into Bottom-Left & Bottom-Right Empty Corner Spaces --- */}
             <motion.path
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
               stroke="#10b981"
@@ -927,8 +801,12 @@ export default function LokiTimelineCrack({
               fill="none"
               filter="url(#pureGreenGlow)"
               initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
+              animate={{ 
+                pathLength: 1,
+                stroke: ["#10b981", "#34d399", "#d1fae5", "#ffffff"],
+                strokeWidth: [2.6, 5.0]
+              }}
+              transition={{ duration: 2.2, delay: previewAllBeams ? 0 : 1.5, ease: [0.12, 1, 0.28, 1] }}
             />
             <motion.path
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
@@ -939,7 +817,7 @@ export default function LokiTimelineCrack({
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.45, delay: 1.0, ease: [0.12, 1, 0.28, 1] }}
+              transition={{ duration: 0.45, delay: previewAllBeams ? 0 : 1.5, ease: [0.12, 1, 0.28, 1] }}
             />
           </g>
         )}
