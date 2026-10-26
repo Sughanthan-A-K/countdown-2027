@@ -207,80 +207,158 @@ export default function LokiLightMasterToolbox({
         </div>
       </div>
 
-      {/* 14 Lights List: Strict chronological UI appearance order */}
-      <div className="space-y-1">
+      {/* 2-COLUMN VIEW: LEFT = CHECKED (ALLOWED FOR CALENDAR) | RIGHT = UNCHECKED */}
+      <div className="space-y-1.5">
         <div className="flex items-center justify-between text-[10px] uppercase font-bold text-neutral-400 px-1">
-          <span>Lights In UI Appearance Order (1-14)</span>
-          <span className="text-[9px] text-emerald-400 font-mono">
-            {checkedBeams?.length || 0}/14 Checked
-          </span>
+          <span className="text-emerald-400">Allowed ({checkedBeams?.length || 0})</span>
+          <span className="text-neutral-500">Unchecked ({LIGHT_BEAMS_LIST.length - (checkedBeams?.length || 0)})</span>
         </div>
 
-        <div className="max-h-[220px] overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-          {LIGHT_BEAMS_LIST.map((beam) => {
-            const isChecked = checkedBeams?.includes(beam.id);
-            const isVisibleNow = activePreviewBeams?.includes(beam.id);
-            const isTuningThis = tuneTarget === beam.id;
-
-            return (
-              <div
-                key={`beam-row-${beam.id}`}
-                onClick={() => setTuneTarget(beam.id)}
-                className={`flex items-center justify-between p-1.5 rounded-lg border text-[11px] cursor-pointer transition-all ${
-                  isTuningThis
-                    ? 'bg-cyan-950/50 border-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.3)]'
-                    : isChecked
-                    ? 'bg-emerald-950/30 border-emerald-600/40 hover:border-emerald-500/70'
-                    : 'bg-neutral-900/60 border-neutral-800 hover:border-neutral-700 opacity-60'
-                }`}
-              >
-                {/* Left: Checkbox (Independent of tap/visibility) */}
-                <div
-                  className="flex items-center gap-2 flex-1"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onToggleCheckBeam(beam.id);
-                  }}
-                >
-                  <button className="text-neutral-400 hover:text-white transition-colors">
-                    {isChecked ? (
-                      <CheckSquare size={14} className="text-emerald-400" />
-                    ) : (
-                      <Square size={14} className="text-neutral-500" />
-                    )}
-                  </button>
-
-                  <div className="flex flex-col leading-tight">
-                    <span className={`font-semibold ${isChecked ? 'text-neutral-100' : 'text-neutral-400'}`}>
-                      {beam.name}
-                    </span>
-                    <span className="text-[9px] font-mono text-neutral-500">
-                      {beam.group} · {beam.delay}
-                    </span>
+        {/* 2 Columns: Left = Checked, Right = Unchecked */}
+        <div className="grid grid-cols-2 gap-2 max-h-[250px] overflow-y-auto pr-1 custom-scrollbar">
+          {/* LEFT COLUMN: Checked Beams (Active for Calendar) */}
+          <div className="space-y-1">
+            <div className="text-[9px] font-bold text-emerald-400 bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-800/40 text-center">
+              LEFT: CHECKED
+            </div>
+            {(() => {
+              const checkedList = LIGHT_BEAMS_LIST.filter(b => checkedBeams?.includes(b.id));
+              if (checkedList.length === 0) {
+                return (
+                  <div className="p-3 text-center text-[10px] text-neutral-500 border border-dashed border-neutral-800 rounded-lg">
+                    Check a light on the right to add here
                   </div>
-                </div>
+                );
+              }
+              return checkedList.map(beam => {
+                const isVisibleNow = activePreviewBeams?.includes(beam.id);
+                const isTuningThis = tuneTarget === beam.id;
 
-                {/* Right: Eye On/Off Tap toggle (Visible preview) */}
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onTogglePreviewBeam(beam.id);
-                      setTuneTarget(beam.id);
-                    }}
-                    className={`p-1 rounded-md transition-colors ${
-                      isVisibleNow
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                        : 'bg-neutral-800 text-neutral-500 hover:text-neutral-300'
+                return (
+                  <div
+                    key={`checked-${beam.id}`}
+                    onClick={() => setTuneTarget(beam.id)}
+                    className={`p-1.5 rounded-lg border text-[11px] cursor-pointer transition-all ${
+                      isTuningThis
+                        ? 'bg-cyan-950/60 border-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.4)]'
+                        : 'bg-emerald-950/30 border-emerald-600/50 hover:border-emerald-400'
                     }`}
-                    title={isVisibleNow ? 'Light is ON (Click to turn OFF)' : 'Light is OFF (Click to turn ON)'}
                   >
-                    {isVisibleNow ? <Eye size={12} /> : <EyeOff size={12} />}
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      {/* Checkbox button: clicking unchecks and moves back to right column */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleCheckBeam(beam.id);
+                        }}
+                        className="text-emerald-400 hover:text-red-400 transition-colors"
+                        title="Uncheck (move to right)"
+                      >
+                        <CheckSquare size={13} />
+                      </button>
+
+                      {/* Eye button: turns light ON / OFF */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onTogglePreviewBeam(beam.id);
+                          setTuneTarget(beam.id);
+                        }}
+                        className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors ${
+                          isVisibleNow
+                            ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-500/50'
+                            : 'bg-neutral-800 text-neutral-500'
+                        }`}
+                        title={isVisibleNow ? "Turn light OFF" : "Turn light ON"}
+                      >
+                        {isVisibleNow ? <Eye size={10} /> : <EyeOff size={10} />}
+                        <span>{isVisibleNow ? 'ON' : 'OFF'}</span>
+                      </button>
+                    </div>
+
+                    <div className="text-[10px] font-semibold text-neutral-100 truncate leading-tight">
+                      {beam.name}
+                    </div>
+                    <div className="text-[8px] font-mono text-emerald-400/80">
+                      {beam.origin}
+                    </div>
+                  </div>
+                );
+              });
+            })()}
+          </div>
+
+          {/* RIGHT COLUMN: Unchecked Beams (Click checkbox to move to Left) */}
+          <div className="space-y-1">
+            <div className="text-[9px] font-bold text-neutral-400 bg-neutral-900 px-1.5 py-0.5 rounded border border-neutral-800 text-center">
+              RIGHT: UNCHECKED
+            </div>
+            {(() => {
+              const uncheckedList = LIGHT_BEAMS_LIST.filter(b => !checkedBeams?.includes(b.id));
+              if (uncheckedList.length === 0) {
+                return (
+                  <div className="p-3 text-center text-[10px] text-neutral-500 border border-dashed border-neutral-800 rounded-lg">
+                    All 14 lights checked
+                  </div>
+                );
+              }
+              return uncheckedList.map(beam => {
+                const isVisibleNow = activePreviewBeams?.includes(beam.id);
+                const isTuningThis = tuneTarget === beam.id;
+
+                return (
+                  <div
+                    key={`unchecked-${beam.id}`}
+                    onClick={() => setTuneTarget(beam.id)}
+                    className={`p-1.5 rounded-lg border text-[11px] cursor-pointer transition-all ${
+                      isTuningThis
+                        ? 'bg-cyan-950/40 border-cyan-500/80'
+                        : 'bg-neutral-900/60 border-neutral-800 hover:border-neutral-700 opacity-70'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      {/* Checkbox button: clicking checks and moves to Left Column */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleCheckBeam(beam.id);
+                        }}
+                        className="text-neutral-500 hover:text-emerald-400 transition-colors"
+                        title="Check (move to left allowed column)"
+                      >
+                        <Square size={13} />
+                      </button>
+
+                      {/* Eye button: turns light ON / OFF */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onTogglePreviewBeam(beam.id);
+                          setTuneTarget(beam.id);
+                        }}
+                        className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors ${
+                          isVisibleNow
+                            ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-500/50'
+                            : 'bg-neutral-800 text-neutral-500'
+                        }`}
+                        title={isVisibleNow ? "Turn light OFF" : "Turn light ON"}
+                      >
+                        {isVisibleNow ? <Eye size={10} /> : <EyeOff size={10} />}
+                        <span>{isVisibleNow ? 'ON' : 'OFF'}</span>
+                      </button>
+                    </div>
+
+                    <div className="text-[10px] font-semibold text-neutral-300 truncate leading-tight">
+                      {beam.name}
+                    </div>
+                    <div className="text-[8px] font-mono text-neutral-500">
+                      {beam.origin}
+                    </div>
+                  </div>
+                );
+              });
+            })()}
+          </div>
         </div>
       </div>
 

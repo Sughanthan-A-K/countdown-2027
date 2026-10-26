@@ -7,6 +7,7 @@ import ConfettiBurst from './components/ConfettiBurst';
 import BirthdaySecretSurprise from './components/BirthdaySecretSurprise';
 import KeyModal from './components/KeyModal';
 import LokiTimelinePortal from './components/LokiTimelinePortal';
+import LokiLightMasterToolbox from './components/LokiLightMasterToolbox';
 import confetti from 'canvas-confetti';
 import { getDaysRemaining, formatDate, addDays, normalizeDate, getDiffDays, getOnboardingTier, isSpecialCardDate, isKeyEligible } from './utils/date';
 import { Moon, Sun, Info, X, Copy, Check, Calendar, RotateCcw } from 'lucide-react';
@@ -294,6 +295,122 @@ function App() {
   const [showDiwaliEvent, setShowDiwaliEvent] = useState(false);
   const [diwaliPhase, setDiwaliPhase] = useState(0);
   const [lokiCrackStage, setLokiCrackStage] = useState(0); // 0 = normal, 1 = first crack, 2 = deep branching, 3 = full cosmos breach
+
+  // Single Master Light Toolbox State (Shortcut: Shift + T)
+  const [showLightToolbox, setShowLightToolbox] = useState(false);
+  
+  // When toolbox is opened, automatically set stage to 4 (vedikurathuku munnadi moment)
+  const handleOpenLightToolbox = () => {
+    setShowLightToolbox(true);
+    setLokiCrackStage(4);
+    setIsPreviewAllMode(true);
+  };
+  
+  // Checked beams: Beams that are marked "OK / Approved". Persists even when toolbox closes!
+  const [checkedBeams, setCheckedBeams] = useState(() => {
+    try {
+      const saved = localStorage.getItem('loki_checked_beams');
+      return saved ? JSON.parse(saved) : [1, 2, 3, 4, 5, 6, 101, 102, 7, 8, 9, 10, 11, 12];
+    } catch (_) {
+      return [1, 2, 3, 4, 5, 6, 101, 102, 7, 8, 9, 10, 11, 12];
+    }
+  });
+
+  // Active Preview Beams: Which lights are currently turned ON/OFF to test visibility/angles
+  const [activePreviewBeams, setActivePreviewBeams] = useState(() => [1, 2, 3, 4, 5, 6, 101, 102, 7, 8, 9, 10, 11, 12]);
+  
+  // Checked preview mode: When true, forces preview of all lights on screen without needing tap sequence
+  const [isPreviewAllMode, setIsPreviewAllMode] = useState(false);
+
+  // Dynamic angle and spread transforms per beam
+  const [beamTransforms, setBeamTransforms] = useState(() => {
+    try {
+      const saved = localStorage.getItem('loki_beam_transforms');
+      return saved ? JSON.parse(saved) : {};
+    } catch (_) {
+      return {};
+    }
+  });
+
+  // Center Circle Radius (Default 98px fits 200px card width perfectly)
+  const [circleRadius, setCircleRadius] = useState(() => {
+    try {
+      const saved = localStorage.getItem('loki_circle_radius');
+      return saved ? parseInt(saved, 10) : 98;
+    } catch (_) {
+      return 98;
+    }
+  });
+
+  const handleToggleCheckBeam = (beamId) => {
+    setCheckedBeams(prev => {
+      const next = prev.includes(beamId) ? prev.filter(id => id !== beamId) : [...prev, beamId];
+      localStorage.setItem('loki_checked_beams', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const handleTogglePreviewBeam = (beamId) => {
+    setActivePreviewBeams(prev => {
+      return prev.includes(beamId) ? prev.filter(id => id !== beamId) : [...prev, beamId];
+    });
+  };
+
+  const handleAllPreviewOn = () => {
+    setActivePreviewBeams([1, 2, 3, 4, 5, 6, 101, 102, 7, 8, 9, 10, 11, 12]);
+  };
+
+  const handleAllPreviewOff = () => {
+    setActivePreviewBeams([]);
+  };
+
+  const handleUpdateBeamTransform = (beamId, changes) => {
+    setBeamTransforms(prev => {
+      const next = {
+        ...prev,
+        [beamId]: {
+          ...(prev[beamId] || { angle: 0, scaleX: 1 }),
+          ...changes
+        }
+      };
+      localStorage.setItem('loki_beam_transforms', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const handleResetBeamTransform = (beamId) => {
+    setBeamTransforms(prev => {
+      const next = { ...prev };
+      delete next[beamId];
+      localStorage.setItem('loki_beam_transforms', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const handleChangeCircleRadius = (val) => {
+    setCircleRadius(val);
+    localStorage.setItem('loki_circle_radius', val.toString());
+  };
+
+  // Keyboard shortcut Shift + T to toggle single master toolbox
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.shiftKey && (e.key === 'T' || e.key === 't')) {
+        e.preventDefault();
+        setShowLightToolbox(prev => {
+          const willOpen = !prev;
+          if (willOpen) {
+            // "antha tool box la ah naa open pannale vedikurahtuku munadi mument la poi ninudum"
+            setLokiCrackStage(4);
+            setIsPreviewAllMode(true);
+          }
+          return willOpen;
+        });
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Ensure Loki crack stage is strictly 0 whenever we are NOT on Dec 16 (or if dev mode is off)
   // Loki Multiverse easter egg is only active when in devMode OR on actual Dec 16 date
@@ -1195,35 +1312,52 @@ function App() {
           {!isSharedCardView && (
             <>
               {isDevMode && (
-                <button 
-                  onClick={() => {
-                    // Reset Vijayadashami / special festival progress in dev mode on single click
-                    try {
-                      localStorage.removeItem('vijayadashamiEventDone_2026');
-                      localStorage.removeItem('ayudhaPoojaEventDone_2026');
-                    } catch (e) {}
+                <>
+                  {/* Dev Mode Reset Button */}
+                  <button 
+                    onClick={() => {
+                      // Reset Vijayadashami / special festival progress in dev mode on single click
+                      try {
+                        localStorage.removeItem('vijayadashamiEventDone_2026');
+                        localStorage.removeItem('ayudhaPoojaEventDone_2026');
+                      } catch (e) {}
 
-                    const stored = localStorage.getItem('devOverrideDate');
-                    if (stored) {
-                      const selected = new Date(parseInt(stored, 10));
-                      selected.setHours(0, 0, 0, 0);
-                      // Create a new fresh Date object reference to trigger complete React state re-render
-                      setCalendarDate(new Date(selected.getTime()));
-                    } else {
-                      const today = normalizeDate(new Date());
-                      setCalendarDate(new Date(today.getTime()));
-                    }
+                      const stored = localStorage.getItem('devOverrideDate');
+                      if (stored) {
+                        const selected = new Date(parseInt(stored, 10));
+                        selected.setHours(0, 0, 0, 0);
+                        // Create a new fresh Date object reference to trigger complete React state re-render
+                        setCalendarDate(new Date(selected.getTime()));
+                      } else {
+                        const today = normalizeDate(new Date());
+                        setCalendarDate(new Date(today.getTime()));
+                      }
 
-                    if (navigator.vibrate) navigator.vibrate([50]);
-                  }}
-                  className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
-                    isDarkMode 
-                      ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
-                      : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
-                  }`}
-                >
-                  <RotateCcw size={20} />
-                </button>
+                      if (navigator.vibrate) navigator.vibrate([50]);
+                    }}
+                    className={`absolute top-8 right-24 z-[50] p-3 rounded-full border-2 shadow-md ${
+                      isDarkMode 
+                        ? 'bg-neutral-900 border-neutral-400 text-neutral-200 hover:bg-neutral-800' 
+                        : 'bg-white border-neutral-800 text-neutral-800 hover:bg-neutral-100'
+                    }`}
+                  >
+                    <RotateCcw size={20} />
+                  </button>
+
+                  {/* Dev Mode Quick Light Toolbox Button (Shift + T) */}
+                  <button
+                    onClick={handleOpenLightToolbox}
+                    className={`absolute top-8 right-40 z-[50] px-3 py-2 rounded-full border-2 shadow-md flex items-center gap-1.5 font-bold text-[11px] transition-colors ${
+                      showLightToolbox 
+                        ? 'bg-emerald-500 text-black border-emerald-400 shadow-[0_0_15px_#10b981]' 
+                        : (isDarkMode ? 'bg-neutral-900 border-neutral-700 text-emerald-400 hover:border-emerald-500' : 'bg-white border-neutral-800 text-emerald-600 hover:bg-neutral-100')
+                    }`}
+                    title="Open Single Light Master Toolbox (Shift + T)"
+                  >
+                    <Sparkles size={14} />
+                    <span>Tool</span>
+                  </button>
+                </>
               )}
 
               {/* Theme Toggle Button (Flies away like glass explosion on Dec 16 Stage 4) */}
@@ -1587,20 +1721,31 @@ function App() {
                       globalLang={globalLang}
                       isDec16Blocked={page.index === 0 && isDec16Card}
                       lokiCrackStage={page.index === 0 ? lokiCrackStage : 0}
+                      activeBeams={
+                        page.index === 0
+                          ? (showLightToolbox && isPreviewAllMode
+                              ? activePreviewBeams
+                              : checkedBeams)
+                          : null
+                      }
+                      beamTransforms={page.index === 0 ? beamTransforms : null}
+                      circleRadius={circleRadius}
+                      previewAllBeams={page.index === 0 && showLightToolbox && isPreviewAllMode}
                       isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
-                          const next = Math.min(prev + 1, 3);
-                          // On 3rd tap: 10-second tension escalation!
-                          // 10 lights slowly wake up across all cracks, pulsing center core, building tension...
-                          // Exactly at ~10 seconds, card shatters directly into Stage 5 (Blast/Portal)!
-                          if (next === 3) {
+                          const next = Math.min(prev + 1, 4);
+                          // On 4th tap:
+                          // All lights radiate and the inner circle swells smoothly to full card size (~2.6s)
+                          // Then all lights stay continuously blazing for ~2s while morphing from emerald to bright supernova white
+                          // At 4.8s, the universe star explosion shatters the card completely into Stage 5!
+                          if (next === 4) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 10000);
+                            }, 4800);
                           }
                           return next;
                         });
@@ -1721,6 +1866,26 @@ function App() {
           setShowDiwaliEvent(false);
           if (!isDevMode && !isSharedCardView) localStorage.setItem('diwaliEventDone_2026', 'true');
         }} />
+      )}
+
+      {/* SINGLE UNIFIED MASTER LIGHT TOOLBOX (Shortcut: Shift + T) */}
+      {showLightToolbox && (
+        <LokiLightMasterToolbox
+          checkedBeams={checkedBeams}
+          onToggleCheckBeam={handleToggleCheckBeam}
+          activePreviewBeams={activePreviewBeams}
+          onTogglePreviewBeam={handleTogglePreviewBeam}
+          onAllPreviewOn={handleAllPreviewOn}
+          onAllPreviewOff={handleAllPreviewOff}
+          isPreviewAllMode={isPreviewAllMode}
+          onTogglePreviewAllMode={() => setIsPreviewAllMode(p => !p)}
+          beamTransforms={beamTransforms}
+          onUpdateBeamTransform={handleUpdateBeamTransform}
+          onResetBeamTransform={handleResetBeamTransform}
+          circleRadius={circleRadius}
+          onChangeCircleRadius={handleChangeCircleRadius}
+          onClose={() => setShowLightToolbox(false)}
+        />
       )}
     </>
   );
