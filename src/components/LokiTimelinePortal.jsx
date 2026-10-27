@@ -61,7 +61,7 @@ function LokiLifePowerSpread({
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "easeInOut" }}
+        transition={{ duration, ease: "linear" }}
         opacity={0.9}
       />
       <motion.path
@@ -72,7 +72,7 @@ function LokiLifePowerSpread({
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "easeInOut" }}
+        transition={{ duration, ease: "linear" }}
         opacity={0.8}
       />
 
@@ -88,10 +88,10 @@ function LokiLifePowerSpread({
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ 
-            pathLength: [0, 0.45, 1],
+            pathLength: 1,
             opacity: [0.3, 0.85, 0.6]
           }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{ duration, ease: "linear" }}
           style={{ filter: "blur(2px)" }}
         />
 
@@ -104,10 +104,10 @@ function LokiLifePowerSpread({
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ 
-            pathLength: [0, 0.5, 1],
+            pathLength: 1,
             opacity: [0.4, 0.95, 0.85]
           }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{ duration, ease: "linear" }}
         />
 
         {/* Layer C: Neon Green (#39FF14) Radiant Core (5px) */}
@@ -119,10 +119,10 @@ function LokiLifePowerSpread({
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ 
-            pathLength: [0, 0.55, 1],
+            pathLength: 1,
             opacity: [0.5, 1, 0.9]
           }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{ duration, ease: "linear" }}
         />
 
         {/* Layer D: Mint Green (#7CFFB2) & Pale Green Glow (#B9FFD0) Center Filament (2px) */}
@@ -134,10 +134,10 @@ function LokiLifePowerSpread({
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ 
-            pathLength: [0, 0.6, 1],
+            pathLength: 1,
             opacity: [0.6, 1, 0.95]
           }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{ duration, ease: "linear" }}
         />
       </g>
     </g>
@@ -373,14 +373,11 @@ export default function LokiTimelinePortal() {
       });
 
       // 2. Parallax Camera Flight:
-      // User watches venom spread across all 5 branches (takes ~4.8s + duration).
-      // Exactly 1 second after venom reaches branches (~8.0s), camera flight begins!
-      // ALL branches start moving simultaneously at that exact moment without delay,
-      // and their physical distances naturally dictate that nearest branches exit first,
-      // then the ones behind exit one by one continuously without stopping.
+      // User watches venom spread completely across all 5 branches (cascade completes at ~10.5s).
+      // After venom fully flows across all branches, camera flight begins smoothly at 11.5s!
       setTimeout(() => {
         setVoyageProgress(1);
-      }, 8000);
+      }, 11500);
 
       return updated;
     });
@@ -430,7 +427,7 @@ export default function LokiTimelinePortal() {
           - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
           - On First Tap (hasDiscovered = true):
             Emerges in deep space distance (scale: 0.30).
-          - Moves continuously and ultra-slowly (70.0 seconds), gradually expanding 
+          - Moves continuously and ultra-slowly (90.0 seconds), gradually expanding 
             into majestic focus only after the branches have drifted past.
       */}
       <motion.div
@@ -448,9 +445,9 @@ export default function LokiTimelinePortal() {
           filter: "blur(28px)"
         }}
         transition={voyageProgress > 0 ? {
-          scale: { duration: 70.0, ease: [0.16, 1, 0.3, 1] },
-          opacity: { duration: 50.0, ease: [0.16, 1, 0.3, 1] },
-          filter: { duration: 58.0, ease: [0.16, 1, 0.3, 1] },
+          scale: { duration: 90.0, ease: [0.16, 1, 0.3, 1] },
+          opacity: { duration: 65.0, ease: [0.16, 1, 0.3, 1] },
+          filter: { duration: 75.0, ease: [0.16, 1, 0.3, 1] },
           x: { duration: 10.0, ease: [0.16, 1, 0.3, 1] }
         } : {
           duration: 14.0,
