@@ -208,8 +208,7 @@ function DraggableBranch({
   onEnergize,
   energizedData,
   allEnergizedStage,
-  isFinalBranch = false,
-  isVoyaging = false
+  isFinalBranch = false
 }) {
   const branchPathRef = useRef(null);
   const [tapRatio, setTapRatio] = useState(0.5);
@@ -264,24 +263,14 @@ function DraggableBranch({
 
   return (
     <motion.g
-      // Spaceship Voyage Experience:
-      // The branches stay naturally swaying in the cosmos.
-      // When our spaceship voyages forward towards the distant portal rift,
-      // we fly right past the branches. They grow smoothly to screen edges and slide past our camera!
-      animate={isVoyaging ? {
-        scale: [1, 14],
-        y: [0, 520],
-        opacity: [1, 1, 1, 0]
-      } : { 
+      // Branches stay strictly in their place, gently swaying naturally in deep space!
+      // They NEVER jump or scale into the screen to hit the user.
+      animate={{ 
         y: windConfig.y,
         x: windConfig.x,
         rotate: windConfig.rotate
       }}
-      transition={isVoyaging ? {
-        duration: 14.0, // Spaceship slow cruise passing by branches
-        times: [0, 0.72, 0.9, 1.0], // Stays 100% visible while passing, fades once behind camera
-        ease: [0.18, 0.9, 0.22, 1.0]
-      } : {
+      transition={{
         duration: windConfig.duration,
         repeat: Infinity,
         ease: "easeInOut",
@@ -445,35 +434,23 @@ export default function LokiTimelinePortal() {
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
           - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
           - On First Tap (hasDiscovered = true):
-            Very slowly emerges and STAYS at its initial distant location in deep space!
-          - After 3sec glow pause, when our spaceship voyages forward towards the portal,
-            we slowly cruise towards it.
+            Very slowly emerges and STAYS fixed at its initial distant cosmic location!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
-        animate={hasDiscovered ? (
-          isVoyaging ? {
-            x: "0vw",
-            scale: 0.95, // Spaceship smoothly approaches close to portal
-            opacity: 1,
-            filter: "blur(0px)"
-          } : {
-            x: "0vw",
-            scale: 0.42, // Stays at initial distant reveal scale!
-            opacity: 0.75,
-            filter: "blur(6px)"
-          }
-        ) : {
+        animate={hasDiscovered ? {
+          x: "0vw",
+          scale: 0.45, // Stays strictly at its distant cosmic scale!
+          opacity: 0.85,
+          filter: "blur(4px)"
+        } : {
           x: "-90vw",
           scale: 0.25,
           opacity: 0,
           filter: "blur(28px)"
         }}
-        transition={isVoyaging ? {
-          duration: 18.0, // Spaceship slow cruise towards portal
-          ease: [0.2, 0.8, 0.25, 1.0]
-        } : {
+        transition={{
           duration: 14.0, // Initial reveal slow emergence
           ease: [0.16, 1, 0.3, 1]
         }}
@@ -638,7 +615,6 @@ export default function LokiTimelinePortal() {
           energizedData={energizedBranches['branch-1']}
           allEnergizedStage={awakenedStages['branch-1']}
           isFinalBranch={lastTappedBranchId === 'branch-1'}
-          isVoyaging={isVoyaging}
           windConfig={{
             y: [-18, 18, -18],
             x: [12, -12, 12],
@@ -710,7 +686,6 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-2']}
             allEnergizedStage={awakenedStages['branch-2']}
             isFinalBranch={lastTappedBranchId === 'branch-2'}
-            isVoyaging={isVoyaging}
             windConfig={{
               y: [16, -16, 16],
               x: [8, -8, 8],
@@ -761,7 +736,6 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-3']}
             allEnergizedStage={awakenedStages['branch-3']}
             isFinalBranch={lastTappedBranchId === 'branch-3'}
-            isVoyaging={isVoyaging}
             windConfig={{
               y: [-20, 20, -20],
               x: [-10, 10, -10],
@@ -812,7 +786,6 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-4']}
             allEnergizedStage={awakenedStages['branch-4']}
             isFinalBranch={lastTappedBranchId === 'branch-4'}
-            isVoyaging={isVoyaging}
             windConfig={{
               x: [-14, 14, -14],
               y: [12, -12, 12],
@@ -863,7 +836,6 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-5']}
             allEnergizedStage={awakenedStages['branch-5']}
             isFinalBranch={lastTappedBranchId === 'branch-5'}
-            isVoyaging={isVoyaging}
             windConfig={{
               y: [15, -15, 15],
               x: [10, -10, 10],
