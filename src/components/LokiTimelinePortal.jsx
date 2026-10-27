@@ -647,8 +647,9 @@ export default function LokiTimelinePortal() {
         </defs>
 
         {/* ------------------------------------------------------------- */}
-        {/* DEPTH LAYER 5 (DEEPEST IN STACK): Branch 4 (~1px near Portal) */}
-        {/* Rendered at bottom of SVG -> All nearer branches draw OVER it  */}
+        {/* DEPTH LAYER 5: Branch 4 (~1px near Portal, diagonal thread)    */}
+        {/* Begins thin, expands naturally to foreground scale ~2.5x near camera */}
+        {/* Framed gracefully across the edge of the screen!             */}
         {/* ------------------------------------------------------------- */}
         <g 
           style={{ 
@@ -659,24 +660,24 @@ export default function LokiTimelinePortal() {
         >
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.15, 1.6, 3.2],
-              y: [0, -100, -500, -1900],
-              x: [0, 80, 320, 950],
-              opacity: [1, 1, 1, 0]
+              scale: [1, 1.4, 2.5],
+              y: [0, 40, 110],
+              x: [0, -30, -70],
+              opacity: [1, 1, 0.95]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.55, 0.8, 1]
+              times: [0, 0.6, 1]
             }}
-            style={{ transformOrigin: "800px 300px" }}
+            style={{ transformOrigin: "600px 480px" }}
           >
             <DraggableBranch
               id="branch-4"
               pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
               origin="500px 520px"
-              strokeScale={0.18}
+              strokeScale={0.7}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-4']}
               allEnergizedStage={awakenedStages['branch-4']}
@@ -701,7 +702,7 @@ export default function LokiTimelinePortal() {
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="2.5"
+                strokeWidth="7"
                 strokeLinecap="round"
                 opacity="0.9"
               />
@@ -709,14 +710,14 @@ export default function LokiTimelinePortal() {
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="1.8"
+                strokeWidth="4.5"
                 strokeLinecap="round"
               />
               <path
                 d="M 1450 29 Q 820 419, 480 619 T -350 939"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="0.8"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 opacity="0.6"
               />
@@ -724,21 +725,21 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* ----------------------------------------------------------- */}
-          {/* DEPTH LAYER 4: Branch 3 (~2-3px visual)                     */}
-          {/* Rendered next -> draws OVER Branch 4                        */}
+          {/* DEPTH LAYER 4: Branch 3 (~2-3px visual -> grows to 8px pass) */}
+          {/* Approaches from deep depth, expands to foreground, sweeps out */}
           {/* ----------------------------------------------------------- */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.25, 2.0, 3.4],
-              y: [0, 150, 600, 1850],
-              x: [0, -20, -80, -240],
+              scale: [1, 1.6, 3.2, 4.6],
+              y: [0, 80, 550, 1800],
+              x: [0, -20, -90, -260],
               opacity: [1, 1, 1, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.45, 0.72, 0.94]
+              times: [0, 0.45, 0.76, 0.96]
             }}
             style={{ transformOrigin: "500px 720px" }}
           >
@@ -746,7 +747,7 @@ export default function LokiTimelinePortal() {
               id="branch-3"
               pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
               origin="500px 720px"
-              strokeScale={0.3}
+              strokeScale={0.8}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-3']}
               allEnergizedStage={awakenedStages['branch-3']}
@@ -771,7 +772,7 @@ export default function LokiTimelinePortal() {
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="4.5"
+                strokeWidth="11"
                 strokeLinecap="round"
                 opacity="0.95"
               />
@@ -779,14 +780,14 @@ export default function LokiTimelinePortal() {
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="3"
+                strokeWidth="7"
                 strokeLinecap="round"
               />
               <path
                 d="M -380 889 Q 200 679, 580 719 T 1450 819"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="1"
+                strokeWidth="2"
                 strokeLinecap="round"
                 opacity="0.6"
               />
@@ -794,21 +795,21 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* ----------------------------------------------------------- */}
-          {/* DEPTH LAYER 3: Branch 5 (~3-4px visual)                     */}
-          {/* Rendered next -> draws OVER Branch 3 and 4                  */}
+          {/* DEPTH LAYER 3: Branch 5 (~3-4px -> Foreground Vine Framing)  */}
+          {/* Approaches and stays beautifully framed in foreground lower! */}
           {/* ----------------------------------------------------------- */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.4, 2.3, 3.2],
-              y: [0, 180, 650, 1750],
-              x: [0, 40, 120, 270],
-              opacity: [1, 1, 1, 0]
+              scale: [1, 1.5, 2.4],
+              y: [0, 80, 180],
+              x: [0, 20, 45],
+              opacity: [1, 1, 0.95]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.35, 0.62, 0.82]
+              times: [0, 0.5, 1]
             }}
             style={{ transformOrigin: "500px 540px" }}
           >
@@ -816,7 +817,7 @@ export default function LokiTimelinePortal() {
               id="branch-5"
               pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
               origin="500px 540px"
-              strokeScale={0.45}
+              strokeScale={0.85}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-5']}
               allEnergizedStage={awakenedStages['branch-5']}
@@ -841,7 +842,7 @@ export default function LokiTimelinePortal() {
                 d="M -320 540 Q 280 430, 720 560 T 1420 520"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="7"
+                strokeWidth="12"
                 strokeLinecap="round"
                 opacity="0.9"
               />
@@ -849,14 +850,14 @@ export default function LokiTimelinePortal() {
                 d="M -320 540 Q 280 430, 720 560 T 1420 520"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="4.5"
+                strokeWidth="8"
                 strokeLinecap="round"
               />
               <path
                 d="M -320 539 Q 280 429, 720 559 T 1420 519"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="1.5"
+                strokeWidth="2.2"
                 strokeLinecap="round"
                 opacity="0.6"
               />
@@ -864,21 +865,21 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* ----------------------------------------------------------- */}
-          {/* DEPTH LAYER 2: Branch 2 (~5px visual)                       */}
-          {/* Rendered next -> draws OVER Branch 5, 3, and 4              */}
+          {/* DEPTH LAYER 2: Branch 2 (~5px -> Grows large and passes top)*/}
+          {/* Approaches from depth, expands to Branch 1 size, then sweeps */}
           {/* ----------------------------------------------------------- */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.6, 2.8],
-              y: [0, -400, -1800],
-              x: [0, -70, -310],
+              scale: [1, 1.8, 3.4],
+              y: [0, -350, -1800],
+              x: [0, -60, -300],
               opacity: [1, 1, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.3, 0.65]
+              times: [0, 0.35, 0.72]
             }}
             style={{ transformOrigin: "500px 160px" }}
           >
@@ -886,7 +887,7 @@ export default function LokiTimelinePortal() {
               id="branch-2"
               pathData="M -350 40 Q 250 220, 680 160 T 1420 120"
               origin="500px 160px"
-              strokeScale={0.7}
+              strokeScale={1.0}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-2']}
               allEnergizedStage={awakenedStages['branch-2']}
@@ -911,7 +912,7 @@ export default function LokiTimelinePortal() {
                 d="M -350 40 Q 250 220, 680 160 T 1420 120"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="11"
+                strokeWidth="15"
                 strokeLinecap="round"
                 opacity="0.9"
               />
@@ -919,14 +920,14 @@ export default function LokiTimelinePortal() {
                 d="M -350 40 Q 250 220, 680 160 T 1420 120"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="7"
+                strokeWidth="10"
                 strokeLinecap="round"
               />
               <path
                 d="M -350 39 Q 250 219, 680 159 T 1420 119"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 opacity="0.6"
               />
@@ -935,8 +936,8 @@ export default function LokiTimelinePortal() {
         </g>
 
         {/* ------------------------------------------------------------- */}
-        {/* DEPTH LAYER 1: FOREFRONT MAIN TIMELINE (Branch 1 - ~8px visual)*/}
-        {/* RENDERED LAST IN SVG -> ALWAYS PAINTS ON TOP OF ALL BACKGROUND */}
+        {/* DEPTH LAYER 1: FOREFRONT MAIN TIMELINE (Branch 1 - Forefront) */}
+        {/* Passes camera smoothly first, leaving view by ~10s           */}
         {/* ------------------------------------------------------------- */}
         <motion.g
           animate={voyageProgress > 0 ? {
