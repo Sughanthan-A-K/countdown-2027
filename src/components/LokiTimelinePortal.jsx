@@ -47,92 +47,97 @@ function LokiLifePowerSpread({
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
   // Duration of venom traveling pulse across the branch
-  // When discovering Branch 1, it runs in a rich, smooth, continuous 5.5s glide
-  const duration = isFinalBranch ? 6.5 : 5.5;
+  // Continuous smooth glide that never cuts out
+  const duration = 7.0;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Behind the pulse: Awakened subtle living body using Forest Green (#004D2B) and Deep Emerald (#006B3C) */}
+      {/* 1. Behind the pulse: Awakened subtle living body inside branch */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#004D2B"
-        strokeWidth="9"
+        strokeWidth="11"
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={0.85}
+        transition={{ duration, ease: "easeInOut" }}
+        opacity={0.9}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#006B3C"
-        strokeWidth="4.5"
+        strokeWidth="6"
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "easeOut" }}
-        opacity={0.75}
+        transition={{ duration, ease: "easeInOut" }}
+        opacity={0.8}
       />
 
       {/* 2. The Traveling Pulse - Loki Authentic Sacred Timeline Color Flow */}
+      {/* Strictly contained inside branch borders without overflowing outside */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
-        {/* Layer A: Atmospheric Malachite (#0BDA51) & Emerald (#008F4C) Volumetric Aura Bloom */}
+        {/* Layer A: Volumetric Edge Glow - Kept within branch width (14px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#008F4C"
-          strokeWidth="24"
-          strokeLinecap="butt"
-          strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
-          initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
-          animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
-          transition={{ duration, ease: "easeOut" }}
-          opacity={0.65}
-          style={{ filter: "blur(6px)" }}
+          strokeWidth="14"
+          strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: [0, 0.45, 1],
+            opacity: [0.3, 0.85, 0.6]
+          }}
+          transition={{ duration, ease: "easeInOut" }}
+          style={{ filter: "blur(2px)" }}
         />
 
-        {/* Layer B: True Loki Green (#00C853) & Electric Green (#00FF66) Body */}
+        {/* Layer B: True Loki Green (#00C853) & Electric Green (#00FF66) Body (9px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#00C853"
-          strokeWidth="12"
-          strokeLinecap="butt"
-          strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
-          initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
-          animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
-          transition={{ duration, ease: "easeOut" }}
-          opacity={0.9}
+          strokeWidth="9"
+          strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: [0, 0.5, 1],
+            opacity: [0.4, 0.95, 0.85]
+          }}
+          transition={{ duration, ease: "easeInOut" }}
         />
 
-        {/* Layer C: Neon Green (#39FF14) & Lime Green (#A8FF60) Radiant Core */}
+        {/* Layer C: Neon Green (#39FF14) Radiant Core (5px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
-          strokeWidth="6.5"
-          strokeLinecap="butt"
-          strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
-          initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
-          animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
-          transition={{ duration, ease: "easeOut" }}
-          opacity={0.98}
+          strokeWidth="5"
+          strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: [0, 0.55, 1],
+            opacity: [0.5, 1, 0.9]
+          }}
+          transition={{ duration, ease: "easeInOut" }}
         />
 
-        {/* Layer D: Mint Green (#7CFFB2) & Pale Green Glow (#B9FFD0) Center Filament */}
+        {/* Layer D: Mint Green (#7CFFB2) & Pale Green Glow (#B9FFD0) Center Filament (2px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth="2.8"
-          strokeLinecap="butt"
-          strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
-          initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
-          animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
-          transition={{ duration, ease: "easeOut" }}
-          opacity={1}
+          strokeWidth="2"
+          strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: [0, 0.6, 1],
+            opacity: [0.6, 1, 0.95]
+          }}
+          transition={{ duration, ease: "easeInOut" }}
         />
       </g>
     </g>
@@ -140,43 +145,53 @@ function LokiLifePowerSpread({
 
   return (
     <g>
-      {/* Symmetrical Left and Right Pulses spreading outward from tap point */}
+      {/* Symmetrical Left and Right Pulses spreading outward seamlessly from tap point to the ends */}
       {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
       {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
 
-      {/* Full Final Burst when all branches connect (Full Loki God of Stories Climax Glow) */}
+      {/* Full Living Pulsation when branch awakens (Stays within branch silhouette borders) */}
       {allEnergizedStage && (
         <g style={{ filter: "url(#venomPulseDistort)" }}>
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
-            stroke="#00C853"
-            strokeWidth="32"
+            stroke="#008F4C"
+            strokeWidth="15"
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.85, 0.7] }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            style={{ filter: "blur(10px)" }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
+            style={{ filter: "blur(3px)" }}
           />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
-            stroke="#00FF66"
-            strokeWidth="18"
+            stroke="#00C853"
+            strokeWidth="9"
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.95, 0.85] }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
           />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
-            stroke="#7CFFB2"
-            strokeWidth="7"
+            stroke="#39FF14"
+            strokeWidth="5"
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.95] }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
+          />
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#B9FFD0"
+            strokeWidth="2"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0.98] }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
           />
         </g>
       )}
@@ -243,11 +258,11 @@ function DraggableBranch({
 
   return (
     <motion.g
-      // Unbroken Continuous Smooth 3D Flight:
-      // Moves with steady, constant velocity straight towards the camera, sweeps past the viewpoint, and only then fades!
+      // Unbroken Continuous Ultra-Slow 3D Pass-By Flight:
+      // Glides smoothly straight towards the viewer's camera, expands to fill and sweep past the screen, and only fades once behind!
       animate={flyOut3D ? {
-        scale: [1, 35],
-        y: [0, 1100],
+        scale: [1, 28],
+        y: [0, 950],
         opacity: [1, 1, 1, 0]
       } : { 
         y: windConfig.y,
@@ -255,9 +270,9 @@ function DraggableBranch({
         rotate: windConfig.rotate
       }}
       transition={flyOut3D ? {
-        duration: 3.2,
-        times: [0, 0.75, 0.92, 1.0], // Full 100% opacity as it approaches and crosses viewpoint, fades only behind viewer!
-        ease: "linear" // 100% steady, smooth uninterrupted speed!
+        duration: 9.5, // Ultra slow, majestic cinematic approach
+        times: [0, 0.7, 0.9, 1.0], // Full 100% visible while approaching & crossing the screen
+        ease: [0.25, 0.1, 0.25, 1.0] // Silky smooth easing
       } : {
         duration: windConfig.duration,
         repeat: Infinity,
@@ -337,50 +352,39 @@ export default function LokiTimelinePortal() {
         }
       };
 
-      const tappedCount = Object.keys(updated).length;
+      // When the user taps Branch 1 (or any initial branch),
+      // smoothly cascade and activate all remaining branches sequentially one by one!
+      const allBranchIds = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'];
+      const remainingBranchIds = allBranchIds.filter(bId => bId !== id);
 
-      // Tap 1 & Tap 2: Each branch passes past viewpoint after venom completes
-      if (tappedCount < 3) {
+      // Stagger each remaining branch smoothly
+      remainingBranchIds.forEach((remId, rIdx) => {
         setTimeout(() => {
-          setFlyOutBranches(flyPrev => ({ ...flyPrev, [id]: true }));
-        }, 3200);
-      }
-
-      // Tap 3 (THIRD CLICK):
-      // Connects & triggers the remaining 2 branches automatically!
-      // All 3 branches (3, 4, 5) radiate full green living venom and together pass past the viewpoint!
-      if (tappedCount === 3) {
-        const remainingBranchIds = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'].filter(bId => !updated[bId]);
-        remainingBranchIds.forEach((remId, rIdx) => {
-          setTimeout(() => {
-            setEnergizedBranches(autoPrev => ({
-              ...autoPrev,
-              [remId]: {
-                active: true,
-                x: 500,
-                y: 500,
-                timestamp: Date.now()
-              }
-            }));
-          }, (rIdx + 1) * 350);
-        });
-
-        // Staggered full living green venom pulsation on all branches
-        ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'].forEach((bId, bIdx) => {
-          setTimeout(() => {
-            setAwakenedStages(stagePrev => ({ ...stagePrev, [bId]: true }));
-          }, 1200 + bIdx * 200);
-        });
-
-        // All remaining branches together sweep and pass past the viewpoint
-        setTimeout(() => {
-          setFlyOutBranches(flyPrev => ({
-            ...flyPrev,
-            [id]: true,
-            ...(remainingBranchIds.reduce((acc, curr) => ({ ...acc, [curr]: true }), {}))
+          setEnergizedBranches(autoPrev => ({
+            ...autoPrev,
+            [remId]: {
+              active: true,
+              x: 500,
+              y: 500,
+              timestamp: Date.now()
+            }
           }));
-        }, 3800);
-      }
+        }, (rIdx + 1) * 1400); // 1.4s, 2.8s, 4.2s, 5.6s organic pulse wave
+      });
+
+      // Staggered awakened living green glow stage across all branches
+      allBranchIds.forEach((bId, bIdx) => {
+        setTimeout(() => {
+          setAwakenedStages(stagePrev => ({ ...stagePrev, [bId]: true }));
+        }, 2200 + bIdx * 1000);
+      });
+
+      // Ultra-slow, majestic 3D sweep towards and past camera for each branch
+      allBranchIds.forEach((bId, bIdx) => {
+        setTimeout(() => {
+          setFlyOutBranches(flyPrev => ({ ...flyPrev, [bId]: true }));
+        }, 4500 + bIdx * 1500);
+      });
 
       return updated;
     });
