@@ -372,14 +372,15 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // 2. Continuous Parallax Camera Flight (Portfolio Smooth Scroll feel):
-      // - 0s to 5.0s: Venom propagates across all branches.
-      // - 5.0s to 8.5s: 3.5 seconds pure rest & glow observation.
-      // - At 8.5s: The smooth camera flight seamlessly starts!
-      // All branches and the portal move simultaneously with smooth progressive parallax depth.
+      // 2. Continuous Parallax Camera Flight (Natural Physics & Depth):
+      // - 0s to 5.0s: Venom propagates across all branches organically.
+      // - 5.0s to 7.0s: Pure rest & glowing cosmos.
+      // - At 7.0s: Natural forward camera cruise begins!
+      // Each branch has staggered depth and time delay (~10s apart per depth tier).
+      // Portal moves concurrently closer as camera voyages through branches.
       setTimeout(() => {
         setVoyageProgress(1);
-      }, 8500);
+      }, 7000);
 
       return updated;
     });
@@ -426,29 +427,31 @@ export default function LokiTimelinePortal() {
 
       {/* ========================================================================= */}
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
-          - Hidden until branch-1 is activated.
-          - As our camera flies through the branches, the portal smoothly grows closer
-            reaching its destination after passing the branches!
+          - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
+          - On First Tap (hasDiscovered = true):
+            Emerges far in the cosmic distance (scale: 0.28).
+          - As we voyage through each branch layer (~10s apart), 
+            the portal continuously and proportionally draws closer (scale 0.28 -> 1.05)!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        initial={{ x: "-90vw", scale: 0.22, opacity: 0, filter: "blur(28px)" }}
+        initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
         animate={hasDiscovered ? {
           x: "0vw",
-          scale: voyageProgress > 0 ? 0.98 : 0.28,
-          opacity: voyageProgress > 0 ? 1 : 0.6,
-          filter: voyageProgress > 0 ? "blur(0px)" : "blur(12px)"
+          scale: voyageProgress > 0 ? 1.05 : 0.28,
+          opacity: voyageProgress > 0 ? 1 : 0.65,
+          filter: voyageProgress > 0 ? "blur(0px)" : "blur(10px)"
         } : {
           x: "-90vw",
-          scale: 0.22,
+          scale: 0.25,
           opacity: 0,
           filter: "blur(28px)"
         }}
         transition={voyageProgress > 0 ? {
-          scale: { duration: 42.0, ease: [0.12, 1, 0.28, 1], delay: 4.0 },
-          opacity: { duration: 25.0, ease: "easeInOut" },
-          filter: { duration: 38.0, ease: [0.12, 1, 0.28, 1], delay: 3.0 },
-          x: { duration: 14.0, ease: [0.16, 1, 0.3, 1] }
+          scale: { duration: 52.0, ease: [0.16, 1, 0.3, 1] },
+          opacity: { duration: 35.0, ease: [0.16, 1, 0.3, 1] },
+          filter: { duration: 45.0, ease: [0.16, 1, 0.3, 1] },
+          x: { duration: 12.0, ease: [0.16, 1, 0.3, 1] }
         } : {
           duration: 14.0,
           ease: [0.16, 1, 0.3, 1]
@@ -615,22 +618,28 @@ export default function LokiTimelinePortal() {
           })}
         </defs>
 
-        {/* Branch 1: Forefront Depth (Closest to camera, Layer 1) */}
-        {/* ONLY this single big branch is clickable! */}
-        {/* Physics: Since it's nearest to camera, it starts largest (scale: 1.15) */}
-        {/* When camera accelerates forward, it rushes past first in 0s-12s, scaling to 3.8 and gently brushing upper screen */}
+        {/* ===================================================================== */}
+        {/* PHYSICAL DEPTH LAYERING (Front -> Back based on Real Optics):         */}
+        {/* Layer 1 (Nearest / Forefront): Branch 1 (Big, thick, stroke 16, tap)  */}
+        {/* Layer 2 (Near-Mid Depth, ~10s mark): Branch 2 (Top, stroke 14)       */}
+        {/* Layer 3 (Mid Depth, ~20s mark): Branch 5 (Center-right, stroke 12)    */}
+        {/* Layer 4 (Far-Mid Depth, ~30s mark): Branch 3 (Bottom, stroke 10)     */}
+        {/* Layer 5 (Deepest Cosmic Horizon, ~40s mark): Branch 4 (Dist, stroke 7)*/}
+        {/* ===================================================================== */}
+
+        {/* --- DEPTH LAYER 1: Forefront Giant Timeline (Branch 1) --- */}
+        {/* Nearest to camera optics: Largest scale, glides gently first */}
         <motion.g
-          initial={{ scale: 1.15, y: 0, x: 0 }}
           animate={voyageProgress > 0 ? {
-            scale: 3.8,
-            y: -520,
-            x: 80,
-            opacity: 0.75
-          } : { scale: 1.15, y: 0, x: 0, opacity: 1 }}
+            scale: 2.8,
+            y: -580,
+            x: -80,
+            opacity: [1, 0.95, 0.7, 0.2, 0]
+          } : { scale: 1, y: 0, x: 0, opacity: 1 }}
           transition={{
-            duration: 16.0,
-            delay: 0,
-            ease: [0.16, 1, 0.3, 1]
+            duration: 18.0,
+            ease: [0.22, 1, 0.36, 1],
+            times: [0, 0.3, 0.6, 0.85, 1]
           }}
           style={{ transformOrigin: "500px 440px" }}
         >
@@ -669,7 +678,7 @@ export default function LokiTimelinePortal() {
               strokeLinecap="round"
               opacity="0.95"
             />
-            {/* Main Dark Silhouette Body (Pure dark black) */}
+            {/* Main Dark Silhouette Body (Pure dark black) - Largest Forefront Width: 16 */}
             <path
               d="M -400 310 Q 150 480, 520 440 T 1450 390"
               fill="none"
@@ -697,8 +706,7 @@ export default function LokiTimelinePortal() {
           </DraggableBranch>
         </motion.g>
 
-        {/* Branches 2 to 5: Long hanging, flowing cosmic branches */}
-        {/* Strictly display-only (pointer-events-none): User cannot tap them! */}
+        {/* Branches 2 to 5: Strictly display-only background multiverse tapestry */}
         <g 
           style={{ 
             opacity: hasDiscovered ? 1 : 0, 
@@ -706,21 +714,20 @@ export default function LokiTimelinePortal() {
             pointerEvents: 'none'
           }}
         >
-          {/* Branch 2: Depth Layer 2 (~10s distance behind Branch 1) */}
-          {/* Starts at natural perspective scale (0.92). Crosses camera at ~10s-22s */}
-          {/* Sweeps near top of screen naturally */}
+          {/* --- DEPTH LAYER 2: Upper Timeline Vine (Branch 2) --- */}
+          {/* ~10s distance behind Branch 1. Glides smoothly up-left */}
           <motion.g
-            initial={{ scale: 0.92, y: 0, x: 0 }}
             animate={voyageProgress > 0 ? {
-              scale: 3.2,
-              y: -580,
-              x: -60,
-              opacity: 0.8
-            } : { scale: 0.92, y: 0, x: 0, opacity: 1 }}
+              scale: 2.3,
+              y: -720,
+              x: -120,
+              opacity: [1, 0.95, 0.75, 0.25, 0]
+            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
-              duration: 18.0,
-              delay: 8.0, // ~8-10 seconds distance behind branch 1
-              ease: [0.16, 1, 0.3, 1]
+              duration: 25.0,
+              delay: 8.0, // ~8-10s delay relative to foreground
+              ease: [0.22, 1, 0.36, 1],
+              times: [0, 0.35, 0.65, 0.9, 1]
             }}
             style={{ transformOrigin: "500px 160px" }}
           >
@@ -752,7 +759,7 @@ export default function LokiTimelinePortal() {
                 d="M -350 40 Q 250 220, 680 160 T 1420 120"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="15"
+                strokeWidth="14"
                 strokeLinecap="round"
                 opacity="0.9"
               />
@@ -760,7 +767,7 @@ export default function LokiTimelinePortal() {
                 d="M -350 40 Q 250 220, 680 160 T 1420 120"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="10"
+                strokeWidth="9"
                 strokeLinecap="round"
               />
               <path
@@ -774,21 +781,20 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* Branch 5: Depth Layer 3 (~18-20s total distance, ~10s behind Branch 2) */}
-          {/* Starts smaller in the distance (scale: 0.72) */}
-          {/* Sweeps near the lower quadrant of the screen */}
+          {/* --- DEPTH LAYER 3: Mid-Depth Flowing Vine (Branch 5) --- */}
+          {/* ~18s delay. Glides organically across screen diagonally down-right */}
           <motion.g
-            initial={{ scale: 0.72, y: 0, x: 0 }}
             animate={voyageProgress > 0 ? {
-              scale: 2.7,
+              scale: 1.9,
               y: 420,
-              x: 50,
-              opacity: 0.85
-            } : { scale: 0.72, y: 0, x: 0, opacity: 1 }}
+              x: 180,
+              opacity: [1, 0.95, 0.8, 0.3, 0]
+            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
-              duration: 18.0,
-              delay: 16.0, // Staggered ~10s after branch 2
-              ease: [0.16, 1, 0.3, 1]
+              duration: 28.0,
+              delay: 16.0, // ~16-18s delay
+              ease: [0.22, 1, 0.36, 1],
+              times: [0, 0.4, 0.7, 0.9, 1]
             }}
             style={{ transformOrigin: "500px 540px" }}
           >
@@ -820,7 +826,7 @@ export default function LokiTimelinePortal() {
                 d="M -320 540 Q 280 430, 720 560 T 1420 520"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="13"
+                strokeWidth="12"
                 strokeLinecap="round"
                 opacity="0.9"
               />
@@ -842,21 +848,20 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* Branch 3: Depth Layer 4 (~26s total distance, ~10s behind Branch 5) */}
-          {/* Starts even further back and smaller (scale: 0.55) */}
-          {/* Sweeps near bottom screen */}
+          {/* --- DEPTH LAYER 4: Deep Lower Vine (Branch 3) --- */}
+          {/* ~26s delay. Sinks downward gracefully */}
           <motion.g
-            initial={{ scale: 0.55, y: 0, x: 0 }}
             animate={voyageProgress > 0 ? {
-              scale: 2.3,
-              y: 520,
-              x: -40,
-              opacity: 0.9
-            } : { scale: 0.55, y: 0, x: 0, opacity: 1 }}
+              scale: 1.6,
+              y: 650,
+              x: -90,
+              opacity: [1, 0.95, 0.8, 0.35, 0]
+            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
-              duration: 18.0,
-              delay: 24.0, // Staggered ~8-10s after branch 5
-              ease: [0.16, 1, 0.3, 1]
+              duration: 30.0,
+              delay: 25.0, // ~25s delay
+              ease: [0.22, 1, 0.36, 1],
+              times: [0, 0.45, 0.75, 0.92, 1]
             }}
             style={{ transformOrigin: "500px 720px" }}
           >
@@ -888,7 +893,7 @@ export default function LokiTimelinePortal() {
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="17"
+                strokeWidth="10"
                 strokeLinecap="round"
                 opacity="0.95"
               />
@@ -896,35 +901,34 @@ export default function LokiTimelinePortal() {
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="12"
+                strokeWidth="7"
                 strokeLinecap="round"
               />
               <path
                 d="M -380 889 Q 200 679, 580 719 T 1450 819"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="3"
+                strokeWidth="1.8"
                 strokeLinecap="round"
                 opacity="0.6"
               />
             </DraggableBranch>
           </motion.g>
 
-          {/* Branch 4: Deepest Layer 5 (Deep cosmic horizon, ~34s total distance) */}
-          {/* Starts smallest and furthest back (scale: 0.42) */}
-          {/* Sweeps diagonally across upper-right / center edge before portal */}
+          {/* --- DEPTH LAYER 5: Deepest Background Horizon Branch (Branch 4) --- */}
+          {/* Deepest distance (~35s delay). Passes gently across background */}
           <motion.g
-            initial={{ scale: 0.42, y: 0, x: 0 }}
             animate={voyageProgress > 0 ? {
-              scale: 1.9,
+              scale: 1.4,
               y: -380,
-              x: 120,
-              opacity: 0.95
-            } : { scale: 0.42, y: 0, x: 0, opacity: 1 }}
+              x: 160,
+              opacity: [1, 0.95, 0.85, 0.4, 0]
+            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
-              duration: 18.0,
-              delay: 32.0, // Staggered ~8-10s after branch 3
-              ease: [0.16, 1, 0.3, 1]
+              duration: 32.0,
+              delay: 34.0, // ~34s delay
+              ease: [0.22, 1, 0.36, 1],
+              times: [0, 0.5, 0.8, 0.95, 1]
             }}
             style={{ transformOrigin: "500px 520px" }}
           >
@@ -956,7 +960,7 @@ export default function LokiTimelinePortal() {
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="14"
+                strokeWidth="8"
                 strokeLinecap="round"
                 opacity="0.9"
               />
@@ -964,14 +968,14 @@ export default function LokiTimelinePortal() {
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="9"
+                strokeWidth="5.5"
                 strokeLinecap="round"
               />
               <path
                 d="M 1450 29 Q 820 419, 480 619 T -350 939"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 opacity="0.6"
               />
