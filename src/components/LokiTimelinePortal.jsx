@@ -468,9 +468,9 @@ export default function LokiTimelinePortal() {
           filter: "blur(28px)"
         }}
         transition={voyageProgress > 0 ? {
-          scale: { duration: 32.0, ease: [0.25, 1, 0.5, 1] },
-          opacity: { duration: 25.0, ease: [0.25, 1, 0.5, 1] },
-          filter: { duration: 28.0, ease: [0.25, 1, 0.5, 1] },
+          scale: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0] },
+          opacity: { duration: 20.0, ease: [0.25, 0.1, 0.25, 1.0] },
+          filter: { duration: 22.0, ease: [0.25, 0.1, 0.25, 1.0] },
           x: { duration: 8.0, ease: [0.16, 1, 0.3, 1] }
         } : {
           duration: 14.0,
@@ -597,19 +597,27 @@ export default function LokiTimelinePortal() {
       </motion.div>
 
       {/* ========================================================================= */}
-      {/* 3. MULTIVERSE TIMELINE BRANCHES: UNIFIED PERSPECTIVE FLIGHT */}
+      {/* 3. MULTIVERSE TIMELINE BRANCHES: UNIFIED PERSPECTIVE DEPTH STACK          */}
       {/* ========================================================================= */}
       {/* 
-        Ultra-Smooth Portfolio Scroll / Locomotive Parallax Flight:
-        All branches are interconnected in the same cosmic space.
-        When camera voyages forward towards the distant portal (voyageProgress: 0 -> 1):
-        - All branches move smoothly and concurrently at their respective depth (z-layer) parallax speeds!
-        - Foreground Branch 1 sweeps gently past the camera first (scale 1 -> 3.2).
-        - Branch 2 (2nd depth) smoothly scales past (scale 1 -> 2.6).
-        - Branch 5 (3rd depth) smoothly scales (scale 1 -> 2.2).
-        - Branch 3 (4th depth) smoothly scales (scale 1 -> 1.8).
-        - Branch 4 (deepest depth) smoothly scales (scale 1 -> 1.5).
-        Zero sudden jumps! Exactly like smooth scrolling in a high-end 3D portfolio!
+        CORRECT REAL-WORLD Z-STACKING ORDER (from back/deep to front/camera):
+        1. Deepest Background: Branch 4 (~1px near portal)
+        2. Far-Mid Depth:      Branch 3 (~2-3px)
+        3. Mid Depth:          Branch 5 (~3-4px)
+        4. Near Depth:         Branch 2 (~5px)
+        5. FOREGROUND (TOP):   Branch 1 (~8px, User Grab/Tap Vine)
+        
+        Because of this, thin distant branches will NEVER paint over or overlap on 
+        top of the thick foreground branches!
+        
+        SYNCHRONIZED PULL (All elements locked to one shared continuous timeline):
+        Total synchronized camera travel = 24.0s (ease: [0.25, 0.1, 0.25, 1.0]).
+        - Layer 1 (Nearest, 8px): Passes camera first (0s -> 9s)
+        - Layer 2 (5px): Enters near focus, passes camera (5s -> 14s)
+        - Layer 3 (4px): Follows in line, passes camera (9s -> 18s)
+        - Layer 4 (2.5px): Follows in line, passes camera (13s -> 22s)
+        - Layer 5 (1px near portal): Sweeps past camera (17s -> 24s)
+        - Portal: Approaches from depth simultaneously and locks into full bloom (0s -> 24s)!
       */}
       <svg 
         viewBox="0 0 1000 1000" 
@@ -638,40 +646,310 @@ export default function LokiTimelinePortal() {
           })}
         </defs>
 
-        {/* ===================================================================== */}
-        {/* CONTINUOUS PARALLAX DEPTH FLIGHT (Smooth Natural Portfolio Cruise):   */}
-        {/* Layer 1 (Nearest, Foreground): Branch 1 (Big, thick, fast-near sweep) */}
-        {/* Layer 2 (Near-Mid Depth): Branch 2 (Top sweep)                         */}
-        {/* Layer 3 (Mid Depth): Branch 5 (Center-right natural pass)             */}
-        {/* Layer 4 (Far-Mid Depth): Branch 3 (Bottom slow cruise)                 */}
-        {/* Layer 5 (Deepest Cosmic Horizon): Branch 4 (Ultra slow far cruise)    */}
-        {/* ===================================================================== */}
+        {/* ------------------------------------------------------------- */}
+        {/* DEPTH LAYER 5 (DEEPEST IN STACK): Branch 4 (~1px near Portal) */}
+        {/* Rendered at bottom of SVG -> All nearer branches draw OVER it  */}
+        {/* ------------------------------------------------------------- */}
+        <g 
+          style={{ 
+            opacity: hasDiscovered ? 1 : 0, 
+            transition: 'opacity 2.5s ease-out 0.5s',
+            pointerEvents: 'none'
+          }}
+        >
+          <motion.g
+            animate={voyageProgress > 0 ? {
+              scale: [1, 1.15, 1.6, 3.2],
+              y: [0, -100, -500, -1900],
+              x: [0, 80, 320, 950],
+              opacity: [1, 1, 1, 0]
+            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
+            transition={{
+              duration: 24.0,
+              delay: 0,
+              ease: [0.25, 0.1, 0.25, 1.0],
+              times: [0, 0.55, 0.8, 1]
+            }}
+            style={{ transformOrigin: "800px 300px" }}
+          >
+            <DraggableBranch
+              id="branch-4"
+              pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
+              origin="500px 520px"
+              strokeScale={0.18}
+              onEnergize={handleBranchEnergize}
+              energizedData={energizedBranches['branch-4']}
+              allEnergizedStage={awakenedStages['branch-4']}
+              isFinalBranch={lastTappedBranchId === 'branch-4'}
+              windConfig={{
+                x: [-14, 14, -14],
+                y: [12, -12, 12],
+                rotate: [-0.9, 0.9, -0.9],
+                duration: 26,
+                delay: 0.5
+              }}
+            >
+              <path
+                d="M 1450 30 Q 820 420, 480 620 T -350 940"
+                fill="none"
+                stroke="#000000"
+                strokeOpacity="0.001"
+                strokeWidth="120"
+                strokeLinecap="round"
+              />
+              <path
+                d="M 1450 30 Q 820 420, 480 620 T -350 940"
+                fill="none"
+                stroke="#000000"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                opacity="0.9"
+              />
+              <path
+                d="M 1450 30 Q 820 420, 480 620 T -350 940"
+                fill="none"
+                stroke="#050a08"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+              <path
+                d="M 1450 29 Q 820 419, 480 619 T -350 939"
+                fill="none"
+                stroke="#062d22"
+                strokeWidth="0.8"
+                strokeLinecap="round"
+                opacity="0.6"
+              />
+            </DraggableBranch>
+          </motion.g>
 
-        {/* ===================================================================== */}
-        {/* TRUE 3D PERSPECTIVE Z-DEPTH (Full Edge-to-Edge Continuous Branches)   */}
-        {/* Layer 1 (Nearest): Apparent 8px (stroke 16) -> Exits 1st (~14s)      */}
-        {/* Layer 2: Apparent 5px (stroke 10)          -> Exits 2nd (~20s)      */}
-        {/* Layer 3: Apparent 3px (stroke 6)           -> Exits 3rd (~26s)      */}
-        {/* Layer 4: Apparent 2px (stroke 3.5)         -> Exits 4th (~32s)      */}
-        {/* Layer 5: Apparent 1px (stroke 2)           -> Exits 5th (~38s)      */}
-        {/* All branches span the full screen (-400 to 1450).                     */}
-        {/* All move concurrently at delay: 0!                                    */}
-        {/* ===================================================================== */}
+          {/* ----------------------------------------------------------- */}
+          {/* DEPTH LAYER 4: Branch 3 (~2-3px visual)                     */}
+          {/* Rendered next -> draws OVER Branch 4                        */}
+          {/* ----------------------------------------------------------- */}
+          <motion.g
+            animate={voyageProgress > 0 ? {
+              scale: [1, 1.25, 2.0, 3.4],
+              y: [0, 150, 600, 1850],
+              x: [0, -20, -80, -240],
+              opacity: [1, 1, 1, 0]
+            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
+            transition={{
+              duration: 24.0,
+              delay: 0,
+              ease: [0.25, 0.1, 0.25, 1.0],
+              times: [0, 0.45, 0.72, 0.94]
+            }}
+            style={{ transformOrigin: "500px 720px" }}
+          >
+            <DraggableBranch
+              id="branch-3"
+              pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
+              origin="500px 720px"
+              strokeScale={0.3}
+              onEnergize={handleBranchEnergize}
+              energizedData={energizedBranches['branch-3']}
+              allEnergizedStage={awakenedStages['branch-3']}
+              isFinalBranch={lastTappedBranchId === 'branch-3'}
+              windConfig={{
+                y: [-20, 20, -20],
+                x: [-10, 10, -10],
+                rotate: [-1.4, 1.4, -1.4],
+                duration: 24,
+                delay: 2
+              }}
+            >
+              <path
+                d="M -380 890 Q 200 680, 580 720 T 1450 820"
+                fill="none"
+                stroke="#000000"
+                strokeOpacity="0.001"
+                strokeWidth="120"
+                strokeLinecap="round"
+              />
+              <path
+                d="M -380 890 Q 200 680, 580 720 T 1450 820"
+                fill="none"
+                stroke="#000000"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+                opacity="0.95"
+              />
+              <path
+                d="M -380 890 Q 200 680, 580 720 T 1450 820"
+                fill="none"
+                stroke="#050a08"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+              <path
+                d="M -380 889 Q 200 679, 580 719 T 1450 819"
+                fill="none"
+                stroke="#062d22"
+                strokeWidth="1"
+                strokeLinecap="round"
+                opacity="0.6"
+              />
+            </DraggableBranch>
+          </motion.g>
 
-        {/* --- DEPTH LAYER 1: Forefront Giant Timeline (Branch 1 - Forefront) --- */}
-        {/* Starts right at camera, glides past first smoothly (0s to 12s) */}
+          {/* ----------------------------------------------------------- */}
+          {/* DEPTH LAYER 3: Branch 5 (~3-4px visual)                     */}
+          {/* Rendered next -> draws OVER Branch 3 and 4                  */}
+          {/* ----------------------------------------------------------- */}
+          <motion.g
+            animate={voyageProgress > 0 ? {
+              scale: [1, 1.4, 2.3, 3.2],
+              y: [0, 180, 650, 1750],
+              x: [0, 40, 120, 270],
+              opacity: [1, 1, 1, 0]
+            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
+            transition={{
+              duration: 24.0,
+              delay: 0,
+              ease: [0.25, 0.1, 0.25, 1.0],
+              times: [0, 0.35, 0.62, 0.82]
+            }}
+            style={{ transformOrigin: "500px 540px" }}
+          >
+            <DraggableBranch
+              id="branch-5"
+              pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
+              origin="500px 540px"
+              strokeScale={0.45}
+              onEnergize={handleBranchEnergize}
+              energizedData={energizedBranches['branch-5']}
+              allEnergizedStage={awakenedStages['branch-5']}
+              isFinalBranch={lastTappedBranchId === 'branch-5'}
+              windConfig={{
+                y: [15, -15, 15],
+                x: [10, -10, 10],
+                rotate: [0.9, -0.9, 0.9],
+                duration: 21,
+                delay: 2.5
+              }}
+            >
+              <path
+                d="M -320 540 Q 280 430, 720 560 T 1420 520"
+                fill="none"
+                stroke="#000000"
+                strokeOpacity="0.001"
+                strokeWidth="110"
+                strokeLinecap="round"
+              />
+              <path
+                d="M -320 540 Q 280 430, 720 560 T 1420 520"
+                fill="none"
+                stroke="#000000"
+                strokeWidth="7"
+                strokeLinecap="round"
+                opacity="0.9"
+              />
+              <path
+                d="M -320 540 Q 280 430, 720 560 T 1420 520"
+                fill="none"
+                stroke="#050a08"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+              />
+              <path
+                d="M -320 539 Q 280 429, 720 559 T 1420 519"
+                fill="none"
+                stroke="#062d22"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                opacity="0.6"
+              />
+            </DraggableBranch>
+          </motion.g>
+
+          {/* ----------------------------------------------------------- */}
+          {/* DEPTH LAYER 2: Branch 2 (~5px visual)                       */}
+          {/* Rendered next -> draws OVER Branch 5, 3, and 4              */}
+          {/* ----------------------------------------------------------- */}
+          <motion.g
+            animate={voyageProgress > 0 ? {
+              scale: [1, 1.6, 2.8],
+              y: [0, -400, -1800],
+              x: [0, -70, -310],
+              opacity: [1, 1, 0]
+            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
+            transition={{
+              duration: 24.0,
+              delay: 0,
+              ease: [0.25, 0.1, 0.25, 1.0],
+              times: [0, 0.3, 0.65]
+            }}
+            style={{ transformOrigin: "500px 160px" }}
+          >
+            <DraggableBranch
+              id="branch-2"
+              pathData="M -350 40 Q 250 220, 680 160 T 1420 120"
+              origin="500px 160px"
+              strokeScale={0.7}
+              onEnergize={handleBranchEnergize}
+              energizedData={energizedBranches['branch-2']}
+              allEnergizedStage={awakenedStages['branch-2']}
+              isFinalBranch={lastTappedBranchId === 'branch-2'}
+              windConfig={{
+                y: [16, -16, 16],
+                x: [8, -8, 8],
+                rotate: [1.2, -1.2, 1.2],
+                duration: 25,
+                delay: 1
+              }}
+            >
+              <path
+                d="M -350 40 Q 250 220, 680 160 T 1420 120"
+                fill="none"
+                stroke="#000000"
+                strokeOpacity="0.001"
+                strokeWidth="110"
+                strokeLinecap="round"
+              />
+              <path
+                d="M -350 40 Q 250 220, 680 160 T 1420 120"
+                fill="none"
+                stroke="#000000"
+                strokeWidth="11"
+                strokeLinecap="round"
+                opacity="0.9"
+              />
+              <path
+                d="M -350 40 Q 250 220, 680 160 T 1420 120"
+                fill="none"
+                stroke="#050a08"
+                strokeWidth="7"
+                strokeLinecap="round"
+              />
+              <path
+                d="M -350 39 Q 250 219, 680 159 T 1420 119"
+                fill="none"
+                stroke="#062d22"
+                strokeWidth="2"
+                strokeLinecap="round"
+                opacity="0.6"
+              />
+            </DraggableBranch>
+          </motion.g>
+        </g>
+
+        {/* ------------------------------------------------------------- */}
+        {/* DEPTH LAYER 1: FOREFRONT MAIN TIMELINE (Branch 1 - ~8px visual)*/}
+        {/* RENDERED LAST IN SVG -> ALWAYS PAINTS ON TOP OF ALL BACKGROUND */}
+        {/* ------------------------------------------------------------- */}
         <motion.g
           animate={voyageProgress > 0 ? {
             scale: [1, 2.8],
             y: [0, -1700],
             x: [0, -280],
-            opacity: [1, 0.95, 0]
+            opacity: [1, 0]
           } : { scale: 1, y: 0, x: 0, opacity: 1 }}
           transition={{
-            duration: 12.0,
+            duration: 24.0,
             delay: 0,
-            ease: [0.32, 0, 0.67, 0],
-            times: [0, 0.7, 1]
+            ease: [0.25, 0.1, 0.25, 1.0],
+            times: [0, 0.42]
           }}
           style={{ transformOrigin: "500px 440px" }}
         >
@@ -737,287 +1015,6 @@ export default function LokiTimelinePortal() {
             />
           </DraggableBranch>
         </motion.g>
-
-        {/* Branches 2 to 5: Strictly display-only background multiverse tapestry */}
-        <g 
-          style={{ 
-            opacity: hasDiscovered ? 1 : 0, 
-            transition: 'opacity 2.5s ease-out 0.5s',
-            pointerEvents: 'none'
-          }}
-        >
-          {/* --- DEPTH LAYER 2: Upper Timeline Vine (Branch 2) --- */}
-          {/* Approaches from depth: enlarges to foreground thickness (scale 1 -> 1.7) around 10s, then flies past by 18s! */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: [1, 1.65, 2.9],
-              y: [0, -450, -1800],
-              x: [0, -80, -320],
-              opacity: [1, 1, 0]
-            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
-            transition={{
-              duration: 18.0,
-              delay: 0,
-              ease: "easeInOut",
-              times: [0, 0.55, 1]
-            }}
-            style={{ transformOrigin: "500px 160px" }}
-          >
-            <DraggableBranch
-              id="branch-2"
-              pathData="M -350 40 Q 250 220, 680 160 T 1420 120"
-              origin="500px 160px"
-              strokeScale={0.7}
-              onEnergize={handleBranchEnergize}
-              energizedData={energizedBranches['branch-2']}
-              allEnergizedStage={awakenedStages['branch-2']}
-              isFinalBranch={lastTappedBranchId === 'branch-2'}
-              windConfig={{
-                y: [16, -16, 16],
-                x: [8, -8, 8],
-                rotate: [1.2, -1.2, 1.2],
-                duration: 25,
-                delay: 1
-              }}
-            >
-              <path
-                d="M -350 40 Q 250 220, 680 160 T 1420 120"
-                fill="none"
-                stroke="#000000"
-                strokeOpacity="0.001"
-                strokeWidth="110"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -350 40 Q 250 220, 680 160 T 1420 120"
-                fill="none"
-                stroke="#000000"
-                strokeWidth="11"
-                strokeLinecap="round"
-                opacity="0.9"
-              />
-              <path
-                d="M -350 40 Q 250 220, 680 160 T 1420 120"
-                fill="none"
-                stroke="#050a08"
-                strokeWidth="7"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -350 39 Q 250 219, 680 159 T 1420 119"
-                fill="none"
-                stroke="#062d22"
-                strokeWidth="2"
-                strokeLinecap="round"
-                opacity="0.6"
-              />
-            </DraggableBranch>
-          </motion.g>
-
-          {/* --- DEPTH LAYER 3: Mid-Depth Flowing Vine (Branch 5) --- */}
-          {/* Approaches from deeper: reaches prominent near size (scale 1 -> 2.2) around 16s, then exits by 23s! */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: [1, 1.5, 2.3, 3.1],
-              y: [0, 200, 700, 1750],
-              x: [0, 50, 140, 280],
-              opacity: [1, 1, 0.9, 0]
-            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
-            transition={{
-              duration: 23.0,
-              delay: 0,
-              ease: "easeInOut",
-              times: [0, 0.45, 0.72, 1]
-            }}
-            style={{ transformOrigin: "500px 540px" }}
-          >
-            <DraggableBranch
-              id="branch-5"
-              pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
-              origin="500px 540px"
-              strokeScale={0.45}
-              onEnergize={handleBranchEnergize}
-              energizedData={energizedBranches['branch-5']}
-              allEnergizedStage={awakenedStages['branch-5']}
-              isFinalBranch={lastTappedBranchId === 'branch-5'}
-              windConfig={{
-                y: [15, -15, 15],
-                x: [10, -10, 10],
-                rotate: [0.9, -0.9, 0.9],
-                duration: 21,
-                delay: 2.5
-              }}
-            >
-              <path
-                d="M -320 540 Q 280 430, 720 560 T 1420 520"
-                fill="none"
-                stroke="#000000"
-                strokeOpacity="0.001"
-                strokeWidth="110"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -320 540 Q 280 430, 720 560 T 1420 520"
-                fill="none"
-                stroke="#000000"
-                strokeWidth="7"
-                strokeLinecap="round"
-                opacity="0.9"
-              />
-              <path
-                d="M -320 540 Q 280 430, 720 560 T 1420 520"
-                fill="none"
-                stroke="#050a08"
-                strokeWidth="4.5"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -320 539 Q 280 429, 720 559 T 1420 519"
-                fill="none"
-                stroke="#062d22"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                opacity="0.6"
-              />
-            </DraggableBranch>
-          </motion.g>
-
-          {/* --- DEPTH LAYER 4: Deep Lower Vine (Branch 3) --- */}
-          {/* Starts far away: approaches camera gradually, becoming prominent (scale 1 -> 3.0) around 22s, then exits by 28s! */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: [1, 1.4, 2.4, 3.4],
-              y: [0, 250, 750, 1850],
-              x: [0, -30, -90, -220],
-              opacity: [1, 1, 0.95, 0]
-            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
-            transition={{
-              duration: 28.0,
-              delay: 0,
-              ease: "easeInOut",
-              times: [0, 0.45, 0.75, 1]
-            }}
-            style={{ transformOrigin: "500px 720px" }}
-          >
-            <DraggableBranch
-              id="branch-3"
-              pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
-              origin="500px 720px"
-              strokeScale={0.3}
-              onEnergize={handleBranchEnergize}
-              energizedData={energizedBranches['branch-3']}
-              allEnergizedStage={awakenedStages['branch-3']}
-              isFinalBranch={lastTappedBranchId === 'branch-3'}
-              windConfig={{
-                y: [-20, 20, -20],
-                x: [-10, 10, -10],
-                rotate: [-1.4, 1.4, -1.4],
-                duration: 24,
-                delay: 2
-              }}
-            >
-              <path
-                d="M -380 890 Q 200 680, 580 720 T 1450 820"
-                fill="none"
-                stroke="#000000"
-                strokeOpacity="0.001"
-                strokeWidth="120"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -380 890 Q 200 680, 580 720 T 1450 820"
-                fill="none"
-                stroke="#000000"
-                strokeWidth="4.5"
-                strokeLinecap="round"
-                opacity="0.95"
-              />
-              <path
-                d="M -380 890 Q 200 680, 580 720 T 1450 820"
-                fill="none"
-                stroke="#050a08"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -380 889 Q 200 679, 580 719 T 1450 819"
-                fill="none"
-                stroke="#062d22"
-                strokeWidth="1"
-                strokeLinecap="round"
-                opacity="0.6"
-              />
-            </DraggableBranch>
-          </motion.g>
-
-          {/* --- DEPTH LAYER 5: Deepest Horizon Branch (Branch 4 - Near portal) --- */}
-          {/* Deepest horizon branch: stays in distant background, then as camera reaches the portal, it expands and sweeps past (25s - 33s) */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: [1, 1.3, 2.2, 3.5],
-              y: [0, -300, -900, -1950],
-              x: [0, 150, 480, 980],
-              opacity: [1, 1, 0.95, 0]
-            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
-            transition={{
-              duration: 33.0,
-              delay: 0,
-              ease: "easeInOut",
-              times: [0, 0.5, 0.78, 1]
-            }}
-            style={{ transformOrigin: "800px 300px" }}
-          >
-            <DraggableBranch
-              id="branch-4"
-              pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
-              origin="500px 520px"
-              strokeScale={0.18}
-              onEnergize={handleBranchEnergize}
-              energizedData={energizedBranches['branch-4']}
-              allEnergizedStage={awakenedStages['branch-4']}
-              isFinalBranch={lastTappedBranchId === 'branch-4'}
-              windConfig={{
-                x: [-14, 14, -14],
-                y: [12, -12, 12],
-                rotate: [-0.9, 0.9, -0.9],
-                duration: 26,
-                delay: 0.5
-              }}
-            >
-              <path
-                d="M 1450 30 Q 820 420, 480 620 T -350 940"
-                fill="none"
-                stroke="#000000"
-                strokeOpacity="0.001"
-                strokeWidth="120"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 1450 30 Q 820 420, 480 620 T -350 940"
-                fill="none"
-                stroke="#000000"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                opacity="0.9"
-              />
-              <path
-                d="M 1450 30 Q 820 420, 480 620 T -350 940"
-                fill="none"
-                stroke="#050a08"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 1450 29 Q 820 419, 480 619 T -350 939"
-                fill="none"
-                stroke="#062d22"
-                strokeWidth="0.8"
-                strokeLinecap="round"
-                opacity="0.6"
-              />
-            </DraggableBranch>
-          </motion.g>
-        </g>
       </svg>
     </div>
   );
