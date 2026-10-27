@@ -656,8 +656,7 @@ export default function LokiTimelinePortal() {
 
         {/* ------------------------------------------------------------- */}
         {/* DEPTH LAYER 5: Branch 4 (~1px near Portal, diagonal thread)    */}
-        {/* Begins thin, expands naturally to foreground scale ~2.5x near camera */}
-        {/* Framed gracefully across the edge of the screen!             */}
+        {/* Begins thin, expands to foreground scale ~3.5x and sweeps past the screen! */}
         {/* ------------------------------------------------------------- */}
         <g 
           style={{ 
@@ -668,10 +667,10 @@ export default function LokiTimelinePortal() {
         >
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.4, 2.5],
-              y: [0, 40, 110],
-              x: [0, -30, -70],
-              opacity: [1, 1, 0.95]
+              scale: [1, 1.5, 3.6],
+              y: [0, -350, -1850],
+              x: [0, 200, 950],
+              opacity: [1, 1, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
@@ -803,21 +802,21 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* ----------------------------------------------------------- */}
-          {/* DEPTH LAYER 3: Branch 5 (~3-4px -> Foreground Vine Framing)  */}
-          {/* Approaches and stays beautifully framed in foreground lower! */}
+          {/* DEPTH LAYER 3: Branch 5 (~3-4px -> Foreground Expansion & Exit) */}
+          {/* Approaches, grows to foreground, and sweeps past screen!    */}
           {/* ----------------------------------------------------------- */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.5, 2.4],
-              y: [0, 80, 180],
-              x: [0, 20, 45],
-              opacity: [1, 1, 0.95]
+              scale: [1, 1.6, 3.4],
+              y: [0, 450, 1850],
+              x: [0, 60, 240],
+              opacity: [1, 1, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.5, 1]
+              times: [0, 0.5, 0.88]
             }}
             style={{ transformOrigin: "500px 540px" }}
           >
