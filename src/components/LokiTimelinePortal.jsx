@@ -625,25 +625,35 @@ export default function LokiTimelinePortal() {
         {/* ===================================================================== */}
 
         {/* ===================================================================== */}
-        {/* PARALLAX PERSPECTIVE FLIGHT:                                          */}
-        {/* All branches start moving at the EXACT SAME TIME (delay: 0).          */}
-        {/* Nearest foreground branches have higher optical parallax velocity     */}
-        {/* and exit screen first. The deeper background branches move slower,    */}
-        {/* exiting one by one behind them in continuous, non-stop motion!        */}
+        {/* TRUE 3D PERSPECTIVE Z-DEPTH FLIGHT (Camera rushes to Portal):         */}
+        {/* In the beginning:                                                     */}
+        {/* - Front Branch 1: Closest to camera -> Scale 1.0 (apparent 8px)       */}
+        {/* - Branch 2: Mid-front depth          -> Scale 0.65 (apparent ~5px)    */}
+        {/* - Branch 5: Mid depth                -> Scale 0.45 (apparent ~3.5px)  */}
+        {/* - Branch 3: Deep depth               -> Scale 0.30 (apparent ~2.5px)  */}
+        {/* - Branch 4: Deepest near portal      -> Scale 0.15 (apparent ~1px)    */}
+        {/* As camera cruises forward concurrently at the exact same time:        */}
+        {/* Every branch grows (1px -> 3px -> 5px -> 8px -> fly past camera)!    */}
+        {/* Since Branch 1 is nearest, it zooms past first (12s).                 */}
+        {/* Then Branch 2 reaches camera and flies past (18s).                    */}
+        {/* Then Branch 5 reaches camera and flies past (25s).                    */}
+        {/* Then Branch 3 reaches camera and flies past (32s).                    */}
+        {/* Then deepest Branch 4 reaches camera and flies past (38s).            */}
+        {/* Then camera arrives at Sacred Portal! All continuous, no stops!       */}
         {/* ===================================================================== */}
 
-        {/* --- DEPTH LAYER 1: Forefront Giant Timeline (Branch 1) --- */}
-        {/* Closest to camera: Exits first, sweeping far UP and fully OFF-SCREEN */}
+        {/* --- DEPTH LAYER 1: Forefront Giant Timeline (Branch 1, starts at 8px) --- */}
         <motion.g
+          initial={{ scale: 1.0, y: 0, x: 0 }}
           animate={voyageProgress > 0 ? {
             scale: 3.5,
-            y: -1600,
+            y: -1700,
             x: -250
-          } : { scale: 1, y: 0, x: 0 }}
+          } : { scale: 1.0, y: 0, x: 0 }}
           transition={{
-            duration: 14.0,
+            duration: 12.0,
             delay: 0,
-            ease: [0.16, 1, 0.3, 1]
+            ease: [0.22, 1, 0.36, 1]
           }}
           style={{ transformOrigin: "500px 440px" }}
         >
@@ -718,18 +728,18 @@ export default function LokiTimelinePortal() {
             pointerEvents: 'none'
           }}
         >
-          {/* --- DEPTH LAYER 2: Upper Timeline Vine (Branch 2) --- */}
-          {/* Depth layer 2: Moves at same time (delay: 0), sweeps far UP and fully OFF-SCREEN */}
+          {/* --- DEPTH LAYER 2: Upper Timeline Vine (Branch 2, starts at ~5px, grows to 8px and exits) --- */}
           <motion.g
+            initial={{ scale: 0.65, y: 0, x: 0 }}
             animate={voyageProgress > 0 ? {
               scale: 3.2,
-              y: -1700,
+              y: -1800,
               x: -300
-            } : { scale: 1, y: 0, x: 0 }}
+            } : { scale: 0.65, y: 0, x: 0 }}
             transition={{
-              duration: 20.0,
+              duration: 18.0,
               delay: 0,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.22, 1, 0.36, 1]
             }}
             style={{ transformOrigin: "500px 160px" }}
           >
@@ -783,18 +793,18 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* --- DEPTH LAYER 3: Mid-Depth Flowing Vine (Branch 5) --- */}
-          {/* Depth layer 3: Sweeps far DOWN and fully OFF-SCREEN */}
+          {/* --- DEPTH LAYER 3: Mid-Depth Flowing Vine (Branch 5, starts at ~3.5px, grows to 8px and exits) --- */}
           <motion.g
+            initial={{ scale: 0.45, y: 0, x: 0 }}
             animate={voyageProgress > 0 ? {
               scale: 3.0,
-              y: 1600,
+              y: 1700,
               x: 250
-            } : { scale: 1, y: 0, x: 0 }}
+            } : { scale: 0.45, y: 0, x: 0 }}
             transition={{
-              duration: 26.0,
+              duration: 25.0,
               delay: 0,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.22, 1, 0.36, 1]
             }}
             style={{ transformOrigin: "500px 540px" }}
           >
@@ -848,18 +858,18 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* --- DEPTH LAYER 4: Deep Lower Vine (Branch 3) --- */}
-          {/* Depth layer 4: Sweeps far DOWN and fully OFF-SCREEN */}
+          {/* --- DEPTH LAYER 4: Deep Lower Vine (Branch 3, starts at ~2.5px, grows to 8px and exits) --- */}
           <motion.g
+            initial={{ scale: 0.30, y: 0, x: 0 }}
             animate={voyageProgress > 0 ? {
               scale: 3.0,
-              y: 1700,
+              y: 1800,
               x: -200
-            } : { scale: 1, y: 0, x: 0 }}
+            } : { scale: 0.30, y: 0, x: 0 }}
             transition={{
-              duration: 33.0,
+              duration: 32.0,
               delay: 0,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.22, 1, 0.36, 1]
             }}
             style={{ transformOrigin: "500px 720px" }}
           >
@@ -913,18 +923,18 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* --- DEPTH LAYER 5: Deepest Background Horizon Branch (Branch 4) --- */}
-          {/* Deepest layer: Flies cleanly UP and far to the right, fully off-screen */}
+          {/* --- DEPTH LAYER 5: Deepest Horizon Branch (Branch 4, starts at ~1px near portal, grows to 8px and exits) --- */}
           <motion.g
+            initial={{ scale: 0.15, y: 0, x: 0 }}
             animate={voyageProgress > 0 ? {
               scale: 3.2,
-              y: -1800,
+              y: -1900,
               x: 950
-            } : { scale: 1, y: 0, x: 0 }}
+            } : { scale: 0.15, y: 0, x: 0 }}
             transition={{
-              duration: 35.0,
+              duration: 38.0,
               delay: 0,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.22, 1, 0.36, 1]
             }}
             style={{ transformOrigin: "800px 300px" }}
           >
