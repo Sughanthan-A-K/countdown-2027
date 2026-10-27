@@ -447,30 +447,31 @@ export default function LokiTimelinePortal() {
 
       {/* ========================================================================= */}
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
-          - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
+          - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.15).
           - On First Tap (hasDiscovered = true):
-            Emerges in deep space distance (scale: 0.30).
-          - Moves continuously and ultra-slowly (90.0 seconds), gradually expanding 
-            into majestic focus only after the branches have drifted past.
+            Emerges in far deep space distance (scale: 0.20, blurry).
+          - Stays far away in distance until voyage begins.
+          - When Voyage begins (voyageProgress > 0):
+            Moves forward strictly synchronized with the camera's 24-second branch journey!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
+        initial={{ x: "-90vw", scale: 0.15, opacity: 0, filter: "blur(32px)" }}
         animate={hasDiscovered ? {
           x: "0vw",
-          scale: voyageProgress > 0 ? 1.05 : 0.30,
-          opacity: voyageProgress > 0 ? 1 : 0.65,
-          filter: voyageProgress > 0 ? "blur(0px)" : "blur(10px)"
+          scale: voyageProgress > 0 ? [0.20, 0.32, 0.55, 1.05] : 0.20,
+          opacity: voyageProgress > 0 ? [0.4, 0.6, 0.85, 1] : 0.45,
+          filter: voyageProgress > 0 ? ["blur(14px)", "blur(10px)", "blur(4px)", "blur(0px)"] : "blur(14px)"
         } : {
           x: "-90vw",
-          scale: 0.25,
+          scale: 0.15,
           opacity: 0,
-          filter: "blur(28px)"
+          filter: "blur(32px)"
         }}
         transition={voyageProgress > 0 ? {
-          scale: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0] },
-          opacity: { duration: 20.0, ease: [0.25, 0.1, 0.25, 1.0] },
-          filter: { duration: 22.0, ease: [0.25, 0.1, 0.25, 1.0] },
+          scale: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
+          opacity: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
+          filter: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
           x: { duration: 8.0, ease: [0.16, 1, 0.3, 1] }
         } : {
           duration: 14.0,
@@ -506,25 +507,29 @@ export default function LokiTimelinePortal() {
           }}
         />
 
-        {/* Outer illuminated cloudy rift lip - Pale Green Glow & Lime Green Flow */}
+        {/* Outer illuminated cloudy rift lip - Scales naturally along with the 24s camera journey */}
         <motion.div
           initial={{ scaleX: 1.0, scaleY: 1.0, opacity: 0.85 }}
-          animate={{
-            scaleX: [1.0, 1.25, 1.45, 1.38, 1.42],
-            scaleY: [1.0, 1.02, 1.04, 1.01, 1.03],
+          animate={voyageProgress > 0 ? {
+            scaleX: [0.5, 0.8, 1.15, 1.42],
+            scaleY: [0.6, 0.85, 1.0, 1.03],
             borderRadius: [
               '15% 75% 55% 35% / 70% 25% 65% 45%',
               '25% 65% 60% 30% / 65% 35% 60% 50%',
               '10% 80% 50% 40% / 75% 20% 70% 40%',
               '18% 72% 56% 36% / 68% 28% 64% 46%'
             ],
-            opacity: [0.85, 0.95, 1, 0.94, 0.98]
+            opacity: [0.5, 0.75, 0.92, 0.98]
+          } : {
+            scaleX: 0.5,
+            scaleY: 0.6,
+            opacity: 0.5
           }}
           transition={{
-            scaleX: { duration: 9.0, ease: [0.16, 1, 0.3, 1] },
-            scaleY: { duration: 9.5, ease: [0.16, 1, 0.3, 1] },
-            borderRadius: { duration: 10.0, ease: "easeInOut" },
-            opacity: { duration: 5, ease: "easeOut" }
+            scaleX: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
+            scaleY: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
+            borderRadius: { duration: 10.0, repeat: Infinity, ease: "easeInOut" },
+            opacity: { duration: 24.0, ease: "easeOut", times: [0, 0.4, 0.75, 1] }
           }}
           className="absolute h-[120vh] w-64 sm:w-80 pointer-events-none"
           style={{
@@ -534,23 +539,26 @@ export default function LokiTimelinePortal() {
           }}
         />
 
-        {/* Inner Void / Deep Spacetime Tear */}
+        {/* Inner Void / Deep Spacetime Tear - Synchronized with the 24s camera journey */}
         <motion.div
           initial={{ scaleX: 1.0, scaleY: 1.0 }}
-          animate={{
-            scaleX: [1.0, 1.3, 1.6, 1.5, 1.55],
-            scaleY: [1.0, 1.02, 1.03, 1.01, 1.02],
+          animate={voyageProgress > 0 ? {
+            scaleX: [0.45, 0.75, 1.15, 1.55],
+            scaleY: [0.55, 0.8, 0.98, 1.02],
             borderRadius: [
               '20% 65% 40% 60% / 65% 35% 55% 45%',
               '35% 55% 48% 52% / 58% 42% 50% 50%',
               '15% 75% 38% 62% / 70% 30% 58% 42%',
               '22% 68% 42% 58% / 64% 36% 54% 46%'
             ]
+          } : {
+            scaleX: 0.45,
+            scaleY: 0.55
           }}
           transition={{
-            scaleX: { duration: 9.5, ease: [0.16, 1, 0.3, 1] },
-            scaleY: { duration: 10.0, ease: [0.16, 1, 0.3, 1] },
-            borderRadius: { duration: 10.5, ease: "easeInOut" }
+            scaleX: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
+            scaleY: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
+            borderRadius: { duration: 10.5, repeat: Infinity, ease: "easeInOut" }
           }}
           className="absolute h-[115vh] w-24 sm:w-36 pointer-events-none"
           style={{
@@ -648,7 +656,8 @@ export default function LokiTimelinePortal() {
 
         {/* ------------------------------------------------------------- */}
         {/* DEPTH LAYER 5: Branch 4 (~1px near Portal, diagonal thread)    */}
-        {/* Begins thin, expands to full foreground ~3.6x and passes top-right out of screen! */}
+        {/* Begins thin, expands naturally to foreground scale ~2.5x near camera */}
+        {/* Framed gracefully across the edge of the screen!             */}
         {/* ------------------------------------------------------------- */}
         <g 
           style={{ 
@@ -659,16 +668,16 @@ export default function LokiTimelinePortal() {
         >
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.6, 3.6],
-              y: [0, -350, -1800],
-              x: [0, 250, 950],
-              opacity: [1, 1, 0]
+              scale: [1, 1.4, 2.5],
+              y: [0, 40, 110],
+              x: [0, -30, -70],
+              opacity: [1, 1, 0.95]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.65, 0.98]
+              times: [0, 0.6, 1]
             }}
             style={{ transformOrigin: "600px 480px" }}
           >
@@ -676,7 +685,7 @@ export default function LokiTimelinePortal() {
               id="branch-4"
               pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
               origin="500px 520px"
-              strokeScale={1.0}
+              strokeScale={0.7}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-4']}
               allEnergizedStage={awakenedStages['branch-4']}
@@ -701,7 +710,7 @@ export default function LokiTimelinePortal() {
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="14"
+                strokeWidth="7"
                 strokeLinecap="round"
                 opacity="0.9"
               />
@@ -709,14 +718,14 @@ export default function LokiTimelinePortal() {
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="9"
+                strokeWidth="4.5"
                 strokeLinecap="round"
               />
               <path
                 d="M 1450 29 Q 820 419, 480 619 T -350 939"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2.4"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 opacity="0.6"
               />
@@ -730,7 +739,7 @@ export default function LokiTimelinePortal() {
           <motion.g
             animate={voyageProgress > 0 ? {
               scale: [1, 1.6, 3.2, 4.6],
-              y: [0, 80, 550, 1850],
+              y: [0, 80, 550, 1800],
               x: [0, -20, -90, -260],
               opacity: [1, 1, 1, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
@@ -746,7 +755,7 @@ export default function LokiTimelinePortal() {
               id="branch-3"
               pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
               origin="500px 720px"
-              strokeScale={1.0}
+              strokeScale={0.8}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-3']}
               allEnergizedStage={awakenedStages['branch-3']}
@@ -771,7 +780,7 @@ export default function LokiTimelinePortal() {
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="15"
+                strokeWidth="11"
                 strokeLinecap="round"
                 opacity="0.95"
               />
@@ -779,14 +788,14 @@ export default function LokiTimelinePortal() {
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="10"
+                strokeWidth="7"
                 strokeLinecap="round"
               />
               <path
                 d="M -380 889 Q 200 679, 580 719 T 1450 819"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2.5"
+                strokeWidth="2"
                 strokeLinecap="round"
                 opacity="0.6"
               />
@@ -794,21 +803,21 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* ----------------------------------------------------------- */}
-          {/* DEPTH LAYER 3: Branch 5 (~3-4px -> Expands and sweeps bottom)*/}
-          {/* Follows in sequence, grows to ~3.5x and passes out of screen */}
+          {/* DEPTH LAYER 3: Branch 5 (~3-4px -> Foreground Vine Framing)  */}
+          {/* Approaches and stays beautifully framed in foreground lower! */}
           {/* ----------------------------------------------------------- */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.7, 3.5],
-              y: [0, 300, 1800],
-              x: [0, 60, 280],
-              opacity: [1, 1, 0]
+              scale: [1, 1.5, 2.4],
+              y: [0, 80, 180],
+              x: [0, 20, 45],
+              opacity: [1, 1, 0.95]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.45, 0.85]
+              times: [0, 0.5, 1]
             }}
             style={{ transformOrigin: "500px 540px" }}
           >
@@ -816,7 +825,7 @@ export default function LokiTimelinePortal() {
               id="branch-5"
               pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
               origin="500px 540px"
-              strokeScale={1.0}
+              strokeScale={0.85}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-5']}
               allEnergizedStage={awakenedStages['branch-5']}
@@ -841,7 +850,7 @@ export default function LokiTimelinePortal() {
                 d="M -320 540 Q 280 430, 720 560 T 1420 520"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="15"
+                strokeWidth="12"
                 strokeLinecap="round"
                 opacity="0.9"
               />
@@ -849,14 +858,14 @@ export default function LokiTimelinePortal() {
                 d="M -320 540 Q 280 430, 720 560 T 1420 520"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="10"
+                strokeWidth="8"
                 strokeLinecap="round"
               />
               <path
                 d="M -320 539 Q 280 429, 720 559 T 1420 519"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2.5"
+                strokeWidth="2.2"
                 strokeLinecap="round"
                 opacity="0.6"
               />
