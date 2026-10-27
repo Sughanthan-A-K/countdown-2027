@@ -208,7 +208,8 @@ function DraggableBranch({
   onEnergize,
   energizedData,
   allEnergizedStage,
-  isFinalBranch = false
+  isFinalBranch = false,
+  isClickable = false
 }) {
   const branchPathRef = useRef(null);
   const [tapRatio, setTapRatio] = useState(0.5);
@@ -221,6 +222,7 @@ function DraggableBranch({
   }, [energizedData?.tapRatio]);
 
   const handlePointerDown = (e) => {
+    if (!isClickable) return;
     e.stopPropagation();
 
     // Trigger Loki God of Stories life magic power flow starting exactly from touch point!
@@ -279,8 +281,8 @@ function DraggableBranch({
       style={{ transformOrigin: origin }}
     >
       <g
-        onPointerDown={handlePointerDown}
-        className="pointer-events-auto cursor-pointer select-none"
+        onPointerDown={isClickable ? handlePointerDown : undefined}
+        className={isClickable ? "pointer-events-auto cursor-pointer select-none" : "pointer-events-none select-none"}
       >
         {/* Hidden reference path to compute exact total length and subpaths on click */}
         <path ref={branchPathRef} d={pathData} fill="none" stroke="none" />
@@ -607,6 +609,7 @@ export default function LokiTimelinePortal() {
           })}
         </defs>
         {/* Branch 1: Long flowing hanging branch across the entire cosmos */}
+        {/* ONLY this single branch has tap enabled! Once tapped, it automatically cascades to all others */}
         <DraggableBranch
           id="branch-1"
           pathData="M -400 310 Q 150 480, 520 440 T 1450 390"
@@ -615,6 +618,7 @@ export default function LokiTimelinePortal() {
           energizedData={energizedBranches['branch-1']}
           allEnergizedStage={awakenedStages['branch-1']}
           isFinalBranch={lastTappedBranchId === 'branch-1'}
+          isClickable={!energizedBranches['branch-1']?.active} // Clickable only until first tap
           windConfig={{
             y: [-18, 18, -18],
             x: [12, -12, 12],
@@ -669,12 +673,12 @@ export default function LokiTimelinePortal() {
         </DraggableBranch>
 
         {/* Branches 2 to 5: Long hanging, flowing cosmic branches */}
-        {/* Initially hidden with pointer-events-none so ONLY Branch 1 is clickable! Once discovered, pointer-events are enabled for effortless interaction */}
+        {/* Strictly display-only (pointer-events-none): All tap options removed! */}
         <g 
           style={{ 
             opacity: hasDiscovered ? 1 : 0, 
             transition: 'opacity 2.5s ease-out 0.5s',
-            pointerEvents: hasDiscovered ? 'auto' : 'none'
+            pointerEvents: 'none'
           }}
         >
           {/* Branch 2: High sweeping undulating branch */}
