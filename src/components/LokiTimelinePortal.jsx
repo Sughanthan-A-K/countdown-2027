@@ -265,11 +265,12 @@ function DraggableBranch({
 
   return (
     <motion.g
-      // Unbroken Continuous Ultra-Slow 3D Pass-By Flight:
-      // Glides smoothly straight towards the viewer's camera, expands to fill and sweep past the screen, and only fades once behind!
+      // First-person camera voyage:
+      // The branches stay rooted in the cosmic fabric while our viewpoint approaches them very slowly.
+      // They expand smoothly to fill and sweep past the screen edges, fading only after crossing behind us!
       animate={flyOut3D ? {
-        scale: [1, 28],
-        y: [0, 950],
+        scale: [1, 24],
+        y: [0, 850],
         opacity: [1, 1, 1, 0]
       } : { 
         y: windConfig.y,
@@ -277,9 +278,9 @@ function DraggableBranch({
         rotate: windConfig.rotate
       }}
       transition={flyOut3D ? {
-        duration: 9.5, // Ultra slow, majestic cinematic approach
-        times: [0, 0.7, 0.9, 1.0], // Full 100% visible while approaching & crossing the screen
-        ease: [0.25, 0.1, 0.25, 1.0] // Silky smooth easing
+        duration: 16.0, // Extremely slow, meditative pass-by voyage
+        times: [0, 0.75, 0.92, 1.0], // Full 100% visible while approaching & passing across screen
+        ease: [0.18, 0.9, 0.2, 1.0] // Very gentle, silky cinematic ease
       } : {
         duration: windConfig.duration,
         repeat: Infinity,
@@ -340,6 +341,10 @@ export default function LokiTimelinePortal() {
   // hasDiscovered = false -> Only single isolated mystery vine in darkness, portal stays far away in deep space!
   const [hasDiscovered, setHasDiscovered] = useState(false);
 
+  // Once all 5 branches are passed and we arrive at the threshold of the portal,
+  // the sacred rift widens further ("antha portal inum konjam viriuthu")!
+  const [isPortalExpanded, setIsPortalExpanded] = useState(false);
+
   const handleBranchEnergize = (id, clickX, clickY) => {
     // When user taps Branch 1:
     if (!hasDiscovered) {
@@ -359,15 +364,13 @@ export default function LokiTimelinePortal() {
         }
       };
 
-      // When the user taps Branch 1 (or any initial branch),
-      // smoothly cascade and activate all remaining branches sequentially one by one!
-      // Instead of all triggering from center (0.5), they ignite dynamically from the sides (left/right ends)
-      // like organic vines catching fire from the perimeter!
+      // Cascade trigger remaining branches from dynamic sides:
+      // Timing: Branch 1 tapped -> branches 2,3,4,5 ignite sequentially from sides
       const cascadeConfig = [
-        { id: 'branch-2', tapRatio: 0.05, delay: 1200 }, // starts from left side edge
-        { id: 'branch-3', tapRatio: 0.95, delay: 2400 }, // starts from right side edge
-        { id: 'branch-4', tapRatio: 0.08, delay: 3600 }, // starts from far right/top side edge
-        { id: 'branch-5', tapRatio: 0.92, delay: 4800 }, // starts from far right side edge
+        { id: 'branch-2', tapRatio: 0.05, delay: 1000 }, // starts from left side edge
+        { id: 'branch-3', tapRatio: 0.95, delay: 2000 }, // starts from right side edge
+        { id: 'branch-4', tapRatio: 0.08, delay: 3000 }, // starts from far corner side edge
+        { id: 'branch-5', tapRatio: 0.92, delay: 4000 }, // starts from far right side edge
       ];
 
       cascadeConfig.forEach(item => {
@@ -390,15 +393,24 @@ export default function LokiTimelinePortal() {
       allBranchIds.forEach((bId, bIdx) => {
         setTimeout(() => {
           setAwakenedStages(stagePrev => ({ ...stagePrev, [bId]: true }));
-        }, 2200 + bIdx * 1000);
+        }, 1800 + bIdx * 900);
       });
 
-      // Ultra-slow, majestic 3D sweep towards and past camera for each branch
+      // User requirement:
+      // "once ellame trigger aaghi antha ella branch apdiye antha green color la glow aaghuratha user oru 3 sec paakanum"
+      // -> All branches finish igniting by ~5.0s. They glow together in living green for 3+ full seconds.
+      // Then, we begin moving forward towards the portal, causing branches to glide past our viewpoint very slowly:
       allBranchIds.forEach((bId, bIdx) => {
         setTimeout(() => {
           setFlyOutBranches(flyPrev => ({ ...flyPrev, [bId]: true }));
-        }, 4500 + bIdx * 1500);
+        }, 8500 + bIdx * 1800); // Starts at 8.5s (giving full 3.5s pure glow time!), staggered
       });
+
+      // Once we pass all 5 branches and arrive close to the portal:
+      // "5 branch once nambha kandnu poi antha portal kita pona odane antha portal inum konjam viriuthu"
+      setTimeout(() => {
+        setIsPortalExpanded(true);
+      }, 21000); // When pass-by completes, the portal expands further!
 
       return updated;
     });
@@ -407,11 +419,8 @@ export default function LokiTimelinePortal() {
   // Total energized count (0 to 5):
   // As user crosses branches one by one, the distant portal gently approaches closer step-by-step!
   const energizedCount = Object.keys(energizedBranches).length;
-  // Starting distant scale = 0.52 (stays far away at beginning as requested!)
-  // Grows incrementally closer with each passed branch: 0.52 -> 0.62 -> 0.72 -> 0.85 -> 1.0!
-  const portalDistanceScale = 0.52 + energizedCount * 0.1;
-  // Starting normal width = 16px (w-4), progressively widens up to 56px (w-14) as user infuses branches
-  const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
+  // Starting normal width = 16px (w-4), progressively widens up to 80px as we approach and portal expands
+  const whiteCoreWidth = isPortalExpanded ? 80 : Math.min(56, 16 + energizedCount * 8);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
@@ -448,18 +457,20 @@ export default function LokiTimelinePortal() {
           - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
             Not even a trace visible at the start. Only the single loom branch exists in the dark.
           - On First Tap (hasDiscovered = true):
-            Very, very slowly (14.0s duration) emerges from deep cosmic blur (blur: 24px -> blur: 3px)
-            gliding gradually towards the distant central background horizon (scale: 0.25 -> 0.55).
-            It NEVER jumps or appears abruptly!
+            Very, very slowly emerges in the distant cosmos.
+          - As we move forward and pass the 5 branches, the portal steadily grows and comes closer.
+          - Once all 5 branches are passed (isPortalExpanded = true):
+            The portal widens and opens up even further!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
         animate={hasDiscovered ? {
           x: "0vw",
-          scale: 0.38 + energizedCount * 0.08, // Stays in deep space (starts small: 0.38)
-          opacity: Math.min(1, 0.2 + energizedCount * 0.16), // Extremely gradual emergence
-          filter: `blur(${Math.max(1, 10 - energizedCount * 2)}px)` // Slow de-blur as branches pass
+          // Approaches closer as we voyage forward, and expands prominently once all branches are crossed
+          scale: isPortalExpanded ? 1.05 : (0.42 + energizedCount * 0.08),
+          opacity: Math.min(1, 0.25 + energizedCount * 0.15),
+          filter: isPortalExpanded ? "blur(0px)" : `blur(${Math.max(1, 8 - energizedCount * 1.5)}px)`
         } : {
           x: "-90vw",
           scale: 0.25,
@@ -467,7 +478,7 @@ export default function LokiTimelinePortal() {
           filter: "blur(28px)"
         }}
         transition={{
-          duration: 14.0, // ULTRA SLOW gradual celestial emergence!
+          duration: isPortalExpanded ? 6.0 : 16.0,
           ease: [0.16, 1, 0.3, 1]
         }}
         style={{ transformOrigin: "50% 50%" }}
