@@ -209,8 +209,7 @@ function DraggableBranch({
   energizedData,
   allEnergizedStage,
   isFinalBranch = false,
-  flyOut3D = false,
-  flyOutDelay = 0
+  isVoyaging = false
 }) {
   const branchPathRef = useRef(null);
   const [tapRatio, setTapRatio] = useState(0.5);
@@ -265,22 +264,23 @@ function DraggableBranch({
 
   return (
     <motion.g
-      // First-person camera voyage:
-      // The branches stay rooted in the cosmic fabric while our viewpoint approaches them very slowly.
-      // They expand smoothly to fill and sweep past the screen edges, fading only after crossing behind us!
-      animate={flyOut3D ? {
-        scale: [1, 24],
-        y: [0, 850],
+      // Spaceship Voyage Experience:
+      // The branches stay naturally swaying in the cosmos.
+      // When our spaceship voyages forward towards the distant portal rift,
+      // we fly right past the branches. They grow smoothly to screen edges and slide past our camera!
+      animate={isVoyaging ? {
+        scale: [1, 14],
+        y: [0, 520],
         opacity: [1, 1, 1, 0]
       } : { 
         y: windConfig.y,
         x: windConfig.x,
         rotate: windConfig.rotate
       }}
-      transition={flyOut3D ? {
-        duration: 16.0, // Extremely slow, meditative pass-by voyage
-        times: [0, 0.75, 0.92, 1.0], // Full 100% visible while approaching & passing across screen
-        ease: [0.18, 0.9, 0.2, 1.0] // Very gentle, silky cinematic ease
+      transition={isVoyaging ? {
+        duration: 14.0, // Spaceship slow cruise passing by branches
+        times: [0, 0.72, 0.9, 1.0], // Stays 100% visible while passing, fades once behind camera
+        ease: [0.18, 0.9, 0.22, 1.0]
       } : {
         duration: windConfig.duration,
         repeat: Infinity,
@@ -337,13 +337,12 @@ export default function LokiTimelinePortal() {
   // growing huge and crossing past the screen like a 3D bullet in an IMAX movie!
   const [flyOutBranches, setFlyOutBranches] = useState({});
 
+  // Track camera flight voyage forward through space (spaceship perspective)
+  const [isVoyaging, setIsVoyaging] = useState(false);
+
   // Cinematic Intro State:
   // hasDiscovered = false -> Only single isolated mystery vine in darkness, portal stays far away in deep space!
   const [hasDiscovered, setHasDiscovered] = useState(false);
-
-  // Once all 5 branches are passed and we arrive at the threshold of the portal,
-  // the sacred rift widens further ("antha portal inum konjam viriuthu")!
-  const [isPortalExpanded, setIsPortalExpanded] = useState(false);
 
   const handleBranchEnergize = (id, clickX, clickY) => {
     // When user taps Branch 1:
@@ -364,13 +363,13 @@ export default function LokiTimelinePortal() {
         }
       };
 
-      // Cascade trigger remaining branches from dynamic sides:
+      // 1. Cascade trigger remaining branches from dynamic sides:
       // Timing: Branch 1 tapped -> branches 2,3,4,5 ignite sequentially from sides
       const cascadeConfig = [
-        { id: 'branch-2', tapRatio: 0.05, delay: 1000 }, // starts from left side edge
-        { id: 'branch-3', tapRatio: 0.95, delay: 2000 }, // starts from right side edge
-        { id: 'branch-4', tapRatio: 0.08, delay: 3000 }, // starts from far corner side edge
-        { id: 'branch-5', tapRatio: 0.92, delay: 4000 }, // starts from far right side edge
+        { id: 'branch-2', tapRatio: 0.05, delay: 900 },
+        { id: 'branch-3', tapRatio: 0.95, delay: 1800 },
+        { id: 'branch-4', tapRatio: 0.08, delay: 2700 },
+        { id: 'branch-5', tapRatio: 0.92, delay: 3600 },
       ];
 
       cascadeConfig.forEach(item => {
@@ -388,39 +387,29 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // Staggered awakened living green glow stage across all branches
+      // 2. Staggered awakened living green glow stage across all branches
       const allBranchIds = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'];
       allBranchIds.forEach((bId, bIdx) => {
         setTimeout(() => {
           setAwakenedStages(stagePrev => ({ ...stagePrev, [bId]: true }));
-        }, 1800 + bIdx * 900);
+        }, 1600 + bIdx * 800);
       });
 
-      // User requirement:
-      // "once ellame trigger aaghi antha ella branch apdiye antha green color la glow aaghuratha user oru 3 sec paakanum"
-      // -> All branches finish igniting by ~5.0s. They glow together in living green for 3+ full seconds.
-      // Then, we begin moving forward towards the portal, causing branches to glide past our viewpoint very slowly:
-      allBranchIds.forEach((bId, bIdx) => {
-        setTimeout(() => {
-          setFlyOutBranches(flyPrev => ({ ...flyPrev, [bId]: true }));
-        }, 8500 + bIdx * 1800); // Starts at 8.5s (giving full 3.5s pure glow time!), staggered
-      });
-
-      // Once we pass all 5 branches and arrive close to the portal:
-      // "5 branch once nambha kandnu poi antha portal kita pona odane antha portal inum konjam viriuthu"
+      // 3. User Requirement:
+      // "branches anghaye irukatum and portal first reveal aaghum pothu irukura thoorathulaye irukatum ok!
+      // first user branch ah click pannathu la iruthu... apdiye avar antha branch smooth ah ellam branch um glow aaghuratha paakatum 3sec aparam
+      // nambha oru spaceship la irukura maathiri feel pannikita nambha apdiye slow ah smooth ah portal la noki poghum pothu antha branch ah kadanthu poraom avalothaan"
+      //
+      // Ignition ends by ~4.5s. User enjoys full branches glowing for 3 full seconds (until ~8.0s).
+      // Then at 8.0s, our spaceship begins gliding forward towards the distant portal,
+      // flying past the branches ultra-smoothly!
       setTimeout(() => {
-        setIsPortalExpanded(true);
-      }, 21000); // When pass-by completes, the portal expands further!
+        setIsVoyaging(true);
+      }, 8000);
 
       return updated;
     });
   };
-
-  // Total energized count (0 to 5):
-  // As user crosses branches one by one, the distant portal gently approaches closer step-by-step!
-  const energizedCount = Object.keys(energizedBranches).length;
-  // Starting normal width = 16px (w-4), progressively widens up to 80px as we approach and portal expands
-  const whiteCoreWidth = isPortalExpanded ? 80 : Math.min(56, 16 + energizedCount * 8);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
@@ -455,30 +444,37 @@ export default function LokiTimelinePortal() {
       {/* ========================================================================= */}
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
           - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
-            Not even a trace visible at the start. Only the single loom branch exists in the dark.
           - On First Tap (hasDiscovered = true):
-            Very, very slowly emerges in the distant cosmos.
-          - As we move forward and pass the 5 branches, the portal steadily grows and comes closer.
-          - Once all 5 branches are passed (isPortalExpanded = true):
-            The portal widens and opens up even further!
+            Very slowly emerges and STAYS at its initial distant location in deep space!
+          - After 3sec glow pause, when our spaceship voyages forward towards the portal,
+            we slowly cruise towards it.
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
-        animate={hasDiscovered ? {
-          x: "0vw",
-          // Approaches closer as we voyage forward, and expands prominently once all branches are crossed
-          scale: isPortalExpanded ? 1.05 : (0.42 + energizedCount * 0.08),
-          opacity: Math.min(1, 0.25 + energizedCount * 0.15),
-          filter: isPortalExpanded ? "blur(0px)" : `blur(${Math.max(1, 8 - energizedCount * 1.5)}px)`
-        } : {
+        animate={hasDiscovered ? (
+          isVoyaging ? {
+            x: "0vw",
+            scale: 0.95, // Spaceship smoothly approaches close to portal
+            opacity: 1,
+            filter: "blur(0px)"
+          } : {
+            x: "0vw",
+            scale: 0.42, // Stays at initial distant reveal scale!
+            opacity: 0.75,
+            filter: "blur(6px)"
+          }
+        ) : {
           x: "-90vw",
           scale: 0.25,
           opacity: 0,
           filter: "blur(28px)"
         }}
-        transition={{
-          duration: isPortalExpanded ? 6.0 : 16.0,
+        transition={isVoyaging ? {
+          duration: 18.0, // Spaceship slow cruise towards portal
+          ease: [0.2, 0.8, 0.25, 1.0]
+        } : {
+          duration: 14.0, // Initial reveal slow emergence
           ease: [0.16, 1, 0.3, 1]
         }}
         style={{ transformOrigin: "50% 50%" }}
@@ -583,14 +579,14 @@ export default function LokiTimelinePortal() {
         {/* Intense white-mint core tear spine */}
         <motion.div
           animate={{
-            width: `${whiteCoreWidth}px`,
+            width: isVoyaging ? '72px' : '28px',
             opacity: [0.85, 1, 0.85],
-            boxShadow: energizedCount > 0 
-              ? `0 0 ${35 + energizedCount * 10}px #ffffff, 0 0 ${70 + energizedCount * 14}px #B9FFD0, 0 0 ${110 + energizedCount * 18}px #00FF66`
+            boxShadow: isVoyaging 
+              ? '0 0 65px #ffffff, 0 0 110px #B9FFD0, 0 0 160px #00FF66'
               : '0 0 35px #B9FFD0, 0 0 70px #00FF66, 0 0 110px #00C853'
           }}
           transition={{
-            width: { duration: 25.0, ease: [0.16, 1, 0.3, 1] },
+            width: { duration: 16.0, ease: [0.16, 1, 0.3, 1] },
             opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" }
           }}
           className="absolute h-[110vh] pointer-events-none rounded-[50%]"
@@ -642,8 +638,7 @@ export default function LokiTimelinePortal() {
           energizedData={energizedBranches['branch-1']}
           allEnergizedStage={awakenedStages['branch-1']}
           isFinalBranch={lastTappedBranchId === 'branch-1'}
-          flyOut3D={flyOutBranches['branch-1']}
-          flyOutDelay={0}
+          isVoyaging={isVoyaging}
           windConfig={{
             y: [-18, 18, -18],
             x: [12, -12, 12],
@@ -715,8 +710,7 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-2']}
             allEnergizedStage={awakenedStages['branch-2']}
             isFinalBranch={lastTappedBranchId === 'branch-2'}
-            flyOut3D={flyOutBranches['branch-2']}
-            flyOutDelay={0}
+            isVoyaging={isVoyaging}
             windConfig={{
               y: [16, -16, 16],
               x: [8, -8, 8],
@@ -767,8 +761,7 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-3']}
             allEnergizedStage={awakenedStages['branch-3']}
             isFinalBranch={lastTappedBranchId === 'branch-3'}
-            flyOut3D={flyOutBranches['branch-3']}
-            flyOutDelay={0}
+            isVoyaging={isVoyaging}
             windConfig={{
               y: [-20, 20, -20],
               x: [-10, 10, -10],
@@ -819,8 +812,7 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-4']}
             allEnergizedStage={awakenedStages['branch-4']}
             isFinalBranch={lastTappedBranchId === 'branch-4'}
-            flyOut3D={flyOutBranches['branch-4']}
-            flyOutDelay={0}
+            isVoyaging={isVoyaging}
             windConfig={{
               x: [-14, 14, -14],
               y: [12, -12, 12],
@@ -871,8 +863,7 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-5']}
             allEnergizedStage={awakenedStages['branch-5']}
             isFinalBranch={lastTappedBranchId === 'branch-5'}
-            flyOut3D={flyOutBranches['branch-5']}
-            flyOutDelay={0}
+            isVoyaging={isVoyaging}
             windConfig={{
               y: [15, -15, 15],
               x: [10, -10, 10],
