@@ -322,14 +322,9 @@ export default function LokiTimelinePortal() {
   const [awakenedStages, setAwakenedStages] = useState({});
   // Track which branch was tapped last (the 5th branch that triggered the continuous venom cascade)
   const [lastTappedBranchId, setLastTappedBranchId] = useState(null);
-  // Voyage stage index (0 to 5):
-  // 0: all branches swaying at rest, glowing for user to observe
-  // 1: passed branch-1 (foreground)
-  // 2: passed branch-2
-  // 3: passed branch-5
-  // 4: passed branch-3
-  // 5: passed branch-4 (deepest) -> reached the sacred portal!
-  const [voyageStage, setVoyageStage] = useState(0);
+  // Smooth continuous parallax voyage progression (0 to 1)
+  // Driven automatically like smooth portfolio scroll / camera dolly:
+  const [voyageProgress, setVoyageProgress] = useState(0);
 
   // Cinematic Intro State:
   // hasDiscovered = false -> Only single isolated mystery vine in darkness, portal stays far away in deep space!
@@ -377,30 +372,14 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // 2. User Requirement:
-      // "ella branch um connect la irukanum bro... ipa real ah en kannu munaadi antha portal iruku nu vai...
-      // naa kitta pona ella branch ku correct ah first ethu iruko atha naa kadanuthu povan
-      // then next one ah kadanthu povan... ithula naa kitta pona ella branch um thaana ore maathiri kitta varum...
-      // oru oru branch ku konjam distance iruku athuku etha maathiri time delay irukum
-      // first branch ah kadanthu... then oru 5 sec aparam 2nd branch ah kadanthu polaam...
-      // then oru 7 sec la aduthatha kadanthu polam... intha maathiri onu onaa kadanthu poghanum...
-      // then portal ah reach pannanum..."
-      //
-      // Natural Cosmic Voyage Timings:
-      // - 0s: Branch 1 tapped, venom spreads.
-      // - ~5.0s: All branches finish igniting into living green.
-      // - ~8.5s: 3.5s pure glow observation complete. Camera starts smooth forward voyage!
-      // - Stage 1 (8.5s): Cruise forward -> pass nearest Branch 1.
-      // - Stage 2 (+5.5s -> 14.0s): Cruise forward -> pass 2nd nearest Branch 2.
-      // - Stage 3 (+5.5s -> 19.5s): Cruise forward -> pass 3rd branch (Branch 5).
-      // - Stage 4 (+6.5s -> 26.0s): Cruise forward -> pass 4th branch (Branch 3).
-      // - Stage 5 (+7.0s -> 33.0s): Cruise forward -> pass deepest Branch 4 -> reach the glowing Sacred Portal!
-
-      setTimeout(() => setVoyageStage(1), 8500);
-      setTimeout(() => setVoyageStage(2), 14000);
-      setTimeout(() => setVoyageStage(3), 19500);
-      setTimeout(() => setVoyageStage(4), 26000);
-      setTimeout(() => setVoyageStage(5), 33000);
+      // 2. Continuous Parallax Camera Flight (Portfolio Smooth Scroll feel):
+      // - 0s to 5.0s: Venom propagates across all branches.
+      // - 5.0s to 8.5s: 3.5 seconds pure rest & glow observation.
+      // - At 8.5s: The smooth camera flight seamlessly starts!
+      // All branches and the portal move simultaneously with smooth progressive parallax depth.
+      setTimeout(() => {
+        setVoyageProgress(1);
+      }, 8500);
 
       return updated;
     });
@@ -450,26 +429,28 @@ export default function LokiTimelinePortal() {
           - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
           - On First Tap (hasDiscovered = true):
             Very slowly emerges into deep cosmic blur at initial distant spot.
-          - As our camera cruises forward past each branch (voyageStage: 0 -> 1 -> 2 -> 3 -> 4 -> 5),
-            the portal slowly and smoothly approaches our viewpoint without jumping or popping!
+          - Voyage Progress:
+            Smooth continuous portfolio-scroll flight forward towards the portal.
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
         animate={hasDiscovered ? {
           x: "0vw",
-          // Smooth progressive approach as we voyage past branches:
-          scale: 0.38 + voyageStage * 0.12, // 0.38 -> 0.50 -> 0.62 -> 0.74 -> 0.86 -> 0.98 (reaches portal!)
-          opacity: Math.min(1, 0.4 + voyageStage * 0.12),
-          filter: `blur(${Math.max(0, 8 - voyageStage * 1.6)}px)` // Progressively becomes crystal clear
+          scale: voyageProgress > 0 ? 0.95 : 0.42,
+          opacity: voyageProgress > 0 ? 1 : 0.65,
+          filter: voyageProgress > 0 ? "blur(0px)" : "blur(7px)"
         } : {
           x: "-90vw",
           scale: 0.25,
           opacity: 0,
           filter: "blur(28px)"
         }}
-        transition={{
-          duration: 6.0,
+        transition={voyageProgress > 0 ? {
+          duration: 22.0, // Long, ultra smooth portfolio scroll flight
+          ease: [0.22, 1, 0.36, 1] // Apple / Locomotive scroll easing
+        } : {
+          duration: 14.0,
           ease: [0.16, 1, 0.3, 1]
         }}
         style={{ transformOrigin: "50% 50%" }}
@@ -593,19 +574,19 @@ export default function LokiTimelinePortal() {
       </motion.div>
 
       {/* ========================================================================= */}
-      {/* 3. MULTIVERSE TIMELINE BRANCHES: FIXED VIEWPORT SVG */}
+      {/* 3. MULTIVERSE TIMELINE BRANCHES: UNIFIED PERSPECTIVE FLIGHT */}
       {/* ========================================================================= */}
       {/* 
-        Unified Perspective Cruise:
-        When user taps Branch 1, it energizes and cascades across all branches.
-        After 3.5s of glowing rest, our first-person camera smoothly cruises forward.
-        Each branch has its own spatial depth (z-layer) in space:
-        - Branch 1 (nearest): passes first (stage 1)
-        - Branch 2 (next): passes second (stage 2)
-        - Branch 5: passes third (stage 3)
-        - Branch 3: passes fourth (stage 4)
-        - Branch 4 (deepest): passes fifth (stage 5)
-        No sudden jumps! Smooth continuous scaling past the viewport borders!
+        Ultra-Smooth Portfolio Scroll / Locomotive Parallax Flight:
+        All branches are interconnected in the same cosmic space.
+        When camera voyages forward towards the distant portal (voyageProgress: 0 -> 1):
+        - All branches move smoothly and concurrently at their respective depth (z-layer) parallax speeds!
+        - Foreground Branch 1 sweeps gently past the camera first (scale 1 -> 3.2).
+        - Branch 2 (2nd depth) smoothly scales past (scale 1 -> 2.6).
+        - Branch 5 (3rd depth) smoothly scales (scale 1 -> 2.2).
+        - Branch 3 (4th depth) smoothly scales (scale 1 -> 1.8).
+        - Branch 4 (deepest depth) smoothly scales (scale 1 -> 1.5).
+        Zero sudden jumps! Exactly like smooth scrolling in a high-end 3D portfolio!
       */}
       <svg 
         viewBox="0 0 1000 1000" 
@@ -635,14 +616,14 @@ export default function LokiTimelinePortal() {
         </defs>
 
         {/* Branch 1: Long flowing hanging branch across the entire cosmos */}
-        {/* ONLY this single big branch is clickable! Nearest foreground branch */}
+        {/* ONLY this single big branch is clickable! Forefront depth layer */}
         <motion.g
-          animate={voyageStage >= 1 ? {
-            scale: [1, 1.8, 3.4],
-            y: [0, 40, 120],
-            opacity: [1, 1, 0.9]
+          animate={voyageProgress > 0 ? {
+            scale: 3.2,
+            y: 90,
+            opacity: 0.88
           } : { scale: 1, y: 0, opacity: 1 }}
-          transition={{ duration: 7.0, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 18.0, ease: [0.22, 1, 0.36, 1] }}
           style={{ transformOrigin: "500px 440px" }}
         >
           <DraggableBranch
@@ -717,18 +698,14 @@ export default function LokiTimelinePortal() {
             pointerEvents: 'none'
           }}
         >
-          {/* Branch 2: High sweeping undulating branch (2nd nearest) */}
+          {/* Branch 2: High sweeping undulating branch (Depth Layer 2) */}
           <motion.g
-            animate={voyageStage >= 2 ? {
-              scale: [1, 1.8, 3.2],
-              y: [0, -30, -90],
-              opacity: [1, 1, 0.9]
-            } : voyageStage >= 1 ? {
-              scale: 1.25,
-              y: -15,
-              opacity: 1
+            animate={voyageProgress > 0 ? {
+              scale: 2.6,
+              y: -70,
+              opacity: 0.92
             } : { scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 19.5, ease: [0.22, 1, 0.36, 1] }}
             style={{ transformOrigin: "500px 160px" }}
           >
             <DraggableBranch
@@ -781,22 +758,14 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* Branch 5: Mid-lower undulating vine (3rd nearest) */}
+          {/* Branch 5: Mid-lower undulating vine (Depth Layer 3) */}
           <motion.g
-            animate={voyageStage >= 3 ? {
-              scale: [1, 1.8, 3.2],
-              y: [0, 30, 90],
-              opacity: [1, 1, 0.9]
-            } : voyageStage >= 2 ? {
-              scale: 1.3,
-              y: 20,
-              opacity: 1
-            } : voyageStage >= 1 ? {
-              scale: 1.15,
-              y: 10,
-              opacity: 1
+            animate={voyageProgress > 0 ? {
+              scale: 2.2,
+              y: 60,
+              opacity: 0.94
             } : { scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 20.5, ease: [0.22, 1, 0.36, 1] }}
             style={{ transformOrigin: "500px 540px" }}
           >
             <DraggableBranch
@@ -849,26 +818,14 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* Branch 3: Low hanging massive vine (4th branch) */}
+          {/* Branch 3: Low hanging massive vine (Depth Layer 4) */}
           <motion.g
-            animate={voyageStage >= 4 ? {
-              scale: [1, 1.8, 3.2],
-              y: [0, 40, 120],
-              opacity: [1, 1, 0.9]
-            } : voyageStage >= 3 ? {
-              scale: 1.35,
-              y: 25,
-              opacity: 1
-            } : voyageStage >= 2 ? {
-              scale: 1.2,
-              y: 15,
-              opacity: 1
-            } : voyageStage >= 1 ? {
-              scale: 1.1,
-              y: 8,
-              opacity: 1
+            animate={voyageProgress > 0 ? {
+              scale: 1.8,
+              y: 70,
+              opacity: 0.96
             } : { scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 21.5, ease: [0.22, 1, 0.36, 1] }}
             style={{ transformOrigin: "500px 720px" }}
           >
             <DraggableBranch
@@ -921,30 +878,14 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* Branch 4: Long sweeping diagonal cascade (5th deepest branch before Portal) */}
+          {/* Branch 4: Long sweeping diagonal cascade (Depth Layer 5 - Deepest) */}
           <motion.g
-            animate={voyageStage >= 5 ? {
-              scale: [1, 1.8, 3.2],
-              y: [0, -30, -90],
-              opacity: [1, 1, 0.9]
-            } : voyageStage >= 4 ? {
-              scale: 1.4,
-              y: -20,
-              opacity: 1
-            } : voyageStage >= 3 ? {
-              scale: 1.25,
-              y: -12,
-              opacity: 1
-            } : voyageStage >= 2 ? {
-              scale: 1.15,
-              y: -6,
-              opacity: 1
-            } : voyageStage >= 1 ? {
-              scale: 1.08,
-              y: -3,
-              opacity: 1
+            animate={voyageProgress > 0 ? {
+              scale: 1.5,
+              y: -50,
+              opacity: 0.98
             } : { scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 22.0, ease: [0.22, 1, 0.36, 1] }}
             style={{ transformOrigin: "500px 520px" }}
           >
             <DraggableBranch
