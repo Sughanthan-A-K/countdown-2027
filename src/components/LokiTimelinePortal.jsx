@@ -656,7 +656,7 @@ export default function LokiTimelinePortal() {
 
         {/* ------------------------------------------------------------- */}
         {/* DEPTH LAYER 5: Branch 4 (~1px near Portal, diagonal thread)    */}
-        {/* Begins thin, expands to foreground scale ~3.5x and sweeps past the screen! */}
+        {/* Starts far -> reaches foreground ~16s -> sweeps past camera!  */}
         {/* ------------------------------------------------------------- */}
         <g 
           style={{ 
@@ -667,16 +667,16 @@ export default function LokiTimelinePortal() {
         >
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.5, 3.6],
-              y: [0, -350, -1850],
-              x: [0, 200, 950],
-              opacity: [1, 1, 0]
+              scale: [1, 1.4, 2.8, 4.2],
+              y: [0, 100, 750, 1950],
+              x: [0, -40, -180, -450],
+              opacity: [1, 1, 1, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.6, 1]
+              times: [0, 0.45, 0.75, 0.98]
             }}
             style={{ transformOrigin: "600px 480px" }}
           >
@@ -738,7 +738,7 @@ export default function LokiTimelinePortal() {
           <motion.g
             animate={voyageProgress > 0 ? {
               scale: [1, 1.6, 3.2, 4.6],
-              y: [0, 80, 550, 1800],
+              y: [0, 80, 550, 1850],
               x: [0, -20, -90, -260],
               opacity: [1, 1, 1, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
@@ -746,7 +746,7 @@ export default function LokiTimelinePortal() {
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.45, 0.76, 0.96]
+              times: [0, 0.4, 0.72, 0.92]
             }}
             style={{ transformOrigin: "500px 720px" }}
           >
@@ -802,21 +802,21 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* ----------------------------------------------------------- */}
-          {/* DEPTH LAYER 3: Branch 5 (~3-4px -> Foreground Expansion & Exit) */}
-          {/* Approaches, grows to foreground, and sweeps past screen!    */}
+          {/* DEPTH LAYER 3: Branch 5 (~3-4px -> Foreground Sweep)        */}
+          {/* Approaches, grows thick, and cleanly passes camera out of view */}
           {/* ----------------------------------------------------------- */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: [1, 1.6, 3.4],
-              y: [0, 450, 1850],
-              x: [0, 60, 240],
-              opacity: [1, 1, 0]
+              scale: [1, 1.7, 3.2, 4.4],
+              y: [0, 150, 680, 1900],
+              x: [0, 40, 130, 320],
+              opacity: [1, 1, 1, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
               duration: 24.0,
               delay: 0,
               ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.5, 0.88]
+              times: [0, 0.35, 0.65, 0.88]
             }}
             style={{ transformOrigin: "500px 540px" }}
           >
@@ -878,8 +878,8 @@ export default function LokiTimelinePortal() {
           <motion.g
             animate={voyageProgress > 0 ? {
               scale: [1, 1.8, 3.4],
-              y: [0, -350, -1800],
-              x: [0, -60, -300],
+              y: [0, -350, -1850],
+              x: [0, -60, -320],
               opacity: [1, 1, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
