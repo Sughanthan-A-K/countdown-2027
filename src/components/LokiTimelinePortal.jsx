@@ -7,6 +7,7 @@ const DEFAULT_LOOM_CONFIG = {
   venomDuration: 7.0,
   flightStartDelay: 7.0,
   globalBranchScale: 1.0,
+  renderOrder: ['branch-4', 'branch-3', 'branch-5', 'branch-2', 'branch-1'], // Z-index render order (Last in array = Topmost layer!)
   portal: {
     initialScale: 0.30,
     finalScale: 1.05,
@@ -414,6 +415,152 @@ export default function LokiTimelinePortal() {
     setReplayKey(k => k + 1);
   };
 
+  // Lookup table of all branch definitions and paths:
+  const branchDefinitions = {
+    'branch-1': {
+      pathData: "M -400 310 Q 150 480, 520 440 T 1450 390",
+      origin: "500px 440px",
+      hitWidth: 120,
+      shadowWidth: 20,
+      baseInnerOffset: 5,
+      glintOffset: 2.5,
+      glintD: "M -400 309 Q 150 479, 520 439 T 1450 389",
+      windConfig: { y: [-18, 18, -18], x: [12, -12, 12], rotate: [-1.2, 1.2, -1.2], duration: 22, delay: 0 }
+    },
+    'branch-2': {
+      pathData: "M -350 40 Q 250 220, 680 160 T 1420 120",
+      origin: "500px 160px",
+      hitWidth: 110,
+      shadowWidth: 14,
+      baseInnerOffset: 5,
+      glintOffset: 2,
+      glintD: "M -350 39 Q 250 219, 680 159 T 1420 119",
+      windConfig: { y: [16, -16, 16], x: [8, -8, 8], rotate: [1.2, -1.2, 1.2], duration: 25, delay: 1 }
+    },
+    'branch-5': {
+      pathData: "M -320 540 Q 280 430, 720 560 T 1420 520",
+      origin: "500px 540px",
+      hitWidth: 110,
+      shadowWidth: 12,
+      baseInnerOffset: 4,
+      glintOffset: 2,
+      glintD: "M -320 539 Q 280 429, 720 559 T 1420 519",
+      windConfig: { y: [15, -15, 15], x: [10, -10, 10], rotate: [0.9, -0.9, 0.9], duration: 21, delay: 2.5 }
+    },
+    'branch-3': {
+      pathData: "M -380 890 Q 200 680, 580 720 T 1450 820",
+      origin: "500px 720px",
+      hitWidth: 120,
+      shadowWidth: 10,
+      baseInnerOffset: 3,
+      glintOffset: 1.8,
+      glintD: "M -380 889 Q 200 679, 580 719 T 1450 819",
+      windConfig: { y: [-20, 20, -20], x: [-10, 10, -10], rotate: [-1.4, 1.4, -1.4], duration: 24, delay: 2 }
+    },
+    'branch-4': {
+      pathData: "M 1450 30 Q 820 420, 480 620 T -350 940",
+      origin: "500px 520px",
+      hitWidth: 120,
+      shadowWidth: 8,
+      baseInnerOffset: 2.5,
+      glintOffset: 1.5,
+      glintD: "M 1450 29 Q 820 419, 480 619 T -350 939",
+      windConfig: { x: [-14, 14, -14], y: [12, -12, 12], rotate: [-0.9, 0.9, -0.9], duration: 26, delay: 0.5 }
+    }
+  };
+
+  const renderSingleBranch = (bId) => {
+    const def = branchDefinitions[bId];
+    if (!def) return null;
+    const bConfig = loomConfig.branches?.[bId] || {};
+    const isMainClickable = bId === 'branch-1';
+    const isVisible = isMainClickable || hasDiscovered || revealAllBranches || !!highlightedBranchId;
+    const isHighlighted = highlightedBranchId === bId;
+
+    return (
+      <motion.g
+        key={bId}
+        animate={voyageProgress > 0 ? {
+          scale: (bConfig.exitScale || 2.5) * (loomConfig.globalBranchScale || 1.0),
+          y: bConfig.exitY ?? 0,
+          x: bConfig.exitX ?? 0
+        } : { 
+          scale: (bConfig.initialScale || 1.0) * (loomConfig.globalBranchScale || 1.0), 
+          y: 0, 
+          x: 0 
+        }}
+        transition={{
+          duration: bConfig.exitDuration || 14.0,
+          delay: bConfig.exitDelay || 0,
+          ease: [0.25, 1, 0.35, 1]
+        }}
+        style={{ 
+          transformOrigin: def.origin,
+          opacity: isVisible ? 1 : 0,
+          transition: 'opacity 0.6s ease-out'
+        }}
+      >
+        <DraggableBranch
+          id={bId}
+          pathData={def.pathData}
+          origin={def.origin}
+          onEnergize={handleBranchEnergize}
+          energizedData={energizedBranches[bId]}
+          allEnergizedStage={awakenedStages[bId]}
+          isFinalBranch={lastTappedBranchId === bId}
+          isClickable={isMainClickable && !energizedBranches[bId]?.active}
+          venomDuration={loomConfig.venomDuration || 7.0}
+          windConfig={def.windConfig}
+        >
+          {/* Hit area */}
+          <path
+            d={def.pathData}
+            fill="none"
+            stroke="#000000"
+            strokeOpacity="0.001"
+            strokeWidth={def.hitWidth}
+            strokeLinecap="round"
+          />
+          {/* Ambient drop shadow */}
+          <path
+            d={def.pathData}
+            fill="none"
+            stroke="#000000"
+            strokeWidth={def.shadowWidth}
+            strokeLinecap="round"
+            opacity="0.95"
+          />
+          {/* Silhouette body */}
+          <path
+            d={def.pathData}
+            fill="none"
+            stroke="#000000"
+            strokeWidth={bConfig.strokeWidth || 14}
+            strokeLinecap="round"
+            opacity="0.95"
+          />
+          <path
+            d={def.pathData}
+            fill="none"
+            stroke="#050a08"
+            strokeWidth={Math.max(2, (bConfig.strokeWidth || 14) - def.baseInnerOffset)}
+            strokeLinecap="round"
+          />
+          {/* Subtle dark glint OR Live glow highlight when selected in toolbox */}
+          <path
+            d={def.glintD}
+            fill="none"
+            stroke={isHighlighted ? "#00FF66" : "#062d22"}
+            strokeWidth={isHighlighted ? 14 : def.glintOffset}
+            strokeLinecap="round"
+            opacity={isHighlighted ? 1 : 0.6}
+            style={isHighlighted ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
+          />
+        </DraggableBranch>
+      </motion.g>
+    );
+  };
+
   const handleBranchEnergize = (id, clickX, clickY) => {
     // Only Branch 1 initiates discovery:
     if (!hasDiscovered) {
@@ -716,358 +863,11 @@ export default function LokiTimelinePortal() {
         {/* Layer 5: Branch 4 (Starts at 32s -> exits at 46s)                    */}
         {/* ===================================================================== */}
 
-        {/* --- DEPTH LAYER 1: Forefront Giant Timeline (Branch 1) --- */}
-        {/* First branch to clear out: glides completely UP and OFF SCREEN */}
-        <motion.g
-          animate={voyageProgress > 0 ? {
-            scale: (loomConfig.branches?.['branch-1']?.exitScale || 3.2) * (loomConfig.globalBranchScale || 1.0),
-            y: loomConfig.branches?.['branch-1']?.exitY ?? -1100,
-            x: loomConfig.branches?.['branch-1']?.exitX ?? -120
-          } : { scale: (loomConfig.branches?.['branch-1']?.initialScale || 1.0) * (loomConfig.globalBranchScale || 1.0), y: 0, x: 0 }}
-          transition={{
-            duration: loomConfig.branches?.['branch-1']?.exitDuration || 14.0,
-            delay: loomConfig.branches?.['branch-1']?.exitDelay || 0,
-            ease: [0.25, 1, 0.35, 1]
-          }}
-          style={{ transformOrigin: "500px 440px" }}
-        >
-          <DraggableBranch
-            id="branch-1"
-            pathData="M -400 310 Q 150 480, 520 440 T 1450 390"
-            origin="500px 440px"
-            onEnergize={handleBranchEnergize}
-            energizedData={energizedBranches['branch-1']}
-            allEnergizedStage={awakenedStages['branch-1']}
-            isFinalBranch={lastTappedBranchId === 'branch-1'}
-            isClickable={!energizedBranches['branch-1']?.active} // Clickable only until first tap
-            venomDuration={loomConfig.venomDuration || 7.0}
-            windConfig={{
-              y: [-18, 18, -18],
-              x: [12, -12, 12],
-              rotate: [-1.2, 1.2, -1.2],
-              duration: 22,
-              delay: 0
-            }}
-          >
-            {/* Invisible extra-wide hit-area stroke for effortless grab anywhere across the branch */}
-            <path
-              d="M -400 310 Q 150 480, 520 440 T 1450 390"
-              fill="none"
-              stroke="#000000"
-              strokeOpacity="0.001"
-              strokeWidth="120"
-              strokeLinecap="round"
-            />
-            {/* Ambient drop shadow */}
-            <path
-              d="M -400 310 Q 150 480, 520 440 T 1450 390"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="20"
-              strokeLinecap="round"
-              opacity="0.95"
-            />
-            {/* Main Dark Silhouette Body (Pure dark black) */}
-            <path
-              d="M -400 310 Q 150 480, 520 440 T 1450 390"
-              fill="none"
-              stroke="#000000"
-              strokeWidth={loomConfig.branches?.['branch-1']?.strokeWidth || 16}
-              strokeLinecap="round"
-              opacity="0.95"
-            />
-            <path
-              d="M -400 310 Q 150 480, 520 440 T 1450 390"
-              fill="none"
-              stroke="#050a08"
-              strokeWidth={Math.max(4, (loomConfig.branches?.['branch-1']?.strokeWidth || 16) - 5)}
-              strokeLinecap="round"
-            />
-            {/* Subtle dark emerald glint or Tool Highlighting Pulsation */}
-            <path
-              d="M -400 309 Q 150 479, 520 439 T 1450 389"
-              fill="none"
-              stroke={highlightedBranchId === 'branch-1' ? "#00FF66" : "#062d22"}
-              strokeWidth={highlightedBranchId === 'branch-1' ? 14 : 2.5}
-              strokeLinecap="round"
-              opacity={highlightedBranchId === 'branch-1' ? 1 : 0.6}
-              style={highlightedBranchId === 'branch-1' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
-            />
-          </DraggableBranch>
-        </motion.g>
-
-        {/* Branches 2 to 5: Strictly display-only background multiverse tapestry */}
-        <g 
-          style={{ 
-            opacity: (hasDiscovered || revealAllBranches || !!highlightedBranchId) ? 1 : 0, 
-            transition: 'opacity 0.6s ease-out',
-            pointerEvents: 'none'
-          }}
-        >
-          {/* --- DEPTH LAYER 2: Upper Timeline Vine (Branch 2) --- */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: (loomConfig.branches?.['branch-2']?.exitScale || 2.8) * (loomConfig.globalBranchScale || 1.0),
-              y: loomConfig.branches?.['branch-2']?.exitY ?? -1250,
-              x: loomConfig.branches?.['branch-2']?.exitX ?? -160
-            } : { scale: (loomConfig.branches?.['branch-2']?.initialScale || 1.0) * (loomConfig.globalBranchScale || 1.0), y: 0, x: 0 }}
-            transition={{
-              duration: loomConfig.branches?.['branch-2']?.exitDuration || 14.0,
-              delay: loomConfig.branches?.['branch-2']?.exitDelay ?? 8.0,
-              ease: [0.25, 1, 0.35, 1]
-            }}
-            style={{ transformOrigin: "500px 160px" }}
-          >
-            <DraggableBranch
-              id="branch-2"
-              pathData="M -350 40 Q 250 220, 680 160 T 1420 120"
-              origin="500px 160px"
-              onEnergize={handleBranchEnergize}
-              energizedData={energizedBranches['branch-2']}
-              allEnergizedStage={awakenedStages['branch-2']}
-              isFinalBranch={lastTappedBranchId === 'branch-2'}
-              venomDuration={loomConfig.venomDuration || 7.0}
-              windConfig={{
-                y: [16, -16, 16],
-                x: [8, -8, 8],
-                rotate: [1.2, -1.2, 1.2],
-                duration: 25,
-                delay: 1
-              }}
-            >
-              <path
-                d="M -350 40 Q 250 220, 680 160 T 1420 120"
-                fill="none"
-                stroke="#000000"
-                strokeOpacity="0.001"
-                strokeWidth="110"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -350 40 Q 250 220, 680 160 T 1420 120"
-                fill="none"
-                stroke="#000000"
-                strokeWidth={loomConfig.branches?.['branch-2']?.strokeWidth || 14}
-                strokeLinecap="round"
-                opacity="0.9"
-              />
-              <path
-                d="M -350 40 Q 250 220, 680 160 T 1420 120"
-                fill="none"
-                stroke="#050a08"
-                strokeWidth={Math.max(3, (loomConfig.branches?.['branch-2']?.strokeWidth || 14) - 5)}
-                strokeLinecap="round"
-              />
-              <path
-                d="M -350 39 Q 250 219, 680 159 T 1420 119"
-                fill="none"
-                stroke={highlightedBranchId === 'branch-2' ? "#00FF66" : "#062d22"}
-                strokeWidth={highlightedBranchId === 'branch-2' ? 14 : 2}
-                strokeLinecap="round"
-                opacity={highlightedBranchId === 'branch-2' ? 1 : 0.6}
-                style={highlightedBranchId === 'branch-2' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
-              />
-            </DraggableBranch>
-          </motion.g>
-
-          {/* --- DEPTH LAYER 3: Mid-Depth Flowing Vine (Branch 5) --- */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: (loomConfig.branches?.['branch-5']?.exitScale || 2.6) * (loomConfig.globalBranchScale || 1.0),
-              y: loomConfig.branches?.['branch-5']?.exitY ?? 1100,
-              x: loomConfig.branches?.['branch-5']?.exitX ?? 180
-            } : { scale: (loomConfig.branches?.['branch-5']?.initialScale || 1.0) * (loomConfig.globalBranchScale || 1.0), y: 0, x: 0 }}
-            transition={{
-              duration: loomConfig.branches?.['branch-5']?.exitDuration || 14.0,
-              delay: loomConfig.branches?.['branch-5']?.exitDelay ?? 16.0,
-              ease: [0.25, 1, 0.35, 1]
-            }}
-            style={{ transformOrigin: "500px 540px" }}
-          >
-            <DraggableBranch
-              id="branch-5"
-              pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
-              origin="500px 540px"
-              onEnergize={handleBranchEnergize}
-              energizedData={energizedBranches['branch-5']}
-              allEnergizedStage={awakenedStages['branch-5']}
-              isFinalBranch={lastTappedBranchId === 'branch-5'}
-              venomDuration={loomConfig.venomDuration || 7.0}
-              windConfig={{
-                y: [15, -15, 15],
-                x: [10, -10, 10],
-                rotate: [0.9, -0.9, 0.9],
-                duration: 21,
-                delay: 2.5
-              }}
-            >
-              <path
-                d="M -320 540 Q 280 430, 720 560 T 1420 520"
-                fill="none"
-                stroke="#000000"
-                strokeOpacity="0.001"
-                strokeWidth="110"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -320 540 Q 280 430, 720 560 T 1420 520"
-                fill="none"
-                stroke="#000000"
-                strokeWidth={loomConfig.branches?.['branch-5']?.strokeWidth || 12}
-                strokeLinecap="round"
-                opacity="0.9"
-              />
-              <path
-                d="M -320 540 Q 280 430, 720 560 T 1420 520"
-                fill="none"
-                stroke="#050a08"
-                strokeWidth={Math.max(3, (loomConfig.branches?.['branch-5']?.strokeWidth || 12) - 4)}
-                strokeLinecap="round"
-              />
-              <path
-                d="M -320 539 Q 280 429, 720 559 T 1420 519"
-                fill="none"
-                stroke={highlightedBranchId === 'branch-5' ? "#00FF66" : "#062d22"}
-                strokeWidth={highlightedBranchId === 'branch-5' ? 14 : 2}
-                strokeLinecap="round"
-                opacity={highlightedBranchId === 'branch-5' ? 1 : 0.6}
-                style={highlightedBranchId === 'branch-5' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
-              />
-            </DraggableBranch>
-          </motion.g>
-
-          {/* --- DEPTH LAYER 4: Deep Lower Vine (Branch 3) --- */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: (loomConfig.branches?.['branch-3']?.exitScale || 2.6) * (loomConfig.globalBranchScale || 1.0),
-              y: loomConfig.branches?.['branch-3']?.exitY ?? 1250,
-              x: loomConfig.branches?.['branch-3']?.exitX ?? -120
-            } : { scale: (loomConfig.branches?.['branch-3']?.initialScale || 1.0) * (loomConfig.globalBranchScale || 1.0), y: 0, x: 0 }}
-            transition={{
-              duration: loomConfig.branches?.['branch-3']?.exitDuration || 14.0,
-              delay: loomConfig.branches?.['branch-3']?.exitDelay ?? 24.0,
-              ease: [0.25, 1, 0.35, 1]
-            }}
-            style={{ transformOrigin: "500px 720px" }}
-          >
-            <DraggableBranch
-              id="branch-3"
-              pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
-              origin="500px 720px"
-              onEnergize={handleBranchEnergize}
-              energizedData={energizedBranches['branch-3']}
-              allEnergizedStage={awakenedStages['branch-3']}
-              isFinalBranch={lastTappedBranchId === 'branch-3'}
-              venomDuration={loomConfig.venomDuration || 7.0}
-              windConfig={{
-                y: [-20, 20, -20],
-                x: [-10, 10, -10],
-                rotate: [-1.4, 1.4, -1.4],
-                duration: 24,
-                delay: 2
-              }}
-            >
-              <path
-                d="M -380 890 Q 200 680, 580 720 T 1450 820"
-                fill="none"
-                stroke="#000000"
-                strokeOpacity="0.001"
-                strokeWidth="120"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -380 890 Q 200 680, 580 720 T 1450 820"
-                fill="none"
-                stroke="#000000"
-                strokeWidth={loomConfig.branches?.['branch-3']?.strokeWidth || 10}
-                strokeLinecap="round"
-                opacity="0.95"
-              />
-              <path
-                d="M -380 890 Q 200 680, 580 720 T 1450 820"
-                fill="none"
-                stroke="#050a08"
-                strokeWidth={Math.max(2, (loomConfig.branches?.['branch-3']?.strokeWidth || 10) - 3)}
-                strokeLinecap="round"
-              />
-              <path
-                d="M -380 889 Q 200 679, 580 719 T 1450 819"
-                fill="none"
-                stroke={highlightedBranchId === 'branch-3' ? "#00FF66" : "#062d22"}
-                strokeWidth={highlightedBranchId === 'branch-3' ? 14 : 1.8}
-                strokeLinecap="round"
-                opacity={highlightedBranchId === 'branch-3' ? 1 : 0.6}
-                style={highlightedBranchId === 'branch-3' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
-              />
-            </DraggableBranch>
-          </motion.g>
-
-          {/* --- DEPTH LAYER 5: Deepest Background Horizon Branch (Branch 4) --- */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: (loomConfig.branches?.['branch-4']?.exitScale || 2.5) * (loomConfig.globalBranchScale || 1.0),
-              y: loomConfig.branches?.['branch-4']?.exitY ?? -1150,
-              x: loomConfig.branches?.['branch-4']?.exitX ?? 350
-            } : { scale: (loomConfig.branches?.['branch-4']?.initialScale || 1.0) * (loomConfig.globalBranchScale || 1.0), y: 0, x: 0 }}
-            transition={{
-              duration: loomConfig.branches?.['branch-4']?.exitDuration || 14.0,
-              delay: loomConfig.branches?.['branch-4']?.exitDelay ?? 32.0,
-              ease: [0.25, 1, 0.35, 1]
-            }}
-            style={{ transformOrigin: "500px 520px" }}
-          >
-            <DraggableBranch
-              id="branch-4"
-              pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
-              origin="500px 520px"
-              onEnergize={handleBranchEnergize}
-              energizedData={energizedBranches['branch-4']}
-              allEnergizedStage={awakenedStages['branch-4']}
-              isFinalBranch={lastTappedBranchId === 'branch-4'}
-              venomDuration={loomConfig.venomDuration || 7.0}
-              windConfig={{
-                x: [-14, 14, -14],
-                y: [12, -12, 12],
-                rotate: [-0.9, 0.9, -0.9],
-                duration: 26,
-                delay: 0.5
-              }}
-            >
-              <path
-                d="M 1450 30 Q 820 420, 480 620 T -350 940"
-                fill="none"
-                stroke="#000000"
-                strokeOpacity="0.001"
-                strokeWidth="120"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 1450 30 Q 820 420, 480 620 T -350 940"
-                fill="none"
-                stroke="#000000"
-                strokeWidth={loomConfig.branches?.['branch-4']?.strokeWidth || 8}
-                strokeLinecap="round"
-                opacity="0.9"
-              />
-              <path
-                d="M 1450 30 Q 820 420, 480 620 T -350 940"
-                fill="none"
-                stroke="#050a08"
-                strokeWidth={Math.max(2, (loomConfig.branches?.['branch-4']?.strokeWidth || 8) - 2.5)}
-                strokeLinecap="round"
-              />
-              <path
-                d="M 1450 29 Q 820 419, 480 619 T -350 939"
-                fill="none"
-                stroke={highlightedBranchId === 'branch-4' ? "#00FF66" : "#062d22"}
-                strokeWidth={highlightedBranchId === 'branch-4' ? 14 : 1.5}
-                strokeLinecap="round"
-                opacity={highlightedBranchId === 'branch-4' ? 1 : 0.6}
-                style={highlightedBranchId === 'branch-4' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
-              />
-            </DraggableBranch>
-          </motion.g>
-        </g>
+        {/* DYNAMIC Z-INDEX ORDERED BRANCHES RENDERING */}
+        {/* Rendered in exact order of loomConfig.renderOrder (Last in array = Topmost layer!) */}
+        {(loomConfig.renderOrder || ['branch-4', 'branch-3', 'branch-5', 'branch-2', 'branch-1']).map(bId => 
+          renderSingleBranch(bId)
+        )}
       </svg>
 
       {/* 4. LIVE INTERACTIVE CALIBRATION TOOLBOX */}

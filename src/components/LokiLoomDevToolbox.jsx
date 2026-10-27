@@ -91,6 +91,31 @@ export default function LokiLoomDevToolbox({
     { id: 'branch-4', label: 'Branch 4 (Deep Horizon)' },
   ];
 
+  // Move branch up or down in Z-index order
+  const moveBranchZ = (bId, direction) => {
+    if (isLocked) return;
+    const currentOrder = [...(config.renderOrder || ['branch-4', 'branch-3', 'branch-5', 'branch-2', 'branch-1'])];
+    const idx = currentOrder.indexOf(bId);
+    if (idx === -1) return;
+
+    if (direction === 'front' && idx < currentOrder.length - 1) {
+      // Swap with next (brings closer to front/top)
+      const temp = currentOrder[idx];
+      currentOrder[idx] = currentOrder[idx + 1];
+      currentOrder[idx + 1] = temp;
+    } else if (direction === 'back' && idx > 0) {
+      // Swap with prev (sends behind/back)
+      const temp = currentOrder[idx];
+      currentOrder[idx] = currentOrder[idx - 1];
+      currentOrder[idx - 1] = temp;
+    }
+
+    onChange(prev => ({
+      ...prev,
+      renderOrder: currentOrder
+    }));
+  };
+
   const handleSelectTab = (tabId) => {
     setActiveTab(tabId);
     if (tabId.startsWith('branch-')) {
@@ -346,8 +371,27 @@ export default function LokiLoomDevToolbox({
               const bData = config.branches[b.id];
               return (
                 <div key={b.id} className="space-y-3.5">
-                  <div className="text-sm font-bold text-[#7CFFB2] border-b border-[#00FF66]/20 pb-1">
-                    {b.label}
+                  <div className="flex items-center justify-between border-b border-[#00FF66]/20 pb-1.5">
+                    <span className="text-sm font-bold text-[#7CFFB2]">{b.label}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] text-gray-400">Layer Order:</span>
+                      <button
+                        onClick={() => moveBranchZ(b.id, 'front')}
+                        disabled={isLocked || (config.renderOrder || []).indexOf(b.id) === (config.renderOrder || []).length - 1}
+                        title="Bring to Front (Render on top of other branches)"
+                        className="px-2 py-0.5 bg-[#00FF66]/20 hover:bg-[#00FF66]/40 border border-[#00FF66]/40 rounded text-emerald-300 font-bold transition disabled:opacity-30"
+                      >
+                        ▲ Bring to Top
+                      </button>
+                      <button
+                        onClick={() => moveBranchZ(b.id, 'back')}
+                        disabled={isLocked || (config.renderOrder || []).indexOf(b.id) === 0}
+                        title="Send to Back (Render behind other branches)"
+                        className="px-2 py-0.5 bg-white/5 hover:bg-white/10 border border-white/20 rounded text-gray-300 transition disabled:opacity-30"
+                      >
+                        ▼ Send to Back
+                      </button>
+                    </div>
                   </div>
 
                   <div>
