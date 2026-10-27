@@ -16,7 +16,8 @@ function LokiLifePowerSpread({
   tapRatio = 0.5, 
   isEnergized, 
   isFinalBranch = false,
-  allEnergizedStage = false 
+  allEnergizedStage = false,
+  strokeScale = 1.0 // Scales venom stroke widths proportionally to branch depth!
 }) {
   if (!isEnergized || !branchPathRef.current) return null;
 
@@ -57,87 +58,87 @@ function LokiLifePowerSpread({
         d={pathD}
         fill="none"
         stroke="#004D2B"
-        strokeWidth="11"
+        strokeWidth={11 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "linear" }}
+        transition={{ duration, ease: "easeInOut" }}
         opacity={0.9}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#006B3C"
-        strokeWidth="6"
+        strokeWidth={6 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "linear" }}
+        transition={{ duration, ease: "easeInOut" }}
         opacity={0.8}
       />
 
       {/* 2. The Traveling Pulse - Loki Authentic Sacred Timeline Color Flow */}
       {/* Strictly contained inside branch borders without overflowing outside */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
-        {/* Layer A: Volumetric Edge Glow - Kept within branch width (14px) */}
+        {/* Layer A: Volumetric Edge Glow - Proportional to branch width */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#008F4C"
-          strokeWidth="14"
+          strokeWidth={14 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ 
-            pathLength: 1,
+            pathLength: [0, 0.45, 1],
             opacity: [0.3, 0.85, 0.6]
           }}
-          transition={{ duration, ease: "linear" }}
+          transition={{ duration, ease: "easeInOut" }}
           style={{ filter: "blur(2px)" }}
         />
 
-        {/* Layer B: True Loki Green (#00C853) & Electric Green (#00FF66) Body (9px) */}
+        {/* Layer B: True Loki Green (#00C853) & Electric Green (#00FF66) Body */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#00C853"
-          strokeWidth="9"
+          strokeWidth={9 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ 
-            pathLength: 1,
+            pathLength: [0, 0.5, 1],
             opacity: [0.4, 0.95, 0.85]
           }}
-          transition={{ duration, ease: "linear" }}
+          transition={{ duration, ease: "easeInOut" }}
         />
 
-        {/* Layer C: Neon Green (#39FF14) Radiant Core (5px) */}
+        {/* Layer C: Neon Green (#39FF14) Radiant Core */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
-          strokeWidth="5"
+          strokeWidth={5 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ 
-            pathLength: 1,
+            pathLength: [0, 0.55, 1],
             opacity: [0.5, 1, 0.9]
           }}
-          transition={{ duration, ease: "linear" }}
+          transition={{ duration, ease: "easeInOut" }}
         />
 
-        {/* Layer D: Mint Green (#7CFFB2) & Pale Green Glow (#B9FFD0) Center Filament (2px) */}
+        {/* Layer D: Mint Green (#7CFFB2) & Pale Green Glow (#B9FFD0) Center Filament */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth="2"
+          strokeWidth={Math.max(1, 2 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ 
-            pathLength: 1,
+            pathLength: [0, 0.6, 1],
             opacity: [0.6, 1, 0.95]
           }}
-          transition={{ duration, ease: "linear" }}
+          transition={{ duration, ease: "easeInOut" }}
         />
       </g>
     </g>
@@ -156,7 +157,7 @@ function LokiLifePowerSpread({
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#008F4C"
-            strokeWidth="15"
+            strokeWidth={15 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.85, 0.7] }}
@@ -167,7 +168,7 @@ function LokiLifePowerSpread({
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#00C853"
-            strokeWidth="9"
+            strokeWidth={9 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.95, 0.85] }}
@@ -177,7 +178,7 @@ function LokiLifePowerSpread({
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#39FF14"
-            strokeWidth="5"
+            strokeWidth={5 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.95] }}
@@ -187,7 +188,7 @@ function LokiLifePowerSpread({
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#B9FFD0"
-            strokeWidth="2"
+            strokeWidth={Math.max(1, 2 * strokeScale)}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.98] }}
@@ -209,7 +210,8 @@ function DraggableBranch({
   energizedData,
   allEnergizedStage,
   isFinalBranch = false,
-  isClickable = false
+  isClickable = false,
+  strokeScale = 1.0
 }) {
   const branchPathRef = useRef(null);
   const [tapRatio, setTapRatio] = useState(0.5);
@@ -297,6 +299,7 @@ function DraggableBranch({
             isEnergized={true} 
             isFinalBranch={isFinalBranch}
             allEnergizedStage={allEnergizedStage}
+            strokeScale={strokeScale}
           />
         )}
       </g>
@@ -758,6 +761,7 @@ export default function LokiTimelinePortal() {
               id="branch-2"
               pathData="M -350 40 Q 250 220, 680 160 T 1420 120"
               origin="500px 160px"
+              strokeScale={0.7}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-2']}
               allEnergizedStage={awakenedStages['branch-2']}
@@ -822,6 +826,7 @@ export default function LokiTimelinePortal() {
               id="branch-5"
               pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
               origin="500px 540px"
+              strokeScale={0.45}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-5']}
               allEnergizedStage={awakenedStages['branch-5']}
@@ -886,6 +891,7 @@ export default function LokiTimelinePortal() {
               id="branch-3"
               pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
               origin="500px 720px"
+              strokeScale={0.3}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-3']}
               allEnergizedStage={awakenedStages['branch-3']}
@@ -950,6 +956,7 @@ export default function LokiTimelinePortal() {
               id="branch-4"
               pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
               origin="500px 520px"
+              strokeScale={0.18}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-4']}
               allEnergizedStage={awakenedStages['branch-4']}
