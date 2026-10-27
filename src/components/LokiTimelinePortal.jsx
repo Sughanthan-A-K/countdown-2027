@@ -330,6 +330,26 @@ export default function LokiTimelinePortal() {
   // hasDiscovered = false -> Only single isolated mystery vine in darkness, portal stays far away in deep space!
   const [hasDiscovered, setHasDiscovered] = useState(false);
 
+  // Replay key to force full fresh mount reset on Shift + R
+  const [replayKey, setReplayKey] = useState(0);
+
+  // Dev Shortcut: Press "Shift + R" to replay/reset portal scene instantly without tapping 3 times!
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.shiftKey && (e.key === 'R' || e.key === 'r')) {
+        e.preventDefault();
+        setEnergizedBranches({});
+        setAwakenedStages({});
+        setLastTappedBranchId(null);
+        setVoyageProgress(0);
+        setHasDiscovered(false);
+        setReplayKey(k => k + 1);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleBranchEnergize = (id, clickX, clickY) => {
     // Only Branch 1 initiates discovery:
     if (!hasDiscovered) {
@@ -393,7 +413,7 @@ export default function LokiTimelinePortal() {
   const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
+    <div key={replayKey} className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
       {/* 0. Full Page Darkness Background */}
       <motion.div 
         initial={{ opacity: 0 }}
