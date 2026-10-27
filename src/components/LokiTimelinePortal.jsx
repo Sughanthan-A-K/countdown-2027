@@ -437,9 +437,9 @@ export default function LokiTimelinePortal() {
         initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
         animate={hasDiscovered ? {
           x: "0vw",
-          scale: voyageProgress > 0 ? 0.95 : 0.42,
+          scale: voyageProgress > 0 ? 0.95 : 0.38,
           opacity: voyageProgress > 0 ? 1 : 0.65,
-          filter: voyageProgress > 0 ? "blur(0px)" : "blur(7px)"
+          filter: voyageProgress > 0 ? "blur(0px)" : "blur(8px)"
         } : {
           x: "-90vw",
           scale: 0.25,
@@ -447,8 +447,10 @@ export default function LokiTimelinePortal() {
           filter: "blur(28px)"
         }}
         transition={voyageProgress > 0 ? {
-          duration: 22.0, // Long, ultra smooth portfolio scroll flight
-          ease: [0.22, 1, 0.36, 1] // Apple / Locomotive scroll easing
+          scale: { duration: 25.0, ease: [0.16, 1, 0.3, 1], delay: 1.5 },
+          opacity: { duration: 20.0, ease: [0.16, 1, 0.3, 1] },
+          filter: { duration: 22.0, ease: [0.16, 1, 0.3, 1], delay: 1.0 },
+          x: { duration: 14.0, ease: [0.16, 1, 0.3, 1] }
         } : {
           duration: 14.0,
           ease: [0.16, 1, 0.3, 1]
@@ -616,14 +618,14 @@ export default function LokiTimelinePortal() {
         </defs>
 
         {/* Branch 1: Long flowing hanging branch across the entire cosmos */}
-        {/* ONLY this single big branch is clickable! Forefront depth layer */}
+        {/* ONLY this single big branch is clickable! Forefront depth layer - Glides UPWARDS out of view */}
         <motion.g
           animate={voyageProgress > 0 ? {
             scale: 3.2,
-            y: 90,
-            opacity: 0.88
+            y: -850,
+            opacity: 0.82
           } : { scale: 1, y: 0, opacity: 1 }}
-          transition={{ duration: 18.0, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 22.0, ease: [0.16, 1, 0.3, 1] }}
           style={{ transformOrigin: "500px 440px" }}
         >
           <DraggableBranch
@@ -698,14 +700,14 @@ export default function LokiTimelinePortal() {
             pointerEvents: 'none'
           }}
         >
-          {/* Branch 2: High sweeping undulating branch (Depth Layer 2) */}
+          {/* Branch 2: High sweeping undulating branch (Depth Layer 2 - Glides UPWARDS out of view) */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: 2.6,
-              y: -70,
-              opacity: 0.92
+              scale: 2.8,
+              y: -1050,
+              opacity: 0.85
             } : { scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 19.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 23.5, ease: [0.16, 1, 0.3, 1] }}
             style={{ transformOrigin: "500px 160px" }}
           >
             <DraggableBranch
@@ -758,14 +760,14 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* Branch 5: Mid-lower undulating vine (Depth Layer 3) */}
+          {/* Branch 5: Mid-lower undulating vine (Depth Layer 3 - Glides DOWNWARDS out of view) */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: 2.2,
-              y: 60,
-              opacity: 0.94
+              scale: 2.6,
+              y: 750,
+              opacity: 0.88
             } : { scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 20.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 24.5, ease: [0.16, 1, 0.3, 1] }}
             style={{ transformOrigin: "500px 540px" }}
           >
             <DraggableBranch
@@ -818,14 +820,14 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* Branch 3: Low hanging massive vine (Depth Layer 4) */}
+          {/* Branch 3: Low hanging massive vine (Depth Layer 4 - Glides DOWNWARDS out of view) */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: 1.8,
-              y: 70,
-              opacity: 0.96
+              scale: 2.8,
+              y: 1100,
+              opacity: 0.85
             } : { scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 21.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 25.5, ease: [0.16, 1, 0.3, 1] }}
             style={{ transformOrigin: "500px 720px" }}
           >
             <DraggableBranch
@@ -878,14 +880,15 @@ export default function LokiTimelinePortal() {
             </DraggableBranch>
           </motion.g>
 
-          {/* Branch 4: Long sweeping diagonal cascade (Depth Layer 5 - Deepest) */}
+          {/* Branch 4: Long sweeping diagonal cascade (Depth Layer 5 - Deepest, glides UP and rightwards) */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: 1.5,
-              y: -50,
-              opacity: 0.98
-            } : { scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 22.0, ease: [0.22, 1, 0.36, 1] }}
+              scale: 2.2,
+              y: -850,
+              x: 280,
+              opacity: 0.88
+            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
+            transition={{ duration: 26.0, ease: [0.16, 1, 0.3, 1] }}
             style={{ transformOrigin: "500px 520px" }}
           >
             <DraggableBranch
