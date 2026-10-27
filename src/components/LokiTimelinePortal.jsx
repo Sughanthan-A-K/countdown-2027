@@ -39,7 +39,6 @@ function LokiLifePowerSpread({
     return d;
   };
 
-  // Symmetrical bi-directional traveling pulses along subpaths
   // Rightward path (from tap to end)
   const rightD = getSubpath(tapLen, totalLen);
   // Leftward path (from tap to start)
@@ -47,13 +46,13 @@ function LokiLifePowerSpread({
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  
-  // Continuous smooth organic venom propagation duration
-  const duration = 5.8;
+  // Duration of venom traveling pulse across the branch
+  // Continuous smooth glide that never cuts out
+  const duration = 7.0;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Permanent awakened living emerald body left behind the venom trail */}
+      {/* 1. Behind the pulse: Awakened subtle living body inside branch */}
       <motion.path
         d={pathD}
         fill="none"
@@ -77,59 +76,68 @@ function LokiLifePowerSpread({
         opacity={0.8}
       />
 
-      {/* 2. The Traveling Living Venom Front - strictly contained, organic fluid pulse */}
+      {/* 2. The Traveling Pulse - Loki Authentic Sacred Timeline Color Flow */}
+      {/* Strictly contained inside branch borders without overflowing outside */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
-        {/* Layer A: Fluid Aura Edge (14px) */}
+        {/* Layer A: Volumetric Edge Glow - Kept within branch width (14px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#008F4C"
           strokeWidth="14"
           strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: [0, 0.45, 1],
+            opacity: [0.3, 0.85, 0.6]
+          }}
           transition={{ duration, ease: "easeInOut" }}
-          opacity={0.7}
-          style={{ filter: "blur(2.5px)" }}
+          style={{ filter: "blur(2px)" }}
         />
 
-        {/* Layer B: Loki Living Climax Green (#00C853) Body (9px) */}
+        {/* Layer B: True Loki Green (#00C853) & Electric Green (#00FF66) Body (9px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#00C853"
           strokeWidth="9"
           strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: [0, 0.5, 1],
+            opacity: [0.4, 0.95, 0.85]
+          }}
           transition={{ duration, ease: "easeInOut" }}
-          opacity={0.9}
         />
 
-        {/* Layer C: Neon Green (#39FF14) Radiant Spine (5px) */}
+        {/* Layer C: Neon Green (#39FF14) Radiant Core (5px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
           strokeWidth="5"
           strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: [0, 0.55, 1],
+            opacity: [0.5, 1, 0.9]
+          }}
           transition={{ duration, ease: "easeInOut" }}
-          opacity={0.95}
         />
 
-        {/* Layer D: Mint & Pale Green Filament (#B9FFD0) (2px) */}
+        {/* Layer D: Mint Green (#7CFFB2) & Pale Green Glow (#B9FFD0) Center Filament (2px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
           strokeWidth="2"
           strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: [0, 0.6, 1],
+            opacity: [0.6, 1, 0.95]
+          }}
           transition={{ duration, ease: "easeInOut" }}
-          opacity={1}
         />
       </g>
     </g>
@@ -137,9 +145,56 @@ function LokiLifePowerSpread({
 
   return (
     <g>
-      {/* Venom flows continuously from start point to both ends - 100% fluid, no abrupt flash! */}
+      {/* Symmetrical Left and Right Pulses spreading outward seamlessly from tap point to the ends */}
       {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
       {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
+
+      {/* Full Living Pulsation when branch awakens (Stays within branch silhouette borders) */}
+      {allEnergizedStage && (
+        <g style={{ filter: "url(#venomPulseDistort)" }}>
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#008F4C"
+            strokeWidth="15"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.85, 0.7] }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
+            style={{ filter: "blur(3px)" }}
+          />
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#00C853"
+            strokeWidth="9"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.95, 0.85] }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
+          />
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#39FF14"
+            strokeWidth="5"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0.95] }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
+          />
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#B9FFD0"
+            strokeWidth="2"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0.98] }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
+          />
+        </g>
+      )}
     </g>
   );
 }
@@ -154,8 +209,8 @@ function DraggableBranch({
   energizedData,
   allEnergizedStage,
   isFinalBranch = false,
-  isClickable = false,
-  passBy = false // Spaceship cruises past this branch
+  flyOut3D = false,
+  flyOutDelay = 0
 }) {
   const branchPathRef = useRef(null);
   const [tapRatio, setTapRatio] = useState(0.5);
@@ -168,7 +223,6 @@ function DraggableBranch({
   }, [energizedData?.tapRatio]);
 
   const handlePointerDown = (e) => {
-    if (!isClickable) return;
     e.stopPropagation();
 
     // Trigger Loki God of Stories life magic power flow starting exactly from touch point!
@@ -211,21 +265,20 @@ function DraggableBranch({
 
   return (
     <motion.g
-      // Spaceship Fly-By Cruise:
-      // When our spaceship approaches and passes a branch, it gently expands outwards towards screen edges
-      // and slides past our camera into the periphery without rushing or popping!
-      animate={passBy ? {
-        scale: [1, 2.8, 8.5],
-        opacity: [1, 1, 0.4, 0],
-        y: [0, 80, 260]
+      // Unbroken Continuous Ultra-Slow 3D Pass-By Flight:
+      // Glides smoothly straight towards the viewer's camera, expands to fill and sweep past the screen, and only fades once behind!
+      animate={flyOut3D ? {
+        scale: [1, 2.5, 7.0],
+        y: [0, 60, 220],
+        opacity: [1, 1, 0.4, 0]
       } : { 
         y: windConfig.y,
         x: windConfig.x,
         rotate: windConfig.rotate
       }}
-      transition={passBy ? {
-        duration: 8.5, // Ultra slow, continuous majestic glide
-        times: [0, 0.55, 0.82, 1.0], // Full 100% visible across screen before fading out in outer space
+      transition={flyOut3D ? {
+        duration: 8.0, // Ultra slow, continuous majestic glide
+        times: [0, 0.5, 0.8, 1.0], // Full 100% visible across screen before fading out in outer space
         ease: [0.16, 1, 0.3, 1]
       } : {
         duration: windConfig.duration,
@@ -236,8 +289,8 @@ function DraggableBranch({
       style={{ transformOrigin: origin }}
     >
       <g
-        onPointerDown={isClickable ? handlePointerDown : undefined}
-        className={isClickable ? "pointer-events-auto cursor-pointer select-none" : "pointer-events-none select-none"}
+        onPointerDown={handlePointerDown}
+        className="pointer-events-auto cursor-pointer select-none"
       >
         {/* Hidden reference path to compute exact total length and subpaths on click */}
         <path ref={branchPathRef} d={pathData} fill="none" stroke="none" />
@@ -278,11 +331,10 @@ export default function LokiTimelinePortal() {
   const [awakenedStages, setAwakenedStages] = useState({});
   // Track which branch was tapped last (the 5th branch that triggered the continuous venom cascade)
   const [lastTappedBranchId, setLastTappedBranchId] = useState(null);
-  // Track individual branches spaceship pass-by states
-  const [passedBranches, setPassedBranches] = useState({});
-
-  // Track slow voyage towards the portal
-  const [portalApproach, setPortalApproach] = useState(false);
+  // Track individual branches 3D bullet pass-by states
+  // When a branch's venom completes its flow, that branch flies straight towards the user's camera,
+  // growing huge and crossing past the screen like a 3D bullet in an IMAX movie!
+  const [flyOutBranches, setFlyOutBranches] = useState({});
 
   // Cinematic Intro State:
   // hasDiscovered = false -> Only single isolated mystery vine in darkness, portal stays far away in deep space!
@@ -307,13 +359,15 @@ export default function LokiTimelinePortal() {
         }
       };
 
-      // 1. Cascade trigger remaining branches from dynamic sides:
-      // Timing: Branch 1 tapped -> branches 2,3,4,5 ignite sequentially from sides
+      // When the user taps Branch 1 (or any initial branch),
+      // smoothly cascade and activate all remaining branches sequentially one by one!
+      // Instead of all triggering from center (0.5), they ignite dynamically from the sides (left/right ends)
+      // like organic vines catching fire from the perimeter!
       const cascadeConfig = [
-        { id: 'branch-2', tapRatio: 0.05, delay: 900 },
-        { id: 'branch-3', tapRatio: 0.95, delay: 1800 },
-        { id: 'branch-4', tapRatio: 0.08, delay: 2700 },
-        { id: 'branch-5', tapRatio: 0.92, delay: 3600 },
+        { id: 'branch-2', tapRatio: 0.05, delay: 1200 }, // starts from left side edge
+        { id: 'branch-3', tapRatio: 0.95, delay: 2400 }, // starts from right side edge
+        { id: 'branch-4', tapRatio: 0.08, delay: 3600 }, // starts from far right/top side edge
+        { id: 'branch-5', tapRatio: 0.92, delay: 4800 }, // starts from far right side edge
       ];
 
       cascadeConfig.forEach(item => {
@@ -331,48 +385,43 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // 2. User Requirement:
+      // Tap 1: User taps Branch 1 -> cascades all remaining branches
+      // User requirement:
       // "once ellame glow aana aparam oru 3 sec aparam branch laan angha ye iruku
       // naa apdiye spaceship la kitta pora maathiri poran oru branch ah kadakura
-      // then oru 2 sec la inoru branch kadakuran... then intha maathrii delay la...
-      // screen kulla pora maathiri vena apdiye screku veliya pora maathiri vachikalam
-      // ithu ellam auto mattick ah nadakumnum then onum rush pannna vena rombha slow ah smooth ah panidu
+      // then oru 2 sec la inoru branch kadakuran...
+      // screku veliya pora maathiri vachikalam ithu ellam auto mattick ah nadakumnum
+      // then onum rush pannna vena rombha slow ah smooth ah panidu
       // like apdiye konjam konjam ah slow ah antha portal la nooki porom thats all"
       //
-      // Timeline breakdown:
-      // - 0s: Branch 1 starts venom
-      // - 3.6s: Last branch (5) starts venom
-      // - ~5.0s: All branches are fully glowing in living green
-      // - ~8.0s (3 sec glow pause complete!): Spaceship begins flying forward
-      // - 8.2s: Pass Branch 1 (moves smoothly outwards past screen)
-      // - 10.4s (+2.2s delay): Pass Branch 2
-      // - 12.6s (+2.2s delay): Pass Branch 3
-      // - 14.8s (+2.2s delay): Pass Branch 4
-      // - 17.0s (+2.2s delay): Pass Branch 5
-      // - Portal slowly approaches and expands as we cruise through them!
-
-      const passBySequence = [
-        { id: 'branch-1', delay: 8200 },
-        { id: 'branch-2', delay: 10400 },
-        { id: 'branch-3', delay: 12600 },
-        { id: 'branch-4', delay: 14800 },
-        { id: 'branch-5', delay: 17000 },
+      // Ignition ends by ~4.8s. User enjoys full branches glowing for 3 full seconds (until ~8.0s).
+      // Then, one branch passes by every 2 seconds smoothly:
+      const passBySchedule = [
+        { id: 'branch-1', delay: 8000 },
+        { id: 'branch-2', delay: 10200 }, // +2.2s
+        { id: 'branch-3', delay: 12400 }, // +2.2s
+        { id: 'branch-4', delay: 14600 }, // +2.2s
+        { id: 'branch-5', delay: 16800 }, // +2.2s
       ];
 
-      passBySequence.forEach(step => {
+      passBySchedule.forEach(item => {
         setTimeout(() => {
-          setPassedBranches(passPrev => ({ ...passPrev, [step.id]: true }));
-        }, step.delay);
+          setFlyOutBranches(flyPrev => ({ ...flyPrev, [item.id]: true }));
+        }, item.delay);
       });
-
-      // Slowly cruise closer towards the portal
-      setTimeout(() => {
-        setPortalApproach(true);
-      }, 8200);
 
       return updated;
     });
   };
+
+  // Total energized count (0 to 5):
+  // As user crosses branches one by one, the distant portal gently approaches closer step-by-step!
+  const energizedCount = Object.keys(energizedBranches).length;
+  // Starting distant scale = 0.52 (stays far away at beginning as requested!)
+  // Grows incrementally closer with each passed branch: 0.52 -> 0.62 -> 0.72 -> 0.85 -> 1.0!
+  const portalDistanceScale = 0.52 + energizedCount * 0.1;
+  // Starting normal width = 16px (w-4), progressively widens up to 56px (w-14) as user infuses branches
+  const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
@@ -407,37 +456,28 @@ export default function LokiTimelinePortal() {
       {/* ========================================================================= */}
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
           - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
+            Not even a trace visible at the start. Only the single loom branch exists in the dark.
           - On First Tap (hasDiscovered = true):
-            Very slowly emerges in deep space at its initial distant spot.
-          - When spaceship slow voyage begins (portalApproach = true):
-            The portal approaches steadily, smoothly expanding towards us without rushing!
+            Very, very slowly (14.0s duration) emerges from deep cosmic blur (blur: 24px -> blur: 3px)
+            gliding gradually towards the distant central background horizon (scale: 0.25 -> 0.55).
+            It NEVER jumps or appears abruptly!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
-        animate={hasDiscovered ? (
-          portalApproach ? {
-            x: "0vw",
-            scale: 0.9, // Spaceship smoothly approaches close to portal
-            opacity: 1,
-            filter: "blur(0px)"
-          } : {
-            x: "0vw",
-            scale: 0.45, // Stays strictly at its distant cosmic scale until voyage begins!
-            opacity: 0.85,
-            filter: "blur(4px)"
-          }
-        ) : {
+        animate={hasDiscovered ? {
+          x: "0vw",
+          scale: 0.38 + energizedCount * 0.08, // Stays in deep space (starts small: 0.38)
+          opacity: Math.min(1, 0.2 + energizedCount * 0.16), // Extremely gradual emergence
+          filter: `blur(${Math.max(1, 10 - energizedCount * 2)}px)` // Slow de-blur as branches pass
+        } : {
           x: "-90vw",
           scale: 0.25,
           opacity: 0,
           filter: "blur(28px)"
         }}
-        transition={portalApproach ? {
-          duration: 16.0, // Slow, meditative cruise towards portal
-          ease: [0.16, 1, 0.3, 1]
-        } : {
-          duration: 14.0, // Initial reveal slow emergence
+        transition={{
+          duration: 14.0, // ULTRA SLOW gradual celestial emergence!
           ease: [0.16, 1, 0.3, 1]
         }}
         style={{ transformOrigin: "50% 50%" }}
@@ -542,14 +582,14 @@ export default function LokiTimelinePortal() {
         {/* Intense white-mint core tear spine */}
         <motion.div
           animate={{
-            width: isVoyaging ? '72px' : '28px',
+            width: `${whiteCoreWidth}px`,
             opacity: [0.85, 1, 0.85],
-            boxShadow: isVoyaging 
-              ? '0 0 65px #ffffff, 0 0 110px #B9FFD0, 0 0 160px #00FF66'
+            boxShadow: energizedCount > 0 
+              ? `0 0 ${35 + energizedCount * 10}px #ffffff, 0 0 ${70 + energizedCount * 14}px #B9FFD0, 0 0 ${110 + energizedCount * 18}px #00FF66`
               : '0 0 35px #B9FFD0, 0 0 70px #00FF66, 0 0 110px #00C853'
           }}
           transition={{
-            width: { duration: 16.0, ease: [0.16, 1, 0.3, 1] },
+            width: { duration: 25.0, ease: [0.16, 1, 0.3, 1] },
             opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" }
           }}
           className="absolute h-[110vh] pointer-events-none rounded-[50%]"
@@ -593,7 +633,6 @@ export default function LokiTimelinePortal() {
           })}
         </defs>
         {/* Branch 1: Long flowing hanging branch across the entire cosmos */}
-        {/* ONLY this single branch has tap enabled! Once tapped, it automatically cascades to all others */}
         <DraggableBranch
           id="branch-1"
           pathData="M -400 310 Q 150 480, 520 440 T 1450 390"
@@ -602,8 +641,8 @@ export default function LokiTimelinePortal() {
           energizedData={energizedBranches['branch-1']}
           allEnergizedStage={awakenedStages['branch-1']}
           isFinalBranch={lastTappedBranchId === 'branch-1'}
-          isClickable={!energizedBranches['branch-1']?.active} // Clickable only until first tap
-          passBy={passedBranches['branch-1']}
+          flyOut3D={flyOutBranches['branch-1']}
+          flyOutDelay={0}
           windConfig={{
             y: [-18, 18, -18],
             x: [12, -12, 12],
@@ -658,12 +697,12 @@ export default function LokiTimelinePortal() {
         </DraggableBranch>
 
         {/* Branches 2 to 5: Long hanging, flowing cosmic branches */}
-        {/* Strictly display-only (pointer-events-none): All tap options removed! */}
+        {/* Initially hidden with pointer-events-none so ONLY Branch 1 is clickable! Once discovered, pointer-events are enabled for effortless interaction */}
         <g 
           style={{ 
             opacity: hasDiscovered ? 1 : 0, 
             transition: 'opacity 2.5s ease-out 0.5s',
-            pointerEvents: 'none'
+            pointerEvents: hasDiscovered ? 'auto' : 'none'
           }}
         >
           {/* Branch 2: High sweeping undulating branch */}
@@ -675,7 +714,8 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-2']}
             allEnergizedStage={awakenedStages['branch-2']}
             isFinalBranch={lastTappedBranchId === 'branch-2'}
-            passBy={passedBranches['branch-2']}
+            flyOut3D={flyOutBranches['branch-2']}
+            flyOutDelay={0}
             windConfig={{
               y: [16, -16, 16],
               x: [8, -8, 8],
@@ -726,7 +766,8 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-3']}
             allEnergizedStage={awakenedStages['branch-3']}
             isFinalBranch={lastTappedBranchId === 'branch-3'}
-            passBy={passedBranches['branch-3']}
+            flyOut3D={flyOutBranches['branch-3']}
+            flyOutDelay={0}
             windConfig={{
               y: [-20, 20, -20],
               x: [-10, 10, -10],
@@ -777,7 +818,8 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-4']}
             allEnergizedStage={awakenedStages['branch-4']}
             isFinalBranch={lastTappedBranchId === 'branch-4'}
-            passBy={passedBranches['branch-4']}
+            flyOut3D={flyOutBranches['branch-4']}
+            flyOutDelay={0}
             windConfig={{
               x: [-14, 14, -14],
               y: [12, -12, 12],
@@ -828,7 +870,8 @@ export default function LokiTimelinePortal() {
             energizedData={energizedBranches['branch-5']}
             allEnergizedStage={awakenedStages['branch-5']}
             isFinalBranch={lastTappedBranchId === 'branch-5'}
-            passBy={passedBranches['branch-5']}
+            flyOut3D={flyOutBranches['branch-5']}
+            flyOutDelay={0}
             windConfig={{
               y: [15, -15, 15],
               x: [10, -10, 10],
