@@ -265,21 +265,22 @@ function DraggableBranch({
 
   return (
     <motion.g
-      // Unbroken Continuous Ultra-Slow 3D Pass-By Flight:
-      // Glides smoothly straight towards the viewer's camera, expands to fill and sweep past the screen, and only fades once behind!
+      // First-person camera cruise (moving through deep space towards the branch):
+      // As our camera approaches this branch, the branch naturally grows closer to our perspective
+      // and slides gently past our viewport edges, vanishing behind us into outer space.
       animate={flyOut3D ? {
-        scale: [1, 2.5, 7.0],
-        y: [0, 60, 220],
-        opacity: [1, 1, 0.4, 0]
+        scale: [1, 1.8, 5.0],
+        opacity: [1, 1, 0.5, 0],
+        y: [0, 45, 160]
       } : { 
         y: windConfig.y,
         x: windConfig.x,
         rotate: windConfig.rotate
       }}
       transition={flyOut3D ? {
-        duration: 8.0, // Ultra slow, continuous majestic glide
-        times: [0, 0.5, 0.8, 1.0], // Full 100% visible across screen before fading out in outer space
-        ease: [0.16, 1, 0.3, 1]
+        duration: 9.0, // Ultra slow, majestic cinematic approach
+        times: [0, 0.5, 0.8, 1.0], // Full 100% visible while passing, gentle fade behind camera
+        ease: [0.18, 0.9, 0.25, 1.0]
       } : {
         duration: windConfig.duration,
         repeat: Infinity,
@@ -394,14 +395,15 @@ export default function LokiTimelinePortal() {
       // then onum rush pannna vena rombha slow ah smooth ah panidu
       // like apdiye konjam konjam ah slow ah antha portal la nooki porom thats all"
       //
-      // Ignition ends by ~4.8s. User enjoys full branches glowing for 3 full seconds (until ~8.0s).
-      // Then, one branch passes by every 2 seconds smoothly:
+      // First-person voyage through the multiverse loom:
+      // We cruise forward through space towards the distant portal.
+      // We pass the nearest branches first, then cruise forward to reach and pass each deeper branch sequentially:
       const passBySchedule = [
-        { id: 'branch-1', delay: 8000 },
-        { id: 'branch-2', delay: 10200 }, // +2.2s
-        { id: 'branch-3', delay: 12400 }, // +2.2s
-        { id: 'branch-4', delay: 14600 }, // +2.2s
-        { id: 'branch-5', delay: 16800 }, // +2.2s
+        { id: 'branch-1', delay: 7800 },  // 1st nearest branch we reach & cross
+        { id: 'branch-2', delay: 10600 }, // cruise ahead -> reach & pass 2nd branch (+2.8s)
+        { id: 'branch-5', delay: 13600 }, // cruise ahead -> reach & pass 3rd branch (+3.0s)
+        { id: 'branch-3', delay: 16800 }, // cruise ahead -> reach & pass 4th branch (+3.2s)
+        { id: 'branch-4', delay: 20200 }, // cruise ahead -> reach & pass 5th deepest branch (+3.4s)
       ];
 
       passBySchedule.forEach(item => {
