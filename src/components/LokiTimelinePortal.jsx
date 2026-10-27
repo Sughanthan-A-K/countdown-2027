@@ -426,16 +426,16 @@ export default function LokiTimelinePortal() {
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
           - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
           - On First Tap (hasDiscovered = true):
-            Emerges in the deep space distance (scale: 0.32).
-          - As our camera cruises smoothly forward, the portal concurrently grows closer
-            in tandem with the parallax flight (scale 0.32 -> 1.05)!
+            Emerges in the deep space distance (scale: 0.30).
+          - As our camera cruises forward ultra-slowly (55s duration), 
+            the portal gradually and imperceptibly draws closer into full focus!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
         animate={hasDiscovered ? {
           x: "0vw",
-          scale: voyageProgress > 0 ? 1.05 : 0.32,
+          scale: voyageProgress > 0 ? 1.05 : 0.30,
           opacity: voyageProgress > 0 ? 1 : 0.65,
           filter: voyageProgress > 0 ? "blur(0px)" : "blur(10px)"
         } : {
@@ -445,10 +445,10 @@ export default function LokiTimelinePortal() {
           filter: "blur(28px)"
         }}
         transition={voyageProgress > 0 ? {
-          scale: { duration: 24.0, ease: [0.18, 0.9, 0.28, 1] },
-          opacity: { duration: 18.0, ease: [0.18, 0.9, 0.28, 1] },
-          filter: { duration: 20.0, ease: [0.18, 0.9, 0.28, 1] },
-          x: { duration: 10.0, ease: [0.16, 1, 0.3, 1] }
+          scale: { duration: 55.0, ease: [0.16, 1, 0.3, 1] },
+          opacity: { duration: 40.0, ease: [0.16, 1, 0.3, 1] },
+          filter: { duration: 48.0, ease: [0.16, 1, 0.3, 1] },
+          x: { duration: 12.0, ease: [0.16, 1, 0.3, 1] }
         } : {
           duration: 14.0,
           ease: [0.16, 1, 0.3, 1]
@@ -616,16 +616,16 @@ export default function LokiTimelinePortal() {
         </defs>
 
         {/* ===================================================================== */}
-        {/* CONTINUOUS PARALLAX DEPTH FLIGHT (Smooth Natural Portfolio Cruise):   */}
-        {/* Layer 1 (Nearest, Foreground): Branch 1 (Big, thick, fast-near sweep) */}
-        {/* Layer 2 (Near-Mid Depth): Branch 2 (Top sweep)                         */}
-        {/* Layer 3 (Mid Depth): Branch 5 (Center-right natural pass)             */}
-        {/* Layer 4 (Far-Mid Depth): Branch 3 (Bottom slow cruise)                 */}
-        {/* Layer 5 (Deepest Cosmic Horizon): Branch 4 (Ultra slow far cruise)    */}
+        {/* ULTRA-SLOW NATURAL PARALLAX DEPTH CRUISE:                             */}
+        {/* Layer 1 (Nearest, Foreground): Branch 1 (Big, thick, slow near-glide) */}
+        {/* Layer 2 (Near-Mid Depth): Branch 2 (Top slow sweep)                   */}
+        {/* Layer 3 (Mid Depth): Branch 5 (Center-right gentle drift)             */}
+        {/* Layer 4 (Far-Mid Depth): Branch 3 (Bottom slow sink)                  */}
+        {/* Layer 5 (Deepest Cosmic Horizon): Branch 4 (Ultra slow horizon drift) */}
         {/* ===================================================================== */}
 
         {/* --- DEPTH LAYER 1: Forefront Giant Timeline (Branch 1) --- */}
-        {/* Nearest to camera optics: Largest initial appearance, sweeps past smoothly first */}
+        {/* Nearest to camera optics: Largest initial appearance, sweeps past ultra-slowly (28s) */}
         <motion.g
           animate={voyageProgress > 0 ? {
             scale: 2.8,
@@ -634,9 +634,9 @@ export default function LokiTimelinePortal() {
             opacity: [1, 0.95, 0.7, 0.2, 0]
           } : { scale: 1, y: 0, x: 0, opacity: 1 }}
           transition={{
-            duration: 9.0,
+            duration: 28.0,
             delay: 0,
-            ease: [0.18, 0.9, 0.28, 1],
+            ease: [0.16, 1, 0.3, 1],
             times: [0, 0.35, 0.65, 0.88, 1]
           }}
           style={{ transformOrigin: "500px 440px" }}
@@ -713,7 +713,7 @@ export default function LokiTimelinePortal() {
           }}
         >
           {/* --- DEPTH LAYER 2: Upper Timeline Vine (Branch 2) --- */}
-          {/* Near-mid depth: Glides smoothly up-left with short gentle offset */}
+          {/* Near-mid depth: Glides smoothly up-left (35s duration) */}
           <motion.g
             animate={voyageProgress > 0 ? {
               scale: 2.3,
@@ -722,9 +722,9 @@ export default function LokiTimelinePortal() {
               opacity: [1, 0.95, 0.75, 0.25, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
-              duration: 13.0,
-              delay: 1.5,
-              ease: [0.18, 0.9, 0.28, 1],
+              duration: 35.0,
+              delay: 3.0,
+              ease: [0.16, 1, 0.3, 1],
               times: [0, 0.35, 0.65, 0.9, 1]
             }}
             style={{ transformOrigin: "500px 160px" }}
@@ -780,7 +780,7 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* --- DEPTH LAYER 3: Mid-Depth Flowing Vine (Branch 5) --- */}
-          {/* Mid depth: Glides organically across screen diagonally down-right */}
+          {/* Mid depth: Glides organically across screen diagonally down-right (42s duration) */}
           <motion.g
             animate={voyageProgress > 0 ? {
               scale: 1.9,
@@ -789,9 +789,9 @@ export default function LokiTimelinePortal() {
               opacity: [1, 0.95, 0.8, 0.3, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
-              duration: 16.0,
-              delay: 3.2,
-              ease: [0.18, 0.9, 0.28, 1],
+              duration: 42.0,
+              delay: 6.0,
+              ease: [0.16, 1, 0.3, 1],
               times: [0, 0.4, 0.7, 0.9, 1]
             }}
             style={{ transformOrigin: "500px 540px" }}
@@ -847,7 +847,7 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* --- DEPTH LAYER 4: Deep Lower Vine (Branch 3) --- */}
-          {/* Far-mid depth: Sinks downward gracefully */}
+          {/* Far-mid depth: Sinks downward gracefully (48s duration) */}
           <motion.g
             animate={voyageProgress > 0 ? {
               scale: 1.6,
@@ -856,9 +856,9 @@ export default function LokiTimelinePortal() {
               opacity: [1, 0.95, 0.8, 0.35, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
-              duration: 19.0,
-              delay: 5.0,
-              ease: [0.18, 0.9, 0.28, 1],
+              duration: 48.0,
+              delay: 9.0,
+              ease: [0.16, 1, 0.3, 1],
               times: [0, 0.45, 0.75, 0.92, 1]
             }}
             style={{ transformOrigin: "500px 720px" }}
@@ -914,7 +914,7 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* --- DEPTH LAYER 5: Deepest Background Horizon Branch (Branch 4) --- */}
-          {/* Deepest distance: Passes gently across background */}
+          {/* Deepest distance: Ultra-slow horizon glide (54s duration) */}
           <motion.g
             animate={voyageProgress > 0 ? {
               scale: 1.4,
@@ -923,9 +923,9 @@ export default function LokiTimelinePortal() {
               opacity: [1, 0.95, 0.85, 0.4, 0]
             } : { scale: 1, y: 0, x: 0, opacity: 1 }}
             transition={{
-              duration: 22.0,
-              delay: 7.0,
-              ease: [0.18, 0.9, 0.28, 1],
+              duration: 54.0,
+              delay: 12.0,
+              ease: [0.16, 1, 0.3, 1],
               times: [0, 0.5, 0.8, 0.95, 1]
             }}
             style={{ transformOrigin: "500px 520px" }}
