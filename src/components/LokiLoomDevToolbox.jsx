@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
  * LokiLoomDevToolbox
@@ -11,6 +11,7 @@ import React, { useState } from 'react';
  * - Live replay / trigger test button
  * - Lock controls toggle
  * - Copy JSON config button
+ * - KEYBOARD SHORTCUT: Press 'T' or '~' (backtick) or 'Shift + D' anytime to toggle!
  */
 export default function LokiLoomDevToolbox({
   config,
@@ -18,10 +19,26 @@ export default function LokiLoomDevToolbox({
   onResetToDefaults,
   onTriggerReplay
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true); // Open by default for immediate visibility!
   const [isLocked, setIsLocked] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState('general'); // 'general' | 'branch1' | 'branch2' | 'branch5' | 'branch3' | 'branch4' | 'portal'
+  const [activeTab, setActiveTab] = useState('general');
+
+  // Keyboard shortcut listener ('t', 'T', '`', or 'Shift+D')
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't trigger if user is typing in an input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 't' || e.key === 'T' || e.key === '`' || (e.shiftKey && (e.key === 'D' || e.key === 'd'))) {
+        e.preventDefault();
+        setIsOpen(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(JSON.stringify(config, null, 2));
@@ -71,26 +88,27 @@ export default function LokiLoomDevToolbox({
   ];
 
   return (
-    <div className="fixed bottom-4 right-4 z-[999] font-mono text-xs select-none">
+    <div className="fixed bottom-4 right-4 z-[99999] pointer-events-auto font-mono text-xs select-none">
       {/* Mini Toggle Pill */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-black/85 border border-[#00FF66]/60 text-[#7CFFB2] px-4 py-2 rounded-full shadow-[0_0_20px_rgba(0,255,102,0.4)] backdrop-blur-md hover:bg-[#00FF66]/20 transition flex items-center gap-2"
+          className="bg-black/90 border-2 border-[#00FF66] text-[#7CFFB2] px-4 py-2.5 rounded-full shadow-[0_0_30px_rgba(0,255,102,0.6)] backdrop-blur-md hover:bg-[#00FF66]/20 transition flex items-center gap-2 cursor-pointer"
         >
-          <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66] animate-pulse" />
-          <span>⚡ Loom Live Toolbox</span>
+          <span className="w-3 h-3 rounded-full bg-[#00FF66] animate-ping" />
+          <span className="font-bold tracking-wide">⚡ Loom Toolbox (Press 'T')</span>
         </button>
       )}
 
       {/* Main Toolbox Modal */}
       {isOpen && (
-        <div className="w-[94vw] max-w-[420px] max-h-[85vh] bg-[#020b07]/95 border border-[#00FF66]/50 rounded-2xl shadow-[0_0_40px_rgba(0,255,102,0.35)] backdrop-blur-xl flex flex-col overflow-hidden text-emerald-100">
+        <div className="w-[94vw] max-w-[420px] max-h-[85vh] bg-[#020b07]/95 border-2 border-[#00FF66]/70 rounded-2xl shadow-[0_0_50px_rgba(0,255,102,0.45)] backdrop-blur-2xl flex flex-col overflow-hidden text-emerald-100">
           {/* Header */}
-          <div className="p-3 bg-black/60 border-b border-[#00FF66]/30 flex items-center justify-between">
+          <div className="p-3 bg-black/70 border-b border-[#00FF66]/30 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66]" />
               <span className="font-bold text-sm tracking-wide text-[#7CFFB2]">Loom Calibration Hub</span>
+              <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-gray-300">['T' key]</span>
             </div>
             <div className="flex items-center gap-1.5">
               <button
