@@ -633,12 +633,12 @@ export default function LokiTimelinePortal() {
         {/* ===================================================================== */}
 
         {/* --- DEPTH LAYER 1: Forefront Giant Timeline (Branch 1) --- */}
-        {/* Closest to camera: Exits first at ~14s (Continuous, zero delay) */}
+        {/* Closest to camera: Exits first, sweeping far UP and fully OFF-SCREEN */}
         <motion.g
           animate={voyageProgress > 0 ? {
-            scale: 3.2,
-            y: -1100,
-            x: -120
+            scale: 3.5,
+            y: -1600,
+            x: -250
           } : { scale: 1, y: 0, x: 0 }}
           transition={{
             duration: 14.0,
@@ -719,12 +719,12 @@ export default function LokiTimelinePortal() {
           }}
         >
           {/* --- DEPTH LAYER 2: Upper Timeline Vine (Branch 2) --- */}
-          {/* Depth layer 2: Moves at same time (delay: 0), exits next at ~20s */}
+          {/* Depth layer 2: Moves at same time (delay: 0), sweeps far UP and fully OFF-SCREEN */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: 2.8,
-              y: -1250,
-              x: -160
+              scale: 3.2,
+              y: -1700,
+              x: -300
             } : { scale: 1, y: 0, x: 0 }}
             transition={{
               duration: 20.0,
@@ -784,12 +784,12 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* --- DEPTH LAYER 3: Mid-Depth Flowing Vine (Branch 5) --- */}
-          {/* Depth layer 3: Moves at same time (delay: 0), exits next at ~26s */}
+          {/* Depth layer 3: Sweeps far DOWN and fully OFF-SCREEN */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: 2.6,
-              y: 1100,
-              x: 180
+              scale: 3.0,
+              y: 1600,
+              x: 250
             } : { scale: 1, y: 0, x: 0 }}
             transition={{
               duration: 26.0,
@@ -849,12 +849,12 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* --- DEPTH LAYER 4: Deep Lower Vine (Branch 3) --- */}
-          {/* Depth layer 4: Moves at same time (delay: 0), exits next at ~33s */}
+          {/* Depth layer 4: Sweeps far DOWN and fully OFF-SCREEN */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: 2.6,
-              y: 1250,
-              x: -120
+              scale: 3.0,
+              y: 1700,
+              x: -200
             } : { scale: 1, y: 0, x: 0 }}
             transition={{
               duration: 33.0,
@@ -914,19 +914,19 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* --- DEPTH LAYER 5: Deepest Background Horizon Branch (Branch 4) --- */}
-          {/* Deepest layer: Moves at same time (delay: 0), exits last at ~40s */}
+          {/* Deepest layer: Flies cleanly UP and far to the right, fully off-screen */}
           <motion.g
             animate={voyageProgress > 0 ? {
-              scale: 2.5,
-              y: -1150,
-              x: 350
+              scale: 3.2,
+              y: -1800,
+              x: 950
             } : { scale: 1, y: 0, x: 0 }}
             transition={{
-              duration: 40.0,
+              duration: 35.0,
               delay: 0,
               ease: [0.16, 1, 0.3, 1]
             }}
-            style={{ transformOrigin: "500px 520px" }}
+            style={{ transformOrigin: "800px 300px" }}
           >
             <DraggableBranch
               id="branch-4"
