@@ -39,6 +39,7 @@ function LokiLifePowerSpread({
     return d;
   };
 
+  // Symmetrical bi-directional traveling pulses along subpaths
   // Rightward path (from tap to end)
   const rightD = getSubpath(tapLen, totalLen);
   // Leftward path (from tap to start)
@@ -46,13 +47,13 @@ function LokiLifePowerSpread({
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  // Duration of venom traveling pulse across the branch
-  // Continuous smooth glide that never cuts out
-  const duration = 7.0;
+  
+  // Continuous smooth organic venom propagation duration
+  const duration = 5.8;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Behind the pulse: Awakened subtle living body inside branch */}
+      {/* 1. Permanent awakened living emerald body left behind the venom trail */}
       <motion.path
         d={pathD}
         fill="none"
@@ -76,68 +77,59 @@ function LokiLifePowerSpread({
         opacity={0.8}
       />
 
-      {/* 2. The Traveling Pulse - Loki Authentic Sacred Timeline Color Flow */}
-      {/* Strictly contained inside branch borders without overflowing outside */}
+      {/* 2. The Traveling Living Venom Front - strictly contained, organic fluid pulse */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
-        {/* Layer A: Volumetric Edge Glow - Kept within branch width (14px) */}
+        {/* Layer A: Fluid Aura Edge (14px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#008F4C"
           strokeWidth="14"
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: [0, 0.45, 1],
-            opacity: [0.3, 0.85, 0.6]
-          }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
           transition={{ duration, ease: "easeInOut" }}
-          style={{ filter: "blur(2px)" }}
+          opacity={0.7}
+          style={{ filter: "blur(2.5px)" }}
         />
 
-        {/* Layer B: True Loki Green (#00C853) & Electric Green (#00FF66) Body (9px) */}
+        {/* Layer B: Loki Living Climax Green (#00C853) Body (9px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#00C853"
           strokeWidth="9"
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: [0, 0.5, 1],
-            opacity: [0.4, 0.95, 0.85]
-          }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
           transition={{ duration, ease: "easeInOut" }}
+          opacity={0.9}
         />
 
-        {/* Layer C: Neon Green (#39FF14) Radiant Core (5px) */}
+        {/* Layer C: Neon Green (#39FF14) Radiant Spine (5px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
           strokeWidth="5"
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: [0, 0.55, 1],
-            opacity: [0.5, 1, 0.9]
-          }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
           transition={{ duration, ease: "easeInOut" }}
+          opacity={0.95}
         />
 
-        {/* Layer D: Mint Green (#7CFFB2) & Pale Green Glow (#B9FFD0) Center Filament (2px) */}
+        {/* Layer D: Mint & Pale Green Filament (#B9FFD0) (2px) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
           strokeWidth="2"
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: [0, 0.6, 1],
-            opacity: [0.6, 1, 0.95]
-          }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
           transition={{ duration, ease: "easeInOut" }}
+          opacity={1}
         />
       </g>
     </g>
@@ -145,56 +137,9 @@ function LokiLifePowerSpread({
 
   return (
     <g>
-      {/* Symmetrical Left and Right Pulses spreading outward seamlessly from tap point to the ends */}
+      {/* Venom flows continuously from start point to both ends - 100% fluid, no abrupt flash! */}
       {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
       {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
-
-      {/* Full Living Pulsation when branch awakens (Stays within branch silhouette borders) */}
-      {allEnergizedStage && (
-        <g style={{ filter: "url(#venomPulseDistort)" }}>
-          <motion.path
-            d={pathEl.getAttribute('d')}
-            fill="none"
-            stroke="#008F4C"
-            strokeWidth="15"
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.85, 0.7] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-            style={{ filter: "blur(3px)" }}
-          />
-          <motion.path
-            d={pathEl.getAttribute('d')}
-            fill="none"
-            stroke="#00C853"
-            strokeWidth="9"
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.95, 0.85] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-          />
-          <motion.path
-            d={pathEl.getAttribute('d')}
-            fill="none"
-            stroke="#39FF14"
-            strokeWidth="5"
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0.95] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-          />
-          <motion.path
-            d={pathEl.getAttribute('d')}
-            fill="none"
-            stroke="#B9FFD0"
-            strokeWidth="2"
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0.98] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-          />
-        </g>
-      )}
     </g>
   );
 }
