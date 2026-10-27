@@ -788,10 +788,10 @@ export default function LokiTimelinePortal() {
               d="M -400 309 Q 150 479, 520 439 T 1450 389"
               fill="none"
               stroke={highlightedBranchId === 'branch-1' ? "#00FF66" : "#062d22"}
-              strokeWidth={highlightedBranchId === 'branch-1' ? 7 : 2.5}
+              strokeWidth={highlightedBranchId === 'branch-1' ? 14 : 2.5}
               strokeLinecap="round"
               opacity={highlightedBranchId === 'branch-1' ? 1 : 0.6}
-              style={highlightedBranchId === 'branch-1' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
+              style={highlightedBranchId === 'branch-1' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
             />
           </DraggableBranch>
         </motion.g>
@@ -799,8 +799,8 @@ export default function LokiTimelinePortal() {
         {/* Branches 2 to 5: Strictly display-only background multiverse tapestry */}
         <g 
           style={{ 
-            opacity: (hasDiscovered || revealAllBranches) ? 1 : 0, 
-            transition: 'opacity 1.5s ease-out',
+            opacity: (hasDiscovered || revealAllBranches || !!highlightedBranchId) ? 1 : 0, 
+            transition: 'opacity 0.6s ease-out',
             pointerEvents: 'none'
           }}
         >
@@ -862,10 +862,10 @@ export default function LokiTimelinePortal() {
                 d="M -350 39 Q 250 219, 680 159 T 1420 119"
                 fill="none"
                 stroke={highlightedBranchId === 'branch-2' ? "#00FF66" : "#062d22"}
-                strokeWidth={highlightedBranchId === 'branch-2' ? 7 : 2}
+                strokeWidth={highlightedBranchId === 'branch-2' ? 14 : 2}
                 strokeLinecap="round"
                 opacity={highlightedBranchId === 'branch-2' ? 1 : 0.6}
-                style={highlightedBranchId === 'branch-2' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
+                style={highlightedBranchId === 'branch-2' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
               />
             </DraggableBranch>
           </motion.g>
@@ -928,10 +928,10 @@ export default function LokiTimelinePortal() {
                 d="M -320 539 Q 280 429, 720 559 T 1420 519"
                 fill="none"
                 stroke={highlightedBranchId === 'branch-5' ? "#00FF66" : "#062d22"}
-                strokeWidth={highlightedBranchId === 'branch-5' ? 7 : 2}
+                strokeWidth={highlightedBranchId === 'branch-5' ? 14 : 2}
                 strokeLinecap="round"
                 opacity={highlightedBranchId === 'branch-5' ? 1 : 0.6}
-                style={highlightedBranchId === 'branch-5' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
+                style={highlightedBranchId === 'branch-5' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
               />
             </DraggableBranch>
           </motion.g>
@@ -994,10 +994,10 @@ export default function LokiTimelinePortal() {
                 d="M -380 889 Q 200 679, 580 719 T 1450 819"
                 fill="none"
                 stroke={highlightedBranchId === 'branch-3' ? "#00FF66" : "#062d22"}
-                strokeWidth={highlightedBranchId === 'branch-3' ? 7 : 1.8}
+                strokeWidth={highlightedBranchId === 'branch-3' ? 14 : 1.8}
                 strokeLinecap="round"
                 opacity={highlightedBranchId === 'branch-3' ? 1 : 0.6}
-                style={highlightedBranchId === 'branch-3' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
+                style={highlightedBranchId === 'branch-3' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
               />
             </DraggableBranch>
           </motion.g>
@@ -1060,10 +1060,10 @@ export default function LokiTimelinePortal() {
                 d="M 1450 29 Q 820 419, 480 619 T -350 939"
                 fill="none"
                 stroke={highlightedBranchId === 'branch-4' ? "#00FF66" : "#062d22"}
-                strokeWidth={highlightedBranchId === 'branch-4' ? 7 : 1.5}
+                strokeWidth={highlightedBranchId === 'branch-4' ? 14 : 1.5}
                 strokeLinecap="round"
                 opacity={highlightedBranchId === 'branch-4' ? 1 : 0.6}
-                style={highlightedBranchId === 'branch-4' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
+                style={highlightedBranchId === 'branch-4' ? { filter: 'drop-shadow(0 0 25px #00FF66) drop-shadow(0 0 45px #39FF14)' } : {}}
               />
             </DraggableBranch>
           </motion.g>
