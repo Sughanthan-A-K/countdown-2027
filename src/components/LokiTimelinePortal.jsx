@@ -265,21 +265,20 @@ function DraggableBranch({
 
   return (
     <motion.g
-      // First-person camera cruise (moving through deep space towards the branch):
-      // As our camera approaches this branch, the branch naturally grows closer to our perspective
-      // and slides gently past our viewport edges, vanishing behind us into outer space.
+      // First-person perspective: The branch stays 100% visible (NEVER hides or disappears!)
+      // As we move forward past it, it expands gently past the screen edges and stays part of our universe.
       animate={flyOut3D ? {
-        scale: [1, 1.8, 5.0],
-        opacity: [1, 1, 0.5, 0],
-        y: [0, 45, 160]
+        scale: [1, 2.0, 3.8],
+        opacity: [1, 1, 0.95, 0.85], // Stays 100% visible, never disappears!
+        y: [0, 50, 140]
       } : { 
         y: windConfig.y,
         x: windConfig.x,
         rotate: windConfig.rotate
       }}
       transition={flyOut3D ? {
-        duration: 9.0, // Ultra slow, majestic cinematic approach
-        times: [0, 0.5, 0.8, 1.0], // Full 100% visible while passing, gentle fade behind camera
+        duration: 12.0, // Majestic, ultra slow pass
+        times: [0, 0.5, 0.8, 1.0],
         ease: [0.18, 0.9, 0.25, 1.0]
       } : {
         duration: windConfig.duration,
