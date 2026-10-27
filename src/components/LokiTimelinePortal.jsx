@@ -382,6 +382,11 @@ export default function LokiTimelinePortal() {
   const [loomConfig, setLoomConfig] = useState(DEFAULT_LOOM_CONFIG);
   const [replayKey, setReplayKey] = useState(0);
 
+  // Active highlighted branch selected in toolbox (null = none)
+  const [highlightedBranchId, setHighlightedBranchId] = useState(null);
+  // Manual reveal all branches toggle (true = user wants to see all 5 branches right away!)
+  const [revealAllBranches, setRevealAllBranches] = useState(false);
+
   // Track which branches have been energized with Loki's life magic
   const [energizedBranches, setEnergizedBranches] = useState({});
   // Track individual branch awakened full stages when all 5 are touched ("takk takk takk" stagger)
@@ -778,14 +783,15 @@ export default function LokiTimelinePortal() {
               strokeWidth={Math.max(4, (loomConfig.branches?.['branch-1']?.strokeWidth || 16) - 5)}
               strokeLinecap="round"
             />
-            {/* Subtle dark emerald glint */}
+            {/* Subtle dark emerald glint or Tool Highlighting Pulsation */}
             <path
               d="M -400 309 Q 150 479, 520 439 T 1450 389"
               fill="none"
-              stroke="#062d22"
-              strokeWidth="2.5"
+              stroke={highlightedBranchId === 'branch-1' ? "#00FF66" : "#062d22"}
+              strokeWidth={highlightedBranchId === 'branch-1' ? 7 : 2.5}
               strokeLinecap="round"
-              opacity="0.6"
+              opacity={highlightedBranchId === 'branch-1' ? 1 : 0.6}
+              style={highlightedBranchId === 'branch-1' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
             />
           </DraggableBranch>
         </motion.g>
@@ -793,8 +799,8 @@ export default function LokiTimelinePortal() {
         {/* Branches 2 to 5: Strictly display-only background multiverse tapestry */}
         <g 
           style={{ 
-            opacity: hasDiscovered ? 1 : 0, 
-            transition: 'opacity 2.5s ease-out 0.5s',
+            opacity: (hasDiscovered || revealAllBranches) ? 1 : 0, 
+            transition: 'opacity 1.5s ease-out',
             pointerEvents: 'none'
           }}
         >
@@ -855,10 +861,11 @@ export default function LokiTimelinePortal() {
               <path
                 d="M -350 39 Q 250 219, 680 159 T 1420 119"
                 fill="none"
-                stroke="#062d22"
-                strokeWidth="2"
+                stroke={highlightedBranchId === 'branch-2' ? "#00FF66" : "#062d22"}
+                strokeWidth={highlightedBranchId === 'branch-2' ? 7 : 2}
                 strokeLinecap="round"
-                opacity="0.6"
+                opacity={highlightedBranchId === 'branch-2' ? 1 : 0.6}
+                style={highlightedBranchId === 'branch-2' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
               />
             </DraggableBranch>
           </motion.g>
@@ -920,10 +927,11 @@ export default function LokiTimelinePortal() {
               <path
                 d="M -320 539 Q 280 429, 720 559 T 1420 519"
                 fill="none"
-                stroke="#062d22"
-                strokeWidth="2"
+                stroke={highlightedBranchId === 'branch-5' ? "#00FF66" : "#062d22"}
+                strokeWidth={highlightedBranchId === 'branch-5' ? 7 : 2}
                 strokeLinecap="round"
-                opacity="0.6"
+                opacity={highlightedBranchId === 'branch-5' ? 1 : 0.6}
+                style={highlightedBranchId === 'branch-5' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
               />
             </DraggableBranch>
           </motion.g>
@@ -985,10 +993,11 @@ export default function LokiTimelinePortal() {
               <path
                 d="M -380 889 Q 200 679, 580 719 T 1450 819"
                 fill="none"
-                stroke="#062d22"
-                strokeWidth="1.8"
+                stroke={highlightedBranchId === 'branch-3' ? "#00FF66" : "#062d22"}
+                strokeWidth={highlightedBranchId === 'branch-3' ? 7 : 1.8}
                 strokeLinecap="round"
-                opacity="0.6"
+                opacity={highlightedBranchId === 'branch-3' ? 1 : 0.6}
+                style={highlightedBranchId === 'branch-3' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
               />
             </DraggableBranch>
           </motion.g>
@@ -1050,10 +1059,11 @@ export default function LokiTimelinePortal() {
               <path
                 d="M 1450 29 Q 820 419, 480 619 T -350 939"
                 fill="none"
-                stroke="#062d22"
-                strokeWidth="1.5"
+                stroke={highlightedBranchId === 'branch-4' ? "#00FF66" : "#062d22"}
+                strokeWidth={highlightedBranchId === 'branch-4' ? 7 : 1.5}
                 strokeLinecap="round"
-                opacity="0.6"
+                opacity={highlightedBranchId === 'branch-4' ? 1 : 0.6}
+                style={highlightedBranchId === 'branch-4' ? { filter: 'drop-shadow(0 0 12px #00FF66)' } : {}}
               />
             </DraggableBranch>
           </motion.g>
@@ -1066,6 +1076,10 @@ export default function LokiTimelinePortal() {
         onChange={setLoomConfig}
         onResetToDefaults={handleResetToDefaults}
         onTriggerReplay={handleTriggerReplay}
+        activeBranchId={highlightedBranchId}
+        onSelectBranch={setHighlightedBranchId}
+        revealAllBranches={revealAllBranches}
+        onToggleRevealAll={() => setRevealAllBranches(prev => !prev)}
       />
     </div>
   );

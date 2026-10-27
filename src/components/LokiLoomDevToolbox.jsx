@@ -17,12 +17,16 @@ export default function LokiLoomDevToolbox({
   config,
   onChange,
   onResetToDefaults,
-  onTriggerReplay
+  onTriggerReplay,
+  activeBranchId,
+  onSelectBranch,
+  revealAllBranches,
+  onToggleRevealAll
 }) {
-  const [isOpen, setIsOpen] = useState(true); // Open by default for immediate visibility!
+  const [isOpen, setIsOpen] = useState(true);
   const [isLocked, setIsLocked] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState('branch-1'); // Default directly on branches so user sees them!
 
   // Keyboard shortcut listener ('t', 'T', '`', or 'Shift+D')
   useEffect(() => {
@@ -87,6 +91,15 @@ export default function LokiLoomDevToolbox({
     { id: 'branch-4', label: 'Branch 4 (Deep Horizon)' },
   ];
 
+  const handleSelectTab = (tabId) => {
+    setActiveTab(tabId);
+    if (tabId.startsWith('branch-')) {
+      onSelectBranch(tabId);
+    } else {
+      onSelectBranch(null);
+    }
+  };
+
   return (
     <div className="fixed bottom-4 right-4 z-[99999] pointer-events-auto font-mono text-xs select-none">
       {/* Mini Toggle Pill */}
@@ -131,12 +144,22 @@ export default function LokiLoomDevToolbox({
           </div>
 
           {/* Action Row */}
-          <div className="p-2.5 bg-black/40 border-b border-[#00FF66]/20 flex gap-2">
+          <div className="p-2.5 bg-black/40 border-b border-[#00FF66]/20 flex flex-wrap gap-2">
+            <button
+              onClick={onToggleRevealAll}
+              className={`px-3 py-1.5 rounded-lg font-bold border transition flex items-center gap-1.5 ${
+                revealAllBranches 
+                  ? 'bg-[#00FF66]/30 border-[#00FF66] text-[#7CFFB2]' 
+                  : 'bg-white/5 border-white/20 text-gray-300 hover:text-white'
+              }`}
+            >
+              👁 {revealAllBranches ? 'Hide Inactive' : 'Show All 5 Branches'}
+            </button>
             <button
               onClick={onTriggerReplay}
               className="flex-1 py-1.5 bg-[#00C853]/25 hover:bg-[#00C853]/40 border border-[#00FF66]/40 rounded-lg text-emerald-300 font-bold transition flex items-center justify-center gap-1.5"
             >
-              ▶ Replay Scene
+              ▶ Replay
             </button>
             <button
               onClick={handleCopy}
@@ -153,35 +176,51 @@ export default function LokiLoomDevToolbox({
             </button>
           </div>
 
-          {/* Tabs */}
-          <div className="flex overflow-x-auto p-1.5 bg-black/30 border-b border-[#00FF66]/20 gap-1 scrollbar-none">
+          {/* 5 Branches Navigation Row (Prominent Large Buttons) */}
+          <div className="p-2 bg-black/60 border-b border-[#00FF66]/30">
+            <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-1.5 flex justify-between">
+              <span>Select Branch to Highlight & Tune:</span>
+              {activeBranchId && <span className="text-[#00FF66] font-bold">Glowing: {activeBranchId.replace('branch-', 'B')}</span>}
+            </div>
+            <div className="grid grid-cols-5 gap-1.5">
+              {branchKeys.map((b, idx) => {
+                const isSelected = activeTab === b.id;
+                return (
+                  <button
+                    key={b.id}
+                    onClick={() => handleSelectTab(b.id)}
+                    className={`py-2 rounded-lg font-bold text-center border transition flex flex-col items-center justify-center ${
+                      isSelected
+                        ? 'bg-[#00FF66]/35 border-[#00FF66] text-[#7CFFB2] shadow-[0_0_15px_rgba(0,255,102,0.5)] scale-[1.03]'
+                        : 'bg-black/40 border-white/15 text-gray-400 hover:text-white hover:border-[#00FF66]/50'
+                    }`}
+                  >
+                    <span className="text-sm">🌿 B{b.id.replace('branch-', '')}</span>
+                    <span className="text-[9px] opacity-75">Layer {idx + 1}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Other Tabs (General & Portal) */}
+          <div className="flex p-1.5 bg-black/30 border-b border-[#00FF66]/20 gap-1.5">
             <button
-              onClick={() => setActiveTab('general')}
-              className={`px-2.5 py-1 rounded-md whitespace-nowrap transition ${
+              onClick={() => handleSelectTab('general')}
+              className={`flex-1 py-1 rounded-md text-center transition ${
                 activeTab === 'general' ? 'bg-[#00FF66]/20 text-[#7CFFB2] border border-[#00FF66]/40 font-bold' : 'text-gray-400 hover:text-white'
               }`}
             >
               ⚙ General & Venom
             </button>
             <button
-              onClick={() => setActiveTab('portal')}
-              className={`px-2.5 py-1 rounded-md whitespace-nowrap transition ${
+              onClick={() => handleSelectTab('portal')}
+              className={`flex-1 py-1 rounded-md text-center transition ${
                 activeTab === 'portal' ? 'bg-[#00FF66]/20 text-[#7CFFB2] border border-[#00FF66]/40 font-bold' : 'text-gray-400 hover:text-white'
               }`}
             >
-              🌀 Portal
+              🌀 Portal Flight
             </button>
-            {branchKeys.map(b => (
-              <button
-                key={b.id}
-                onClick={() => setActiveTab(b.id)}
-                className={`px-2.5 py-1 rounded-md whitespace-nowrap transition ${
-                  activeTab === b.id ? 'bg-[#00FF66]/20 text-[#7CFFB2] border border-[#00FF66]/40 font-bold' : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                🌿 {b.id.replace('branch-', 'B')}
-              </button>
-            ))}
           </div>
 
           {/* Controls Body */}
