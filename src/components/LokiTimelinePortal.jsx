@@ -430,8 +430,8 @@ export default function LokiTimelinePortal() {
           - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
           - On First Tap (hasDiscovered = true):
             Emerges in deep space distance (scale: 0.30).
-          - Moves continuously and simultaneously with the camera flight over 42s,
-            arriving close-up as branches exit behind one by one.
+          - Moves continuously and ultra-slowly (70.0 seconds), gradually expanding 
+            into majestic focus only after the branches have drifted past.
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -448,9 +448,9 @@ export default function LokiTimelinePortal() {
           filter: "blur(28px)"
         }}
         transition={voyageProgress > 0 ? {
-          scale: { duration: 42.0, ease: [0.16, 1, 0.3, 1] },
-          opacity: { duration: 32.0, ease: [0.16, 1, 0.3, 1] },
-          filter: { duration: 36.0, ease: [0.16, 1, 0.3, 1] },
+          scale: { duration: 70.0, ease: [0.16, 1, 0.3, 1] },
+          opacity: { duration: 50.0, ease: [0.16, 1, 0.3, 1] },
+          filter: { duration: 58.0, ease: [0.16, 1, 0.3, 1] },
           x: { duration: 10.0, ease: [0.16, 1, 0.3, 1] }
         } : {
           duration: 14.0,
