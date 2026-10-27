@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 /**
@@ -215,6 +215,13 @@ function DraggableBranch({
   const branchPathRef = useRef(null);
   const [tapRatio, setTapRatio] = useState(0.5);
 
+  // When energized via cascade, if tapRatio is specified in energizedData use it
+  useEffect(() => {
+    if (energizedData?.tapRatio !== undefined) {
+      setTapRatio(energizedData.tapRatio);
+    }
+  }, [energizedData?.tapRatio]);
+
   const handlePointerDown = (e) => {
     e.stopPropagation();
 
@@ -354,25 +361,32 @@ export default function LokiTimelinePortal() {
 
       // When the user taps Branch 1 (or any initial branch),
       // smoothly cascade and activate all remaining branches sequentially one by one!
-      const allBranchIds = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'];
-      const remainingBranchIds = allBranchIds.filter(bId => bId !== id);
+      // Instead of all triggering from center (0.5), they ignite dynamically from the sides (left/right ends)
+      // like organic vines catching fire from the perimeter!
+      const cascadeConfig = [
+        { id: 'branch-2', tapRatio: 0.05, delay: 1200 }, // starts from left side edge
+        { id: 'branch-3', tapRatio: 0.95, delay: 2400 }, // starts from right side edge
+        { id: 'branch-4', tapRatio: 0.08, delay: 3600 }, // starts from far right/top side edge
+        { id: 'branch-5', tapRatio: 0.92, delay: 4800 }, // starts from far right side edge
+      ];
 
-      // Stagger each remaining branch smoothly
-      remainingBranchIds.forEach((remId, rIdx) => {
-        setTimeout(() => {
-          setEnergizedBranches(autoPrev => ({
-            ...autoPrev,
-            [remId]: {
-              active: true,
-              x: 500,
-              y: 500,
-              timestamp: Date.now()
-            }
-          }));
-        }, (rIdx + 1) * 1400); // 1.4s, 2.8s, 4.2s, 5.6s organic pulse wave
+      cascadeConfig.forEach(item => {
+        if (item.id !== id) {
+          setTimeout(() => {
+            setEnergizedBranches(autoPrev => ({
+              ...autoPrev,
+              [item.id]: {
+                active: true,
+                tapRatio: item.tapRatio,
+                timestamp: Date.now()
+              }
+            }));
+          }, item.delay);
+        }
       });
 
       // Staggered awakened living green glow stage across all branches
+      const allBranchIds = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'];
       allBranchIds.forEach((bId, bIdx) => {
         setTimeout(() => {
           setAwakenedStages(stagePrev => ({ ...stagePrev, [bId]: true }));
