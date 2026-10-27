@@ -46,85 +46,87 @@ function LokiLifePowerSpread({
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  const duration = isFinalBranch ? 6.5 : 12.0;
+  // Duration of venom traveling pulse across the branch
+  // When discovering Branch 1, it runs in a rich, smooth, continuous 5.5s glide
+  const duration = isFinalBranch ? 6.5 : 5.5;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Behind the pulse: Awakened subtle living dark-green body (No marks at tap point - smooth seamless fade-in) */}
+      {/* 1. Behind the pulse: Awakened subtle living body using Forest Green (#004D2B) and Deep Emerald (#006B3C) */}
       <motion.path
         d={pathD}
         fill="none"
-        stroke="#064e3b"
+        stroke="#004D2B"
         strokeWidth="9"
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration, ease: "easeOut" }}
-        opacity={0.8}
+        opacity={0.85}
       />
       <motion.path
         d={pathD}
         fill="none"
-        stroke="#047857"
-        strokeWidth="4"
+        stroke="#006B3C"
+        strokeWidth="4.5"
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration, ease: "easeOut" }}
-        opacity={0.65}
+        opacity={0.75}
       />
 
-      {/* 2. The Traveling Pulse - ALL LAYERS SAME UNIFORM LENGTH with Venom-tendril organic edge */}
+      {/* 2. The Traveling Pulse - Loki Authentic Sacred Timeline Color Flow */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
-        {/* Layer A: Atmospheric emerald volumetric aura bloom */}
+        {/* Layer A: Atmospheric Malachite (#0BDA51) & Emerald (#008F4C) Volumetric Aura Bloom */}
         <motion.path
           d={pathD}
           fill="none"
-          stroke="#10b981"
-          strokeWidth="20"
+          stroke="#008F4C"
+          strokeWidth="24"
           strokeLinecap="butt"
           strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
           initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
           animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
           transition={{ duration, ease: "easeOut" }}
-          opacity={0.55}
-          style={{ filter: "blur(5px)" }}
+          opacity={0.65}
+          style={{ filter: "blur(6px)" }}
         />
 
-        {/* Layer B: Deep vibrant emerald/lime body */}
+        {/* Layer B: True Loki Green (#00C853) & Electric Green (#00FF66) Body */}
         <motion.path
           d={pathD}
           fill="none"
-          stroke="#22c55e"
-          strokeWidth="11"
+          stroke="#00C853"
+          strokeWidth="12"
           strokeLinecap="butt"
           strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
           initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
           animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
           transition={{ duration, ease: "easeOut" }}
-          opacity={0.85}
+          opacity={0.9}
         />
 
-        {/* Layer C: Vibrant bright lime core */}
+        {/* Layer C: Neon Green (#39FF14) & Lime Green (#A8FF60) Radiant Core */}
         <motion.path
           d={pathD}
           fill="none"
-          stroke="#84cc16"
-          strokeWidth="6"
+          stroke="#39FF14"
+          strokeWidth="6.5"
           strokeLinecap="butt"
           strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
           initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
           animate={{ strokeDashoffset: isFinalBranch ? 0 : -(distance + 100) }}
           transition={{ duration, ease: "easeOut" }}
-          opacity={0.95}
+          opacity={0.98}
         />
 
-        {/* Layer D: Intense white-mint core filament */}
+        {/* Layer D: Mint Green (#7CFFB2) & Pale Green Glow (#B9FFD0) Center Filament */}
         <motion.path
           d={pathD}
           fill="none"
-          stroke="#ffffff"
-          strokeWidth="2.5"
+          stroke="#B9FFD0"
+          strokeWidth="2.8"
           strokeLinecap="butt"
           strokeDasharray={isFinalBranch ? `${distance + 600} ${distance + 600}` : `${pulseLen} ${distance + 500}`}
           initial={{ strokeDashoffset: isFinalBranch ? distance + 600 : pulseLen }}
@@ -142,39 +144,39 @@ function LokiLifePowerSpread({
       {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
       {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
 
-      {/* Full Final Burst when all branches connect (Smooth vibrant living venom glow) */}
+      {/* Full Final Burst when all branches connect (Full Loki God of Stories Climax Glow) */}
       {allEnergizedStage && (
         <g style={{ filter: "url(#venomPulseDistort)" }}>
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
-            stroke="#10b981"
+            stroke="#00C853"
             strokeWidth="32"
             strokeLinecap="round"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.75, 0.6] }}
+            animate={{ opacity: [0, 0.85, 0.7] }}
             transition={{ duration: 1.2, ease: "easeOut" }}
-            style={{ filter: "blur(8px)" }}
+            style={{ filter: "blur(10px)" }}
           />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
-            stroke="#4ade80"
-            strokeWidth="15"
+            stroke="#00FF66"
+            strokeWidth="18"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.95, 0.85] }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+          />
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#7CFFB2"
+            strokeWidth="7"
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.95] }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
-          />
-          <motion.path
-            d={pathEl.getAttribute('d')}
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="3"
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0.9] }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
           />
         </g>
       )}
@@ -195,23 +197,11 @@ function DraggableBranch({
   flyOut3D = false,
   flyOutDelay = 0
 }) {
-  const targetX = useMotionValue(0);
-  const targetY = useMotionValue(0);
-
-  const smoothX = useSpring(targetX, { stiffness: 18, damping: 25, mass: 2.5 });
-  const smoothY = useSpring(targetY, { stiffness: 18, damping: 25, mass: 2.5 });
-
-  const isDragging = useRef(false);
   const branchPathRef = useRef(null);
-
   const [tapRatio, setTapRatio] = useState(0.5);
 
   const handlePointerDown = (e) => {
-    isDragging.current = true;
-    const startClientX = e.clientX;
-    const startClientY = e.clientY;
-    const initialTargetX = targetX.get();
-    const initialTargetY = targetY.get();
+    e.stopPropagation();
 
     // Trigger Loki God of Stories life magic power flow starting exactly from touch point!
     const svg = e.currentTarget.closest('svg');
@@ -229,7 +219,7 @@ function DraggableBranch({
     // Determine normalized tap ratio along path
     if (branchPathRef.current) {
       const pathEl = branchPathRef.current;
-      const totalLen = pathEl.getTotalLength();
+      const totalLen = pathEl.getTotalLength ? pathEl.getTotalLength() : 1400;
       let bestLen = 0;
       let minDistance = Infinity;
 
@@ -249,41 +239,16 @@ function DraggableBranch({
     if (onEnergize) {
       onEnergize(id, clickX, clickY);
     }
-
-    const handlePointerMove = (moveEvent) => {
-      if (!isDragging.current) return;
-      const dx = moveEvent.clientX - startClientX;
-      const dy = moveEvent.clientY - startClientY;
-      
-      const resistanceFactor = 0.18;
-      const clampedX = Math.max(-80, Math.min(80, initialTargetX + dx * resistanceFactor));
-      const clampedY = Math.max(-60, Math.min(60, initialTargetY + dy * resistanceFactor));
-      
-      targetX.set(clampedX);
-      targetY.set(clampedY);
-    };
-
-    const handlePointerUp = () => {
-      isDragging.current = false;
-      targetX.set(0);
-      targetY.set(0);
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
-      window.removeEventListener('pointercancel', handlePointerUp);
-    };
-
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
-    window.addEventListener('pointercancel', handlePointerUp);
   };
 
   return (
     <motion.g
-      // Wind sway normal animation OR 3D Fly-Out past screen towards camera
+      // Unbroken Continuous Smooth 3D Flight:
+      // Moves with steady, constant velocity straight towards the camera, sweeps past the viewpoint, and only then fades!
       animate={flyOut3D ? {
-        scale: [1, 1.4, 3.8, 8.5],
-        opacity: [1, 1, 0.9, 0],
-        y: [0, -30, -120, -350]
+        scale: [1, 35],
+        y: [0, 1100],
+        opacity: [1, 1, 1, 0]
       } : { 
         y: windConfig.y,
         x: windConfig.x,
@@ -291,8 +256,8 @@ function DraggableBranch({
       }}
       transition={flyOut3D ? {
         duration: 3.2,
-        delay: flyOutDelay,
-        ease: [0.15, 0.85, 0.35, 1]
+        times: [0, 0.75, 0.92, 1.0], // Full 100% opacity as it approaches and crosses viewpoint, fades only behind viewer!
+        ease: "linear" // 100% steady, smooth uninterrupted speed!
       } : {
         duration: windConfig.duration,
         repeat: Infinity,
@@ -301,10 +266,9 @@ function DraggableBranch({
       }}
       style={{ transformOrigin: origin }}
     >
-      <motion.g
-        style={{ x: smoothX, y: smoothY, transformOrigin: origin }}
+      <g
         onPointerDown={handlePointerDown}
-        className="pointer-events-auto cursor-grab active:cursor-grabbing select-none"
+        className="pointer-events-auto cursor-pointer select-none"
       >
         {/* Hidden reference path to compute exact total length and subpaths on click */}
         <path ref={branchPathRef} d={pathData} fill="none" stroke="none" />
@@ -322,7 +286,7 @@ function DraggableBranch({
             allEnergizedStage={allEnergizedStage}
           />
         )}
-      </motion.g>
+      </g>
     </motion.g>
   );
 }
@@ -345,12 +309,25 @@ export default function LokiTimelinePortal() {
   const [awakenedStages, setAwakenedStages] = useState({});
   // Track which branch was tapped last (the 5th branch that triggered the continuous venom cascade)
   const [lastTappedBranchId, setLastTappedBranchId] = useState(null);
-  // Track 3D fly-out state (branches fly towards camera and past the screen)
-  const [trigger3DFlyOut, setTrigger3DFlyOut] = useState(false);
+  // Track individual branches 3D bullet pass-by states
+  // When a branch's venom completes its flow, that branch flies straight towards the user's camera,
+  // growing huge and crossing past the screen like a 3D bullet in an IMAX movie!
+  const [flyOutBranches, setFlyOutBranches] = useState({});
+
+  // Cinematic Intro State:
+  // hasDiscovered = false -> Only single isolated mystery vine in darkness, portal stays far away in deep space!
+  const [hasDiscovered, setHasDiscovered] = useState(false);
 
   const handleBranchEnergize = (id, clickX, clickY) => {
+    // When user taps Branch 1:
+    if (!hasDiscovered) {
+      setHasDiscovered(true);
+    }
+
+    // Energize the tapped branch
     setEnergizedBranches(prev => {
-      const next = {
+      if (prev[id]?.active) return prev; // already energized
+      const updated = {
         ...prev,
         [id]: {
           active: true,
@@ -360,74 +337,75 @@ export default function LokiTimelinePortal() {
         }
       };
 
-      const count = Object.keys(next).length;
-      if (count === 5) {
-        setLastTappedBranchId(id);
+      const tappedCount = Object.keys(updated).length;
 
-        // Sequence:
-        // 1. Final 5th branch continuous venom surge flows to ends in ~4-5s
-        // 2. Venom spreads across all remaining branches smoothly igniting them
-        const allBranchIds = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'];
-        allBranchIds.forEach((bId, idx) => {
-          setTimeout(() => {
-            setAwakenedStages(stagePrev => ({ ...stagePrev, [bId]: true }));
-          }, 3500 + idx * 400);
-        });
-
-        // 3. Once all branches are fully glowing, trigger 3D Fly-Out past screen
+      // Tap 1 & Tap 2: Each branch passes past viewpoint after venom completes
+      if (tappedCount < 3) {
         setTimeout(() => {
-          setTrigger3DFlyOut(true);
-        }, 6500);
+          setFlyOutBranches(flyPrev => ({ ...flyPrev, [id]: true }));
+        }, 3200);
       }
 
-      return next;
+      // Tap 3 (THIRD CLICK):
+      // Connects & triggers the remaining 2 branches automatically!
+      // All 3 branches (3, 4, 5) radiate full green living venom and together pass past the viewpoint!
+      if (tappedCount === 3) {
+        const remainingBranchIds = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'].filter(bId => !updated[bId]);
+        remainingBranchIds.forEach((remId, rIdx) => {
+          setTimeout(() => {
+            setEnergizedBranches(autoPrev => ({
+              ...autoPrev,
+              [remId]: {
+                active: true,
+                x: 500,
+                y: 500,
+                timestamp: Date.now()
+              }
+            }));
+          }, (rIdx + 1) * 350);
+        });
+
+        // Staggered full living green venom pulsation on all branches
+        ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'].forEach((bId, bIdx) => {
+          setTimeout(() => {
+            setAwakenedStages(stagePrev => ({ ...stagePrev, [bId]: true }));
+          }, 1200 + bIdx * 200);
+        });
+
+        // All remaining branches together sweep and pass past the viewpoint
+        setTimeout(() => {
+          setFlyOutBranches(flyPrev => ({
+            ...flyPrev,
+            [id]: true,
+            ...(remainingBranchIds.reduce((acc, curr) => ({ ...acc, [curr]: true }), {}))
+          }));
+        }, 3800);
+      }
+
+      return updated;
     });
   };
 
-  // Total energized count (0 to 5) directly expands the inner white core spine width!
+  // Total energized count (0 to 5):
+  // As user crosses branches one by one, the distant portal gently approaches closer step-by-step!
   const energizedCount = Object.keys(energizedBranches).length;
+  // Starting distant scale = 0.52 (stays far away at beginning as requested!)
+  // Grows incrementally closer with each passed branch: 0.52 -> 0.62 -> 0.72 -> 0.85 -> 1.0!
+  const portalDistanceScale = 0.52 + energizedCount * 0.1;
   // Starting normal width = 16px (w-4), progressively widens up to 56px (w-14) as user infuses branches
   const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
-      {/* 1. Full Page Deep Emerald Atmospheric Glow & Reflection (Flooding the entire screen like in reference) */}
+      {/* 0. Full Page Darkness Background */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
-        className="absolute inset-0 bg-[#01140e]"
+        className="absolute inset-0 bg-[#000805]"
       />
 
-      {/* Layer 1: Vivid Luminous Emerald Aurora Atmosphere */}
-      <motion.div
-        animate={{
-          opacity: [0.85, 1, 0.85],
-          scale: [1, 1.08, 1]
-        }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.7) 35%, rgba(4,120,87,0.5) 60%, rgba(1,25,18,0.92) 90%)',
-          filter: 'blur(35px)'
-        }}
-      />
-
-      {/* Layer 2: Radiant Center Halo Aura (Vibrant Bright Mint & Emerald Glow behind the Portal) */}
-      <motion.div
-        animate={{
-          scale: [0.95, 1.15, 0.95],
-          opacity: [0.75, 0.95, 0.75]
-        }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-[600px] h-[85vh] rounded-full pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(52,211,153,0.75) 0%, rgba(16,185,129,0.55) 40%, rgba(5,150,105,0.25) 70%, transparent 95%)',
-          filter: 'blur(45px)'
-        }}
-      />
-
-      {/* SVG Organic Distortion Filters for the irregular jagged portal border ONLY */}
+      {/* SVG Organic Distortion Filters for the irregular jagged portal border & venom tendrils */}
       <svg className="absolute w-0 h-0 pointer-events-none">
         <defs>
           <filter id="lokiOrganicRiftEdge" x="-30%" y="-30%" width="160%" height="160%">
@@ -447,13 +425,67 @@ export default function LokiTimelinePortal() {
         </defs>
       </svg>
 
-      {/* 2. The Organic Asymmetrical Portal Opening (Contained with organic natural tapered Ends, Expanding smoothly over time) */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-visible">
-        {/* Outer illuminated cloudy rift lip */}
+      {/* ========================================================================= */}
+      {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
+          - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.25).
+            Not even a trace visible at the start. Only the single loom branch exists in the dark.
+          - On First Tap (hasDiscovered = true):
+            Very, very slowly (14.0s duration) emerges from deep cosmic blur (blur: 24px -> blur: 3px)
+            gliding gradually towards the distant central background horizon (scale: 0.25 -> 0.55).
+            It NEVER jumps or appears abruptly!
+      */}
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        initial={{ x: "-90vw", scale: 0.25, opacity: 0, filter: "blur(28px)" }}
+        animate={hasDiscovered ? {
+          x: "0vw",
+          scale: 0.38 + energizedCount * 0.08, // Stays in deep space (starts small: 0.38)
+          opacity: Math.min(1, 0.2 + energizedCount * 0.16), // Extremely gradual emergence
+          filter: `blur(${Math.max(1, 10 - energizedCount * 2)}px)` // Slow de-blur as branches pass
+        } : {
+          x: "-90vw",
+          scale: 0.25,
+          opacity: 0,
+          filter: "blur(28px)"
+        }}
+        transition={{
+          duration: 14.0, // ULTRA SLOW gradual celestial emergence!
+          ease: [0.16, 1, 0.3, 1]
+        }}
+        style={{ transformOrigin: "50% 50%" }}
+      >
+        {/* Layer 1: Authentic Loki Climax Emerald Aurora Atmosphere */}
+        <motion.div
+          animate={{
+            opacity: hasDiscovered ? [0.85, 1, 0.85] : 0.65,
+            scale: [1, 1.08, 1]
+          }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(0,200,83,0.85) 0%, rgba(0,143,76,0.7) 35%, rgba(0,77,43,0.5) 60%, rgba(11,31,22,0.95) 90%)',
+            filter: 'blur(35px)'
+          }}
+        />
+
+        {/* Layer 2: Radiant Center Halo Aura - Electric Green & Mint Glow */}
+        <motion.div
+          animate={{
+            scale: [0.95, 1.15, 0.95],
+            opacity: hasDiscovered ? [0.75, 0.95, 0.75] : 0.55
+          }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute w-[600px] h-[85vh] rounded-full pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(0,255,102,0.75) 0%, rgba(0,200,83,0.55) 40%, rgba(0,107,60,0.25) 70%, transparent 95%)',
+            filter: 'blur(45px)'
+          }}
+        />
+
+        {/* Outer illuminated cloudy rift lip - Pale Green Glow & Lime Green Flow */}
         <motion.div
           initial={{ scaleX: 1.0, scaleY: 1.0, opacity: 0.85 }}
           animate={{
-            // Organic asymmetrical widening from current base shape into an uneven wider rift
             scaleX: [1.0, 1.25, 1.45, 1.38, 1.42],
             scaleY: [1.0, 1.02, 1.04, 1.01, 1.03],
             borderRadius: [
@@ -473,19 +505,17 @@ export default function LokiTimelinePortal() {
           className="absolute h-[120vh] w-64 sm:w-80 pointer-events-none"
           style={{
             transformOrigin: "52% 48%",
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(167,243,208,0.85) 0%, rgba(52,211,153,0.6) 30%, rgba(16,185,129,0.3) 55%, transparent 75%)',
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(185,255,208,0.85) 0%, rgba(124,255,178,0.6) 30%, rgba(0,200,83,0.3) 55%, transparent 75%)',
             filter: 'blur(25px)'
           }}
         />
 
-        {/* Inner Void / Deep Spacetime Tear (Starts from current shape, widens organically & unevenly over time) */}
+        {/* Inner Void / Deep Spacetime Tear */}
         <motion.div
           initial={{ scaleX: 1.0, scaleY: 1.0 }}
           animate={{
-            // Slow organic width increase: expands unevenly (more width around mid-upper center)
             scaleX: [1.0, 1.3, 1.6, 1.5, 1.55],
             scaleY: [1.0, 1.02, 1.03, 1.01, 1.02],
-            // Asymmetrical borderRadius shifts dynamically as width increases so it doesn't look like a uniform box
             borderRadius: [
               '20% 65% 40% 60% / 65% 35% 55% 45%',
               '35% 55% 48% 52% / 58% 42% 50% 50%',
@@ -500,35 +530,35 @@ export default function LokiTimelinePortal() {
           }}
           className="absolute h-[115vh] w-24 sm:w-36 pointer-events-none"
           style={{
-            transformOrigin: "52% 46%", // Off-center origin so width increases asymmetrically
-            background: 'radial-gradient(ellipse at 50% 55%, #04251c 0%, #021a13 45%, #010f0a 80%, transparent 100%)',
-            borderLeft: '4px solid #d1fae5',
-            borderRight: '4px solid #a7f3d0',
-            borderTop: '3px solid #6ee7b7',
-            borderBottom: '4px solid #34d399',
-            boxShadow: '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 110px #10b981, inset 0 0 30px rgba(0,0,0,0.9)',
+            transformOrigin: "52% 46%",
+            background: 'radial-gradient(ellipse at 50% 55%, #004D2B 0%, #006B3C 45%, #0B1F16 80%, transparent 100%)',
+            borderLeft: '4px solid #B9FFD0',
+            borderRight: '4px solid #7CFFB2',
+            borderTop: '3px solid #00FF66',
+            borderBottom: '4px solid #00C853',
+            boxShadow: '0 0 35px #7CFFB2, 0 0 70px #00FF66, 0 0 110px #00C853, inset 0 0 30px rgba(0,0,0,0.9)',
             filter: 'url(#lokiOrganicRiftEdge)'
           }}
         />
 
-        {/* Soft Point of Light Origin (The distant nexus glimmer seen in reference image) */}
+        {/* Soft Point of Light Origin */}
         <motion.div
           animate={{
             scale: [0.9, 1.35, 0.9],
             opacity: [0.85, 1, 0.85]
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[58%] w-12 h-12 rounded-full bg-emerald-100 blur-sm shadow-[0_0_50px_#a7f3d0,0_0_100px_#34d399,0_0_160px_#10b981] pointer-events-none"
+          className="absolute top-[58%] w-12 h-12 rounded-full bg-[#B9FFD0] blur-sm shadow-[0_0_50px_#B9FFD0,0_0_100px_#00FF66,0_0_160px_#00C853] pointer-events-none"
         />
 
-        {/* Intense white-mint core tear spine (Width starts normal & increases organically as Loki touches branches) */}
+        {/* Intense white-mint core tear spine */}
         <motion.div
           animate={{
             width: `${whiteCoreWidth}px`,
             opacity: [0.85, 1, 0.85],
             boxShadow: energizedCount > 0 
-              ? `0 0 ${35 + energizedCount * 10}px #ffffff, 0 0 ${70 + energizedCount * 14}px #a7f3d0, 0 0 ${110 + energizedCount * 18}px #34d399`
-              : '0 0 35px #a7f3d0, 0 0 70px #34d399, 0 0 110px #10b981'
+              ? `0 0 ${35 + energizedCount * 10}px #ffffff, 0 0 ${70 + energizedCount * 14}px #B9FFD0, 0 0 ${110 + energizedCount * 18}px #00FF66`
+              : '0 0 35px #B9FFD0, 0 0 70px #00FF66, 0 0 110px #00C853'
           }}
           transition={{
             width: { duration: 25.0, ease: [0.16, 1, 0.3, 1] },
@@ -536,13 +566,16 @@ export default function LokiTimelinePortal() {
           }}
           className="absolute h-[110vh] pointer-events-none rounded-[50%]"
           style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(209,250,229,0.9) 15%, #ffffff 50%, rgba(167,243,208,0.9) 85%, transparent 100%)',
+            background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.9) 15%, #ffffff 50%, rgba(124,255,178,0.9) 85%, transparent 100%)',
             filter: 'url(#lokiOrganicRiftEdge) blur(2.5px)'
           }}
         />
-      </div>
+      </motion.div>
 
-      {/* 3. Dark Multiverse Timeline Branches (Rigid, interactive draggable branches placed in front with z-10) */}
+      {/* ========================================================================= */}
+      {/* 3. MULTIVERSE TIMELINE BRANCHES: FIXED VIEWPORT SVG */}
+      {/* SVG is always 100% fixed across the screen (never shifted off-screen to the right!) */}
+      {/* ========================================================================= */}
       <svg 
         viewBox="0 0 1000 1000" 
         preserveAspectRatio="none"
@@ -571,54 +604,62 @@ export default function LokiTimelinePortal() {
             );
           })}
         </defs>
-        {/* Branch 1: Upper graceful arc crossing from beyond left (-150) to beyond right (1150) */}
+        {/* Branch 1: Long flowing hanging branch across the entire cosmos */}
         <DraggableBranch
           id="branch-1"
-          pathData="M -150 220 Q 250 340, 500 370 T 1150 390"
-          origin="500px 300px"
+          pathData="M -400 310 Q 150 480, 520 440 T 1450 390"
+          origin="500px 440px"
           onEnergize={handleBranchEnergize}
           energizedData={energizedBranches['branch-1']}
           allEnergizedStage={awakenedStages['branch-1']}
           isFinalBranch={lastTappedBranchId === 'branch-1'}
-          flyOut3D={trigger3DFlyOut}
+          flyOut3D={flyOutBranches['branch-1']}
           flyOutDelay={0}
           windConfig={{
-            y: [-14, 14, -14],
-            x: [-8, 8, -8],
-            rotate: [-0.8, 0.8, -0.8],
-            duration: 18,
+            y: [-18, 18, -18],
+            x: [12, -12, 12],
+            rotate: [-1.2, 1.2, -1.2],
+            duration: 22,
             delay: 0
           }}
         >
           {/* Invisible extra-wide hit-area stroke for effortless grab anywhere across the branch */}
           <path
-            d="M -150 220 Q 250 340, 500 370 T 1150 390"
+            d="M -400 310 Q 150 480, 520 440 T 1450 390"
             fill="none"
             stroke="#000000"
             strokeOpacity="0.001"
-            strokeWidth="90"
+            strokeWidth="120"
             strokeLinecap="round"
           />
           {/* Ambient drop shadow */}
           <path
-            d="M -150 220 Q 250 340, 500 370 T 1150 390"
+            d="M -400 310 Q 150 480, 520 440 T 1450 390"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="20"
+            strokeLinecap="round"
+            opacity="0.95"
+          />
+          {/* Main Dark Silhouette Body (Pure dark black) */}
+          <path
+            d="M -400 310 Q 150 480, 520 440 T 1450 390"
             fill="none"
             stroke="#000000"
             strokeWidth="16"
             strokeLinecap="round"
             opacity="0.95"
           />
-          {/* Main Dark Silhouette Body */}
           <path
-            d="M -150 220 Q 250 340, 500 370 T 1150 390"
+            d="M -400 310 Q 150 480, 520 440 T 1450 390"
             fill="none"
             stroke="#050a08"
             strokeWidth="11"
             strokeLinecap="round"
           />
-          {/* Subtle Darkest Emerald Edge Glint */}
+          {/* Subtle dark emerald glint */}
           <path
-            d="M -150 219 Q 250 339, 500 369 T 1150 389"
+            d="M -400 309 Q 150 479, 520 439 T 1450 389"
             fill="none"
             stroke="#062d22"
             strokeWidth="2.5"
@@ -627,213 +668,223 @@ export default function LokiTimelinePortal() {
           />
         </DraggableBranch>
 
-        {/* Branch 2: High Sweeping gentle branch */}
-        <DraggableBranch
-          id="branch-2"
-          pathData="M -120 70 Q 400 160, 680 140 T 1120 180"
-          origin="500px 150px"
-          onEnergize={handleBranchEnergize}
-          energizedData={energizedBranches['branch-2']}
-          allEnergizedStage={awakenedStages['branch-2']}
-          isFinalBranch={lastTappedBranchId === 'branch-2'}
-          flyOut3D={trigger3DFlyOut}
-          flyOutDelay={0.25}
-          windConfig={{
-            y: [12, -12, 12],
-            x: [6, -6, 6],
-            rotate: [1.0, -1.0, 1.0],
-            duration: 22,
-            delay: 1
+        {/* Branches 2 to 5: Long hanging, flowing cosmic branches */}
+        {/* Initially hidden with pointer-events-none so ONLY Branch 1 is clickable! Once discovered, pointer-events are enabled for effortless interaction */}
+        <g 
+          style={{ 
+            opacity: hasDiscovered ? 1 : 0, 
+            transition: 'opacity 2.5s ease-out 0.5s',
+            pointerEvents: hasDiscovered ? 'auto' : 'none'
           }}
         >
-          <path
-            d="M -120 70 Q 400 160, 680 140 T 1120 180"
-            fill="none"
-            stroke="#000000"
-            strokeOpacity="0.001"
-            strokeWidth="90"
-            strokeLinecap="round"
-          />
-          <path
-            d="M -120 70 Q 400 160, 680 140 T 1120 180"
-            fill="none"
-            stroke="#000000"
-            strokeWidth="14"
-            strokeLinecap="round"
-            opacity="0.9"
-          />
-          <path
-            d="M -120 70 Q 400 160, 680 140 T 1120 180"
-            fill="none"
-            stroke="#050a08"
-            strokeWidth="9"
-            strokeLinecap="round"
-          />
-          <path
-            d="M -120 69 Q 400 159, 680 139 T 1120 179"
-            fill="none"
-            stroke="#062d22"
-            strokeWidth="2"
-            strokeLinecap="round"
-            opacity="0.6"
-          />
-        </DraggableBranch>
+          {/* Branch 2: High sweeping undulating branch */}
+          <DraggableBranch
+            id="branch-2"
+            pathData="M -350 40 Q 250 220, 680 160 T 1420 120"
+            origin="500px 160px"
+            onEnergize={handleBranchEnergize}
+            energizedData={energizedBranches['branch-2']}
+            allEnergizedStage={awakenedStages['branch-2']}
+            isFinalBranch={lastTappedBranchId === 'branch-2'}
+            flyOut3D={flyOutBranches['branch-2']}
+            flyOutDelay={0}
+            windConfig={{
+              y: [16, -16, 16],
+              x: [8, -8, 8],
+              rotate: [1.2, -1.2, 1.2],
+              duration: 25,
+              delay: 1
+            }}
+          >
+            <path
+              d="M -350 40 Q 250 220, 680 160 T 1420 120"
+              fill="none"
+              stroke="#000000"
+              strokeOpacity="0.001"
+              strokeWidth="110"
+              strokeLinecap="round"
+            />
+            <path
+              d="M -350 40 Q 250 220, 680 160 T 1420 120"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="15"
+              strokeLinecap="round"
+              opacity="0.9"
+            />
+            <path
+              d="M -350 40 Q 250 220, 680 160 T 1420 120"
+              fill="none"
+              stroke="#050a08"
+              strokeWidth="10"
+              strokeLinecap="round"
+            />
+            <path
+              d="M -350 39 Q 250 219, 680 159 T 1420 119"
+              fill="none"
+              stroke="#062d22"
+              strokeWidth="2"
+              strokeLinecap="round"
+              opacity="0.6"
+            />
+          </DraggableBranch>
 
-        {/* Branch 3: Lower Ascending Vine (Smooth continuous bezier curve) */}
-        <DraggableBranch
-          id="branch-3"
-          pathData="M -150 820 Q 200 720, 520 670 T 1150 860"
-          origin="500px 750px"
-          onEnergize={handleBranchEnergize}
-          energizedData={energizedBranches['branch-3']}
-          allEnergizedStage={awakenedStages['branch-3']}
-          isFinalBranch={lastTappedBranchId === 'branch-3'}
-          flyOut3D={trigger3DFlyOut}
-          flyOutDelay={0.5}
-          windConfig={{
-            y: [-16, 16, -16],
-            x: [-6, 6, -6],
-            rotate: [-0.9, 0.9, -0.9],
-            duration: 20,
-            delay: 2
-          }}
-        >
-          <path
-            d="M -150 820 Q 200 720, 520 670 T 1150 860"
-            fill="none"
-            stroke="#000000"
-            strokeOpacity="0.001"
-            strokeWidth="90"
-            strokeLinecap="round"
-          />
-          <path
-            d="M -150 820 Q 200 720, 520 670 T 1150 860"
-            fill="none"
-            stroke="#000000"
-            strokeWidth="16"
-            strokeLinecap="round"
-            opacity="0.95"
-          />
-          <path
-            d="M -150 820 Q 200 720, 520 670 T 1150 860"
-            fill="none"
-            stroke="#050a08"
-            strokeWidth="12"
-            strokeLinecap="round"
-          />
-          <path
-            d="M -150 819 Q 200 719, 520 669 T 1150 859"
-            fill="none"
-            stroke="#062d22"
-            strokeWidth="3"
-            strokeLinecap="round"
-            opacity="0.6"
-          />
-        </DraggableBranch>
+          {/* Branch 3: Low hanging massive vine */}
+          <DraggableBranch
+            id="branch-3"
+            pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
+            origin="500px 720px"
+            onEnergize={handleBranchEnergize}
+            energizedData={energizedBranches['branch-3']}
+            allEnergizedStage={awakenedStages['branch-3']}
+            isFinalBranch={lastTappedBranchId === 'branch-3'}
+            flyOut3D={flyOutBranches['branch-3']}
+            flyOutDelay={0}
+            windConfig={{
+              y: [-20, 20, -20],
+              x: [-10, 10, -10],
+              rotate: [-1.4, 1.4, -1.4],
+              duration: 24,
+              delay: 2
+            }}
+          >
+            <path
+              d="M -380 890 Q 200 680, 580 720 T 1450 820"
+              fill="none"
+              stroke="#000000"
+              strokeOpacity="0.001"
+              strokeWidth="120"
+              strokeLinecap="round"
+            />
+            <path
+              d="M -380 890 Q 200 680, 580 720 T 1450 820"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="17"
+              strokeLinecap="round"
+              opacity="0.95"
+            />
+            <path
+              d="M -380 890 Q 200 680, 580 720 T 1450 820"
+              fill="none"
+              stroke="#050a08"
+              strokeWidth="12"
+              strokeLinecap="round"
+            />
+            <path
+              d="M -380 889 Q 200 679, 580 719 T 1450 819"
+              fill="none"
+              stroke="#062d22"
+              strokeWidth="3"
+              strokeLinecap="round"
+              opacity="0.6"
+            />
+          </DraggableBranch>
 
-        {/* Branch 4: Long Diagonal Branch crossing gracefully through the rift */}
-        <DraggableBranch
-          id="branch-4"
-          pathData="M 1150 80 Q 750 380, 450 550 T -120 880"
-          origin="500px 500px"
-          onEnergize={handleBranchEnergize}
-          energizedData={energizedBranches['branch-4']}
-          allEnergizedStage={awakenedStages['branch-4']}
-          isFinalBranch={lastTappedBranchId === 'branch-4'}
-          flyOut3D={trigger3DFlyOut}
-          flyOutDelay={0.75}
-          windConfig={{
-            x: [-12, 12, -12],
-            y: [10, -10, 10],
-            rotate: [-0.6, 0.6, -0.6],
-            duration: 24,
-            delay: 0.5
-          }}
-        >
-          <path
-            d="M 1150 80 Q 750 380, 450 550 T -120 880"
-            fill="none"
-            stroke="#000000"
-            strokeOpacity="0.001"
-            strokeWidth="90"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 1150 80 Q 750 380, 450 550 T -120 880"
-            fill="none"
-            stroke="#000000"
-            strokeWidth="12"
-            strokeLinecap="round"
-            opacity="0.9"
-          />
-          <path
-            d="M 1150 80 Q 750 380, 450 550 T -120 880"
-            fill="none"
-            stroke="#050a08"
-            strokeWidth="8"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 1150 79 Q 750 379, 450 549 T -120 879"
-            fill="none"
-            stroke="#062d22"
-            strokeWidth="2"
-            strokeLinecap="round"
-            opacity="0.6"
-          />
-        </DraggableBranch>
+          {/* Branch 4: Long sweeping diagonal cascade */}
+          <DraggableBranch
+            id="branch-4"
+            pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
+            origin="500px 520px"
+            onEnergize={handleBranchEnergize}
+            energizedData={energizedBranches['branch-4']}
+            allEnergizedStage={awakenedStages['branch-4']}
+            isFinalBranch={lastTappedBranchId === 'branch-4'}
+            flyOut3D={flyOutBranches['branch-4']}
+            flyOutDelay={0}
+            windConfig={{
+              x: [-14, 14, -14],
+              y: [12, -12, 12],
+              rotate: [-0.9, 0.9, -0.9],
+              duration: 26,
+              delay: 0.5
+            }}
+          >
+            <path
+              d="M 1450 30 Q 820 420, 480 620 T -350 940"
+              fill="none"
+              stroke="#000000"
+              strokeOpacity="0.001"
+              strokeWidth="120"
+              strokeLinecap="round"
+            />
+            <path
+              d="M 1450 30 Q 820 420, 480 620 T -350 940"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="14"
+              strokeLinecap="round"
+              opacity="0.9"
+            />
+            <path
+              d="M 1450 30 Q 820 420, 480 620 T -350 940"
+              fill="none"
+              stroke="#050a08"
+              strokeWidth="9"
+              strokeLinecap="round"
+            />
+            <path
+              d="M 1450 29 Q 820 419, 480 619 T -350 939"
+              fill="none"
+              stroke="#062d22"
+              strokeWidth="2"
+              strokeLinecap="round"
+              opacity="0.6"
+            />
+          </DraggableBranch>
 
-        {/* Branch 5: Mid-lower gentle horizontal vine */}
-        <DraggableBranch
-          id="branch-5"
-          pathData="M -100 480 Q 300 420, 650 490 T 1150 510"
-          origin="500px 520px"
-          onEnergize={handleBranchEnergize}
-          energizedData={energizedBranches['branch-5']}
-          allEnergizedStage={awakenedStages['branch-5']}
-          isFinalBranch={lastTappedBranchId === 'branch-5'}
-          flyOut3D={trigger3DFlyOut}
-          flyOutDelay={1.0}
-          windConfig={{
-            y: [12, -12, 12],
-            x: [8, -8, 8],
-            rotate: [0.7, -0.7, 0.7],
-            duration: 19,
-            delay: 2.5
-          }}
-        >
-          <path
-            d="M -100 480 Q 300 420, 650 490 T 1150 510"
-            fill="none"
-            stroke="#000000"
-            strokeOpacity="0.001"
-            strokeWidth="90"
-            strokeLinecap="round"
-          />
-          <path
-            d="M -100 480 Q 300 420, 650 490 T 1150 510"
-            fill="none"
-            stroke="#000000"
-            strokeWidth="12"
-            strokeLinecap="round"
-            opacity="0.9"
-          />
-          <path
-            d="M -100 480 Q 300 420, 650 490 T 1150 510"
-            fill="none"
-            stroke="#050a08"
-            strokeWidth="7.5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M -100 479 Q 300 419, 650 489 T 1150 509"
-            fill="none"
-            stroke="#062d22"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            opacity="0.6"
-          />
-        </DraggableBranch>
+          {/* Branch 5: Mid-lower undulating vine */}
+          <DraggableBranch
+            id="branch-5"
+            pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
+            origin="500px 540px"
+            onEnergize={handleBranchEnergize}
+            energizedData={energizedBranches['branch-5']}
+            allEnergizedStage={awakenedStages['branch-5']}
+            isFinalBranch={lastTappedBranchId === 'branch-5'}
+            flyOut3D={flyOutBranches['branch-5']}
+            flyOutDelay={0}
+            windConfig={{
+              y: [15, -15, 15],
+              x: [10, -10, 10],
+              rotate: [0.9, -0.9, 0.9],
+              duration: 21,
+              delay: 2.5
+            }}
+          >
+            <path
+              d="M -320 540 Q 280 430, 720 560 T 1420 520"
+              fill="none"
+              stroke="#000000"
+              strokeOpacity="0.001"
+              strokeWidth="110"
+              strokeLinecap="round"
+            />
+            <path
+              d="M -320 540 Q 280 430, 720 560 T 1420 520"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="13"
+              strokeLinecap="round"
+              opacity="0.9"
+            />
+            <path
+              d="M -320 540 Q 280 430, 720 560 T 1420 520"
+              fill="none"
+              stroke="#050a08"
+              strokeWidth="8"
+              strokeLinecap="round"
+            />
+            <path
+              d="M -320 539 Q 280 429, 720 559 T 1420 519"
+              fill="none"
+              stroke="#062d22"
+              strokeWidth="2"
+              strokeLinecap="round"
+              opacity="0.6"
+            />
+          </DraggableBranch>
+        </g>
       </svg>
     </div>
   );

@@ -316,7 +316,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-visible border-2 z-20 ${
             isDec16Blocked && lokiCrackStage >= 3 ? 'bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700' :
             (isDec16Blocked && lokiCrackStage === 2 ? 'bg-neutral-900/90 border-emerald-500/70 shadow-[0_0_25px_rgba(16,185,129,0.3)] transition-all duration-500' :
-            (isDec16Blocked && lokiCrackStage === 1 ? 'border-emerald-600/50 transition-all duration-500' :
+            (isDec16Blocked && lokiCrackStage === 1 ? `${cardBg} border-emerald-600/50 transition-all duration-500` :
             (diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder} transition-all duration-500`)))
           }`}
           style={{
