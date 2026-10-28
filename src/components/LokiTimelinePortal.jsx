@@ -393,16 +393,16 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // Once venom has spread across almost all branches (~7.5s):
+      // Once venom has spread across almost all branches (~7.0s):
       // Stage 1: A subtle thin vertical hairline tear appears in the center!
       setTimeout(() => {
         setPortalStage(1);
-      }, 7500);
+      }, 7000);
 
-      // Stage 2 (~9.5s): Slowly, organically cracks open into a real portal tear!
+      // Stage 2 (~8.5s): Slowly, organically cracks open across 20 full seconds!
       setTimeout(() => {
         setPortalStage(2);
-      }, 9500);
+      }, 8500);
 
       return updated;
     });
@@ -469,9 +469,9 @@ export default function LokiTimelinePortal() {
 
       {/* ========================================================================= */}
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
-          - Initially completely hidden.
-          - Once venom has spread across all branches, center-la first oru thin vertical hairline
-            tear maathiri start aagi, apdiye very slowly, realistically portal crack open aagum!
+          - Exactly Centered Portal (NOT full screen height - sized naturally ~52vh / 360px high)
+          - Intro opens ultra-slowly across 20.0 seconds!
+          - Organic mystical portal gateway shape (almond / vesica piscis gateway).
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -487,108 +487,108 @@ export default function LokiTimelinePortal() {
         }}
         style={{ transformOrigin: "50% 50%" }}
       >
-        {/* Layer 1: Emerald Cosmic Atmosphere Glow - Expands slowly when portal opens */}
+        {/* Layer 1: Cosmic Aurora Background Halo (Centered) */}
         <motion.div
           animate={portalStage === 2 ? {
             opacity: 0.85,
-            scale: 1.05
+            scale: 1.0
           } : {
-            opacity: portalStage === 1 ? 0.35 : 0,
-            scale: 0.7
+            opacity: portalStage === 1 ? 0.25 : 0,
+            scale: 0.6
           }}
-          transition={{ duration: 6.0, ease: "easeOut" }}
-          className="absolute inset-0 pointer-events-none"
+          transition={{ duration: 20.0, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute w-[360px] sm:w-[480px] h-[360px] sm:h-[480px] rounded-full pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(0,200,83,0.7) 0%, rgba(0,143,76,0.5) 35%, rgba(0,77,43,0.3) 60%, transparent 85%)',
+            background: 'radial-gradient(circle at 50% 50%, rgba(0,200,83,0.7) 0%, rgba(0,143,76,0.45) 35%, rgba(0,77,43,0.2) 65%, transparent 85%)',
             filter: 'blur(35px)'
           }}
         />
 
-        {/* Layer 2: Radiant Center Halo Aura */}
+        {/* Layer 2: Radiant Center Elliptical Glow */}
         <motion.div
           animate={portalStage === 2 ? {
             opacity: 0.75,
             scale: 1.0
           } : {
-            opacity: portalStage === 1 ? 0.4 : 0,
-            scale: 0.5
+            opacity: portalStage === 1 ? 0.3 : 0,
+            scale: 0.4
           }}
-          transition={{ duration: 5.5, ease: "easeOut" }}
-          className="absolute w-[450px] h-[80vh] rounded-full pointer-events-none"
+          transition={{ duration: 20.0, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute w-[240px] sm:w-[320px] h-[380px] sm:h-[440px] rounded-[50%] pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(0,255,102,0.65) 0%, rgba(0,200,83,0.45) 40%, rgba(0,107,60,0.2) 70%, transparent 95%)',
-            filter: 'blur(40px)'
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(0,255,102,0.65) 0%, rgba(0,200,83,0.4) 40%, rgba(0,107,60,0.15) 70%, transparent 95%)',
+            filter: 'blur(30px)'
           }}
         />
 
-        {/* Outer illuminated soft rift lip - Starts as thin hairline vertical crack, then widens slowly */}
+        {/* Outer illuminated portal gateway border - 20s ultra-slow opening */}
         <motion.div
           animate={portalStage === 2 ? {
             scaleX: 1.0,
             opacity: 0.95
           } : {
-            scaleX: 0.05,
-            opacity: portalStage === 1 ? 0.8 : 0
+            scaleX: 0.04,
+            opacity: portalStage === 1 ? 0.75 : 0
           }}
-          transition={{ duration: 7.0, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute h-[110vh] w-48 sm:w-64 pointer-events-none rounded-[50%]"
+          transition={{ duration: 20.0, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute h-[340px] sm:h-[420px] w-[180px] sm:w-[240px] pointer-events-none rounded-[50%]"
           style={{
             transformOrigin: "50% 50%",
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(185,255,208,0.75) 0%, rgba(124,255,178,0.5) 30%, rgba(0,200,83,0.25) 55%, transparent 75%)',
-            filter: 'blur(20px)'
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(185,255,208,0.75) 0%, rgba(124,255,178,0.45) 35%, rgba(0,200,83,0.2) 60%, transparent 80%)',
+            filter: 'blur(16px)'
           }}
         />
 
-        {/* Inner Spacetime Void Tear - Organic jagged crack opening slowly */}
+        {/* Inner Organic Gateway Tear Void - Centered Portal Aperture */}
         <motion.div
           animate={portalStage === 2 ? {
             scaleX: 1.0,
             opacity: 1
           } : {
-            scaleX: 0.04,
-            opacity: portalStage === 1 ? 0.9 : 0
+            scaleX: 0.03,
+            opacity: portalStage === 1 ? 0.85 : 0
           }}
-          transition={{ duration: 6.5, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute h-[105vh] w-20 sm:w-28 pointer-events-none rounded-[45%]"
+          transition={{ duration: 20.0, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute h-[300px] sm:h-[380px] w-[120px] sm:w-[170px] pointer-events-none rounded-[50%]"
           style={{
             transformOrigin: "50% 50%",
-            background: 'radial-gradient(ellipse at 50% 50%, #004D2B 0%, #006B3C 45%, #0B1F16 80%, transparent 100%)',
+            background: 'radial-gradient(ellipse at 50% 50%, #002b18 0%, #004D2B 45%, #0B1F16 80%, transparent 100%)',
             borderLeft: '3px solid #B9FFD0',
             borderRight: '3px solid #7CFFB2',
-            borderTop: '2px solid #00FF66',
-            borderBottom: '3px solid #00C853',
-            boxShadow: '0 0 30px #7CFFB2, 0 0 60px #00FF66, 0 0 90px #00C853, inset 0 0 25px rgba(0,0,0,0.9)',
+            borderTop: '2.5px solid #00FF66',
+            borderBottom: '2.5px solid #00C853',
+            boxShadow: '0 0 25px #7CFFB2, 0 0 50px #00FF66, 0 0 80px #00C853, inset 0 0 25px rgba(0,0,0,0.95)',
             filter: 'url(#lokiOrganicRiftEdge)'
           }}
         />
 
-        {/* Center Point of Light Origin */}
+        {/* Center Point of Origin Light Star */}
         <motion.div
           animate={portalStage > 0 ? {
-            scale: [0.9, 1.25, 0.9],
+            scale: [0.85, 1.25, 0.85],
             opacity: 1
           } : {
             scale: 0,
             opacity: 0
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[50%] w-10 h-10 rounded-full bg-[#B9FFD0] blur-sm shadow-[0_0_40px_#B9FFD0,0_0_80px_#00FF66,0_0_120px_#00C853] pointer-events-none"
+          className="absolute w-8 h-8 rounded-full bg-[#ffffff] blur-sm shadow-[0_0_30px_#ffffff,0_0_60px_#B9FFD0,0_0_100px_#00FF66] pointer-events-none"
         />
 
-        {/* Calm White-Mint Core Tear Spine - The initial thin vertical hairline crack */}
+        {/* Calm White-Mint Core Aperture Spine - Starts as hairline vertical crack, expands smoothly over 20s */}
         <motion.div
           animate={portalStage === 2 ? {
-            width: "16px",
-            opacity: 1
+            width: "18px",
+            opacity: 0.95
           } : {
-            width: portalStage === 1 ? "2.5px" : "0px",
-            opacity: portalStage === 1 ? 0.95 : 0
+            width: portalStage === 1 ? "2px" : "0px",
+            opacity: portalStage === 1 ? 0.9 : 0
           }}
-          transition={{ duration: 5.0, ease: "easeOut" }}
-          className="absolute h-[100vh] pointer-events-none rounded-[50%]"
+          transition={{ duration: 20.0, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute h-[280px] sm:h-[350px] pointer-events-none rounded-[50%]"
           style={{
             background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.95) 15%, #ffffff 50%, rgba(124,255,178,0.95) 85%, transparent 100%)',
-            boxShadow: '0 0 25px #ffffff, 0 0 50px #B9FFD0, 0 0 80px #00FF66',
+            boxShadow: '0 0 25px #ffffff, 0 0 45px #B9FFD0, 0 0 75px #00FF66',
             filter: 'url(#lokiOrganicRiftEdge) blur(1px)'
           }}
         />
