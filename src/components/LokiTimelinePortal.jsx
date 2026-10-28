@@ -48,8 +48,8 @@ function LokiLifePowerSpread({
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
   // Duration of venom traveling pulse across the branch
-  // Continuous smooth glide that never cuts out
-  const duration = 7.0;
+  // Continuous smooth glide that never stops or stutters
+  const duration = 6.0;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
@@ -62,7 +62,7 @@ function LokiLifePowerSpread({
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "easeInOut" }}
+        transition={{ duration, ease: "linear" }}
         opacity={0.9}
       />
       <motion.path
@@ -73,72 +73,60 @@ function LokiLifePowerSpread({
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "easeInOut" }}
+        transition={{ duration, ease: "linear" }}
         opacity={0.8}
       />
 
       {/* 2. The Traveling Pulse - Loki Authentic Sacred Timeline Color Flow */}
       {/* Strictly contained inside branch borders without overflowing outside */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
-        {/* Layer A: Volumetric Edge Glow - Proportional to branch width */}
+        {/* Layer A: Volumetric Edge Glow - Continuous smooth linear sweep */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#008F4C"
           strokeWidth={14 * strokeScale}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: [0, 0.45, 1],
-            opacity: [0.3, 0.85, 0.6]
-          }}
-          transition={{ duration, ease: "easeInOut" }}
+          initial={{ pathLength: 0, opacity: 0.8 }}
+          animate={{ pathLength: 1, opacity: 0.8 }}
+          transition={{ duration, ease: "linear" }}
           style={{ filter: "blur(2px)" }}
         />
 
-        {/* Layer B: True Loki Green (#00C853) & Electric Green (#00FF66) Body */}
+        {/* Layer B: True Loki Green & Electric Green Body */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#00C853"
           strokeWidth={9 * strokeScale}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: [0, 0.5, 1],
-            opacity: [0.4, 0.95, 0.85]
-          }}
-          transition={{ duration, ease: "easeInOut" }}
+          initial={{ pathLength: 0, opacity: 0.9 }}
+          animate={{ pathLength: 1, opacity: 0.9 }}
+          transition={{ duration, ease: "linear" }}
         />
 
-        {/* Layer C: Neon Green (#39FF14) Radiant Core */}
+        {/* Layer C: Neon Green Radiant Core */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
           strokeWidth={5 * strokeScale}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: [0, 0.55, 1],
-            opacity: [0.5, 1, 0.9]
-          }}
-          transition={{ duration, ease: "easeInOut" }}
+          initial={{ pathLength: 0, opacity: 1 }}
+          animate={{ pathLength: 1, opacity: 1 }}
+          transition={{ duration, ease: "linear" }}
         />
 
-        {/* Layer D: Mint Green (#7CFFB2) & Pale Green Glow (#B9FFD0) Center Filament */}
+        {/* Layer D: Mint Green Center Filament */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
           strokeWidth={Math.max(1, 2 * strokeScale)}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: [0, 0.6, 1],
-            opacity: [0.6, 1, 0.95]
-          }}
-          transition={{ duration, ease: "easeInOut" }}
+          initial={{ pathLength: 0, opacity: 1 }}
+          animate={{ pathLength: 1, opacity: 1 }}
+          transition={{ duration, ease: "linear" }}
         />
       </g>
     </g>
@@ -372,12 +360,12 @@ export default function LokiTimelinePortal() {
         }
       };
 
-      // 1. Fluid Venom Propagation cascades across remaining branches from organic sides:
+      // Fluid Venom Propagation cascades across remaining branches one by one:
       const cascadeConfig = [
-        { id: 'branch-2', tapRatio: 0.05, delay: 1200 },
-        { id: 'branch-3', tapRatio: 0.95, delay: 2400 },
-        { id: 'branch-4', tapRatio: 0.08, delay: 3600 },
-        { id: 'branch-5', tapRatio: 0.92, delay: 4800 },
+        { id: 'branch-2', tapRatio: 0.05, delay: 1000 },
+        { id: 'branch-5', tapRatio: 0.92, delay: 2000 },
+        { id: 'branch-3', tapRatio: 0.95, delay: 3000 },
+        { id: 'branch-4', tapRatio: 0.08, delay: 4000 },
       ];
 
       cascadeConfig.forEach(item => {
@@ -394,13 +382,6 @@ export default function LokiTimelinePortal() {
           }, item.delay);
         }
       });
-
-      // 2. Parallax Camera Flight:
-      // User watches venom spread completely across all 5 branches (cascade completes at ~10.5s).
-      // After venom fully flows across all branches, camera flight begins smoothly at 11.5s!
-      setTimeout(() => {
-        setVoyageProgress(1);
-      }, 11500);
 
       return updated;
     });
@@ -467,35 +448,24 @@ export default function LokiTimelinePortal() {
 
       {/* ========================================================================= */}
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
-          - Initially 100% COMPLETELY HIDDEN (opacity: 0, x: -90vw, scale: 0.15).
-          - On First Tap (hasDiscovered = true):
-            Emerges in far deep space distance (scale: 0.20, blurry).
-          - Stays far away in distance until voyage begins.
-          - When Voyage begins (voyageProgress > 0):
-            Moves forward strictly synchronized with the camera's 24-second branch journey!
+          - Initially hidden, emerges gently when branch is tapped
+          - Stays firmly at its natural, majestic deep space distance (NO camera zoom/fly)
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        initial={{ x: "-90vw", scale: 0.15, opacity: 0, filter: "blur(32px)" }}
+        initial={{ scale: 0.85, opacity: 0, filter: "blur(20px)" }}
         animate={hasDiscovered ? {
-          x: "0vw",
-          scale: voyageProgress > 0 ? [0.20, 0.32, 0.55, 1.05] : 0.20,
-          opacity: voyageProgress > 0 ? [0.4, 0.6, 0.85, 1] : 0.45,
-          filter: voyageProgress > 0 ? ["blur(14px)", "blur(10px)", "blur(4px)", "blur(0px)"] : "blur(14px)"
+          scale: 0.95,
+          opacity: 0.95,
+          filter: "blur(0px)"
         } : {
-          x: "-90vw",
-          scale: 0.15,
+          scale: 0.85,
           opacity: 0,
-          filter: "blur(32px)"
+          filter: "blur(20px)"
         }}
-        transition={voyageProgress > 0 ? {
-          scale: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
-          opacity: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
-          filter: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
-          x: { duration: 8.0, ease: [0.16, 1, 0.3, 1] }
-        } : {
-          duration: 14.0,
-          ease: [0.16, 1, 0.3, 1]
+        transition={{
+          duration: 3.0,
+          ease: "easeOut"
         }}
         style={{ transformOrigin: "50% 50%" }}
       >
@@ -527,29 +497,25 @@ export default function LokiTimelinePortal() {
           }}
         />
 
-        {/* Outer illuminated cloudy rift lip - Scales naturally along with the 24s camera journey */}
+        {/* Outer illuminated cloudy rift lip */}
         <motion.div
           initial={{ scaleX: 1.0, scaleY: 1.0, opacity: 0.85 }}
-          animate={voyageProgress > 0 ? {
-            scaleX: [0.5, 0.8, 1.15, 1.42],
-            scaleY: [0.6, 0.85, 1.0, 1.03],
+          animate={{
+            scaleX: [1.0, 1.25, 1.45, 1.38, 1.42],
+            scaleY: [1.0, 1.02, 1.04, 1.01, 1.03],
             borderRadius: [
               '15% 75% 55% 35% / 70% 25% 65% 45%',
               '25% 65% 60% 30% / 65% 35% 60% 50%',
               '10% 80% 50% 40% / 75% 20% 70% 40%',
               '18% 72% 56% 36% / 68% 28% 64% 46%'
             ],
-            opacity: [0.5, 0.75, 0.92, 0.98]
-          } : {
-            scaleX: 0.5,
-            scaleY: 0.6,
-            opacity: 0.5
+            opacity: [0.85, 0.95, 1, 0.94, 0.98]
           }}
           transition={{
-            scaleX: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
-            scaleY: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
+            scaleX: { duration: 9.0, repeat: Infinity, ease: [0.16, 1, 0.3, 1] },
+            scaleY: { duration: 9.5, repeat: Infinity, ease: [0.16, 1, 0.3, 1] },
             borderRadius: { duration: 10.0, repeat: Infinity, ease: "easeInOut" },
-            opacity: { duration: 24.0, ease: "easeOut", times: [0, 0.4, 0.75, 1] }
+            opacity: { duration: 5, repeat: Infinity, ease: "easeInOut" }
           }}
           className="absolute h-[120vh] w-64 sm:w-80 pointer-events-none"
           style={{
@@ -559,25 +525,22 @@ export default function LokiTimelinePortal() {
           }}
         />
 
-        {/* Inner Void / Deep Spacetime Tear - Synchronized with the 24s camera journey */}
+        {/* Inner Void / Deep Spacetime Tear */}
         <motion.div
           initial={{ scaleX: 1.0, scaleY: 1.0 }}
-          animate={voyageProgress > 0 ? {
-            scaleX: [0.45, 0.75, 1.15, 1.55],
-            scaleY: [0.55, 0.8, 0.98, 1.02],
+          animate={{
+            scaleX: [1.0, 1.3, 1.6, 1.5, 1.55],
+            scaleY: [1.0, 1.02, 1.03, 1.01, 1.02],
             borderRadius: [
               '20% 65% 40% 60% / 65% 35% 55% 45%',
               '35% 55% 48% 52% / 58% 42% 50% 50%',
               '15% 75% 38% 62% / 70% 30% 58% 42%',
               '22% 68% 42% 58% / 64% 36% 54% 46%'
             ]
-          } : {
-            scaleX: 0.45,
-            scaleY: 0.55
           }}
           transition={{
-            scaleX: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
-            scaleY: { duration: 24.0, ease: [0.25, 0.1, 0.25, 1.0], times: [0, 0.4, 0.75, 1] },
+            scaleX: { duration: 9.5, repeat: Infinity, ease: [0.16, 1, 0.3, 1] },
+            scaleY: { duration: 10.0, repeat: Infinity, ease: [0.16, 1, 0.3, 1] },
             borderRadius: { duration: 10.5, repeat: Infinity, ease: "easeInOut" }
           }}
           className="absolute h-[115vh] w-24 sm:w-36 pointer-events-none"
@@ -613,7 +576,7 @@ export default function LokiTimelinePortal() {
               : '0 0 35px #B9FFD0, 0 0 70px #00FF66, 0 0 110px #00C853'
           }}
           transition={{
-            width: { duration: 25.0, ease: [0.16, 1, 0.3, 1] },
+            width: { duration: 2.0, ease: "easeOut" },
             opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" }
           }}
           className="absolute h-[110vh] pointer-events-none rounded-[50%]"
@@ -677,7 +640,7 @@ export default function LokiTimelinePortal() {
         {/* ------------------------------------------------------------- */}
         {/* MULTIVERSE TAPESTRY FILAMENTS (LOKI YGGDRASIL WORLD TREE)     */}
         {/* Rendered at deepest layer right in front of the distant portal */}
-        {/* Sweeps gracefully out past the camera as the journey advances */}
+        {/* Stable organic breathing (NO camera zoom/fly)                 */}
         {/* ------------------------------------------------------------- */}
         <g 
           style={{ 
@@ -689,21 +652,11 @@ export default function LokiTimelinePortal() {
           {cosmicFilaments.map((f, i) => (
             <motion.g
               key={`filament-${i}`}
-              animate={voyageProgress > 0 ? {
-                scale: [1, 1.4, 3.2],
-                y: [0, (i % 2 === 0 ? -1 : 1) * (200 + i * 40), (i % 2 === 0 ? -1 : 1) * 1600],
-                x: [0, (i % 3 === 0 ? 1 : -1) * (60 + i * 15), (i % 3 === 0 ? 1 : -1) * 700],
-                opacity: [f.opacity, f.opacity * 1.5, 0]
-              } : {
-                y: [i % 2 === 0 ? 6 : -6, i % 2 === 0 ? -6 : 6, i % 2 === 0 ? 6 : -6],
-                opacity: [f.opacity, f.opacity * 1.3, f.opacity]
+              animate={{
+                y: [i % 2 === 0 ? 5 : -5, i % 2 === 0 ? -5 : 5, i % 2 === 0 ? 5 : -5],
+                opacity: [f.opacity, f.opacity * 1.35, f.opacity]
               }}
-              transition={voyageProgress > 0 ? {
-                duration: 22.0,
-                delay: 0,
-                ease: [0.25, 0.1, 0.25, 1.0],
-                times: [0, 0.5, 0.9 + (i % 3) * 0.04]
-              } : {
+              transition={{
                 duration: f.windDur,
                 repeat: Infinity,
                 ease: "easeInOut"
@@ -742,8 +695,7 @@ export default function LokiTimelinePortal() {
         </g>
 
         {/* ------------------------------------------------------------- */}
-        {/* DEPTH LAYER 5: Branch 4 (~1px near Portal, diagonal thread)    */}
-        {/* Starts far -> reaches foreground ~16s -> sweeps past camera!  */}
+        {/* DEPTH LAYER 5: Branch 4 (Diagonal timeline vine)              */}
         {/* ------------------------------------------------------------- */}
         <g 
           style={{ 
@@ -752,21 +704,7 @@ export default function LokiTimelinePortal() {
             pointerEvents: 'none'
           }}
         >
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: [1, 1.4, 2.8, 4.2],
-              y: [0, 100, 750, 1950],
-              x: [0, -40, -180, -450],
-              opacity: [1, 1, 1, 0]
-            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
-            transition={{
-              duration: 24.0,
-              delay: 0,
-              ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.45, 0.75, 0.98]
-            }}
-            style={{ transformOrigin: "600px 480px" }}
-          >
+          <motion.g>
             <DraggableBranch
               id="branch-4"
               pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
@@ -819,24 +757,9 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* ----------------------------------------------------------- */}
-          {/* DEPTH LAYER 4: Branch 3 (~2-3px visual -> grows to 8px pass) */}
-          {/* Approaches from deep depth, expands to foreground, sweeps out */}
+          {/* DEPTH LAYER 4: Branch 3 (Lower timeline vine)               */}
           {/* ----------------------------------------------------------- */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: [1, 1.6, 3.2, 4.6],
-              y: [0, 80, 550, 1850],
-              x: [0, -20, -90, -260],
-              opacity: [1, 1, 1, 0]
-            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
-            transition={{
-              duration: 24.0,
-              delay: 0,
-              ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.4, 0.72, 0.92]
-            }}
-            style={{ transformOrigin: "500px 720px" }}
-          >
+          <motion.g>
             <DraggableBranch
               id="branch-3"
               pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
@@ -889,24 +812,9 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* ----------------------------------------------------------- */}
-          {/* DEPTH LAYER 3: Branch 5 (~3-4px -> Foreground Sweep)        */}
-          {/* Approaches, grows thick, and cleanly passes camera out of view */}
+          {/* DEPTH LAYER 3: Branch 5 (Mid-lower flowing timeline vine)   */}
           {/* ----------------------------------------------------------- */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: [1, 1.7, 3.2, 4.4],
-              y: [0, 150, 680, 1900],
-              x: [0, 40, 130, 320],
-              opacity: [1, 1, 1, 0]
-            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
-            transition={{
-              duration: 24.0,
-              delay: 0,
-              ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.35, 0.65, 0.88]
-            }}
-            style={{ transformOrigin: "500px 540px" }}
-          >
+          <motion.g>
             <DraggableBranch
               id="branch-5"
               pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
@@ -959,24 +867,9 @@ export default function LokiTimelinePortal() {
           </motion.g>
 
           {/* ----------------------------------------------------------- */}
-          {/* DEPTH LAYER 2: Branch 2 (~5px -> Grows large and passes top)*/}
-          {/* Approaches from depth, expands to Branch 1 size, then sweeps */}
+          {/* DEPTH LAYER 2: Branch 2 (Upper timeline vine)               */}
           {/* ----------------------------------------------------------- */}
-          <motion.g
-            animate={voyageProgress > 0 ? {
-              scale: [1, 1.8, 3.4],
-              y: [0, -350, -1850],
-              x: [0, -60, -320],
-              opacity: [1, 1, 0]
-            } : { scale: 1, y: 0, x: 0, opacity: 1 }}
-            transition={{
-              duration: 24.0,
-              delay: 0,
-              ease: [0.25, 0.1, 0.25, 1.0],
-              times: [0, 0.35, 0.72]
-            }}
-            style={{ transformOrigin: "500px 160px" }}
-          >
+          <motion.g>
             <DraggableBranch
               id="branch-2"
               pathData="M -350 40 Q 250 220, 680 160 T 1420 120"
@@ -1031,23 +924,9 @@ export default function LokiTimelinePortal() {
 
         {/* ------------------------------------------------------------- */}
         {/* DEPTH LAYER 1: FOREFRONT MAIN TIMELINE (Branch 1 - Forefront) */}
-        {/* Passes camera smoothly first, leaving view by ~10s           */}
+        {/* User grabs/taps to start the God of Stories power cascade!    */}
         {/* ------------------------------------------------------------- */}
-        <motion.g
-          animate={voyageProgress > 0 ? {
-            scale: [1, 2.8],
-            y: [0, -1700],
-            x: [0, -280],
-            opacity: [1, 0]
-          } : { scale: 1, y: 0, x: 0, opacity: 1 }}
-          transition={{
-            duration: 24.0,
-            delay: 0,
-            ease: [0.25, 0.1, 0.25, 1.0],
-            times: [0, 0.42]
-          }}
-          style={{ transformOrigin: "500px 440px" }}
-        >
+        <motion.g>
           <DraggableBranch
             id="branch-1"
             pathData="M -400 310 Q 150 480, 520 440 T 1450 390"
