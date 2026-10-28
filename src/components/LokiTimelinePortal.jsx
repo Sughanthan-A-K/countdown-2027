@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 
 /**
  * LokiLifePowerSpread
@@ -388,20 +388,23 @@ export default function LokiTimelinePortal() {
   // hasDiscovered = false -> Only single isolated mystery vine in darkness, portal stays far away in deep space!
   const [hasDiscovered, setHasDiscovered] = useState(false);
 
-  // STEP 1: Temporal Loom Explosion (DEC 16 card vedikudhu)
-  // loomExploded = true: card vedichu 5s multicolor aurora light varudhu, branches pirinju dead aagudhu
-  // loomExplosionComplete = true: 5s mudinjadhum aurora fades out, pitch black space
-  const [loomExploded, setLoomExploded] = useState(false);
-  const [loomExplosionComplete, setLoomExplosionComplete] = useState(false);
+  // Replay key to force full fresh mount reset on Shift + R
+  const [replayKey, setReplayKey] = useState(0);
 
-  // Trigger Loom Explosion immediately on mount (or when component active)
+  // STEP 1: LOOM CARD EXPLOSION & SCATTER TIMELINE STATE (0s to 5s)
+  // loomExplodePhase:
+  // 0 = Card explodes, branches start tightly held at center (DEC 16 Loom anchor)
+  // 1 = (0s -> 5s): Multicolored explosion aurora (orange/cyan/green) blazes while branches scatter criss-cross into dead lines!
+  // 2 = (5s onwards): Explosion light smoothly darkens into pitch black, leaving dying dead branches in space.
+  const [loomExplodePhase, setLoomExplodePhase] = useState(0);
+
   useEffect(() => {
-    // 0s: Card explodes!
-    setLoomExploded(true);
+    // Stage 1: Multicolored Loom explosion light blazes immediately
+    setLoomExplodePhase(1);
 
-    // 5s: Mild multicolored explosion aurora fades, screen goes smooth dark
+    // Stage 2: After exactly 5 seconds, light smoothly fades to pure black
     const timer = setTimeout(() => {
-      setLoomExplosionComplete(true);
+      setLoomExplodePhase(2);
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -438,8 +441,6 @@ export default function LokiTimelinePortal() {
         setGripPoint(null);
         setIsGatheringHand(false);
         setPortalVoyageStage(0);
-        setLoomExploded(true);
-        setLoomExplosionComplete(false);
         setReplayKey(k => k + 1);
       }
     };
@@ -668,70 +669,64 @@ export default function LokiTimelinePortal() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
-        className="absolute inset-0 bg-[#000402]"
+        className="absolute inset-0 bg-[#000403]"
       />
 
       {/* ========================================================================= */}
-      {/* STEP 1: THE TEMPORAL LOOM EXPLOSION AURORA (5-SECOND MULTICOLOR GLOW)     */}
-      {/* DEC 16 card vedikudhu: mild orange, cyan, gold, emerald cosmic aurora clouds */}
-      {/* In this light, user sees the bundled timelines scatter and die!           */}
-      {/* At 5.0s, this aurora gently fades away into pitch black space.            */}
+      {/* STEP 1: THE TEMPORAL LOOM EXPLOSION: 5-SECOND MULTICOLOR COSMIC AURORA   */}
+      {/* Orange, teal, amber & emerald atmospheric aurora glow from the destroyed Loom */}
+      {/* (exactly matching user's attached Marvel Season 2 finale explosion shot) */}
+      {/* Fades smoothly to pitch black by 5 seconds!                              */}
       {/* ========================================================================= */}
-      {!loomExplosionComplete && (
-        <motion.div
-          className="absolute inset-0 pointer-events-none overflow-hidden z-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.9, 0.95, 0.7, 0] }}
-          transition={{ duration: 5.0, times: [0, 0.15, 0.5, 0.8, 1.0], ease: "easeInOut" }}
-        >
-          {/* Ambient Loom Explosion Backlight (Orange-Gold + Cyan + Emerald Aurora) */}
-          <div 
-            className="absolute inset-0"
-            style={{
-              background: 'radial-gradient(ellipse at 50% 50%, rgba(255, 140, 0, 0.45) 0%, rgba(0, 230, 200, 0.35) 30%, rgba(0, 143, 76, 0.25) 60%, transparent 85%)',
-              filter: 'blur(50px)'
-            }}
-          />
-
-          {/* Left Warm Amber/Orange Cosmic Filament Light (Exact match with reference image) */}
-          <motion.div 
-            className="absolute -left-20 top-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
-            style={{
-              background: 'radial-gradient(circle, rgba(255, 170, 50, 0.5) 0%, rgba(200, 90, 0, 0.25) 50%, transparent 75%)',
-              filter: 'blur(60px)'
-            }}
-            animate={{ scale: [0.8, 1.25, 1.0], x: [-30, 20, 0] }}
-            transition={{ duration: 5.0, ease: "easeOut" }}
-          />
-
-          {/* Right Emerald/Cyan Loom Aurora (From reference image) */}
-          <motion.div 
-            className="absolute -right-20 top-10 w-[550px] h-[550px] rounded-full pointer-events-none"
-            style={{
-              background: 'radial-gradient(circle, rgba(0, 230, 180, 0.45) 0%, rgba(0, 100, 70, 0.25) 55%, transparent 75%)',
-              filter: 'blur(60px)'
-            }}
-            animate={{ scale: [0.85, 1.2, 1.0], y: [20, -20, 0] }}
-            transition={{ duration: 5.0, ease: "easeOut" }}
-          />
-
-          {/* Center Loom Fragment Shrapnel Glow */}
+      <AnimatePresence>
+        {loomExplodePhase < 2 && (
           <motion.div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            initial={{ scale: 0.2, opacity: 1 }}
-            animate={{ scale: [0.2, 1.8, 2.5], opacity: [1, 0.8, 0] }}
-            transition={{ duration: 3.5, ease: "easeOut" }}
+            key="loom-explosion-aurora"
+            className="absolute inset-0 pointer-events-none overflow-hidden z-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.95, 0.9, 0.7, 0] }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 5.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div 
-              className="w-48 h-48 rounded-full"
+            {/* Orange / Amber temporal explosion flare (Left side warm radiation) */}
+            <motion.div
+              className="absolute -top-[10%] -left-[10%] w-[650px] h-[650px] rounded-full"
               style={{
-                background: 'radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 200, 100, 0.6) 35%, rgba(0, 255, 150, 0.3) 65%, transparent 85%)',
-                filter: 'blur(25px)'
+                background: 'radial-gradient(circle, rgba(230,120,40,0.65) 0%, rgba(180,80,20,0.3) 40%, rgba(200,100,30,0.1) 65%, transparent 85%)',
+                filter: 'blur(60px)'
               }}
+              animate={{ scale: [0.5, 1.4, 1.8], opacity: [0.3, 0.85, 0] }}
+              transition={{ duration: 5.0, ease: "easeOut" }}
             />
+
+            {/* Cyan / Teal Loom discharge aurora (Top right cool cosmic radiation) */}
+            <motion.div
+              className="absolute -top-[5%] right-[0%] w-[600px] h-[600px] rounded-full"
+              style={{
+                background: 'radial-gradient(circle, rgba(30,200,180,0.6) 0%, rgba(10,140,130,0.3) 45%, transparent 80%)',
+                filter: 'blur(55px)'
+              }}
+              animate={{ scale: [0.6, 1.3, 1.6], opacity: [0.4, 0.8, 0] }}
+              transition={{ duration: 5.0, ease: "easeOut" }}
+            />
+
+            {/* Central Sacred Green Shockwave flash */}
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <motion.div
+                className="w-[850px] h-[850px] rounded-full"
+                style={{
+                  background: 'radial-gradient(ellipse at 50% 50%, rgba(0,255,102,0.45) 0%, rgba(0,143,76,0.25) 40%, rgba(185,255,208,0.1) 60%, transparent 80%)',
+                  filter: 'blur(50px)'
+                }}
+                animate={{ scale: [0.3, 1.5, 2.2], opacity: [0.8, 0.9, 0] }}
+                transition={{ duration: 4.8, ease: "easeOut" }}
+              />
+            </motion.div>
           </motion.div>
-        </motion.div>
-      )}
+        )}
+      </AnimatePresence>
 
       {/* SVG Organic Distortion Filters for the irregular jagged portal border & venom tendrils */}
       <svg className="absolute w-0 h-0 pointer-events-none">
@@ -1038,7 +1033,8 @@ export default function LokiTimelinePortal() {
         {/* ------------------------------------------------------------- */}
         {/* MULTIVERSE TAPESTRY FILAMENTS (LOKI YGGDRASIL WORLD TREE)     */}
         {/* Rendered at deepest layer, pure dark black silhouette branches */}
-        {/* Step 1: On card explosion, branches scatter across screen and die in 5s aurora */}
+        {/* Awakens with venom pulse proportional to its thickness        */}
+        {/* In Step 1: Branches scatter from Loom center across the 5s explosion! */}
         {/* ------------------------------------------------------------- */}
         <g 
           style={{ 
@@ -1054,21 +1050,23 @@ export default function LokiTimelinePortal() {
               <motion.g
                 key={filamentId}
                 initial={{
-                  // Step 1: At 0s, branches start condensed near center (held by DEC 16 card)
-                  scaleX: 0.2,
-                  scaleY: 0.1,
-                  opacity: 0.5
+                  scaleX: 0.15,
+                  scaleY: 0.2,
+                  rotate: (i % 2 === 0 ? 1 : -1) * (i * 4),
+                  opacity: 0.2
                 }}
                 animate={{
-                  // By 3-5s, they scatter across full screen in all directions into dying dead lines!
-                  scaleX: 1.0,
-                  scaleY: 1.0,
+                  scaleX: 1,
+                  scaleY: 1,
+                  rotate: 0,
                   opacity: 1,
                   y: [i % 2 === 0 ? 5 : -5, i % 2 === 0 ? -5 : 5, i % 2 === 0 ? 5 : -5]
                 }}
                 transition={{
-                  scaleX: { duration: 4.5, ease: [0.16, 1, 0.3, 1] },
-                  scaleY: { duration: 4.5, ease: [0.16, 1, 0.3, 1] },
+                  scaleX: { duration: 4.8, ease: [0.16, 1, 0.3, 1] },
+                  scaleY: { duration: 4.8, ease: [0.16, 1, 0.3, 1] },
+                  rotate: { duration: 4.8, ease: [0.16, 1, 0.3, 1] },
+                  opacity: { duration: 2.0 },
                   y: {
                     duration: f.windDur,
                     repeat: Infinity,
@@ -1177,9 +1175,9 @@ export default function LokiTimelinePortal() {
           }}
         >
           <motion.g
-            initial={{ scaleX: 0.25, scaleY: 0.15, opacity: 0.4 }}
+            initial={{ scaleX: 0.2, scaleY: 0.3, opacity: 0.3 }}
             animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
-            transition={{ duration: 4.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 4.8, ease: [0.16, 1, 0.3, 1] }}
             style={{ transformOrigin: "500px 500px" }}
           >
             <DraggableBranch
@@ -1236,12 +1234,7 @@ export default function LokiTimelinePortal() {
           {/* ----------------------------------------------------------- */}
           {/* DEPTH LAYER 4: Branch 3 (Lower timeline vine)               */}
           {/* ----------------------------------------------------------- */}
-          <motion.g
-            initial={{ scaleX: 0.25, scaleY: 0.15, opacity: 0.4 }}
-            animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
-            transition={{ duration: 4.5, ease: [0.16, 1, 0.3, 1] }}
-            style={{ transformOrigin: "500px 500px" }}
-          >
+          <motion.g>
             <DraggableBranch
               id="branch-3"
               pathData={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
@@ -1296,12 +1289,7 @@ export default function LokiTimelinePortal() {
           {/* ----------------------------------------------------------- */}
           {/* DEPTH LAYER 3: Branch 5 (Mid-lower flowing timeline vine)   */}
           {/* ----------------------------------------------------------- */}
-          <motion.g
-            initial={{ scaleX: 0.25, scaleY: 0.15, opacity: 0.4 }}
-            animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
-            transition={{ duration: 4.5, ease: [0.16, 1, 0.3, 1] }}
-            style={{ transformOrigin: "500px 500px" }}
-          >
+          <motion.g>
             <DraggableBranch
               id="branch-5"
               pathData={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
@@ -1356,12 +1344,7 @@ export default function LokiTimelinePortal() {
           {/* ----------------------------------------------------------- */}
           {/* DEPTH LAYER 2: Branch 2 (Upper timeline vine)               */}
           {/* ----------------------------------------------------------- */}
-          <motion.g
-            initial={{ scaleX: 0.25, scaleY: 0.15, opacity: 0.4 }}
-            animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
-            transition={{ duration: 4.5, ease: [0.16, 1, 0.3, 1] }}
-            style={{ transformOrigin: "500px 500px" }}
-          >
+          <motion.g>
             <DraggableBranch
               id="branch-2"
               pathData={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
@@ -1419,9 +1402,9 @@ export default function LokiTimelinePortal() {
         {/* User grabs/taps to start the God of Stories power cascade!    */}
         {/* ------------------------------------------------------------- */}
         <motion.g
-          initial={{ scaleX: 0.3, scaleY: 0.2, opacity: 0.5 }}
+          initial={{ scaleX: 0.25, scaleY: 0.35, opacity: 0.3 }}
           animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
-          transition={{ duration: 4.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 4.8, ease: [0.16, 1, 0.3, 1] }}
           style={{ transformOrigin: "500px 500px" }}
         >
           <DraggableBranch
