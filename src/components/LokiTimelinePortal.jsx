@@ -504,23 +504,24 @@ export default function LokiTimelinePortal() {
   const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
   // Deep Multiverse Tapestry Filaments (~16 subtle background timelines that form the Yggdrasil tree tapestry)
+  // Distance-scaled physics: Farther branches are noticeably thinner and more atmospheric
   const cosmicFilaments = [
-    { d: "M -350 180 Q 180 80, 520 220 T 1400 160", width: 1.2, opacity: 0.28, color: "#00C853", windDur: 27 },
-    { d: "M -300 280 Q 300 380, 750 260 T 1420 320", width: 1.5, opacity: 0.35, color: "#39FF14", windDur: 31 },
-    { d: "M -380 420 Q 220 540, 620 440 T 1450 480", width: 1.0, opacity: 0.25, color: "#00E676", windDur: 29 },
-    { d: "M -320 620 Q 350 500, 780 640 T 1400 580", width: 1.3, opacity: 0.32, color: "#7CFFB2", windDur: 33 },
-    { d: "M -400 780 Q 250 860, 680 760 T 1420 840", width: 1.6, opacity: 0.38, color: "#00FF66", windDur: 26 },
-    { d: "M 1400 90 Q 750 280, 380 140 T -320 240", width: 1.1, opacity: 0.30, color: "#00C853", windDur: 30 },
-    { d: "M 1420 380 Q 820 240, 420 410 T -350 360", width: 1.4, opacity: 0.36, color: "#39FF14", windDur: 28 },
-    { d: "M 1450 680 Q 780 780, 350 630 T -300 720", width: 1.2, opacity: 0.28, color: "#00FF66", windDur: 34 },
-    { d: "M -360 80 Q 420 180, 850 100 T 1420 190", width: 0.9, opacity: 0.22, color: "#B9FFD0", windDur: 35 },
-    { d: "M -340 490 Q 150 390, 580 510 T 1450 430", width: 1.4, opacity: 0.34, color: "#00E676", windDur: 32 },
-    { d: "M -390 850 Q 320 720, 710 880 T 1400 790", width: 1.0, opacity: 0.26, color: "#39FF14", windDur: 25 },
-    { d: "M 1420 220 Q 900 420, 460 300 T -350 420", width: 1.3, opacity: 0.32, color: "#00C853", windDur: 31 },
-    { d: "M 1450 510 Q 880 620, 490 530 T -320 610", width: 1.1, opacity: 0.28, color: "#7CFFB2", windDur: 29 },
-    { d: "M -350 950 Q 280 820, 680 940 T 1420 890", width: 1.5, opacity: 0.35, color: "#00FF66", windDur: 27 },
-    { d: "M -320 15 Q 380 120, 780 40 T 1450 110", width: 0.8, opacity: 0.20, color: "#B9FFD0", windDur: 36 },
-    { d: "M 1400 820 Q 850 930, 420 840 T -340 910", width: 1.2, opacity: 0.29, color: "#00E676", windDur: 30 }
+    { d: "M -350 180 Q 180 80, 520 220 T 1400 160", width: 0.9, opacity: 0.22, color: "#00C853", windDur: 32 },
+    { d: "M -300 280 Q 300 380, 750 260 T 1420 320", width: 1.1, opacity: 0.28, color: "#39FF14", windDur: 36 },
+    { d: "M -380 420 Q 220 540, 620 440 T 1450 480", width: 0.7, opacity: 0.18, color: "#00E676", windDur: 34 },
+    { d: "M -320 620 Q 350 500, 780 640 T 1400 580", width: 1.0, opacity: 0.25, color: "#7CFFB2", windDur: 38 },
+    { d: "M -400 780 Q 250 860, 680 760 T 1420 840", width: 1.2, opacity: 0.30, color: "#00FF66", windDur: 30 },
+    { d: "M 1400 90 Q 750 280, 380 140 T -320 240", width: 0.8, opacity: 0.22, color: "#00C853", windDur: 35 },
+    { d: "M 1420 380 Q 820 240, 420 410 T -350 360", width: 1.1, opacity: 0.27, color: "#39FF14", windDur: 33 },
+    { d: "M 1450 680 Q 780 780, 350 630 T -300 720", width: 0.9, opacity: 0.22, color: "#00FF66", windDur: 39 },
+    { d: "M -360 80 Q 420 180, 850 100 T 1420 190", width: 0.6, opacity: 0.16, color: "#B9FFD0", windDur: 40 },
+    { d: "M -340 490 Q 150 390, 580 510 T 1450 430", width: 1.0, opacity: 0.26, color: "#00E676", windDur: 37 },
+    { d: "M -390 850 Q 320 720, 710 880 T 1400 790", width: 0.7, opacity: 0.19, color: "#39FF14", windDur: 31 },
+    { d: "M 1420 220 Q 900 420, 460 300 T -350 420", width: 0.9, opacity: 0.24, color: "#00C853", windDur: 36 },
+    { d: "M 1450 510 Q 880 620, 490 530 T -320 610", width: 0.8, opacity: 0.21, color: "#7CFFB2", windDur: 34 },
+    { d: "M -350 950 Q 280 820, 680 940 T 1420 890", width: 1.1, opacity: 0.28, color: "#00FF66", windDur: 32 },
+    { d: "M -320 15 Q 380 120, 780 40 T 1450 110", width: 0.5, opacity: 0.15, color: "#B9FFD0", windDur: 42 },
+    { d: "M 1400 820 Q 850 930, 420 840 T -340 910", width: 0.8, opacity: 0.22, color: "#00E676", windDur: 35 }
   ];
 
   return (
@@ -879,16 +880,16 @@ export default function LokiTimelinePortal() {
               id="branch-4"
               pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
               origin="500px 520px"
-              strokeScale={0.7}
+              strokeScale={0.38}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-4']}
               allEnergizedStage={awakenedStages['branch-4']}
               isFinalBranch={lastTappedBranchId === 'branch-4'}
               windConfig={{
-                x: [-14, 14, -14],
-                y: [12, -12, 12],
-                rotate: [-0.9, 0.9, -0.9],
-                duration: 26,
+                x: [-8, 8, -8],
+                y: [6, -6, 6],
+                rotate: [-0.5, 0.5, -0.5],
+                duration: 28,
                 delay: 0.5
               }}
             >
@@ -897,31 +898,31 @@ export default function LokiTimelinePortal() {
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
-                strokeWidth="120"
+                strokeWidth="100"
                 strokeLinecap="round"
               />
               <path
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="2.5"
+                strokeWidth="1.5"
                 strokeLinecap="round"
-                opacity="0.8"
+                opacity="0.65"
               />
               <path
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="1.6"
+                strokeWidth="0.9"
                 strokeLinecap="round"
               />
               <path
                 d="M 1450 29 Q 820 419, 480 619 T -350 939"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="0.8"
+                strokeWidth="0.5"
                 strokeLinecap="round"
-                opacity="0.4"
+                opacity="0.3"
               />
             </DraggableBranch>
           </motion.g>
@@ -934,16 +935,16 @@ export default function LokiTimelinePortal() {
               id="branch-3"
               pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
               origin="500px 720px"
-              strokeScale={0.8}
+              strokeScale={0.52}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-3']}
               allEnergizedStage={awakenedStages['branch-3']}
               isFinalBranch={lastTappedBranchId === 'branch-3'}
               windConfig={{
-                y: [-20, 20, -20],
-                x: [-10, 10, -10],
-                rotate: [-1.4, 1.4, -1.4],
-                duration: 24,
+                y: [-12, 12, -12],
+                x: [-6, 6, -6],
+                rotate: [-0.8, 0.8, -0.8],
+                duration: 25,
                 delay: 2
               }}
             >
@@ -952,31 +953,31 @@ export default function LokiTimelinePortal() {
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
-                strokeWidth="120"
+                strokeWidth="110"
                 strokeLinecap="round"
               />
               <path
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="3.0"
+                strokeWidth="2.0"
                 strokeLinecap="round"
-                opacity="0.8"
+                opacity="0.75"
               />
               <path
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="2.0"
+                strokeWidth="1.3"
                 strokeLinecap="round"
               />
               <path
                 d="M -380 889 Q 200 679, 580 719 T 1450 819"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="0.9"
+                strokeWidth="0.6"
                 strokeLinecap="round"
-                opacity="0.4"
+                opacity="0.35"
               />
             </DraggableBranch>
           </motion.g>
@@ -989,16 +990,16 @@ export default function LokiTimelinePortal() {
               id="branch-5"
               pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
               origin="500px 540px"
-              strokeScale={0.85}
+              strokeScale={0.7}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-5']}
               allEnergizedStage={awakenedStages['branch-5']}
               isFinalBranch={lastTappedBranchId === 'branch-5'}
               windConfig={{
-                y: [15, -15, 15],
-                x: [10, -10, 10],
-                rotate: [0.9, -0.9, 0.9],
-                duration: 21,
+                y: [12, -12, 12],
+                x: [8, -8, 8],
+                rotate: [0.8, -0.8, 0.8],
+                duration: 22,
                 delay: 2.5
               }}
             >
@@ -1014,7 +1015,7 @@ export default function LokiTimelinePortal() {
                 d="M -320 540 Q 280 430, 720 560 T 1420 520"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="3.2"
+                strokeWidth="2.8"
                 strokeLinecap="round"
                 opacity="0.8"
               />
@@ -1022,14 +1023,14 @@ export default function LokiTimelinePortal() {
                 d="M -320 540 Q 280 430, 720 560 T 1420 520"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="2.2"
+                strokeWidth="1.8"
                 strokeLinecap="round"
               />
               <path
                 d="M -320 539 Q 280 429, 720 559 T 1420 519"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="1.0"
+                strokeWidth="0.8"
                 strokeLinecap="round"
                 opacity="0.4"
               />
@@ -1044,7 +1045,7 @@ export default function LokiTimelinePortal() {
               id="branch-2"
               pathData="M -350 40 Q 250 220, 680 160 T 1420 120"
               origin="500px 160px"
-              strokeScale={1.0}
+              strokeScale={0.88}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-2']}
               allEnergizedStage={awakenedStages['branch-2']}
@@ -1053,7 +1054,7 @@ export default function LokiTimelinePortal() {
                 y: [16, -16, 16],
                 x: [8, -8, 8],
                 rotate: [1.2, -1.2, 1.2],
-                duration: 25,
+                duration: 24,
                 delay: 1
               }}
             >
@@ -1071,7 +1072,7 @@ export default function LokiTimelinePortal() {
                 stroke="#000000"
                 strokeWidth="3.6"
                 strokeLinecap="round"
-                opacity="0.8"
+                opacity="0.85"
               />
               <path
                 d="M -350 40 Q 250 220, 680 160 T 1420 120"
