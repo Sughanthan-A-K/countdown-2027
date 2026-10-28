@@ -448,141 +448,75 @@ export default function LokiTimelinePortal() {
 
       {/* ========================================================================= */}
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
-          - Initially hidden, emerges gently when branch is tapped
-          - Stays firmly at its natural, majestic deep space distance (NO camera zoom/fly)
+          - Calm, majestic cosmic tear (Clean portal look without jumping/pulsing distortions)
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        initial={{ scale: 0.85, opacity: 0, filter: "blur(20px)" }}
+        initial={{ opacity: 0 }}
         animate={hasDiscovered ? {
-          scale: 0.95,
-          opacity: 0.95,
-          filter: "blur(0px)"
+          opacity: 0.95
         } : {
-          scale: 0.85,
-          opacity: 0,
-          filter: "blur(20px)"
+          opacity: 0
         }}
         transition={{
-          duration: 3.0,
+          duration: 2.5,
           ease: "easeOut"
         }}
         style={{ transformOrigin: "50% 50%" }}
       >
-        {/* Layer 1: Authentic Loki Climax Emerald Aurora Atmosphere */}
-        <motion.div
-          animate={{
-            opacity: hasDiscovered ? [0.85, 1, 0.85] : 0.65,
-            scale: [1, 1.08, 1]
-          }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute inset-0"
+        {/* Layer 1: Emerald Cosmic Atmosphere Glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(0,200,83,0.85) 0%, rgba(0,143,76,0.7) 35%, rgba(0,77,43,0.5) 60%, rgba(11,31,22,0.95) 90%)',
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(0,200,83,0.7) 0%, rgba(0,143,76,0.5) 35%, rgba(0,77,43,0.3) 60%, transparent 85%)',
             filter: 'blur(35px)'
           }}
         />
 
-        {/* Layer 2: Radiant Center Halo Aura - Electric Green & Mint Glow */}
-        <motion.div
-          animate={{
-            scale: [0.95, 1.15, 0.95],
-            opacity: hasDiscovered ? [0.75, 0.95, 0.75] : 0.55
-          }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute w-[600px] h-[85vh] rounded-full pointer-events-none"
+        {/* Layer 2: Radiant Center Halo Aura */}
+        <div
+          className="absolute w-[450px] h-[80vh] rounded-full pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(0,255,102,0.75) 0%, rgba(0,200,83,0.55) 40%, rgba(0,107,60,0.25) 70%, transparent 95%)',
-            filter: 'blur(45px)'
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(0,255,102,0.65) 0%, rgba(0,200,83,0.45) 40%, rgba(0,107,60,0.2) 70%, transparent 95%)',
+            filter: 'blur(40px)'
           }}
         />
 
-        {/* Outer illuminated cloudy rift lip */}
-        <motion.div
-          initial={{ scaleX: 1.0, scaleY: 1.0, opacity: 0.85 }}
-          animate={{
-            scaleX: [1.0, 1.25, 1.45, 1.38, 1.42],
-            scaleY: [1.0, 1.02, 1.04, 1.01, 1.03],
-            borderRadius: [
-              '15% 75% 55% 35% / 70% 25% 65% 45%',
-              '25% 65% 60% 30% / 65% 35% 60% 50%',
-              '10% 80% 50% 40% / 75% 20% 70% 40%',
-              '18% 72% 56% 36% / 68% 28% 64% 46%'
-            ],
-            opacity: [0.85, 0.95, 1, 0.94, 0.98]
-          }}
-          transition={{
-            scaleX: { duration: 9.0, repeat: Infinity, ease: [0.16, 1, 0.3, 1] },
-            scaleY: { duration: 9.5, repeat: Infinity, ease: [0.16, 1, 0.3, 1] },
-            borderRadius: { duration: 10.0, repeat: Infinity, ease: "easeInOut" },
-            opacity: { duration: 5, repeat: Infinity, ease: "easeInOut" }
-          }}
-          className="absolute h-[120vh] w-64 sm:w-80 pointer-events-none"
+        {/* Outer illuminated soft rift lip */}
+        <div
+          className="absolute h-[110vh] w-48 sm:w-64 pointer-events-none rounded-[50%]"
           style={{
-            transformOrigin: "52% 48%",
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(185,255,208,0.85) 0%, rgba(124,255,178,0.6) 30%, rgba(0,200,83,0.3) 55%, transparent 75%)',
-            filter: 'blur(25px)'
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(185,255,208,0.75) 0%, rgba(124,255,178,0.5) 30%, rgba(0,200,83,0.25) 55%, transparent 75%)',
+            filter: 'blur(20px)'
           }}
         />
 
-        {/* Inner Void / Deep Spacetime Tear */}
-        <motion.div
-          initial={{ scaleX: 1.0, scaleY: 1.0 }}
-          animate={{
-            scaleX: [1.0, 1.3, 1.6, 1.5, 1.55],
-            scaleY: [1.0, 1.02, 1.03, 1.01, 1.02],
-            borderRadius: [
-              '20% 65% 40% 60% / 65% 35% 55% 45%',
-              '35% 55% 48% 52% / 58% 42% 50% 50%',
-              '15% 75% 38% 62% / 70% 30% 58% 42%',
-              '22% 68% 42% 58% / 64% 36% 54% 46%'
-            ]
-          }}
-          transition={{
-            scaleX: { duration: 9.5, repeat: Infinity, ease: [0.16, 1, 0.3, 1] },
-            scaleY: { duration: 10.0, repeat: Infinity, ease: [0.16, 1, 0.3, 1] },
-            borderRadius: { duration: 10.5, repeat: Infinity, ease: "easeInOut" }
-          }}
-          className="absolute h-[115vh] w-24 sm:w-36 pointer-events-none"
+        {/* Inner Spacetime Void Tear */}
+        <div
+          className="absolute h-[105vh] w-20 sm:w-28 pointer-events-none rounded-[45%]"
           style={{
-            transformOrigin: "52% 46%",
-            background: 'radial-gradient(ellipse at 50% 55%, #004D2B 0%, #006B3C 45%, #0B1F16 80%, transparent 100%)',
-            borderLeft: '4px solid #B9FFD0',
-            borderRight: '4px solid #7CFFB2',
-            borderTop: '3px solid #00FF66',
-            borderBottom: '4px solid #00C853',
-            boxShadow: '0 0 35px #7CFFB2, 0 0 70px #00FF66, 0 0 110px #00C853, inset 0 0 30px rgba(0,0,0,0.9)',
+            background: 'radial-gradient(ellipse at 50% 50%, #004D2B 0%, #006B3C 45%, #0B1F16 80%, transparent 100%)',
+            borderLeft: '3px solid #B9FFD0',
+            borderRight: '3px solid #7CFFB2',
+            borderTop: '2px solid #00FF66',
+            borderBottom: '3px solid #00C853',
+            boxShadow: '0 0 30px #7CFFB2, 0 0 60px #00FF66, 0 0 90px #00C853, inset 0 0 25px rgba(0,0,0,0.9)',
             filter: 'url(#lokiOrganicRiftEdge)'
           }}
         />
 
-        {/* Soft Point of Light Origin */}
-        <motion.div
-          animate={{
-            scale: [0.9, 1.35, 0.9],
-            opacity: [0.85, 1, 0.85]
-          }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[58%] w-12 h-12 rounded-full bg-[#B9FFD0] blur-sm shadow-[0_0_50px_#B9FFD0,0_0_100px_#00FF66,0_0_160px_#00C853] pointer-events-none"
+        {/* Center Point of Light Origin */}
+        <div
+          className="absolute top-[50%] w-10 h-10 rounded-full bg-[#B9FFD0] blur-sm shadow-[0_0_40px_#B9FFD0,0_0_80px_#00FF66,0_0_120px_#00C853] pointer-events-none"
         />
 
-        {/* Intense white-mint core tear spine */}
-        <motion.div
-          animate={{
-            width: `${whiteCoreWidth}px`,
-            opacity: [0.85, 1, 0.85],
-            boxShadow: energizedCount > 0 
-              ? `0 0 ${35 + energizedCount * 10}px #ffffff, 0 0 ${70 + energizedCount * 14}px #B9FFD0, 0 0 ${110 + energizedCount * 18}px #00FF66`
-              : '0 0 35px #B9FFD0, 0 0 70px #00FF66, 0 0 110px #00C853'
-          }}
-          transition={{
-            width: { duration: 2.0, ease: "easeOut" },
-            opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" }
-          }}
-          className="absolute h-[110vh] pointer-events-none rounded-[50%]"
+        {/* Calm White-Mint Core Tear Spine */}
+        <div
+          className="absolute h-[100vh] w-6 pointer-events-none rounded-[50%]"
           style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.9) 15%, #ffffff 50%, rgba(124,255,178,0.9) 85%, transparent 100%)',
-            filter: 'url(#lokiOrganicRiftEdge) blur(2.5px)'
+            background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.85) 15%, #ffffff 50%, rgba(124,255,178,0.85) 85%, transparent 100%)',
+            boxShadow: '0 0 35px #ffffff, 0 0 70px #B9FFD0, 0 0 100px #00FF66',
+            filter: 'url(#lokiOrganicRiftEdge) blur(1.5px)'
           }}
         />
       </motion.div>
