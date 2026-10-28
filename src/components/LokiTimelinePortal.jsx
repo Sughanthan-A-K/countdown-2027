@@ -36,9 +36,9 @@ function LokiLifePowerSpread({
       const prog = i / samples;
       const l = fromLen + prog * (toLen - fromLen);
       const pt = pathEl.getPointAtLength(l);
-      // Subtle micro-undulation for organic root texture
-      const wave = Math.sin(prog * 18 + seed) * (Math.sin(prog * Math.PI) * 2.8 * strokeScale);
-      const x = pt.x + wave * 0.5;
+      // Subtle micro-undulation for organic root texture (zero offset at start to eliminate any seam)
+      const wave = Math.sin(prog * 18 + seed) * (Math.sin(prog * Math.PI) * 2.5 * strokeScale);
+      const x = pt.x + wave * 0.4;
       const y = pt.y + wave;
       d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
     }
@@ -60,9 +60,6 @@ function LokiLifePowerSpread({
   // Natural biological root awakening - slow, elegant, atmospheric spreading across the timeline
   const duration = 7.5;
 
-  // Tap Point Coordinates
-  const tapPt = pathEl.getPointAtLength(tapLen);
-
   const renderRootVeinSystem = (pathMain, pathVein2, pathVein3, distance, key) => (
     <g key={key}>
       {/* 1. Bark Cracking Pre-glow: Emerald warmth glowing through cracked wood */}
@@ -72,6 +69,7 @@ function LokiLifePowerSpread({
         stroke="#004D2B"
         strokeWidth={13 * strokeScale}
         strokeLinecap="round"
+        strokeLinejoin="round"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 0.95 }}
         transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
@@ -85,6 +83,7 @@ function LokiLifePowerSpread({
         stroke="#008F4C"
         strokeWidth={9 * strokeScale}
         strokeLinecap="round"
+        strokeLinejoin="round"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 0.98 }}
         transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
@@ -96,6 +95,7 @@ function LokiLifePowerSpread({
         stroke="#00C853"
         strokeWidth={6.5 * strokeScale}
         strokeLinecap="round"
+        strokeLinejoin="round"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
@@ -108,6 +108,7 @@ function LokiLifePowerSpread({
         stroke="#00E676"
         strokeWidth={Math.max(1.2, 2.8 * strokeScale)}
         strokeLinecap="round"
+        strokeLinejoin="round"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: [0, 0.9, 0.85] }}
         transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
@@ -119,6 +120,7 @@ function LokiLifePowerSpread({
         stroke="#7CFFB2"
         strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
         strokeLinecap="round"
+        strokeLinejoin="round"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: [0, 1, 0.9] }}
         transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
@@ -133,6 +135,7 @@ function LokiLifePowerSpread({
           stroke="#39FF14"
           strokeWidth={4.5 * strokeScale}
           strokeLinecap="round"
+          strokeLinejoin="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
@@ -145,6 +148,7 @@ function LokiLifePowerSpread({
           stroke="#B9FFD0"
           strokeWidth={Math.max(1.2, 2.2 * strokeScale)}
           strokeLinecap="round"
+          strokeLinejoin="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
@@ -155,12 +159,13 @@ function LokiLifePowerSpread({
           d={pathMain}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(1.0, 1.6 * strokeScale)}
+          strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
           strokeLinecap="round"
+          strokeLinejoin="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-          style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.8))" }}
+          style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.7))" }}
         />
       </g>
     </g>
