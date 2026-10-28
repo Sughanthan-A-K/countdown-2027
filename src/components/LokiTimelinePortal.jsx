@@ -28,134 +28,152 @@ function LokiLifePowerSpread({
   // Pulse length: standard dynamic slug length
   const pulseLen = 220;
 
-  // Generate subpath helper
-  const getSubpath = (fromLen, toLen) => {
-    const samples = 35;
+  // Generate natural undulating tendril subpath with branching vein jitter
+  const getVeinSubpath = (fromLen, toLen, seed = 0) => {
+    const samples = 45;
     let d = "";
     for (let i = 0; i <= samples; i++) {
-      const l = fromLen + (i / samples) * (toLen - fromLen);
+      const prog = i / samples;
+      const l = fromLen + prog * (toLen - fromLen);
       const pt = pathEl.getPointAtLength(l);
-      d += (i === 0 ? `M ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}` : ` L ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`);
+      // Subtle micro-undulation for organic root texture
+      const wave = Math.sin(prog * 18 + seed) * (Math.sin(prog * Math.PI) * 2.8 * strokeScale);
+      const x = pt.x + wave * 0.5;
+      const y = pt.y + wave;
+      d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
     }
     return d;
   };
 
-  // Rightward path (from tap to end)
-  const rightD = getSubpath(tapLen, totalLen);
-  // Leftward path (from tap to start)
-  const leftD = getSubpath(tapLen, 0);
+  // Main spine paths
+  const rightD = getVeinSubpath(tapLen, totalLen, 1);
+  const leftD = getVeinSubpath(tapLen, 0, 2);
+
+  // Secondary fine capillary root veins that branch off and crack through the bark
+  const rightVeinB = getVeinSubpath(tapLen, totalLen, 3.5);
+  const leftVeinB = getVeinSubpath(tapLen, 0, 4.5);
+  const rightVeinC = getVeinSubpath(tapLen, totalLen, 6.0);
+  const leftVeinC = getVeinSubpath(tapLen, 0, 7.5);
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  // Natural organic life infusion travel duration: graceful awakening across the timeline
-  const duration = 5.0;
+  // Natural biological root cracking velocity
+  const duration = 4.8;
 
-  const renderTravelingPulse = (pathD, distance, key) => (
+  // Tap Point Coordinates
+  const tapPt = pathEl.getPointAtLength(tapLen);
+
+  const renderRootVeinSystem = (pathMain, pathVein2, pathVein3, distance, key) => (
     <g key={key}>
-      {/* 1. Pre-glow of life: Soft emerald warmth permeating into the black wood */}
+      {/* 1. Bark Cracking Pre-glow: Emerald warmth glowing through cracked wood */}
       <motion.path
-        d={pathD}
+        d={pathMain}
         fill="none"
         stroke="#004D2B"
-        strokeWidth={14 * strokeScale}
+        strokeWidth={13 * strokeScale}
         strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-        opacity={0.92}
-        style={{ filter: "blur(2.5px)" }}
-      />
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#006B3C"
-        strokeWidth={11 * strokeScale}
-        strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-        opacity={0.9}
-        style={{ filter: "blur(1.2px)" }}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.95 }}
+        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
+        style={{ filter: "blur(3px)" }}
       />
 
-      {/* 2. Living Flesh of the Vine: Saturated rich Loki emerald spreading continuously */}
+      {/* 2. Deep Green Bio-luminescent Vascular Flesh */}
       <motion.path
-        d={pathD}
+        d={pathMain}
         fill="none"
         stroke="#008F4C"
-        strokeWidth={12 * strokeScale}
+        strokeWidth={9 * strokeScale}
         strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-        opacity={0.95}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.98 }}
+        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
+        style={{ filter: "blur(1px)" }}
       />
       <motion.path
-        d={pathD}
+        d={pathMain}
         fill="none"
         stroke="#00C853"
-        strokeWidth={8.5 * strokeScale}
+        strokeWidth={6.5 * strokeScale}
         strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-        opacity={0.98}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
       />
 
-      {/* 3. The Core Living Vein & Spark Head: Spreading organically through the branch */}
+      {/* 3. Secondary Capillary Vein Roots (Naram bugal branching & weaving) */}
+      <motion.path
+        d={pathVein2}
+        fill="none"
+        stroke="#00E676"
+        strokeWidth={Math.max(1.2, 2.8 * strokeScale)}
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: [0, 0.9, 0.85] }}
+        transition={{ duration: duration * 1.05, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+        style={{ filter: "blur(0.6px)" }}
+      />
+      <motion.path
+        d={pathVein3}
+        fill="none"
+        stroke="#7CFFB2"
+        strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: [0, 1, 0.9] }}
+        transition={{ duration: duration * 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+      />
+
+      {/* 4. Electric Neon Core Vein - High voltage life pulse cracking through */}
       <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-        {/* Living Radiant Core Vein spreading along path */}
         <motion.path
-          d={pathD}
+          d={pathMain}
           fill="none"
           stroke="#39FF14"
-          strokeWidth={5 * strokeScale}
+          strokeWidth={4.2 * strokeScale}
           strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-          opacity={1}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 1 }}
+          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        {/* Mint Life Stream */}
+        {/* Mint Star Vein Filament */}
         <motion.path
-          d={pathD}
+          d={pathMain}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth={Math.max(1.2, 2.5 * strokeScale)}
+          strokeWidth={Math.max(1, 2.0 * strokeScale)}
           strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-          opacity={1}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 1 }}
+          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        {/* Center Starlight Spark Line */}
+        {/* Pure Starlight Crack Line */}
         <motion.path
-          d={pathD}
+          d={pathMain}
           fill="none"
           stroke="#ffffff"
           strokeWidth={Math.max(0.6, 1.0 * strokeScale)}
           strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-          opacity={0.8}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 0.95 }}
+          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        {/* 4. Leading Spark of Life (Uyir Munai): Glinting starlight tip that leads the spread! */}
+        {/* 5. Leading Root-Growth Tip: Piercing starlight root-head driving forward */}
         <motion.path
-          d={pathD}
+          d={pathMain}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(1.8, 3.2 * strokeScale)}
+          strokeWidth={Math.max(2.2, 3.8 * strokeScale)}
           strokeLinecap="round"
-          strokeDasharray={`28 ${distance + 400}`}
-          initial={{ strokeDashoffset: 28 }}
-          animate={{ strokeDashoffset: -(distance + 50) }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          strokeDasharray={`35 ${distance + 400}`}
+          initial={{ strokeDashoffset: 35 }}
+          animate={{ strokeDashoffset: -(distance + 60) }}
+          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
           opacity={1}
-          style={{ filter: "drop-shadow(0 0 6px #B9FFD0)" }}
+          style={{ filter: "drop-shadow(0 0 8px #39FF14)" }}
         />
       </g>
     </g>
@@ -163,9 +181,37 @@ function LokiLifePowerSpread({
 
   return (
     <g>
-      {/* Symmetrical Left and Right Pulses: Life spreading organically from tap point across the branch */}
-      {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
-      {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
+      {/* Tap Point Origin Awakening: Loki's Magic Hand Flare that ignites the root spread */}
+      {tapPt && (
+        <g>
+          {/* Outer magical aurora burst */}
+          <motion.circle
+            cx={tapPt.x}
+            cy={tapPt.y}
+            r={30 * strokeScale}
+            fill="radial-gradient(circle, #39FF14 0%, #008F4C 50%, transparent 75%)"
+            initial={{ r: 4, opacity: 1 }}
+            animate={{ r: 42 * strokeScale, opacity: 0 }}
+            transition={{ duration: 1.4, ease: "easeOut" }}
+            style={{ filter: "blur(6px)" }}
+          />
+          {/* Intense core spark */}
+          <motion.circle
+            cx={tapPt.x}
+            cy={tapPt.y}
+            r={8 * strokeScale}
+            fill="#ffffff"
+            initial={{ r: 2, opacity: 1 }}
+            animate={{ r: 12 * strokeScale, opacity: [1, 0.8, 0] }}
+            transition={{ duration: 1.0, ease: "easeOut" }}
+            style={{ filter: "drop-shadow(0 0 10px #7CFFB2)" }}
+          />
+        </g>
+      )}
+
+      {/* Symmetrical Bi-Directional Root Cracking: Right and Left Veins spreading */}
+      {renderRootVeinSystem(rightD, rightVeinB, rightVeinC, rightDistance, "roots-right")}
+      {renderRootVeinSystem(leftD, leftVeinB, leftVeinC, leftDistance, "roots-left")}
 
       {/* Awakened Breathing Life: Once infused, the branch gently breathes and pulses with living energy */}
       {allEnergizedStage && (
