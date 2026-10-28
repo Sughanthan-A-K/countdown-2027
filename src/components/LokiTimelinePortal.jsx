@@ -1236,7 +1236,12 @@ export default function LokiTimelinePortal() {
           {/* ----------------------------------------------------------- */}
           {/* DEPTH LAYER 4: Branch 3 (Lower timeline vine)               */}
           {/* ----------------------------------------------------------- */}
-          <motion.g>
+          <motion.g
+            initial={{ scaleX: 0.25, scaleY: 0.15, opacity: 0.4 }}
+            animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
+            transition={{ duration: 4.5, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transformOrigin: "500px 500px" }}
+          >
             <DraggableBranch
               id="branch-3"
               pathData={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
@@ -1291,7 +1296,12 @@ export default function LokiTimelinePortal() {
           {/* ----------------------------------------------------------- */}
           {/* DEPTH LAYER 3: Branch 5 (Mid-lower flowing timeline vine)   */}
           {/* ----------------------------------------------------------- */}
-          <motion.g>
+          <motion.g
+            initial={{ scaleX: 0.25, scaleY: 0.15, opacity: 0.4 }}
+            animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
+            transition={{ duration: 4.5, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transformOrigin: "500px 500px" }}
+          >
             <DraggableBranch
               id="branch-5"
               pathData={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
@@ -1346,7 +1356,12 @@ export default function LokiTimelinePortal() {
           {/* ----------------------------------------------------------- */}
           {/* DEPTH LAYER 2: Branch 2 (Upper timeline vine)               */}
           {/* ----------------------------------------------------------- */}
-          <motion.g>
+          <motion.g
+            initial={{ scaleX: 0.25, scaleY: 0.15, opacity: 0.4 }}
+            animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
+            transition={{ duration: 4.5, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transformOrigin: "500px 500px" }}
+          >
             <DraggableBranch
               id="branch-2"
               pathData={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
