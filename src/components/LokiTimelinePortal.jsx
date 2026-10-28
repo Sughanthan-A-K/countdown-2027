@@ -324,6 +324,9 @@ export default function LokiTimelinePortal() {
   // Replay key to force full fresh mount reset on Shift + R
   const [replayKey, setReplayKey] = useState(0);
 
+  // Portal opening stage: 0 = hidden, 1 = thin hairline vertical crack, 2 = slowly opening organic portal
+  const [portalStage, setPortalStage] = useState(0);
+
   // Dev Shortcut: Press "Shift + R" to replay/reset portal scene instantly without tapping 3 times!
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -334,6 +337,7 @@ export default function LokiTimelinePortal() {
         setLastTappedBranchId(null);
         setVoyageProgress(0);
         setHasDiscovered(false);
+        setPortalStage(0);
         setReplayKey(k => k + 1);
       }
     };
@@ -366,6 +370,12 @@ export default function LokiTimelinePortal() {
         { id: 'branch-5', tapRatio: 0.92, delay: 2000 },
         { id: 'branch-3', tapRatio: 0.95, delay: 3000 },
         { id: 'branch-4', tapRatio: 0.08, delay: 4000 },
+        // Cosmic filaments also energize sequentially
+        ...Array.from({ length: 16 }).map((_, idx) => ({
+          id: `filament-${idx}`,
+          tapRatio: idx % 2 === 0 ? 0.05 : 0.95,
+          delay: 4500 + idx * 300
+        }))
       ];
 
       cascadeConfig.forEach(item => {
@@ -382,6 +392,17 @@ export default function LokiTimelinePortal() {
           }, item.delay);
         }
       });
+
+      // Once venom has spread across almost all branches (~7.5s):
+      // Stage 1: A subtle thin vertical hairline tear appears in the center!
+      setTimeout(() => {
+        setPortalStage(1);
+      }, 7500);
+
+      // Stage 2 (~9.5s): Slowly, organically cracks open into a real portal tear!
+      setTimeout(() => {
+        setPortalStage(2);
+      }, 9500);
 
       return updated;
     });
@@ -448,24 +469,34 @@ export default function LokiTimelinePortal() {
 
       {/* ========================================================================= */}
       {/* 2. DISTANT DEEP SPACE BACKGROUND: THE SACRED PORTAL (THE LOOM)
-          - Calm, majestic cosmic tear (Clean portal look without jumping/pulsing distortions)
+          - Initially completely hidden.
+          - Once venom has spread across all branches, center-la first oru thin vertical hairline
+            tear maathiri start aagi, apdiye very slowly, realistically portal crack open aagum!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ opacity: 0 }}
-        animate={hasDiscovered ? {
-          opacity: 0.95
+        animate={portalStage > 0 ? {
+          opacity: 1
         } : {
           opacity: 0
         }}
         transition={{
-          duration: 2.5,
+          duration: 2.0,
           ease: "easeOut"
         }}
         style={{ transformOrigin: "50% 50%" }}
       >
-        {/* Layer 1: Emerald Cosmic Atmosphere Glow */}
-        <div
+        {/* Layer 1: Emerald Cosmic Atmosphere Glow - Expands slowly when portal opens */}
+        <motion.div
+          animate={portalStage === 2 ? {
+            opacity: 0.85,
+            scale: 1.05
+          } : {
+            opacity: portalStage === 1 ? 0.35 : 0,
+            scale: 0.7
+          }}
+          transition={{ duration: 6.0, ease: "easeOut" }}
           className="absolute inset-0 pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse at 50% 50%, rgba(0,200,83,0.7) 0%, rgba(0,143,76,0.5) 35%, rgba(0,77,43,0.3) 60%, transparent 85%)',
@@ -474,7 +505,15 @@ export default function LokiTimelinePortal() {
         />
 
         {/* Layer 2: Radiant Center Halo Aura */}
-        <div
+        <motion.div
+          animate={portalStage === 2 ? {
+            opacity: 0.75,
+            scale: 1.0
+          } : {
+            opacity: portalStage === 1 ? 0.4 : 0,
+            scale: 0.5
+          }}
+          transition={{ duration: 5.5, ease: "easeOut" }}
           className="absolute w-[450px] h-[80vh] rounded-full pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse at 50% 50%, rgba(0,255,102,0.65) 0%, rgba(0,200,83,0.45) 40%, rgba(0,107,60,0.2) 70%, transparent 95%)',
@@ -482,19 +521,37 @@ export default function LokiTimelinePortal() {
           }}
         />
 
-        {/* Outer illuminated soft rift lip */}
-        <div
+        {/* Outer illuminated soft rift lip - Starts as thin hairline vertical crack, then widens slowly */}
+        <motion.div
+          animate={portalStage === 2 ? {
+            scaleX: 1.0,
+            opacity: 0.95
+          } : {
+            scaleX: 0.05,
+            opacity: portalStage === 1 ? 0.8 : 0
+          }}
+          transition={{ duration: 7.0, ease: [0.16, 1, 0.3, 1] }}
           className="absolute h-[110vh] w-48 sm:w-64 pointer-events-none rounded-[50%]"
           style={{
+            transformOrigin: "50% 50%",
             background: 'radial-gradient(ellipse at 50% 50%, rgba(185,255,208,0.75) 0%, rgba(124,255,178,0.5) 30%, rgba(0,200,83,0.25) 55%, transparent 75%)',
             filter: 'blur(20px)'
           }}
         />
 
-        {/* Inner Spacetime Void Tear */}
-        <div
+        {/* Inner Spacetime Void Tear - Organic jagged crack opening slowly */}
+        <motion.div
+          animate={portalStage === 2 ? {
+            scaleX: 1.0,
+            opacity: 1
+          } : {
+            scaleX: 0.04,
+            opacity: portalStage === 1 ? 0.9 : 0
+          }}
+          transition={{ duration: 6.5, ease: [0.16, 1, 0.3, 1] }}
           className="absolute h-[105vh] w-20 sm:w-28 pointer-events-none rounded-[45%]"
           style={{
+            transformOrigin: "50% 50%",
             background: 'radial-gradient(ellipse at 50% 50%, #004D2B 0%, #006B3C 45%, #0B1F16 80%, transparent 100%)',
             borderLeft: '3px solid #B9FFD0',
             borderRight: '3px solid #7CFFB2',
@@ -506,17 +563,33 @@ export default function LokiTimelinePortal() {
         />
 
         {/* Center Point of Light Origin */}
-        <div
+        <motion.div
+          animate={portalStage > 0 ? {
+            scale: [0.9, 1.25, 0.9],
+            opacity: 1
+          } : {
+            scale: 0,
+            opacity: 0
+          }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[50%] w-10 h-10 rounded-full bg-[#B9FFD0] blur-sm shadow-[0_0_40px_#B9FFD0,0_0_80px_#00FF66,0_0_120px_#00C853] pointer-events-none"
         />
 
-        {/* Calm White-Mint Core Tear Spine */}
-        <div
-          className="absolute h-[100vh] w-6 pointer-events-none rounded-[50%]"
+        {/* Calm White-Mint Core Tear Spine - The initial thin vertical hairline crack */}
+        <motion.div
+          animate={portalStage === 2 ? {
+            width: "16px",
+            opacity: 1
+          } : {
+            width: portalStage === 1 ? "2.5px" : "0px",
+            opacity: portalStage === 1 ? 0.95 : 0
+          }}
+          transition={{ duration: 5.0, ease: "easeOut" }}
+          className="absolute h-[100vh] pointer-events-none rounded-[50%]"
           style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.85) 15%, #ffffff 50%, rgba(124,255,178,0.85) 85%, transparent 100%)',
-            boxShadow: '0 0 35px #ffffff, 0 0 70px #B9FFD0, 0 0 100px #00FF66',
-            filter: 'url(#lokiOrganicRiftEdge) blur(1.5px)'
+            background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.95) 15%, #ffffff 50%, rgba(124,255,178,0.95) 85%, transparent 100%)',
+            boxShadow: '0 0 25px #ffffff, 0 0 50px #B9FFD0, 0 0 80px #00FF66',
+            filter: 'url(#lokiOrganicRiftEdge) blur(1px)'
           }}
         />
       </motion.div>
@@ -573,59 +646,105 @@ export default function LokiTimelinePortal() {
 
         {/* ------------------------------------------------------------- */}
         {/* MULTIVERSE TAPESTRY FILAMENTS (LOKI YGGDRASIL WORLD TREE)     */}
-        {/* Rendered at deepest layer right in front of the distant portal */}
-        {/* Stable organic breathing (NO camera zoom/fly)                 */}
+        {/* Rendered at deepest layer, pure dark black silhouette branches */}
+        {/* Awakens with venom pulse proportional to its thickness        */}
         {/* ------------------------------------------------------------- */}
         <g 
           style={{ 
             opacity: hasDiscovered ? 1 : 0, 
-            transition: 'opacity 3.0s ease-out 0.8s',
+            transition: 'opacity 2.5s ease-out 0.5s',
             pointerEvents: 'none'
           }}
         >
-          {cosmicFilaments.map((f, i) => (
-            <motion.g
-              key={`filament-${i}`}
-              animate={{
-                y: [i % 2 === 0 ? 5 : -5, i % 2 === 0 ? -5 : 5, i % 2 === 0 ? 5 : -5],
-                opacity: [f.opacity, f.opacity * 1.35, f.opacity]
-              }}
-              transition={{
-                duration: f.windDur,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              {/* Soft dark shadow line */}
-              <path
-                d={f.d}
-                fill="none"
-                stroke="#000805"
-                strokeWidth={f.width * 2.8}
-                strokeLinecap="round"
-                opacity={0.7}
-              />
-              {/* Outer timeline glowing filament */}
-              <path
-                d={f.d}
-                fill="none"
-                stroke={f.color}
-                strokeWidth={f.width * 1.8}
-                strokeLinecap="round"
-                opacity={0.6}
-                style={{ filter: "blur(1.5px)" }}
-              />
-              {/* Core bright neon timeline filament */}
-              <path
-                d={f.d}
-                fill="none"
-                stroke="#ffffff"
-                strokeWidth={Math.max(0.6, f.width * 0.7)}
-                strokeLinecap="round"
-                opacity={0.85}
-              />
-            </motion.g>
-          ))}
+          {cosmicFilaments.map((f, i) => {
+            const filamentId = `filament-${i}`;
+            const isEnergized = energizedBranches[filamentId]?.active;
+            return (
+              <motion.g
+                key={filamentId}
+                animate={{
+                  y: [i % 2 === 0 ? 5 : -5, i % 2 === 0 ? -5 : 5, i % 2 === 0 ? 5 : -5]
+                }}
+                transition={{
+                  duration: f.windDur,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                {/* 1. Pure dark silhouette body */}
+                <path
+                  d={f.d}
+                  fill="none"
+                  stroke="#000000"
+                  strokeWidth={f.width * 2.8}
+                  strokeLinecap="round"
+                  opacity={0.92}
+                />
+                <path
+                  d={f.d}
+                  fill="none"
+                  stroke="#050a08"
+                  strokeWidth={f.width * 1.8}
+                  strokeLinecap="round"
+                />
+                <path
+                  d={f.d}
+                  fill="none"
+                  stroke="#062d22"
+                  strokeWidth={Math.max(0.6, f.width * 0.8)}
+                  strokeLinecap="round"
+                  opacity={0.6}
+                />
+
+                {/* 2. Proportional Venom Life Pulse when energized */}
+                {isEnergized && (
+                  <g style={{ filter: "url(#venomPulseDistort)" }}>
+                    <motion.path
+                      d={f.d}
+                      fill="none"
+                      stroke="#008F4C"
+                      strokeWidth={f.width * 2.5}
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 0.8 }}
+                      animate={{ pathLength: 1, opacity: 0.8 }}
+                      transition={{ duration: 5.5, ease: "linear" }}
+                      style={{ filter: "blur(1.5px)" }}
+                    />
+                    <motion.path
+                      d={f.d}
+                      fill="none"
+                      stroke="#00C853"
+                      strokeWidth={f.width * 1.6}
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 0.9 }}
+                      animate={{ pathLength: 1, opacity: 0.9 }}
+                      transition={{ duration: 5.5, ease: "linear" }}
+                    />
+                    <motion.path
+                      d={f.d}
+                      fill="none"
+                      stroke="#39FF14"
+                      strokeWidth={f.width * 0.9}
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 1 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ duration: 5.5, ease: "linear" }}
+                    />
+                    <motion.path
+                      d={f.d}
+                      fill="none"
+                      stroke="#ffffff"
+                      strokeWidth={Math.max(0.5, f.width * 0.4)}
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 1 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ duration: 5.5, ease: "linear" }}
+                    />
+                  </g>
+                )}
+              </motion.g>
+            );
+          })}
         </g>
 
         {/* ------------------------------------------------------------- */}
