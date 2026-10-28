@@ -53,7 +53,7 @@ function LokiLifePowerSpread({
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Behind the pulse: Awakened living tubular body inside branch */}
+      {/* 1. Behind the pulse: Awakened living body inside branch */}
       <motion.path
         d={pathD}
         fill="none"
@@ -77,22 +77,22 @@ function LokiLifePowerSpread({
         opacity={0.85}
       />
 
-      {/* 2. The Traveling Cylindrical Pulse - Smooth 3D Tubular Contour Shading */}
-      <g>
-        {/* Layer A: Ambient Cylindrical Aura / Soft outer curvature shadow */}
+      {/* 2. The Traveling Pulse - 20% subtle cylindrical volumetric feel with rich organic venom blend */}
+      <g style={{ filter: "url(#venomPulseDistort)" }}>
+        {/* Layer A: Full edge-to-edge venom glow canopy */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#008F4C"
           strokeWidth={16 * strokeScale}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0.85 }}
-          animate={{ pathLength: 1, opacity: 0.85 }}
+          initial={{ pathLength: 0, opacity: 0.9 }}
+          animate={{ pathLength: 1, opacity: 0.9 }}
           transition={{ duration, ease: "linear" }}
-          style={{ filter: "blur(2px)" }}
+          style={{ filter: "blur(2.5px)" }}
         />
 
-        {/* Layer B: Base Cylindrical Body - Deep vibrant Loki Emerald */}
+        {/* Layer B: Base Deep Loki Green Venom Body */}
         <motion.path
           d={pathD}
           fill="none"
@@ -104,7 +104,7 @@ function LokiLifePowerSpread({
           transition={{ duration, ease: "linear" }}
         />
 
-        {/* Layer C: Raised Cylinder Mid-Tone - Neon green tubular body */}
+        {/* Layer C: Neon Green Radiant Core */}
         <motion.path
           d={pathD}
           fill="none"
@@ -116,7 +116,7 @@ function LokiLifePowerSpread({
           transition={{ duration, ease: "linear" }}
         />
 
-        {/* Layer D: Cylindrical Specular Crown - Slender core highlight */}
+        {/* Layer D: Mint Green Center Stream */}
         <motion.path
           d={pathD}
           fill="none"
@@ -128,16 +128,17 @@ function LokiLifePowerSpread({
           transition={{ duration, ease: "linear" }}
         />
 
-        {/* Layer E: 3D Specular Center Reflection Line (Gives authentic glassy cylindrical reflection) */}
+        {/* Layer E: Subtle 20% soft center highlight (natural, not rigid pipe) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
+          strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0.9 }}
-          animate={{ pathLength: 1, opacity: 0.9 }}
+          initial={{ pathLength: 0, opacity: 0.45 }}
+          animate={{ pathLength: 1, opacity: 0.45 }}
           transition={{ duration, ease: "linear" }}
+          style={{ filter: "blur(0.5px)" }}
         />
       </g>
     </g>
@@ -149,10 +150,9 @@ function LokiLifePowerSpread({
       {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
       {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
 
-      {/* Full Living Cylindrical Pulsation when branch awakens */}
+      {/* Full Living Pulsation when branch awakens (Natural with subtle 20% depth) */}
       {allEnergizedStage && (
-        <g>
-          {/* Outer tubular aura */}
+        <g style={{ filter: "url(#venomPulseDistort)" }}>
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
@@ -160,11 +160,10 @@ function LokiLifePowerSpread({
             strokeWidth={16 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.85, 0.75] }}
+            animate={{ opacity: [0, 0.9, 0.8] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
             style={{ filter: "blur(2.5px)" }}
           />
-          {/* Cylindrical outer curvature */}
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
@@ -172,10 +171,9 @@ function LokiLifePowerSpread({
             strokeWidth={12 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.95, 0.9] }}
+            animate={{ opacity: [0, 1, 0.92] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
           />
-          {/* Cylindrical mid curvature */}
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
@@ -186,7 +184,6 @@ function LokiLifePowerSpread({
             animate={{ opacity: [0, 1, 0.95] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
           />
-          {/* Specular crest */}
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
@@ -197,16 +194,16 @@ function LokiLifePowerSpread({
             animate={{ opacity: [0, 1, 0.98] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
           />
-          {/* Specular center reflection line */}
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#ffffff"
-            strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
+            strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.9, 0.85] }}
+            animate={{ opacity: [0, 0.5, 0.4] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
+            style={{ filter: "blur(0.5px)" }}
           />
         </g>
       )}
@@ -504,10 +501,10 @@ export default function LokiTimelinePortal() {
             <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#010f0b" floodOpacity="0.9" />
           </filter>
 
-          {/* Venom tendril organic distortion for the traveling life pulse */}
+          {/* Subtle Organic Venom filter: 20% organic wave + 80% natural cylindrical stream */}
           <filter id="venomPulseDistort" x="-20%" y="-40%" width="140%" height="180%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04 0.12" numOctaves="3" result="venomNoise" />
-            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="9" xChannelSelector="R" yChannelSelector="G" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.025 0.08" numOctaves="2" result="venomNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="2.5" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
       </svg>
@@ -745,9 +742,9 @@ export default function LokiTimelinePortal() {
                   opacity={0.5}
                 />
 
-                {/* 2. Cylindrical Tubular Energy Flow covering edges */}
+                {/* 2. Natural organic flow with subtle 20% cylindrical depth */}
                 {isEnergized && (
-                  <g>
+                  <g style={{ filter: "url(#venomPulseDistort)" }}>
                     {/* Outer curvature aura */}
                     <motion.path
                       d={f.d}
@@ -760,7 +757,7 @@ export default function LokiTimelinePortal() {
                       transition={{ duration: 5.5, ease: "linear" }}
                       style={{ filter: "blur(1.5px)" }}
                     />
-                    {/* Cylindrical base body */}
+                    {/* Organic base venom body */}
                     <motion.path
                       d={f.d}
                       fill="none"
@@ -771,7 +768,7 @@ export default function LokiTimelinePortal() {
                       animate={{ pathLength: 1, opacity: 0.95 }}
                       transition={{ duration: 5.5, ease: "linear" }}
                     />
-                    {/* Cylindrical mid-tone highlight */}
+                    {/* Mid-tone vibrant core */}
                     <motion.path
                       d={f.d}
                       fill="none"
@@ -782,15 +779,15 @@ export default function LokiTimelinePortal() {
                       animate={{ pathLength: 1, opacity: 1 }}
                       transition={{ duration: 5.5, ease: "linear" }}
                     />
-                    {/* Specular crest reflection */}
+                    {/* Subtle soft gleam reflection (not overly sharp) */}
                     <motion.path
                       d={f.d}
                       fill="none"
                       stroke="#ffffff"
-                      strokeWidth={Math.max(0.6, f.width * 0.6)}
+                      strokeWidth={Math.max(0.5, f.width * 0.5)}
                       strokeLinecap="round"
-                      initial={{ pathLength: 0, opacity: 1 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
+                      initial={{ pathLength: 0, opacity: 0.5 }}
+                      animate={{ pathLength: 1, opacity: 0.5 }}
                       transition={{ duration: 5.5, ease: "linear" }}
                     />
                   </g>
