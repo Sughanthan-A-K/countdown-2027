@@ -47,71 +47,36 @@ function LokiLifePowerSpread({
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  // Natural organic life infusion travel duration: slow, graceful awakening across the timeline
-  const duration = 6.0;
-
-  // Crawling slug length for the living venom wave head
-  const headLen = Math.max(160, Math.min(300, totalLen * 0.3));
+  // Deep, unified organic life awakening duration: smooth continuous seamless growth
+  const duration = 6.5;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Behind the venom wave: Awakened living body that stays alive once infused */}
+      {/* 1. Deep Sub-surface Emerald Glow permeating the dead wood */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#004D2B"
-        strokeWidth={13 * strokeScale}
+        strokeWidth={14 * strokeScale}
         strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
-        opacity={0.88}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.95 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        style={{ filter: "blur(2.5px)" }}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#006B3C"
-        strokeWidth={9 * strokeScale}
+        strokeWidth={11 * strokeScale}
         strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
-        opacity={0.85}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.92 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        style={{ filter: "blur(1.2px)" }}
       />
 
-      {/* 2. Crawling Living Venom Organism (Venom Thaan Uyir) - Organic Fluid Head creeping & spreading */}
-      <g style={{ filter: "url(#livingVenomFluidDistort)" }}>
-        {/* Venom Aura Canopy creeping along branch */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#008F4C"
-          strokeWidth={16 * strokeScale}
-          strokeLinecap="round"
-          strokeDasharray={`${headLen} ${distance + 600}`}
-          initial={{ strokeDashoffset: headLen }}
-          animate={{ strokeDashoffset: -(distance + 120) }}
-          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
-          opacity={0.9}
-          style={{ filter: "blur(2.5px)" }}
-        />
-
-        {/* Dense Living Venom Slime/Body */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#00C853"
-          strokeWidth={11.5 * strokeScale}
-          strokeLinecap="round"
-          strokeDasharray={`${headLen - 15} ${distance + 600}`}
-          initial={{ strokeDashoffset: headLen - 15 }}
-          animate={{ strokeDashoffset: -(distance + 120) }}
-          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
-          opacity={0.95}
-        />
-      </g>
-
-      {/* 3. Awakened Living Body trailing right behind the crawl */}
+      {/* 2. Unified Living Flesh of the Vine: Perfectly integrated with the branch */}
       <motion.path
         d={pathD}
         fill="none"
@@ -119,8 +84,8 @@ function LokiLifePowerSpread({
         strokeWidth={12 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.9 }}
-        transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+        animate={{ pathLength: 1, opacity: 0.96 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
       />
       <motion.path
         d={pathD}
@@ -129,76 +94,46 @@ function LokiLifePowerSpread({
         strokeWidth={8.5 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.95 }}
-        transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+        animate={{ pathLength: 1, opacity: 0.98 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
       />
 
-      {/* 4. The Sacred Electric Core of Life: Traveling venom pulse & living inner pulse */}
+      {/* 3. The Living Electric Mint Vein (Core Life Pulse) - Natural organic ripple inside */}
       <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-        {/* Traveling high-energy venom core head */}
+        {/* Living Radiant Core Vein */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
-          strokeWidth={6.5 * strokeScale}
-          strokeLinecap="round"
-          strokeDasharray={`${headLen - 30} ${distance + 600}`}
-          initial={{ strokeDashoffset: headLen - 30 }}
-          animate={{ strokeDashoffset: -(distance + 120) }}
-          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
-          opacity={1}
-        />
-
-        {/* Awakened living continuous vein behind head */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#39FF14"
-          strokeWidth={4.5 * strokeScale}
+          strokeWidth={5 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.95 }}
-          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+          animate={{ pathLength: 1, opacity: 1 }}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         />
 
-        {/* Bright Mint Living Spark Head */}
+        {/* Mint Life Stream */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth={Math.max(1.5, 3 * strokeScale)}
-          strokeLinecap="round"
-          strokeDasharray={`${headLen - 45} ${distance + 600}`}
-          initial={{ strokeDashoffset: headLen - 45 }}
-          animate={{ strokeDashoffset: -(distance + 120) }}
-          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
-          opacity={1}
-        />
-
-        {/* Continuous mint vein */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#B9FFD0"
-          strokeWidth={Math.max(1, 2 * strokeScale)}
+          strokeWidth={Math.max(1.2, 2.5 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.9 }}
-          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+          animate={{ pathLength: 1, opacity: 1 }}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         />
 
-        {/* Pure White Spark Point */}
+        {/* Subtle Starlight Gleam Thread */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
+          strokeWidth={Math.max(0.6, 1.0 * strokeScale)}
           strokeLinecap="round"
-          strokeDasharray={`40 ${distance + 600}`}
-          initial={{ strokeDashoffset: 40 }}
-          animate={{ strokeDashoffset: -(distance + 100) }}
-          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
-          opacity={0.9}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 0.7 }}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         />
       </g>
     </g>
