@@ -502,10 +502,10 @@ export default function LokiTimelinePortal() {
             <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#010f0b" floodOpacity="0.9" />
           </filter>
 
-          {/* Subtle Organic Venom filter for inner core only: 20% organic fluid ripple */}
+          {/* Organic Venom filter for inner core: 40% organic fluid wave ripple */}
           <filter id="venomInnerCoreDistort" x="-20%" y="-40%" width="140%" height="180%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04 0.14" numOctaves="2" result="venomNoise" />
-            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="3.2" xChannelSelector="R" yChannelSelector="G" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.035 0.12" numOctaves="3" result="venomNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="5.5" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
       </svg>
