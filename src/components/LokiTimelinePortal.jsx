@@ -449,27 +449,28 @@ export default function LokiTimelinePortal() {
 
       // Normal Organic Tree Branching Propagation:
       // Branch 1 uyir perum pothu, adhutha branches ku uyir thodarndhu slow & calm-ah paravudhu
+      // Early ripple: Branch 1 green aagi mudiyuradhuku munnadiye Branch 2 & 5 ignite aagudhu (no awkward pause!)
       const cascadeConfig = [
-        { id: 'branch-2', tapRatio: 0.02, delay: 3800 },
-        { id: 'branch-5', tapRatio: 0.98, delay: 5200 },
-        { id: 'branch-3', tapRatio: 0.02, delay: 7500 },
-        { id: 'filament-1', tapRatio: 0.02, delay: 8200 },
-        { id: 'filament-6', tapRatio: 0.98, delay: 9000 },
-        { id: 'branch-4', tapRatio: 0.98, delay: 10800 },
-        { id: 'filament-3', tapRatio: 0.02, delay: 11500 },
-        { id: 'filament-9', tapRatio: 0.98, delay: 12200 },
-        { id: 'filament-0', tapRatio: 0.02, delay: 13000 },
-        { id: 'filament-4', tapRatio: 0.98, delay: 13800 },
-        { id: 'filament-2', tapRatio: 0.02, delay: 15200 },
-        { id: 'filament-5', tapRatio: 0.98, delay: 16000 },
-        { id: 'filament-7', tapRatio: 0.02, delay: 16800 },
-        { id: 'filament-8', tapRatio: 0.98, delay: 17600 },
-        { id: 'filament-10', tapRatio: 0.02, delay: 18400 },
-        { id: 'filament-11', tapRatio: 0.98, delay: 19200 },
-        { id: 'filament-12', tapRatio: 0.02, delay: 20000 },
-        { id: 'filament-13', tapRatio: 0.98, delay: 20800 },
-        { id: 'filament-14', tapRatio: 0.02, delay: 21600 },
-        { id: 'filament-15', tapRatio: 0.98, delay: 22400 },
+        { id: 'branch-2', tapRatio: 0.02, delay: 1800 },
+        { id: 'branch-5', tapRatio: 0.98, delay: 2800 },
+        { id: 'branch-3', tapRatio: 0.02, delay: 4200 },
+        { id: 'filament-1', tapRatio: 0.02, delay: 4800 },
+        { id: 'filament-6', tapRatio: 0.98, delay: 5400 },
+        { id: 'branch-4', tapRatio: 0.98, delay: 6200 },
+        { id: 'filament-3', tapRatio: 0.02, delay: 6800 },
+        { id: 'filament-9', tapRatio: 0.98, delay: 7400 },
+        { id: 'filament-0', tapRatio: 0.02, delay: 8000 },
+        { id: 'filament-4', tapRatio: 0.98, delay: 8600 },
+        { id: 'filament-2', tapRatio: 0.02, delay: 9200 },
+        { id: 'filament-5', tapRatio: 0.98, delay: 9800 },
+        { id: 'filament-7', tapRatio: 0.02, delay: 10400 },
+        { id: 'filament-8', tapRatio: 0.98, delay: 11000 },
+        { id: 'filament-10', tapRatio: 0.02, delay: 11600 },
+        { id: 'filament-11', tapRatio: 0.98, delay: 12200 },
+        { id: 'filament-12', tapRatio: 0.02, delay: 12800 },
+        { id: 'filament-13', tapRatio: 0.98, delay: 13400 },
+        { id: 'filament-14', tapRatio: 0.02, delay: 14000 },
+        { id: 'filament-15', tapRatio: 0.98, delay: 14600 },
       ];
 
       cascadeConfig.forEach(item => {
@@ -487,26 +488,30 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // Once life has fully spread across the whole cosmic tree (~23s):
+      // Once life has fully spread across the whole cosmic tree (~15s):
       // Stage 1: A subtle thin vertical hairline tear appears in the center gently!
       setTimeout(() => {
         setPortalStage(1);
-      }, 23000);
+      }, 15000);
 
-      // Stage 2 (~26s): Slowly, organically cracks open into a lean slender spacetime portal!
+      // Stage 2 (~17.5s): Slowly, organically cracks open into a lean slender spacetime portal!
       setTimeout(() => {
         setPortalStage(2);
-      }, 26000);
+      }, 17500);
 
       return updated;
     });
   };
 
   // 2nd Interaction: When portal has opened (portalStage >= 2), user simply taps / holds anywhere!
-  // 1. All branches instantly stretch & converge into user's hand with elastic light-speed tension.
-  // 2. Portal grows massive to engulf the full screen (`scale: 40`), pulling user & branches into its vortex.
-  // 3. Multiverse Bifrost / Heimdall warp tunnel voyage with spinning galaxies & timeline filaments (~3.5s).
-  // 4. User holds the branch bunch all the way into the tunnel until a sudden bright flash cuts to BLACK!
+  // User hold panni irukkumbothu:
+  // 1. Initial 2 to 3 seconds: Portal angaye distant space-la irukkum.
+  //    All branches nambha kaiya நோக்கி power-ah tension-oda izhukkappadum (gathering branches in hand).
+  // 2. Apdiye branches-ah nambha izhuthukitte irukkum pothu, nambha portal-kulla enter aaguroam!
+  //    Portal zoom-aagaama, nambha camera space-la portal kitta travel aagi pora perspective depth.
+  // 3. Deep Heimdall / Bifrost wormhole voyage (~3.5s): Multiverse cosmic dust, swirling space nebula,
+  //    timeline rays. User hold panna branch bunch continue aagi ulla travel aagudhu!
+  // 4. Climax: Sudden blinding destination flash cuts to Pitch Black!
   const getSvgCoordinates = (e) => {
     const svg = e.currentTarget.closest('svg') || document.querySelector('svg#loki-timeline-svg');
     if (!svg) return { x: 500, y: 500 };
@@ -523,23 +528,23 @@ export default function LokiTimelinePortal() {
     setGripPoint(coords);
     setIsGatheringHand(true);
 
-    // Sequence 1: Elastic Light-Speed Snap & Portal expands to full screen size (0s -> 1.5s)
+    // Sequence 1: 0s to 2.5s -> Portal remains in place! Branches gather & stretch elastically into user hand.
     setPortalVoyageStage(1);
 
-    // Sequence 2: Dive into the Heimdall / Bifrost Multiverse wormhole (1.5s -> 5.0s, exactly 3.5s deep travel)
+    // Sequence 2: At 2.5s -> Nambha portal kulla pull aagi enter aagi, Heimdall Multiverse warp tunnel-kulla porom! (2.5s -> 6.2s)
     setTimeout(() => {
       setPortalVoyageStage(2);
-    }, 1500);
+    }, 2500);
 
-    // Sequence 3: Pure blinding light burst at the end of tunnel (at 5.0s)
+    // Sequence 3: At 6.2s -> Climax arrival blinding flash!
     setTimeout(() => {
       setPortalVoyageStage(3);
-    }, 5000);
+    }, 6200);
 
-    // Sequence 4: Sudden dramatic CUT TO PITCH BLACK SCREEN (at 5.4s)
+    // Sequence 4: At 6.6s -> Sudden dramatic CUT TO PITCH BLACK SCREEN!
     setTimeout(() => {
       setPortalVoyageStage(4);
-    }, 5400);
+    }, 6600);
   };
 
   const handlePointerMoveGather = (e) => {
@@ -668,25 +673,26 @@ export default function LokiTimelinePortal() {
           - Exactly Centered Portal (LEAN, SLENDER, SLEEK shape - NO bulky/fat look)
           - Intro opens ultra-slowly across 20.0 seconds!
           - Mystical slender vertical spacetime tear aperture.
-          - On 2nd Tap (portalVoyageStage >= 1): Portal expands smoothly to engulf entire screen!
+          - On 2nd Tap (portalVoyageStage === 1): Portal STAYS AT ITS PLACE for 2.5s while branches are pulled!
+          - When portalVoyageStage === 2: We fly through the portal into the void!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ opacity: 0 }}
         animate={
           portalVoyageStage === 1
-            ? { opacity: 1, scale: 18, z: 200 }
+            ? { opacity: 1, scale: 1.15, z: 10 }
             : portalVoyageStage >= 2
-            ? { opacity: 0.15, scale: 50, z: 400 }
+            ? { opacity: 0.1, scale: 28, z: 300 }
             : portalStage > 0
             ? { opacity: 1, scale: 1, z: 0 }
             : { opacity: 0, scale: 0.8, z: -100 }
         }
         transition={
           portalVoyageStage === 1
-            ? { duration: 1.5, ease: [0.22, 1, 0.36, 1] }
+            ? { duration: 2.5, ease: "easeOut" }
             : portalVoyageStage >= 2
-            ? { duration: 1.0, ease: "easeOut" }
+            ? { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
             : { duration: 2.0, ease: "easeOut" }
         }
         style={{ transformOrigin: "50% 50%" }}
@@ -867,24 +873,24 @@ export default function LokiTimelinePortal() {
         </defs>
 
         {/* SVG Container wrapping all branches:
-            Elastic light-speed stretch & suction towards user's hand & portal interior
-            User continues to hold the branch bunch even inside the warp voyage!
+            Elastic branch pull & gathering into hand for first 2.5s while portal stays in place!
+            Then at Stage 2, as we fly through portal, branches follow through our hand into the wormhole!
         */}
         <motion.g
           animate={
             portalVoyageStage === 1
-              ? { scaleX: [1, 1.45, 0.85], scaleY: [1, 0.65, 0.85], opacity: 1 }
+              ? { scale: [1, 1.05, 0.98], opacity: 1 }
               : portalVoyageStage >= 2 && portalVoyageStage < 4
-              ? { scale: 0.55, opacity: 0.9, y: 30 }
+              ? { scale: 0.65, opacity: 0.85, y: 40 }
               : portalVoyageStage >= 4
               ? { opacity: 0 }
               : { scale: 1, opacity: 1 }
           }
           transition={
             portalVoyageStage === 1
-              ? { duration: 1.5, ease: [0.16, 1, 0.3, 1] }
+              ? { duration: 2.5, ease: "easeInOut" }
               : portalVoyageStage >= 2
-              ? { duration: 0.8, ease: "easeOut" }
+              ? { duration: 1.0, ease: "easeOut" }
               : { duration: 0.5 }
           }
           style={{ transformOrigin: "500px 500px" }}
@@ -1312,9 +1318,9 @@ export default function LokiTimelinePortal() {
       </svg>
 
       {/* ========================================================================= */}
-      {/* 4. TRAVELING INSIDE THE PORTAL: HEIMDALL / BIFROST MULTIVERSE WARP VOYAGE   */}
-      {/* Deep cosmic journey through multiple swirling universes & timeline dimensions */}
-      {/* NO bright initial flash! Deep, rich dark space filled with cosmic nebulae & rays */}
+      {/* 4. TRAVELING INSIDE THE PORTAL: AUTHENTIC HEIMDALL / BIFROST MULTIVERSE WARP */}
+      {/* Real cosmic depth travel: Deep space starfield rush, swirling celestial nebulae, */}
+      {/* passing multiple spiral galaxies & hyperspace timeline streams */}
       {/* ========================================================================= */}
       {portalVoyageStage >= 2 && portalVoyageStage < 4 && (
         <motion.div
@@ -1323,84 +1329,135 @@ export default function LokiTimelinePortal() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          {/* Deep Dark Multiverse Void */}
-          <div className="absolute inset-0 bg-[#000805]" />
+          {/* 1. Deep Space Black Void Background */}
+          <div className="absolute inset-0 bg-[#000403]" />
 
-          {/* Multiple Universes & Galaxies Passing in Depth (Heimdall Rainbow / Multiverse Bridges) */}
+          {/* 2. Swirling Multiverse Cosmic Nebula Vortex (The Loom / World Tree Core) */}
           <motion.div
-            className="absolute w-[950px] h-[950px] rounded-full"
+            className="absolute w-[1100px] h-[1100px] rounded-full"
             style={{
-              background: 'conic-gradient(from 180deg, #004D2B, #001A0E, #008F4C, #002B19, #00FF66, #00361F, #004D2B)',
-              filter: 'blur(50px)',
+              background: 'radial-gradient(circle at 50% 50%, rgba(0,255,102,0.18) 0%, rgba(0,77,43,0.3) 35%, rgba(0,26,14,0.65) 65%, transparent 85%)',
+              filter: 'blur(45px)',
             }}
-            animate={{ rotate: 360, scale: [0.9, 1.8, 3.2] }}
+            animate={{ rotate: [0, 180, 360], scale: [0.8, 1.4, 2.2] }}
             transition={{
-              rotate: { duration: 3.5, repeat: Infinity, ease: "linear" },
-              scale: { duration: 3.5, ease: "easeInOut" }
+              rotate: { duration: 6.0, repeat: Infinity, ease: "linear" },
+              scale: { duration: 3.8, ease: "easeInOut" }
             }}
           />
 
-          {/* Drifting Multiverse Star-Clusters & Galaxies (Pala Universes passing by) */}
-          {[
-            { x: -280, y: -220, color: 'rgba(0,255,102,0.3)', size: 320, dur: 3.5 },
-            { x: 300, y: 180, color: 'rgba(57,255,20,0.25)', size: 280, dur: 3.2 },
-            { x: -160, y: 260, color: 'rgba(185,255,208,0.2)', size: 240, dur: 3.8 },
-            { x: 220, y: -250, color: 'rgba(0,200,83,0.3)', size: 300, dur: 3.0 }
-          ].map((gal, idx) => (
-            <motion.div
-              key={idx}
-              className="absolute rounded-full pointer-events-none"
-              style={{
-                width: gal.size,
-                height: gal.size,
-                background: `radial-gradient(circle, ${gal.color} 0%, transparent 75%)`,
-                filter: 'blur(35px)',
-              }}
-              animate={{
-                x: [gal.x * 0.4, gal.x * 1.8],
-                y: [gal.y * 0.4, gal.y * 1.8],
-                scale: [0.5, 2.2],
-                opacity: [0.3, 0.9, 0]
-              }}
-              transition={{
-                duration: gal.dur,
-                ease: "easeIn",
-                repeat: Infinity
-              }}
-            />
-          ))}
+          {/* 3. Deep Multiverse Starfield Warp: Passing Stars moving forward toward camera */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(40)].map((_, i) => {
+              const angle = (i / 40) * Math.PI * 2;
+              const radius = 60 + (i % 6) * 70;
+              const startX = Math.cos(angle) * (radius * 0.2);
+              const startY = Math.sin(angle) * (radius * 0.2);
+              const endX = Math.cos(angle) * (radius * 3.5);
+              const endY = Math.sin(angle) * (radius * 3.5);
+              const size = (i % 3) + 1.5;
+              const isGreen = i % 3 === 0;
 
-          {/* Streaking Bifrost Warp Light Streaks pulling into infinity */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            {[...Array(24)].map((_, i) => (
+              return (
+                <motion.div
+                  key={`star-${i}`}
+                  className="absolute rounded-full"
+                  style={{
+                    width: `${size}px`,
+                    height: `${size * 3}px`,
+                    backgroundColor: isGreen ? '#B9FFD0' : '#ffffff',
+                    boxShadow: isGreen ? '0 0 6px #00FF66' : '0 0 4px #ffffff',
+                    left: '50%',
+                    top: '50%',
+                  }}
+                  animate={{
+                    x: [startX, endX],
+                    y: [startY, endY],
+                    scale: [0.2, 2.8],
+                    opacity: [0, 1, 0]
+                  }}
+                  transition={{
+                    duration: 1.2 + (i % 4) * 0.25,
+                    repeat: Infinity,
+                    delay: (i % 8) * 0.12,
+                    ease: "easeIn"
+                  }}
+                />
+              );
+            })}
+          </div>
+
+          {/* 4. Drifting Parallel Universes & Spiral Galaxies Passing By */}
+          {[
+            { angle: 30, dist: 280, color: 'rgba(0, 255, 102, 0.4)', size: 240, dur: 2.8 },
+            { angle: 140, dist: 340, color: 'rgba(57, 255, 20, 0.35)', size: 300, dur: 3.2 },
+            { angle: 230, dist: 290, color: 'rgba(185, 255, 208, 0.3)', size: 220, dur: 3.5 },
+            { angle: 310, dist: 350, color: 'rgba(0, 200, 83, 0.4)', size: 260, dur: 3.0 }
+          ].map((gal, idx) => {
+            const rad = (gal.angle * Math.PI) / 180;
+            const x1 = Math.cos(rad) * (gal.dist * 0.2);
+            const y1 = Math.sin(rad) * (gal.dist * 0.2);
+            const x2 = Math.cos(rad) * gal.dist;
+            const y2 = Math.sin(rad) * gal.dist;
+
+            return (
               <motion.div
-                key={i}
-                className="absolute w-[2.5px] bg-gradient-to-t from-transparent via-[#00FF66] to-[#B9FFD0] rounded-full"
+                key={`gal-${idx}`}
+                className="absolute rounded-full pointer-events-none"
                 style={{
-                  height: '140vh',
-                  transform: `rotate(${i * 15}deg)`,
-                  transformOrigin: '50% 50%',
-                  filter: 'blur(0.8px)'
+                  width: gal.size,
+                  height: gal.size * 0.55,
+                  transform: `rotate(${gal.angle}deg)`,
+                  background: `radial-gradient(ellipse at 50% 50%, ${gal.color} 0%, rgba(0,77,43,0.2) 45%, transparent 75%)`,
+                  filter: 'blur(25px)',
                 }}
                 animate={{
-                  scaleY: [0.3, 2.2, 3.0],
-                  opacity: [0.2, 0.85, 0.2]
+                  x: [x1, x2],
+                  y: [y1, y2],
+                  scale: [0.3, 2.2],
+                  opacity: [0, 0.85, 0]
                 }}
                 transition={{
-                  duration: 0.7,
+                  duration: gal.dur,
+                  ease: "easeIn",
                   repeat: Infinity,
-                  delay: (i % 6) * 0.1,
+                  delay: idx * 0.4
+                }}
+              />
+            );
+          })}
+
+          {/* 5. Infinite Spacetime Cylindrical Warp Tunnel Filaments */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={`ray-${i}`}
+                className="absolute w-[2px] bg-gradient-to-t from-transparent via-[#00FF66] to-[#ffffff] rounded-full"
+                style={{
+                  height: '130vh',
+                  transform: `rotate(${i * 18}deg)`,
+                  transformOrigin: '50% 50%',
+                  filter: 'blur(0.6px)'
+                }}
+                animate={{
+                  scaleY: [0.1, 1.8, 2.8],
+                  opacity: [0.1, 0.9, 0.15]
+                }}
+                transition={{
+                  duration: 0.9,
+                  repeat: Infinity,
+                  delay: (i % 5) * 0.12,
                   ease: "easeInOut"
                 }}
               />
             ))}
           </div>
 
-          {/* Distant Spacetime Singularity Destination Star (Approaching destination) */}
+          {/* 6. Deep Cosmic Light Singularity ahead (Destination portal horizon) */}
           <motion.div
-            className="absolute w-14 h-14 rounded-full bg-[#B9FFD0] blur-[10px] shadow-[0_0_50px_#00FF66,0_0_100px_#008F4C]"
-            animate={{ scale: [0.6, 2.5, 6.0] }}
-            transition={{ duration: 3.5, ease: "easeIn" }}
+            className="absolute w-16 h-16 rounded-full bg-[#ffffff] blur-[12px] shadow-[0_0_60px_#B9FFD0,0_0_120px_#00FF66,0_0_200px_#008F4C]"
+            animate={{ scale: [0.6, 2.2, 7.5] }}
+            transition={{ duration: 3.7, ease: "easeIn" }}
           />
         </motion.div>
       )}
