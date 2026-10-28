@@ -401,10 +401,11 @@ export default function LokiTimelinePortal() {
   // Cinematic Sequences:
   // portalVoyageStage:
   // 0 = Idle portal open
-  // 1 = Portal pulls close & draws branches into portal vortex (approaching portal)
-  // 2 = Traveling inside portal warp tunnel (3 seconds deep cosmic travel)
-  // 3 = Brilliant White Flashout light burst
-  // 4 = Pitch Black Cut Screen
+  // 1 = Hand holds branches, timeline tension builds (0s -> 2.0s)
+  // 2 = REAL PORTAL ENTRY: The camera flies right into the jagged portal opening, entering its glowing emerald rift mouth (2.0s -> 4.5s)
+  // 3 = Inside the deep Heimdall / Bifrost warp wormhole voyage (4.5s -> 8.0s, 3.5s deep travel)
+  // 4 = Climax destination flash burst (8.0s)
+  // 5 = Dramatic CUT TO PITCH BLACK (8.4s)
   const [portalVoyageStage, setPortalVoyageStage] = useState(0);
 
   // Dev Shortcut: Press "Shift + R" to replay/reset portal scene instantly without tapping 3 times!
@@ -528,27 +529,32 @@ export default function LokiTimelinePortal() {
     setGripPoint(coords);
     setIsGatheringHand(true);
 
-    // Sequence 1: 0s to 2.5s -> Portal remains in place! Branches gather & stretch elastically into user hand.
+    // Phase 1 (0s -> 2.0s): Hold branches, gather into hand, portal in place
     setPortalVoyageStage(1);
 
-    // Sequence 2: At 2.5s -> Nambha portal kulla pull aagi enter aagi, Heimdall Multiverse warp tunnel-kulla porom! (2.5s -> 6.2s)
+    // Phase 2 (2.0s -> 4.5s): REAL PORTAL PASS-THROUGH! We approach and fly through the jagged portal opening!
     setTimeout(() => {
       setPortalVoyageStage(2);
-    }, 2500);
+    }, 2000);
 
-    // Sequence 3: At 6.2s -> Climax arrival blinding flash!
+    // Phase 3 (4.5s -> 8.0s): Inside the deep Heimdall multiverse warp wormhole!
     setTimeout(() => {
       setPortalVoyageStage(3);
-    }, 6200);
+    }, 4500);
 
-    // Sequence 4: At 6.6s -> Sudden dramatic CUT TO PITCH BLACK SCREEN!
+    // Phase 4 (8.0s -> 8.4s): Destination arrival blinding white flash!
     setTimeout(() => {
       setPortalVoyageStage(4);
-    }, 6600);
+    }, 8000);
+
+    // Phase 5 (8.4s): Sudden dramatic CUT TO PITCH BLACK SCREEN!
+    setTimeout(() => {
+      setPortalVoyageStage(5);
+    }, 8400);
   };
 
   const handlePointerMoveGather = (e) => {
-    if (!isGatheringHand || portalVoyageStage >= 4) return;
+    if (!isGatheringHand || portalVoyageStage >= 5) return;
     const coords = getSvgCoordinates(e);
     setGripPoint(coords);
   };
@@ -685,8 +691,10 @@ export default function LokiTimelinePortal() {
           - Exactly Centered Portal (LEAN, SLENDER, SLEEK shape - NO bulky/fat look)
           - Intro opens ultra-slowly across 20.0 seconds!
           - Mystical slender vertical spacetime tear aperture.
-          - On 2nd Tap (portalVoyageStage === 1): Portal draws timelines into its gravitational singularity!
-          - portalVoyageStage === 2: The portal horizon engulfs camera as we dive through it!
+          - On 2nd Tap (portalVoyageStage === 1): Portal gently brightens in place.
+          - Phase 2 (portalVoyageStage === 2): DRAMATIC 2.5-SECOND PORTAL PASS-THROUGH!
+            The camera flies directly towards the glowing portal mouth, expanding past camera
+            so user clearly sees and feels entering through the jagged rift aperture!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -695,20 +703,27 @@ export default function LokiTimelinePortal() {
           portalVoyageStage === 1
             ? { 
                 opacity: 1, 
-                scale: [1, 1.35, 1.9], 
-                filter: ['brightness(1) contrast(1)', 'brightness(1.5) contrast(1.3)', 'brightness(2) contrast(1.6)'] 
+                scale: 1.15,
+                filter: 'brightness(1.3) contrast(1.2)'
               }
-            : portalVoyageStage >= 2
-            ? { opacity: 0.1, scale: 35 }
+            : portalVoyageStage === 2
+            ? { 
+                // Flying through the portal: scale grows from 1.15 up to 14, enveloping screen as we pass through the rift!
+                opacity: [1, 1, 0.8, 0], 
+                scale: [1.15, 3.5, 8.0, 16.0],
+                filter: ['brightness(1.3)', 'brightness(1.8)', 'brightness(2.2)', 'brightness(1)']
+              }
+            : portalVoyageStage >= 3
+            ? { opacity: 0, scale: 25 }
             : portalStage > 0
             ? { opacity: 1, scale: 1 }
             : { opacity: 0, scale: 0.8 }
         }
         transition={
           portalVoyageStage === 1
-            ? { duration: 2.5, ease: [0.22, 1, 0.36, 1] }
-            : portalVoyageStage >= 2
-            ? { duration: 1.0, ease: "easeOut" }
+            ? { duration: 2.0, ease: "easeOut" }
+            : portalVoyageStage === 2
+            ? { duration: 2.5, ease: [0.25, 0.1, 0.25, 1] }
             : { duration: 2.0, ease: "easeOut" }
         }
         style={{ transformOrigin: "50% 50%" }}
@@ -896,25 +911,33 @@ export default function LokiTimelinePortal() {
 
         {/* SVG Container wrapping all branches:
             REAL ELASTIC LIGHT-SPEED STRETCH & SUCTION INTO PORTAL:
-            When user holds (Stage 1), branches pull & stretch elastically into center singularity!
-            Maintains full width stretching across the entire canvas so ends NEVER appear cut.
+            When user holds (Stage 1), branches pull & gather elastically.
+            At Stage 2 (Portal entry), user holding the branch bunch moves smoothly into the opening!
+            At Stage 3 (Wormhole voyage), branches stay held in hand through the voyage!
         */}
         <motion.g
           animate={
             portalVoyageStage === 1
               ? { 
-                  // Elastic rubber band pull: stretches and pulls toward center singularity, but width stays wide enough to cover screen edges!
-                  scaleY: [1, 0.75, 0.55],
-                  x: [0, (500 - (gripPoint?.x || 500)) * 0.35, (500 - (gripPoint?.x || 500)) * 0.75],
-                  y: [0, (500 - (gripPoint?.y || 500)) * 0.35, (500 - (gripPoint?.y || 500)) * 0.75],
+                  scaleY: [1, 0.85, 0.7],
+                  x: [0, (500 - (gripPoint?.x || 500)) * 0.25, (500 - (gripPoint?.x || 500)) * 0.55],
+                  y: [0, (500 - (gripPoint?.y || 500)) * 0.25, (500 - (gripPoint?.y || 500)) * 0.55],
                   opacity: 1
                 }
-              : portalVoyageStage >= 2 && portalVoyageStage < 4
+              : portalVoyageStage === 2
               ? { 
-                  // Traveling through portal: held bunch stays in front of user as we fly into wormhole!
-                  scale: [0.8, 0.55, 0.35], 
-                  opacity: [1, 0.9, 0.6], 
-                  y: [20, 60, 100],
+                  // Entering the portal mouth: lines pull forward into the glowing vertical rift
+                  scale: [1, 0.85, 0.65],
+                  x: (500 - (gripPoint?.x || 500)) * 0.9,
+                  y: (500 - (gripPoint?.y || 500)) * 0.9,
+                  opacity: 0.95
+                }
+              : portalVoyageStage === 3
+              ? { 
+                  // Inside wormhole voyage: branch bunch remains held in perspective!
+                  scale: [0.65, 0.45, 0.3], 
+                  opacity: [0.95, 0.85, 0.6], 
+                  y: [20, 60, 90],
                   filter: 'blur(0.5px)'
                 }
               : portalVoyageStage >= 4
@@ -923,9 +946,11 @@ export default function LokiTimelinePortal() {
           }
           transition={
             portalVoyageStage === 1
-              ? { duration: 2.5, ease: [0.16, 1, 0.3, 1] }
-              : portalVoyageStage >= 2
-              ? { duration: 3.7, ease: "easeIn" }
+              ? { duration: 2.0, ease: "easeInOut" }
+              : portalVoyageStage === 2
+              ? { duration: 2.5, ease: [0.25, 0.1, 0.25, 1] }
+              : portalVoyageStage === 3
+              ? { duration: 3.5, ease: "easeIn" }
               : { duration: 0.5 }
           }
           style={{ transformOrigin: `${gripPoint?.x || 500}px ${gripPoint?.y || 500}px` }}
@@ -1356,8 +1381,9 @@ export default function LokiTimelinePortal() {
       {/* 4. TRAVELING INSIDE THE PORTAL: AUTHENTIC HEIMDALL / BIFROST MULTIVERSE WARP */}
       {/* Real cosmic depth travel: Deep space starfield rush, swirling celestial nebulae, */}
       {/* passing multiple spiral galaxies & hyperspace timeline streams */}
+      {/* Active on Phase 3: after portal pass-through has fully completed! */}
       {/* ========================================================================= */}
-      {portalVoyageStage >= 2 && portalVoyageStage < 4 && (
+      {portalVoyageStage >= 3 && portalVoyageStage < 5 && (
         <motion.div
           className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden z-20"
           initial={{ opacity: 0 }}
@@ -1498,10 +1524,10 @@ export default function LokiTimelinePortal() {
       )}
 
       {/* ========================================================================= */}
-      {/* 5. BRILLIANT WHITE FLASHOUT: ONLY AT THE END OF THE JOURNEY (Stage 3)     */}
+      {/* 5. BRILLIANT WHITE FLASHOUT: ONLY AT THE END OF THE JOURNEY (Stage 4)     */}
       {/* Sudden intense cosmic arrival flash (0.4s) before cutting to black        */}
       {/* ========================================================================= */}
-      {portalVoyageStage >= 3 && portalVoyageStage < 4 && (
+      {portalVoyageStage >= 4 && portalVoyageStage < 5 && (
         <motion.div
           className="absolute inset-0 bg-white pointer-events-none z-30"
           initial={{ opacity: 0 }}
@@ -1511,9 +1537,9 @@ export default function LokiTimelinePortal() {
       )}
 
       {/* ========================================================================= */}
-      {/* 6. DRAMATIC CUT TO PITCH BLACK SCREEN (Stage 4)                          */}
+      {/* 6. DRAMATIC CUT TO PITCH BLACK SCREEN (Stage 5)                          */}
       {/* ========================================================================= */}
-      {portalVoyageStage === 4 && (
+      {portalVoyageStage === 5 && (
         <motion.div
           className="absolute inset-0 bg-[#000000] pointer-events-auto z-40"
           initial={{ opacity: 1 }}
