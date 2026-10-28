@@ -47,36 +47,34 @@ function LokiLifePowerSpread({
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  // Spreading biological easing: fast initial surge as venom injects, then organic spreading saturation
-  const duration = 4.2;
-  const spreadEase = [0.22, 1, 0.36, 1]; // Smooth organic creeping expansion curve
+  // Slower, majestic living duration: Uyir slow-ah apdiye paravi crawl aagi poga 5.8s
+  const duration = 5.8;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Behind the pulse: Awakened living body inside branch that gradually blooms as venom creeps */}
+      {/* 1. Uyir Awakening Life Body: Soft warm awakening glow breathing underneath */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#004D2B"
-        strokeWidth={12 * strokeScale}
+        strokeWidth={13 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.95, 0.9] }}
-        transition={{ duration, ease: spreadEase }}
+        animate={{ pathLength: 1, opacity: [0, 0.95, 0.85] }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#006B3C"
-        strokeWidth={8.5 * strokeScale}
+        strokeWidth={9 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.9, 0.85] }}
-        transition={{ duration, ease: spreadEase }}
+        animate={{ pathLength: 1, opacity: [0, 0.9, 0.8] }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
       />
 
-      {/* 2. Boundary Layers - Clean cylindrical borders with a subtle 10% dark defining edge contour */}
-      {/* 10% dark defining border stroke spreading along outer edge */}
+      {/* 2. Boundary Layers - Clean cylindrical borders with subtle 10% dark defining edge contour */}
       <motion.path
         d={pathD}
         fill="none"
@@ -84,10 +82,9 @@ function LokiLifePowerSpread({
         strokeWidth={15.5 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.7, 0.65] }}
-        transition={{ duration, ease: spreadEase }}
+        animate={{ pathLength: 1, opacity: 0.65 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
       />
-      {/* Outer Emerald Spreading Glow Layer */}
       <motion.path
         d={pathD}
         fill="none"
@@ -95,8 +92,8 @@ function LokiLifePowerSpread({
         strokeWidth={13.5 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.95, 0.9] }}
-        transition={{ duration, ease: spreadEase }}
+        animate={{ pathLength: 1, opacity: 0.9 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         style={{ filter: "blur(1.5px)" }}
       />
       <motion.path
@@ -106,28 +103,13 @@ function LokiLifePowerSpread({
         strokeWidth={10.5 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 1, 0.95] }}
-        transition={{ duration, ease: spreadEase }}
+        animate={{ pathLength: 1, opacity: 0.95 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
       />
 
-      {/* 3. Spreading Venom Vanguard Surge - High-energy crawling slug that leads the spreading front */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#7CFFB2"
-        strokeWidth={11 * strokeScale}
-        strokeLinecap="round"
-        strokeDasharray={`${Math.max(60, distance * 0.18)} ${distance + 400}`}
-        initial={{ strokeDashoffset: Math.max(60, distance * 0.18) }}
-        animate={{ strokeDashoffset: -(distance + 80) }}
-        transition={{ duration, ease: spreadEase }}
-        style={{ filter: "blur(2.5px)" }}
-        opacity={0.8}
-      />
-
-      {/* 4. Inner Center Core - 40% organic fluid wave ripple spreading from within */}
+      {/* 3. Uyir Core Awakening: 40% organic fluid wave ripple with breathing vitality */}
       <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-        {/* Neon Green Radiant Venom Core with creeping organic bloom */}
+        {/* Neon Green Radiant Venom Core */}
         <motion.path
           d={pathD}
           fill="none"
@@ -135,11 +117,11 @@ function LokiLifePowerSpread({
           strokeWidth={6.5 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: [0, 1, 1] }}
-          transition={{ duration, ease: spreadEase }}
+          animate={{ pathLength: 1, opacity: [0, 1, 0.95] }}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         />
 
-        {/* Mint Green Center Spreading Stream */}
+        {/* Mint Green Center Stream */}
         <motion.path
           d={pathD}
           fill="none"
@@ -147,22 +129,48 @@ function LokiLifePowerSpread({
           strokeWidth={Math.max(1.5, 3 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: [0, 1, 1] }}
-          transition={{ duration, ease: spreadEase }}
+          animate={{ pathLength: 1, opacity: [0, 1, 0.98] }}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         />
 
-        {/* Inner intense gleam front that creeps and pulses across the path */}
+        {/* Inner gleam reflection */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.6, 1.4 * strokeScale)}
+          strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: [0, 0.9, 0.6] }}
-          transition={{ duration, ease: spreadEase }}
+          animate={{ pathLength: 1, opacity: [0, 0.7, 0.55] }}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         />
       </g>
+
+      {/* 4. Living Soul Spark / Life Head: Leading creeping spark that carries Uyir along the branch */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#ffffff"
+        strokeWidth={Math.max(2.2, 4.2 * strokeScale)}
+        strokeLinecap="round"
+        strokeDasharray={`14 ${distance + 400}`}
+        initial={{ strokeDashoffset: 14, opacity: 0 }}
+        animate={{ strokeDashoffset: -(distance + 30), opacity: [0, 1, 1, 0] }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        style={{ filter: "drop-shadow(0 0 6px #7CFFB2) drop-shadow(0 0 12px #39FF14)" }}
+      />
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#7CFFB2"
+        strokeWidth={Math.max(3.5, 7.5 * strokeScale)}
+        strokeLinecap="round"
+        strokeDasharray={`28 ${distance + 400}`}
+        initial={{ strokeDashoffset: 28, opacity: 0 }}
+        animate={{ strokeDashoffset: -(distance + 30), opacity: [0, 0.9, 0.9, 0] }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        style={{ filter: "blur(1.5px)" }}
+      />
     </g>
   );
 
@@ -789,10 +797,10 @@ export default function LokiTimelinePortal() {
                       strokeWidth={f.width * 2.8}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: [0, 0.7, 0.65] }}
-                      transition={{ duration: 5.5, ease: [0.22, 1, 0.36, 1] }}
+                      animate={{ pathLength: 1, opacity: 0.65 }}
+                      transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
                     />
-                    {/* Clean outer cylindrical boundaries with spreading saturation */}
+                    {/* Clean outer cylindrical boundaries */}
                     <motion.path
                       d={f.d}
                       fill="none"
@@ -800,8 +808,8 @@ export default function LokiTimelinePortal() {
                       strokeWidth={f.width * 2.3}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: [0, 0.9, 0.85] }}
-                      transition={{ duration: 5.5, ease: [0.22, 1, 0.36, 1] }}
+                      animate={{ pathLength: 1, opacity: 0.85 }}
+                      transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
                       style={{ filter: "blur(1.2px)" }}
                     />
                     <motion.path
@@ -811,10 +819,10 @@ export default function LokiTimelinePortal() {
                       strokeWidth={f.width * 1.8}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: [0, 1, 0.95] }}
-                      transition={{ duration: 5.5, ease: [0.22, 1, 0.36, 1] }}
+                      animate={{ pathLength: 1, opacity: 0.95 }}
+                      transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
                     />
-                    {/* Inner core venom ripple with spreading organic wave */}
+                    {/* Inner core venom ripple */}
                     <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
                       <motion.path
                         d={f.d}
@@ -823,8 +831,8 @@ export default function LokiTimelinePortal() {
                         strokeWidth={f.width * 1.2}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: [0, 1, 1] }}
-                        transition={{ duration: 5.5, ease: [0.22, 1, 0.36, 1] }}
+                        animate={{ pathLength: 1, opacity: [0, 1, 0.95] }}
+                        transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
                       />
                       <motion.path
                         d={f.d}
@@ -833,10 +841,23 @@ export default function LokiTimelinePortal() {
                         strokeWidth={Math.max(0.5, f.width * 0.45)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: [0, 0.9, 0.55] }}
-                        transition={{ duration: 5.5, ease: [0.22, 1, 0.36, 1] }}
+                        animate={{ pathLength: 1, opacity: [0, 0.7, 0.55] }}
+                        transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
                       />
                     </g>
+                    {/* Leading Life Spark for filaments */}
+                    <motion.path
+                      d={f.d}
+                      fill="none"
+                      stroke="#ffffff"
+                      strokeWidth={Math.max(1.8, f.width * 0.8)}
+                      strokeLinecap="round"
+                      strokeDasharray={`10 1200`}
+                      initial={{ strokeDashoffset: 10, opacity: 0 }}
+                      animate={{ strokeDashoffset: -1200, opacity: [0, 1, 1, 0] }}
+                      transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
+                      style={{ filter: "drop-shadow(0 0 5px #7CFFB2)" }}
+                    />
                   </g>
                 )}
               </motion.g>
