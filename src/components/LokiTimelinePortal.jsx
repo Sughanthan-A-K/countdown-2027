@@ -47,209 +47,167 @@ function LokiLifePowerSpread({
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  // Slower, majestic living duration: Uyir slow-ah apdiye paravi crawl aagi poga 5.8s
-  const duration = 5.8;
+  // Natural organic life infusion travel duration: slow, graceful awakening across the timeline
+  const duration = 7.0;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Uyir Awakening Life Body: Soft warm awakening glow breathing underneath */}
+      {/* 1. Pre-glow of life awakening: Soft aura permeating into the black branch ahead of the flow */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#004D2B"
-        strokeWidth={13 * strokeScale}
+        strokeWidth={14 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.95, 0.85] }}
+        animate={{ pathLength: 1, opacity: [0, 0.8, 0.95] }}
         transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        style={{ filter: "blur(3px)" }}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#006B3C"
-        strokeWidth={9 * strokeScale}
+        strokeWidth={10 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.9, 0.8] }}
+        animate={{ pathLength: 1, opacity: [0, 0.85, 0.92] }}
         transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        style={{ filter: "blur(1.5px)" }}
       />
 
-      {/* 2. Boundary Layers - Clean cylindrical borders with subtle 10% dark defining edge contour */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#01140c"
-        strokeWidth={15.5 * strokeScale}
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.65 }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-      />
+      {/* 2. Deep Living Flesh of the Vine: Saturated rich emerald life infusing into the dark branch */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#008F4C"
-        strokeWidth={13.5 * strokeScale}
+        strokeWidth={12 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.9 }}
+        animate={{ pathLength: 1, opacity: [0, 0.9, 0.98] }}
         transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-        style={{ filter: "blur(1.5px)" }}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#00C853"
-        strokeWidth={10.5 * strokeScale}
+        strokeWidth={9 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.95 }}
+        animate={{ pathLength: 1, opacity: [0, 0.95, 1] }}
         transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
       />
 
-      {/* 3. Uyir Core Awakening: 40% organic fluid wave ripple with breathing vitality */}
+      {/* 3. The Sacred Pulse of Life: Electric Green & Mint heartbeat flowing through the core */}
       <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-        {/* Neon Green Radiant Venom Core */}
+        {/* Living Core Vein */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
-          strokeWidth={6.5 * strokeScale}
+          strokeWidth={5.5 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: [0, 1, 0.95] }}
+          animate={{ pathLength: 1, opacity: [0, 1, 1] }}
           transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         />
 
-        {/* Mint Green Center Stream */}
+        {/* Life Essence Core Stream (Mint / Starlight) */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth={Math.max(1.5, 3 * strokeScale)}
+          strokeWidth={Math.max(1.2, 2.5 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: [0, 1, 0.98] }}
+          animate={{ pathLength: 1, opacity: [0, 1, 1] }}
           transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         />
 
-        {/* Inner gleam reflection */}
+        {/* Vital Spark - Pure White Living Thread */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
+          strokeWidth={Math.max(0.6, 1.0 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: [0, 0.7, 0.55] }}
+          animate={{ pathLength: 1, opacity: [0, 0.8, 0.7] }}
           transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
         />
       </g>
-
-      {/* 4. Living Soul Spark / Life Head: Leading creeping spark that carries Uyir along the branch */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#ffffff"
-        strokeWidth={Math.max(2.2, 4.2 * strokeScale)}
-        strokeLinecap="round"
-        strokeDasharray={`14 ${distance + 400}`}
-        initial={{ strokeDashoffset: 14, opacity: 0 }}
-        animate={{ strokeDashoffset: -(distance + 30), opacity: [0, 1, 1, 0] }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-        style={{ filter: "drop-shadow(0 0 6px #7CFFB2) drop-shadow(0 0 12px #39FF14)" }}
-      />
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#7CFFB2"
-        strokeWidth={Math.max(3.5, 7.5 * strokeScale)}
-        strokeLinecap="round"
-        strokeDasharray={`28 ${distance + 400}`}
-        initial={{ strokeDashoffset: 28, opacity: 0 }}
-        animate={{ strokeDashoffset: -(distance + 30), opacity: [0, 0.9, 0.9, 0] }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-        style={{ filter: "blur(1.5px)" }}
-      />
     </g>
   );
 
   return (
     <g>
-      {/* Symmetrical Left and Right Pulses spreading outward seamlessly from tap point to the ends */}
+      {/* Symmetrical Left and Right Pulses: Life spreading organically from tap point across the branch */}
       {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
       {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
 
-      {/* Full Living Pulsation when branch awakens */}
+      {/* Awakened Breathing Life: Once infused, the branch gently breathes and pulses with living energy */}
       {allEnergizedStage && (
-        <g>
-          {/* Clean outer cylindrical boundary with subtle 10% dark contour */}
-          <motion.path
-            d={pathEl.getAttribute('d')}
-            fill="none"
-            stroke="#01140c"
-            strokeWidth={15.5 * strokeScale}
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.65, 0.6] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-          />
+        <motion.g
+          animate={{ opacity: [0.85, 1, 0.85] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          {/* Subtle living atmospheric envelope */}
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#008F4C"
-            strokeWidth={13.5 * strokeScale}
+            strokeWidth={13 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.9, 0.8] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-            style={{ filter: "blur(1.5px)" }}
+            animate={{ opacity: 0.8 }}
+            transition={{ duration: 2.0, ease: "easeOut" }}
+            style={{ filter: "blur(2px)" }}
           />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#00C853"
-            strokeWidth={10.5 * strokeScale}
+            strokeWidth={9 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0.92] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
+            animate={{ opacity: 0.95 }}
+            transition={{ duration: 2.0, ease: "easeOut" }}
           />
 
-          {/* Inner core venom ripple */}
+          {/* Living core breath */}
           <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
             <motion.path
               d={pathEl.getAttribute('d')}
               fill="none"
               stroke="#39FF14"
-              strokeWidth={6.5 * strokeScale}
+              strokeWidth={5.5 * strokeScale}
               strokeLinecap="round"
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 1, 0.95] }}
-              transition={{ duration: 1.8, ease: "easeOut" }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 2.0, ease: "easeOut" }}
             />
             <motion.path
               d={pathEl.getAttribute('d')}
               fill="none"
               stroke="#B9FFD0"
-              strokeWidth={Math.max(1.5, 3 * strokeScale)}
+              strokeWidth={Math.max(1.2, 2.5 * strokeScale)}
               strokeLinecap="round"
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 1, 0.98] }}
-              transition={{ duration: 1.8, ease: "easeOut" }}
+              animate={{ opacity: 0.95 }}
+              transition={{ duration: 2.0, ease: "easeOut" }}
             />
             <motion.path
               d={pathEl.getAttribute('d')}
               fill="none"
               stroke="#ffffff"
-              strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
+              strokeWidth={Math.max(0.6, 1.0 * strokeScale)}
               strokeLinecap="round"
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.55, 0.45] }}
-              transition={{ duration: 1.8, ease: "easeOut" }}
+              animate={{ opacity: 0.7 }}
+              transition={{ duration: 2.0, ease: "easeOut" }}
             />
           </g>
-        </g>
+        </motion.g>
       )}
     </g>
   );
@@ -432,36 +390,36 @@ export default function LokiTimelinePortal() {
       };
 
       // Organic Tree Branching Propagation:
-      // All branches flow end-to-end naturally (tapRatio ~0.02 to 0.05 / 0.95 to 0.98)
-      // Oru branch venom poite irukkura andha time-laye (naduvulaye), parallel-ah adutha branches start aagum!
+      // Life spreading organically across the tree tapestry:
+      // Branch 1 uyir perum pothu, adhutha branches ku uyir thodarndhu slow-ah paravudhu!
       const cascadeConfig = [
-        // Tier 2: Branch 1 naduvula poite irukkumbothe (at 1.6s & 2.2s), Branch 2 & 5 start aagum
-        { id: 'branch-2', tapRatio: 0.02, delay: 1600 },
-        { id: 'branch-5', tapRatio: 0.98, delay: 2200 },
+        // Tier 2: Branch 1 uyir paravum pothu (at 2.8s & 3.8s), Branch 2 & 5 ignite aagudhu
+        { id: 'branch-2', tapRatio: 0.02, delay: 2800 },
+        { id: 'branch-5', tapRatio: 0.98, delay: 3800 },
 
-        // Tier 3: Branch 2 & 5 naduvula poite irukkumbothe, 3 branches end-to-end ignite aagum
-        { id: 'branch-3', tapRatio: 0.02, delay: 3500 },
-        { id: 'filament-1', tapRatio: 0.02, delay: 3900 },
-        { id: 'filament-6', tapRatio: 0.98, delay: 4300 },
+        // Tier 3: Uyir thodarndhu adutha branches & filaments ku paravudhu
+        { id: 'branch-3', tapRatio: 0.02, delay: 5600 },
+        { id: 'filament-1', tapRatio: 0.02, delay: 6200 },
+        { id: 'filament-6', tapRatio: 0.98, delay: 6800 },
 
-        // Tier 4: Parallel branches multiply while previous are still flowing
-        { id: 'branch-4', tapRatio: 0.98, delay: 5400 },
-        { id: 'filament-3', tapRatio: 0.02, delay: 5800 },
-        { id: 'filament-9', tapRatio: 0.98, delay: 6200 },
-        { id: 'filament-0', tapRatio: 0.02, delay: 6600 },
-        { id: 'filament-4', tapRatio: 0.98, delay: 7000 },
+        // Tier 4: Multiverse tree-oda naram bugal ellam uyir perudhu
+        { id: 'branch-4', tapRatio: 0.98, delay: 8200 },
+        { id: 'filament-3', tapRatio: 0.02, delay: 8800 },
+        { id: 'filament-9', tapRatio: 0.98, delay: 9400 },
+        { id: 'filament-0', tapRatio: 0.02, delay: 10000 },
+        { id: 'filament-4', tapRatio: 0.98, delay: 10600 },
 
-        // Tier 5: The rest of the multiverse filaments cascade smoothly
-        { id: 'filament-2', tapRatio: 0.02, delay: 7900 },
-        { id: 'filament-5', tapRatio: 0.98, delay: 8200 },
-        { id: 'filament-7', tapRatio: 0.02, delay: 8500 },
-        { id: 'filament-8', tapRatio: 0.98, delay: 8800 },
-        { id: 'filament-10', tapRatio: 0.02, delay: 9100 },
-        { id: 'filament-11', tapRatio: 0.98, delay: 9400 },
-        { id: 'filament-12', tapRatio: 0.02, delay: 9700 },
-        { id: 'filament-13', tapRatio: 0.98, delay: 10000 },
-        { id: 'filament-14', tapRatio: 0.02, delay: 10300 },
-        { id: 'filament-15', tapRatio: 0.98, delay: 10600 },
+        // Tier 5: Rest of the filaments gently awaken
+        { id: 'filament-2', tapRatio: 0.02, delay: 11800 },
+        { id: 'filament-5', tapRatio: 0.98, delay: 12400 },
+        { id: 'filament-7', tapRatio: 0.02, delay: 13000 },
+        { id: 'filament-8', tapRatio: 0.98, delay: 13600 },
+        { id: 'filament-10', tapRatio: 0.02, delay: 14200 },
+        { id: 'filament-11', tapRatio: 0.98, delay: 14800 },
+        { id: 'filament-12', tapRatio: 0.02, delay: 15400 },
+        { id: 'filament-13', tapRatio: 0.98, delay: 16000 },
+        { id: 'filament-14', tapRatio: 0.02, delay: 16600 },
+        { id: 'filament-15', tapRatio: 0.98, delay: 17200 },
       ];
 
       cascadeConfig.forEach(item => {
@@ -479,16 +437,16 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // Once venom has spread across the whole tapestry (~11.5s):
+      // Once life has fully spread across the whole cosmic tree (~18s):
       // Stage 1: A subtle thin vertical hairline tear appears in the center!
       setTimeout(() => {
         setPortalStage(1);
-      }, 11500);
+      }, 18000);
 
-      // Stage 2 (~13.0s): Slowly, organically cracks open into a lean slender spacetime portal!
+      // Stage 2 (~20.5s): Slowly, organically cracks open into a lean slender spacetime portal!
       setTimeout(() => {
         setPortalStage(2);
-      }, 13000);
+      }, 20500);
 
       return updated;
     });
@@ -786,31 +744,20 @@ export default function LokiTimelinePortal() {
                   opacity={0.5}
                 />
 
-                {/* 2. Cylindrical outer boundary with inner core venom ripple */}
+                {/* 2. Slow Life Infusion into Filaments */}
                 {isEnergized && (
                   <g>
-                    {/* Subtle 10% dark defining edge contour */}
-                    <motion.path
-                      d={f.d}
-                      fill="none"
-                      stroke="#01140c"
-                      strokeWidth={f.width * 2.8}
-                      strokeLinecap="round"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 0.65 }}
-                      transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
-                    />
-                    {/* Clean outer cylindrical boundaries */}
+                    {/* Living outer atmospheric envelope */}
                     <motion.path
                       d={f.d}
                       fill="none"
                       stroke="#008F4C"
-                      strokeWidth={f.width * 2.3}
+                      strokeWidth={f.width * 2.6}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 0.85 }}
-                      transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
-                      style={{ filter: "blur(1.2px)" }}
+                      animate={{ pathLength: 1, opacity: [0, 0.75, 0.85] }}
+                      transition={{ duration: 7.5, ease: [0.25, 0.1, 0.25, 1] }}
+                      style={{ filter: "blur(1.5px)" }}
                     />
                     <motion.path
                       d={f.d}
@@ -819,45 +766,32 @@ export default function LokiTimelinePortal() {
                       strokeWidth={f.width * 1.8}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 0.95 }}
-                      transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
+                      animate={{ pathLength: 1, opacity: [0, 0.85, 0.95] }}
+                      transition={{ duration: 7.5, ease: [0.25, 0.1, 0.25, 1] }}
                     />
-                    {/* Inner core venom ripple */}
+                    {/* Inner core life spark */}
                     <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
                       <motion.path
                         d={f.d}
                         fill="none"
                         stroke="#39FF14"
-                        strokeWidth={f.width * 1.2}
+                        strokeWidth={f.width * 1.1}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: [0, 1, 0.95] }}
-                        transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
+                        animate={{ pathLength: 1, opacity: [0, 1, 1] }}
+                        transition={{ duration: 7.5, ease: [0.25, 0.1, 0.25, 1] }}
                       />
                       <motion.path
                         d={f.d}
                         fill="none"
                         stroke="#ffffff"
-                        strokeWidth={Math.max(0.5, f.width * 0.45)}
+                        strokeWidth={Math.max(0.5, f.width * 0.4)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: [0, 0.7, 0.55] }}
-                        transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
+                        animate={{ pathLength: 1, opacity: [0, 0.7, 0.6] }}
+                        transition={{ duration: 7.5, ease: [0.25, 0.1, 0.25, 1] }}
                       />
                     </g>
-                    {/* Leading Life Spark for filaments */}
-                    <motion.path
-                      d={f.d}
-                      fill="none"
-                      stroke="#ffffff"
-                      strokeWidth={Math.max(1.8, f.width * 0.8)}
-                      strokeLinecap="round"
-                      strokeDasharray={`10 1200`}
-                      initial={{ strokeDashoffset: 10, opacity: 0 }}
-                      animate={{ strokeDashoffset: -1200, opacity: [0, 1, 1, 0] }}
-                      transition={{ duration: 6.8, ease: [0.25, 0.1, 0.25, 1] }}
-                      style={{ filter: "drop-shadow(0 0 5px #7CFFB2)" }}
-                    />
                   </g>
                 )}
               </motion.g>
