@@ -445,26 +445,26 @@ export default function LokiTimelinePortal() {
       // Normal Organic Tree Branching Propagation:
       // Branch 1 uyir perum pothu, adhutha branches ku uyir thodarndhu slow & calm-ah paravudhu
       const cascadeConfig = [
-        { id: 'branch-2', tapRatio: 0.02, delay: 3800 },
-        { id: 'branch-5', tapRatio: 0.98, delay: 5200 },
-        { id: 'branch-3', tapRatio: 0.02, delay: 7500 },
-        { id: 'filament-1', tapRatio: 0.02, delay: 8200 },
-        { id: 'filament-6', tapRatio: 0.98, delay: 9000 },
-        { id: 'branch-4', tapRatio: 0.98, delay: 10800 },
-        { id: 'filament-3', tapRatio: 0.02, delay: 11500 },
-        { id: 'filament-9', tapRatio: 0.98, delay: 12200 },
-        { id: 'filament-0', tapRatio: 0.02, delay: 13000 },
-        { id: 'filament-4', tapRatio: 0.98, delay: 13800 },
-        { id: 'filament-2', tapRatio: 0.02, delay: 15200 },
-        { id: 'filament-5', tapRatio: 0.98, delay: 16000 },
-        { id: 'filament-7', tapRatio: 0.02, delay: 16800 },
-        { id: 'filament-8', tapRatio: 0.98, delay: 17600 },
-        { id: 'filament-10', tapRatio: 0.02, delay: 18400 },
-        { id: 'filament-11', tapRatio: 0.98, delay: 19200 },
-        { id: 'filament-12', tapRatio: 0.02, delay: 20000 },
-        { id: 'filament-13', tapRatio: 0.98, delay: 20800 },
-        { id: 'filament-14', tapRatio: 0.02, delay: 21600 },
-        { id: 'filament-15', tapRatio: 0.98, delay: 22400 },
+        { id: 'branch-2', tapRatio: 0.02, delay: 1800 },
+        { id: 'branch-5', tapRatio: 0.98, delay: 2800 },
+        { id: 'branch-3', tapRatio: 0.02, delay: 4200 },
+        { id: 'filament-1', tapRatio: 0.02, delay: 4800 },
+        { id: 'filament-6', tapRatio: 0.98, delay: 5400 },
+        { id: 'branch-4', tapRatio: 0.98, delay: 6200 },
+        { id: 'filament-3', tapRatio: 0.02, delay: 6800 },
+        { id: 'filament-9', tapRatio: 0.98, delay: 7400 },
+        { id: 'filament-0', tapRatio: 0.02, delay: 8000 },
+        { id: 'filament-4', tapRatio: 0.98, delay: 8600 },
+        { id: 'filament-2', tapRatio: 0.02, delay: 9200 },
+        { id: 'filament-5', tapRatio: 0.98, delay: 9800 },
+        { id: 'filament-7', tapRatio: 0.02, delay: 10400 },
+        { id: 'filament-8', tapRatio: 0.98, delay: 11000 },
+        { id: 'filament-10', tapRatio: 0.02, delay: 11600 },
+        { id: 'filament-11', tapRatio: 0.98, delay: 12200 },
+        { id: 'filament-12', tapRatio: 0.02, delay: 12800 },
+        { id: 'filament-13', tapRatio: 0.98, delay: 13400 },
+        { id: 'filament-14', tapRatio: 0.02, delay: 14000 },
+        { id: 'filament-15', tapRatio: 0.98, delay: 14600 },
       ];
 
       cascadeConfig.forEach(item => {
@@ -482,16 +482,15 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // Once life has fully spread across the whole cosmic tree (~23s):
-      // Stage 1: A subtle thin vertical hairline tear appears in the center gently!
+      // Stage 1: Subtle thin vertical hairline tear appears gently (~10s)
       setTimeout(() => {
         setPortalStage(1);
-      }, 23000);
+      }, 10000);
 
-      // Stage 2 (~26s): Slowly, organically cracks open into a lean slender spacetime portal!
+      // Stage 2: Spacetime portal cracks open ready for 2nd tap! (~13s)
       setTimeout(() => {
         setPortalStage(2);
-      }, 26000);
+      }, 13000);
 
       return updated;
     });
@@ -512,7 +511,7 @@ export default function LokiTimelinePortal() {
   };
 
   const handlePointerDownGather = (e) => {
-    if (portalStage < 2 || travelStage !== 'idle') return;
+    if (travelStage !== 'idle') return;
     const coords = getSvgCoordinates(e);
     setGripPoint(coords);
 
@@ -832,7 +831,11 @@ export default function LokiTimelinePortal() {
             ? { duration: 3.0, ease: [0.25, 0.1, 0.25, 1] }
             : { duration: 1.5, ease: "easeOut" }
         }
-        className="absolute inset-0 w-full h-full overflow-visible z-10 select-none pointer-events-none" 
+        className={`absolute inset-0 w-full h-full overflow-visible z-10 select-none ${
+          portalStage >= 2 && travelStage === 'idle' 
+            ? 'pointer-events-auto cursor-pointer' 
+            : 'pointer-events-none'
+        }`} 
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
@@ -1326,14 +1329,6 @@ export default function LokiTimelinePortal() {
       {/* 4. CINEMATIC PORTAL HYPERSPACE VOYAGE & CUT-TO-BLACK OVERLAYS             */}
       {/* ========================================================================= */}
       
-      {/* Transparent Click-Catcher for 2nd Tap once Portal is Open */}
-      {portalStage >= 2 && travelStage === 'idle' && (
-        <div
-          onPointerDown={handlePointerDownGather}
-          className="fixed inset-0 pointer-events-auto cursor-pointer z-30"
-        />
-      )}
-
       {/* Blinding Pure Starlight Cosmic Flash ("apdiye oru velicham varuthu") */}
       <motion.div
         className="fixed inset-0 pointer-events-none z-[95] bg-[#ffffff]"
