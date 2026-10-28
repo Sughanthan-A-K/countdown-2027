@@ -25,8 +25,8 @@ function LokiLifePowerSpread({
   const totalLen = pathEl.getTotalLength ? pathEl.getTotalLength() : 1400;
   const tapLen = totalLen * Math.min(0.95, Math.max(0.05, tapRatio));
 
-  // Pulse length: standard dynamic slug length
-  const pulseLen = 220;
+  // Dynamic pulse slug length (travels like living venom fluid creeping & gripping along branch)
+  const pulseLen = Math.max(180, Math.min(340, totalLen * 0.35));
 
   // Generate subpath helper
   const getSubpath = (fromLen, toLen) => {
@@ -47,13 +47,12 @@ function LokiLifePowerSpread({
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  // Duration of venom traveling pulse across each branch
-  // Pure fluid linear flow across 4.0s
-  const duration = 4.0;
+  // Natural organic travel duration
+  const duration = 5.2;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Behind the pulse: Awakened subtle living body inside branch */}
+      {/* 1. Behind the pulse: Awakened subtle living body inside branch that stays awake */}
       <motion.path
         d={pathD}
         fill="none"
@@ -62,70 +61,91 @@ function LokiLifePowerSpread({
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "linear" }}
-        opacity={0.9}
+        transition={{ duration, ease: "easeOut" }}
+        opacity={0.88}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#006B3C"
-        strokeWidth={6 * strokeScale}
+        strokeWidth={7 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "linear" }}
+        transition={{ duration, ease: "easeOut" }}
         opacity={0.8}
       />
 
-      {/* 2. The Traveling Pulse - Authentic Loki Venom Flow (40% organic fluid ripple) */}
+      {/* 2. Outer Smooth Cylindrical Border (NO jagged/overflow distortion on border) */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#008F4C"
+        strokeWidth={14 * strokeScale}
+        strokeLinecap="round"
+        strokeDasharray={`${pulseLen} ${distance + 600}`}
+        initial={{ strokeDashoffset: pulseLen }}
+        animate={{ strokeDashoffset: -(distance + 150) }}
+        transition={{ duration, ease: "easeOut" }}
+        opacity={0.7}
+        style={{ filter: "blur(2px)" }}
+      />
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#00C853"
+        strokeWidth={9.5 * strokeScale}
+        strokeLinecap="round"
+        strokeDasharray={`${pulseLen - 20} ${distance + 600}`}
+        initial={{ strokeDashoffset: pulseLen - 20 }}
+        animate={{ strokeDashoffset: -(distance + 150) }}
+        transition={{ duration, ease: "easeOut" }}
+        opacity={0.9}
+      />
+
+      {/* 3. The Traveling Venom Pulse - Strictly inside the middle (40% organic fluid ripple) */}
+      {/* Creeps and crawls forward smoothly along the center without distorting the outer borders */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
-        {/* Layer A: Edge Glow - Fluid wave coverage */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#008F4C"
-          strokeWidth={14 * strokeScale}
-          strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0.85 }}
-          animate={{ pathLength: 1, opacity: 0.85 }}
-          transition={{ duration, ease: "linear" }}
-          style={{ filter: "blur(2px)" }}
-        />
-
-        {/* Layer B: True Loki Green & Electric Green Venom Body */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#00C853"
-          strokeWidth={9 * strokeScale}
-          strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0.92 }}
-          animate={{ pathLength: 1, opacity: 0.92 }}
-          transition={{ duration, ease: "linear" }}
-        />
-
-        {/* Layer C: Neon Green Radiant Core */}
+        {/* Mid-core Neon Green venom fluid */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
-          strokeWidth={5 * strokeScale}
+          strokeWidth={5.5 * strokeScale}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 1 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration, ease: "linear" }}
+          strokeDasharray={`${pulseLen - 40} ${distance + 600}`}
+          initial={{ strokeDashoffset: pulseLen - 40 }}
+          animate={{ strokeDashoffset: -(distance + 150) }}
+          transition={{ duration, ease: "easeOut" }}
+          opacity={1}
         />
 
-        {/* Layer D: Mint Green Center Filament */}
+        {/* Radiant Mint Green Life Stream */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth={Math.max(1, 2 * strokeScale)}
+          strokeWidth={Math.max(1.5, 2.8 * strokeScale)}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 1 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration, ease: "linear" }}
+          strokeDasharray={`${pulseLen - 70} ${distance + 600}`}
+          initial={{ strokeDashoffset: pulseLen - 70 }}
+          animate={{ strokeDashoffset: -(distance + 150) }}
+          transition={{ duration, ease: "easeOut" }}
+          opacity={1}
+        />
+
+        {/* White-hot center filament */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth={Math.max(0.8, 1.3 * strokeScale)}
+          strokeLinecap="round"
+          strokeDasharray={`${pulseLen - 100} ${distance + 600}`}
+          initial={{ strokeDashoffset: pulseLen - 100 }}
+          animate={{ strokeDashoffset: -(distance + 150) }}
+          transition={{ duration, ease: "easeOut" }}
+          opacity={1}
         />
       </g>
     </g>
@@ -139,48 +159,63 @@ function LokiLifePowerSpread({
 
       {/* Full Living Pulsation when branch awakens */}
       {allEnergizedStage && (
-        <g style={{ filter: "url(#venomPulseDistort)" }}>
+        <g>
+          {/* Clean outer glow */}
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#008F4C"
-            strokeWidth={15 * strokeScale}
+            strokeWidth={14 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.85, 0.7] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
-            style={{ filter: "blur(3px)" }}
+            style={{ filter: "blur(2.5px)" }}
           />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#00C853"
-            strokeWidth={9 * strokeScale}
+            strokeWidth={9.5 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.95, 0.85] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
           />
-          <motion.path
-            d={pathEl.getAttribute('d')}
-            fill="none"
-            stroke="#39FF14"
-            strokeWidth={5 * strokeScale}
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0.95] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-          />
-          <motion.path
-            d={pathEl.getAttribute('d')}
-            fill="none"
-            stroke="#B9FFD0"
-            strokeWidth={Math.max(1, 2 * strokeScale)}
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0.98] }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-          />
+
+          {/* Inner core venom ripple */}
+          <g style={{ filter: "url(#venomPulseDistort)" }}>
+            <motion.path
+              d={pathEl.getAttribute('d')}
+              fill="none"
+              stroke="#39FF14"
+              strokeWidth={5.5 * strokeScale}
+              strokeLinecap="round"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0.95] }}
+              transition={{ duration: 1.8, ease: "easeOut" }}
+            />
+            <motion.path
+              d={pathEl.getAttribute('d')}
+              fill="none"
+              stroke="#B9FFD0"
+              strokeWidth={Math.max(1.5, 2.8 * strokeScale)}
+              strokeLinecap="round"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0.98] }}
+              transition={{ duration: 1.8, ease: "easeOut" }}
+            />
+            <motion.path
+              d={pathEl.getAttribute('d')}
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth={Math.max(0.8, 1.3 * strokeScale)}
+              strokeLinecap="round"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.8, 0.6] }}
+              transition={{ duration: 1.8, ease: "easeOut" }}
+            />
+          </g>
         </g>
       )}
     </g>
@@ -477,10 +512,10 @@ export default function LokiTimelinePortal() {
             <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#010f0b" floodOpacity="0.9" />
           </filter>
 
-          {/* Organic Venom pulse filter with 40% organic wave feel */}
+          {/* 40% Organic Venom filter - strictly active inside the core stream without breaking outer cylinder */}
           <filter id="venomPulseDistort" x="-20%" y="-40%" width="140%" height="180%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.035 0.1" numOctaves="3" result="venomNoise" />
-            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="5.5" xChannelSelector="R" yChannelSelector="G" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.035 0.12" numOctaves="3" result="venomNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="4.5" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
       </svg>
@@ -718,9 +753,10 @@ export default function LokiTimelinePortal() {
                   opacity={0.5}
                 />
 
-                {/* 2. Proportional Venom Life Pulse when energized (40% organic fluid ripple) */}
+                {/* 2. Proportional Venom Life Pulse when energized (40% organic fluid ripple in core) */}
                 {isEnergized && (
-                  <g style={{ filter: "url(#venomPulseDistort)" }}>
+                  <g>
+                    {/* Clean outer glow border */}
                     <motion.path
                       d={f.d}
                       fill="none"
@@ -729,7 +765,7 @@ export default function LokiTimelinePortal() {
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0.8 }}
                       animate={{ pathLength: 1, opacity: 0.8 }}
-                      transition={{ duration: 5.5, ease: "linear" }}
+                      transition={{ duration: 5.5, ease: "easeOut" }}
                       style={{ filter: "blur(1.5px)" }}
                     />
                     <motion.path
@@ -740,28 +776,31 @@ export default function LokiTimelinePortal() {
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0.9 }}
                       animate={{ pathLength: 1, opacity: 0.9 }}
-                      transition={{ duration: 5.5, ease: "linear" }}
+                      transition={{ duration: 5.5, ease: "easeOut" }}
                     />
-                    <motion.path
-                      d={f.d}
-                      fill="none"
-                      stroke="#39FF14"
-                      strokeWidth={f.width * 0.9}
-                      strokeLinecap="round"
-                      initial={{ pathLength: 0, opacity: 1 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
-                      transition={{ duration: 5.5, ease: "linear" }}
-                    />
-                    <motion.path
-                      d={f.d}
-                      fill="none"
-                      stroke="#ffffff"
-                      strokeWidth={Math.max(0.5, f.width * 0.4)}
-                      strokeLinecap="round"
-                      initial={{ pathLength: 0, opacity: 1 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
-                      transition={{ duration: 5.5, ease: "linear" }}
-                    />
+                    {/* Inner 40% organic fluid venom core */}
+                    <g style={{ filter: "url(#venomPulseDistort)" }}>
+                      <motion.path
+                        d={f.d}
+                        fill="none"
+                        stroke="#39FF14"
+                        strokeWidth={f.width * 1.0}
+                        strokeLinecap="round"
+                        initial={{ pathLength: 0, opacity: 1 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        transition={{ duration: 5.5, ease: "easeOut" }}
+                      />
+                      <motion.path
+                        d={f.d}
+                        fill="none"
+                        stroke="#ffffff"
+                        strokeWidth={Math.max(0.5, f.width * 0.45)}
+                        strokeLinecap="round"
+                        initial={{ pathLength: 0, opacity: 1 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        transition={{ duration: 5.5, ease: "easeOut" }}
+                      />
+                    </g>
                   </g>
                 )}
               </motion.g>
