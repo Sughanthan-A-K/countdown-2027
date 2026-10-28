@@ -394,13 +394,18 @@ export default function LokiTimelinePortal() {
   // Portal opening stage: 0 = hidden, 1 = thin hairline vertical crack, 2 = slowly opening organic portal
   const [portalStage, setPortalStage] = useState(0);
 
-  // Cinematic Portal Travel & Cut-to-Black Stage:
-  // travelStage: 'idle' -> 'approaching' -> 'hyperspace' -> 'whiteout' -> 'blackout'
-  const [travelStage, setTravelStage] = useState('idle');
-
   // Convergence Grip Point: Where all branches get held together by Loki's hand on 2nd tap after portal opened
   const [gripPoint, setGripPoint] = useState(null);
   const [isGatheringHand, setIsGatheringHand] = useState(false);
+
+  // Cinematic Sequences:
+  // portalVoyageStage:
+  // 0 = Idle portal open
+  // 1 = Portal pulls close & draws branches into portal vortex (approaching portal)
+  // 2 = Traveling inside portal warp tunnel (3 seconds deep cosmic travel)
+  // 3 = Brilliant White Flashout light burst
+  // 4 = Pitch Black Cut Screen
+  const [portalVoyageStage, setPortalVoyageStage] = useState(0);
 
   // Dev Shortcut: Press "Shift + R" to replay/reset portal scene instantly without tapping 3 times!
   useEffect(() => {
@@ -413,9 +418,9 @@ export default function LokiTimelinePortal() {
         setVoyageProgress(0);
         setHasDiscovered(false);
         setPortalStage(0);
-        setTravelStage('idle');
         setGripPoint(null);
         setIsGatheringHand(false);
+        setPortalVoyageStage(0);
         setReplayKey(k => k + 1);
       }
     };
@@ -445,26 +450,26 @@ export default function LokiTimelinePortal() {
       // Normal Organic Tree Branching Propagation:
       // Branch 1 uyir perum pothu, adhutha branches ku uyir thodarndhu slow & calm-ah paravudhu
       const cascadeConfig = [
-        { id: 'branch-2', tapRatio: 0.02, delay: 1800 },
-        { id: 'branch-5', tapRatio: 0.98, delay: 2800 },
-        { id: 'branch-3', tapRatio: 0.02, delay: 4200 },
-        { id: 'filament-1', tapRatio: 0.02, delay: 4800 },
-        { id: 'filament-6', tapRatio: 0.98, delay: 5400 },
-        { id: 'branch-4', tapRatio: 0.98, delay: 6200 },
-        { id: 'filament-3', tapRatio: 0.02, delay: 6800 },
-        { id: 'filament-9', tapRatio: 0.98, delay: 7400 },
-        { id: 'filament-0', tapRatio: 0.02, delay: 8000 },
-        { id: 'filament-4', tapRatio: 0.98, delay: 8600 },
-        { id: 'filament-2', tapRatio: 0.02, delay: 9200 },
-        { id: 'filament-5', tapRatio: 0.98, delay: 9800 },
-        { id: 'filament-7', tapRatio: 0.02, delay: 10400 },
-        { id: 'filament-8', tapRatio: 0.98, delay: 11000 },
-        { id: 'filament-10', tapRatio: 0.02, delay: 11600 },
-        { id: 'filament-11', tapRatio: 0.98, delay: 12200 },
-        { id: 'filament-12', tapRatio: 0.02, delay: 12800 },
-        { id: 'filament-13', tapRatio: 0.98, delay: 13400 },
-        { id: 'filament-14', tapRatio: 0.02, delay: 14000 },
-        { id: 'filament-15', tapRatio: 0.98, delay: 14600 },
+        { id: 'branch-2', tapRatio: 0.02, delay: 3800 },
+        { id: 'branch-5', tapRatio: 0.98, delay: 5200 },
+        { id: 'branch-3', tapRatio: 0.02, delay: 7500 },
+        { id: 'filament-1', tapRatio: 0.02, delay: 8200 },
+        { id: 'filament-6', tapRatio: 0.98, delay: 9000 },
+        { id: 'branch-4', tapRatio: 0.98, delay: 10800 },
+        { id: 'filament-3', tapRatio: 0.02, delay: 11500 },
+        { id: 'filament-9', tapRatio: 0.98, delay: 12200 },
+        { id: 'filament-0', tapRatio: 0.02, delay: 13000 },
+        { id: 'filament-4', tapRatio: 0.98, delay: 13800 },
+        { id: 'filament-2', tapRatio: 0.02, delay: 15200 },
+        { id: 'filament-5', tapRatio: 0.98, delay: 16000 },
+        { id: 'filament-7', tapRatio: 0.02, delay: 16800 },
+        { id: 'filament-8', tapRatio: 0.98, delay: 17600 },
+        { id: 'filament-10', tapRatio: 0.02, delay: 18400 },
+        { id: 'filament-11', tapRatio: 0.98, delay: 19200 },
+        { id: 'filament-12', tapRatio: 0.02, delay: 20000 },
+        { id: 'filament-13', tapRatio: 0.98, delay: 20800 },
+        { id: 'filament-14', tapRatio: 0.02, delay: 21600 },
+        { id: 'filament-15', tapRatio: 0.98, delay: 22400 },
       ];
 
       cascadeConfig.forEach(item => {
@@ -482,24 +487,26 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // Stage 1: Subtle thin vertical hairline tear appears gently (~10s)
+      // Once life has fully spread across the whole cosmic tree (~23s):
+      // Stage 1: A subtle thin vertical hairline tear appears in the center gently!
       setTimeout(() => {
         setPortalStage(1);
-      }, 10000);
+      }, 23000);
 
-      // Stage 2: Spacetime portal cracks open ready for 2nd tap! (~13s)
+      // Stage 2 (~26s): Slowly, organically cracks open into a lean slender spacetime portal!
       setTimeout(() => {
         setPortalStage(2);
-      }, 13000);
+      }, 26000);
 
       return updated;
     });
   };
 
-  // 2nd Interaction: When portal has opened (portalStage >= 2), user taps anywhere!
-  // All 20 branches physically converge into the user's tap point, the portal pulls forward
-  // swallowing all branches, we travel through the portal for ~3 seconds, flash bright white light,
-  // and cut immediately to pure black screen!
+  // 2nd Interaction: When portal has opened (portalStage >= 2), user simply taps / holds anywhere!
+  // 1. All branches instantly converge into the user's hand without needing any grip effect circles.
+  // 2. Portal rushes close to the foreground and draws all branches into its cosmic rift vortex.
+  // 3. User travels inside the portal for ~3 seconds with swirling multiverse light.
+  // 4. Brilliant blinding white flash of light, followed by sudden dramatic CUT TO BLACK!
   const getSvgCoordinates = (e) => {
     const svg = e.currentTarget.closest('svg') || document.querySelector('svg#loki-timeline-svg');
     if (!svg) return { x: 500, y: 500 };
@@ -511,28 +518,38 @@ export default function LokiTimelinePortal() {
   };
 
   const handlePointerDownGather = (e) => {
-    if (travelStage !== 'idle') return;
+    if (portalStage < 2 || portalVoyageStage > 0) return;
     const coords = getSvgCoordinates(e);
     setGripPoint(coords);
+    setIsGatheringHand(true);
 
-    // Sequence of Cinematic Void Voyage:
-    // 1. Immediately: All branches bend into hand & portal surges closer pulling everything in
-    setTravelStage('approaching');
+    // Sequence 1: Portal approaches close and draws all branches inside (0s -> 1.8s)
+    setPortalVoyageStage(1);
 
-    // 2. At 1.5s: Enters inner portal rift, hyperspace travel through green spacetime tunnel for 3 seconds!
+    // Sequence 2: Dive inside the portal warp tunnel, 3 seconds travel (1.8s -> 4.8s)
     setTimeout(() => {
-      setTravelStage('hyperspace');
-    }, 1500);
+      setPortalVoyageStage(2);
+    }, 1800);
 
-    // 3. At 4.5s (after 3s of portal travel): Blinding bright cosmic white light flash!
+    // Sequence 3: Pure white flash burst (at 4.8s)
     setTimeout(() => {
-      setTravelStage('whiteout');
-    }, 4500);
+      setPortalVoyageStage(3);
+    }, 4800);
 
-    // 4. At 5.1s: Instant Cut to Black Screen!
+    // Sequence 4: Sudden dramatic CUT TO BLACK SCREEN! (at 5.3s)
     setTimeout(() => {
-      setTravelStage('blackout');
-    }, 5100);
+      setPortalVoyageStage(4);
+    }, 5300);
+  };
+
+  const handlePointerMoveGather = (e) => {
+    if (!isGatheringHand || portalVoyageStage >= 2) return;
+    const coords = getSvgCoordinates(e);
+    setGripPoint(coords);
+  };
+
+  const handlePointerUpGather = () => {
+    setIsGatheringHand(false);
   };
 
   // Total energized count (0 to 5):
@@ -651,24 +668,25 @@ export default function LokiTimelinePortal() {
           - Exactly Centered Portal (LEAN, SLENDER, SLEEK shape - NO bulky/fat look)
           - Intro opens ultra-slowly across 20.0 seconds!
           - Mystical slender vertical spacetime tear aperture.
+          - On 2nd Tap (portalVoyageStage >= 1): Portal accelerates forward to camera!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ opacity: 0 }}
         animate={
-          travelStage === 'hyperspace' || travelStage === 'whiteout'
-            ? { opacity: 1, scale: [1.2, 5.5, 9.0] }
-            : travelStage === 'approaching'
-            ? { opacity: 1, scale: 1.4 }
+          portalVoyageStage === 1
+            ? { opacity: 1, scale: 2.8, z: 50 }
+            : portalVoyageStage >= 2
+            ? { opacity: 1, scale: 12, z: 200 }
             : portalStage > 0
-            ? { opacity: 1, scale: 1 }
-            : { opacity: 0, scale: 0.8 }
+            ? { opacity: 1, scale: 1, z: 0 }
+            : { opacity: 0, scale: 0.8, z: -100 }
         }
         transition={
-          travelStage === 'hyperspace' || travelStage === 'whiteout'
-            ? { duration: 3.2, ease: [0.16, 0.8, 0.2, 1] }
-            : travelStage === 'approaching'
-            ? { duration: 1.5, ease: "easeOut" }
+          portalVoyageStage === 1
+            ? { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
+            : portalVoyageStage >= 2
+            ? { duration: 3.2, ease: "easeIn" }
             : { duration: 2.0, ease: "easeOut" }
         }
         style={{ transformOrigin: "50% 50%" }}
@@ -814,27 +832,16 @@ export default function LokiTimelinePortal() {
         - Layer 5 (1px near portal): Sweeps past camera (17s -> 24s)
         - Portal: Approaches from depth simultaneously and locks into full bloom (0s -> 24s)!
       */}
-      <motion.svg 
+      <svg 
         id="loki-timeline-svg"
         viewBox="0 0 1000 1000" 
         preserveAspectRatio="none"
         onPointerDown={portalStage >= 2 ? handlePointerDownGather : undefined}
-        animate={
-          travelStage === 'hyperspace' || travelStage === 'whiteout' || travelStage === 'blackout'
-            ? { scale: 3.5, opacity: [1, 0.4, 0] }
-            : travelStage === 'approaching'
-            ? { scale: 1.15 }
-            : { scale: 1, opacity: 1 }
-        }
-        transition={
-          travelStage === 'hyperspace' || travelStage === 'whiteout' || travelStage === 'blackout'
-            ? { duration: 3.0, ease: [0.25, 0.1, 0.25, 1] }
-            : { duration: 1.5, ease: "easeOut" }
-        }
+        onPointerMove={portalStage >= 2 ? handlePointerMoveGather : undefined}
+        onPointerUp={portalStage >= 2 ? handlePointerUpGather : undefined}
+        onPointerLeave={portalStage >= 2 ? handlePointerUpGather : undefined}
         className={`absolute inset-0 w-full h-full overflow-visible z-10 select-none ${
-          portalStage >= 2 && travelStage === 'idle' 
-            ? 'pointer-events-auto cursor-pointer' 
-            : 'pointer-events-none'
+          portalStage >= 2 ? 'pointer-events-auto cursor-grab active:cursor-grabbing' : 'pointer-events-none'
         }`} 
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -859,6 +866,24 @@ export default function LokiTimelinePortal() {
           })}
         </defs>
 
+        {/* SVG Container wrapping all branches with entrance/portal-pull transforms */}
+        <motion.g
+          animate={
+            portalVoyageStage === 1
+              ? { scale: 0.7, opacity: 0.95 }
+              : portalVoyageStage >= 2
+              ? { scale: 0.05, opacity: 0 }
+              : { scale: 1, opacity: 1 }
+          }
+          transition={
+            portalVoyageStage === 1
+              ? { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
+              : portalVoyageStage >= 2
+              ? { duration: 1.2, ease: "easeIn" }
+              : { duration: 0.5 }
+          }
+          style={{ transformOrigin: "500px 500px" }}
+        >
         {/* ------------------------------------------------------------- */}
         {/* MULTIVERSE TAPESTRY FILAMENTS (LOKI YGGDRASIL WORLD TREE)     */}
         {/* Rendered at deepest layer, pure dark black silhouette branches */}
@@ -1272,86 +1297,96 @@ export default function LokiTimelinePortal() {
             />
           </DraggableBranch>
         </motion.g>
+        </motion.g>
 
         {/* ========================================================================= */}
         {/* LOKI GOD OF STORIES: THE SACRED HAND GRIP KNOT                           */}
         {/* Visual tension knot/fist where all cosmic timelines converge in user's touch */}
         {/* ========================================================================= */}
-        {gripPoint && (
-          <motion.g
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: [0, 1.25, 1], opacity: 1 }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {/* Outer Godly Atmospheric Glow around Hand */}
-            <circle
-              cx={gripPoint.x}
-              cy={gripPoint.y}
-              r="34"
-              fill="url(#venomGripPulseGlow)"
-              opacity="0.75"
-              style={{ filter: "blur(6px)" }}
-            />
-            {/* Loki Emerald Ring Tendrils wrapping the bundle */}
-            <circle
-              cx={gripPoint.x}
-              cy={gripPoint.y}
-              r="18"
-              fill="none"
-              stroke="#00FF66"
-              strokeWidth="2.8"
-              strokeDasharray="4 3"
-              opacity="0.85"
-            />
-            <circle
-              cx={gripPoint.x}
-              cy={gripPoint.y}
-              r="12"
-              fill="none"
-              stroke="#B9FFD0"
-              strokeWidth="2"
-              opacity="0.95"
-            />
-            {/* Core Pure Light Spark inside the Grip */}
-            <circle
-              cx={gripPoint.x}
-              cy={gripPoint.y}
-              r="5"
-              fill="#ffffff"
-              opacity="1"
-              style={{ filter: "drop-shadow(0 0 8px #39FF14)" }}
-            />
-          </motion.g>
-        )}
-      </motion.svg>
+        {/* User requested: antha hold panda edathula irukura effect vena -> clean convergence only */}
+      </svg>
 
       {/* ========================================================================= */}
-      {/* 4. CINEMATIC PORTAL HYPERSPACE VOYAGE & CUT-TO-BLACK OVERLAYS             */}
+      {/* 4. TRAVELING INSIDE THE PORTAL: 3 SECONDS HYPERSPACE WARP VOYAGE          */}
       {/* ========================================================================= */}
-      
-      {/* Blinding Pure Starlight Cosmic Flash ("apdiye oru velicham varuthu") */}
-      <motion.div
-        className="fixed inset-0 pointer-events-none z-[95] bg-[#ffffff]"
-        initial={{ opacity: 0 }}
-        animate={travelStage === 'whiteout' ? {
-          opacity: [0, 1, 0.95]
-        } : {
-          opacity: 0
-        }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-      />
+      {portalVoyageStage >= 2 && portalVoyageStage < 4 && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden z-20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Swirling emerald timeline energy tunnel */}
+          <motion.div
+            className="absolute w-[800px] h-[800px] rounded-full"
+            style={{
+              background: 'conic-gradient(from 0deg, #00FF66, #004D2B, #39FF14, #002213, #7CFFB2, #00FF66)',
+              filter: 'blur(40px)',
+            }}
+            animate={{ rotate: 360, scale: [1, 2.5, 4] }}
+            transition={{
+              rotate: { duration: 1.5, repeat: Infinity, ease: "linear" },
+              scale: { duration: 3.0, ease: "easeInOut" }
+            }}
+          />
 
-      {/* Sudden Hard Cut to Black Screen ("odane cut black screen thaan") */}
-      <motion.div
-        className="fixed inset-0 pointer-events-auto z-[100] bg-[#000000]"
-        initial={{ opacity: 0 }}
-        animate={travelStage === 'blackout' ? {
-          opacity: 1
-        } : {
-          opacity: 0
-        }}
-        transition={{ duration: 0.05, ease: "linear" }}
-      />
+          {/* Streaking spacetime warp rays */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            {[...Array(16)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-[3px] bg-gradient-to-t from-transparent via-[#B9FFD0] to-white rounded-full"
+                style={{
+                  height: '120vh',
+                  transform: `rotate(${i * 22.5}deg)`,
+                  transformOrigin: '50% 50%',
+                  filter: 'blur(1px)'
+                }}
+                animate={{
+                  scaleY: [0.2, 1.8, 2.4],
+                  opacity: [0.3, 1, 0.4]
+                }}
+                transition={{
+                  duration: 0.8,
+                  repeat: Infinity,
+                  delay: (i % 4) * 0.15,
+                  ease: "easeInOut"
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Deep focal hyperspace star */}
+          <motion.div
+            className="absolute w-24 h-24 rounded-full bg-white blur-xl shadow-[0_0_80px_#ffffff,0_0_150px_#00FF66]"
+            animate={{ scale: [1, 3, 8] }}
+            transition={{ duration: 3.0, ease: "easeIn" }}
+          />
+        </motion.div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 5. BRILLIANT WHITE FLASHOUT (Stage 3)                                    */}
+      {/* ========================================================================= */}
+      {portalVoyageStage >= 3 && portalVoyageStage < 4 && (
+        <motion.div
+          className="absolute inset-0 bg-white pointer-events-none z-30"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.45, ease: "easeIn" }}
+        />
+      )}
+
+      {/* ========================================================================= */}
+      {/* 6. DRAMATIC CUT TO PITCH BLACK SCREEN (Stage 4)                          */}
+      {/* ========================================================================= */}
+      {portalVoyageStage === 4 && (
+        <motion.div
+          className="absolute inset-0 bg-[#000000] pointer-events-auto z-40"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+        />
+      )}
     </div>
   );
 }
