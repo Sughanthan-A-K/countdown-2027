@@ -364,18 +364,18 @@ export default function LokiTimelinePortal() {
         }
       };
 
-      // Strict Sequential Venom Propagation:
-      // Oru branch-la venom FULL-AH (4.0s) travel aagi mudinjathukku apram thaan next branch start aagum!
+      // Natural Fluid Venom Propagation:
+      // Current branch almost mudiya pogum bothu (~2.6s - 2.8s), organic transition-oda next branch start aagum!
       const cascadeConfig = [
-        { id: 'branch-2', tapRatio: 0.05, delay: 4200 },
-        { id: 'branch-5', tapRatio: 0.92, delay: 8400 },
-        { id: 'branch-3', tapRatio: 0.95, delay: 12600 },
-        { id: 'branch-4', tapRatio: 0.08, delay: 16800 },
-        // Cosmic filaments then ignite together to complete the world tree tapestry (~21.0s)
+        { id: 'branch-2', tapRatio: 0.05, delay: 2600 },
+        { id: 'branch-5', tapRatio: 0.92, delay: 5200 },
+        { id: 'branch-3', tapRatio: 0.95, delay: 7800 },
+        { id: 'branch-4', tapRatio: 0.08, delay: 10400 },
+        // Cosmic filaments then ignite smoothly (~12.8s)
         ...Array.from({ length: 16 }).map((_, idx) => ({
           id: `filament-${idx}`,
           tapRatio: idx % 2 === 0 ? 0.05 : 0.95,
-          delay: 21000 + idx * 150
+          delay: 12800 + idx * 120
         }))
       ];
 
@@ -394,16 +394,16 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // Once venom has spread sequentially across all main branches and reaches the tapestry (~22s):
+      // Once venom has spread across main branches (~13.5s):
       // Stage 1: A subtle thin vertical hairline tear appears in the center!
       setTimeout(() => {
         setPortalStage(1);
-      }, 22000);
+      }, 13500);
 
-      // Stage 2 (~23.5s): Slowly, organically cracks open into a lean slender spacetime portal!
+      // Stage 2 (~15.0s): Slowly, organically cracks open into a lean slender spacetime portal!
       setTimeout(() => {
         setPortalStage(2);
-      }, 23500);
+      }, 15000);
 
       return updated;
     });
