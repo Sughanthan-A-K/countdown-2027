@@ -674,9 +674,9 @@ export default function LokiTimelinePortal() {
 
       {/* ========================================================================= */}
       {/* STEP 1: THE TEMPORAL LOOM EXPLOSION: 5-SECOND MULTICOLOR COSMIC AURORA   */}
-      {/* Orange, teal, amber & emerald atmospheric aurora glow from the destroyed Loom */}
-      {/* (exactly matching user's attached Marvel Season 2 finale explosion shot) */}
-      {/* Fades smoothly to pitch black by 5 seconds!                              */}
+      {/* Brilliant, fully saturated, vivid cinematic exposure matching User's 2nd reference image! */}
+      {/* Luminous warm amber-orange rays on left, vivid turquoise-cyan on right, and glowing central cosmic Loom light */}
+      {/* Fades smoothly into pitch black after 5.0 seconds                        */}
       {/* ========================================================================= */}
       <AnimatePresence>
         {loomExplodePhase < 2 && (
@@ -684,43 +684,57 @@ export default function LokiTimelinePortal() {
             key="loom-explosion-aurora"
             className="absolute inset-0 pointer-events-none overflow-hidden z-0"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.95, 0.9, 0.7, 0] }}
+            animate={{ opacity: [0, 1, 1, 0.85, 0] }}
             exit={{ opacity: 0 }}
             transition={{ duration: 5.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Orange / Amber temporal explosion flare (Left side warm radiation) */}
+            {/* 1. Full-screen Luminous Cosmic Sky Base - Golden amber on left, cyan on right */}
             <motion.div
-              className="absolute -top-[10%] -left-[10%] w-[650px] h-[650px] rounded-full"
+              className="absolute inset-0"
               style={{
-                background: 'radial-gradient(circle, rgba(230,120,40,0.65) 0%, rgba(180,80,20,0.3) 40%, rgba(200,100,30,0.1) 65%, transparent 85%)',
-                filter: 'blur(60px)'
+                background: 'linear-gradient(115deg, rgba(230,140,50,0.85) 0%, rgba(190,110,40,0.65) 25%, rgba(60,160,110,0.6) 55%, rgba(20,190,180,0.85) 85%, rgba(10,140,160,0.95) 100%)',
+                filter: 'brightness(1.25) contrast(1.15)',
               }}
-              animate={{ scale: [0.5, 1.4, 1.8], opacity: [0.3, 0.85, 0] }}
+              animate={{ opacity: [0.3, 1, 0.9, 0] }}
               transition={{ duration: 5.0, ease: "easeOut" }}
             />
 
-            {/* Cyan / Teal Loom discharge aurora (Top right cool cosmic radiation) */}
+            {/* 2. Intense Warm Amber-Gold Loom Flare (Left Hemisphere Explosion Corona) */}
             <motion.div
-              className="absolute -top-[5%] right-[0%] w-[600px] h-[600px] rounded-full"
+              className="absolute -top-[20%] -left-[15%] w-[800px] h-[800px] rounded-full"
               style={{
-                background: 'radial-gradient(circle, rgba(30,200,180,0.6) 0%, rgba(10,140,130,0.3) 45%, transparent 80%)',
-                filter: 'blur(55px)'
+                background: 'radial-gradient(circle at 45% 45%, #ffcc66 0%, #ff9933 25%, #cc5500 55%, transparent 80%)',
+                filter: 'blur(45px)',
+                mixBlendMode: 'screen'
               }}
-              animate={{ scale: [0.6, 1.3, 1.6], opacity: [0.4, 0.8, 0] }}
+              animate={{ scale: [0.6, 1.3, 1.7], opacity: [0.6, 1, 0] }}
               transition={{ duration: 5.0, ease: "easeOut" }}
             />
 
-            {/* Central Sacred Green Shockwave flash */}
+            {/* 3. Intense Cyan-Turquoise Cosmic Discharge (Top & Right Hemisphere) */}
+            <motion.div
+              className="absolute -top-[15%] right-[-10%] w-[750px] h-[750px] rounded-full"
+              style={{
+                background: 'radial-gradient(circle at 55% 45%, #66ffff 0%, #00cccc 30%, #008888 60%, transparent 85%)',
+                filter: 'blur(45px)',
+                mixBlendMode: 'screen'
+              }}
+              animate={{ scale: [0.6, 1.25, 1.6], opacity: [0.5, 0.95, 0] }}
+              transition={{ duration: 5.0, ease: "easeOut" }}
+            />
+
+            {/* 4. Center Radiant Loom Core Flash (Supernova shockwave at card center) */}
             <motion.div
               className="absolute inset-0 flex items-center justify-center"
             >
               <motion.div
-                className="w-[850px] h-[850px] rounded-full"
+                className="w-[900px] h-[900px] rounded-full"
                 style={{
-                  background: 'radial-gradient(ellipse at 50% 50%, rgba(0,255,102,0.45) 0%, rgba(0,143,76,0.25) 40%, rgba(185,255,208,0.1) 60%, transparent 80%)',
-                  filter: 'blur(50px)'
+                  background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.95) 0%, rgba(255,220,150,0.8) 20%, rgba(100,255,180,0.5) 45%, transparent 75%)',
+                  filter: 'blur(40px)',
+                  mixBlendMode: 'screen'
                 }}
-                animate={{ scale: [0.3, 1.5, 2.2], opacity: [0.8, 0.9, 0] }}
+                animate={{ scale: [0.2, 1.4, 2.2], opacity: [1, 0.9, 0] }}
                 transition={{ duration: 4.8, ease: "easeOut" }}
               />
             </motion.div>
