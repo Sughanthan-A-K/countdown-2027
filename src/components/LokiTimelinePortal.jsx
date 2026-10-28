@@ -48,35 +48,70 @@ function LokiLifePowerSpread({
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
   // Natural organic life infusion travel duration: slow, graceful awakening across the timeline
-  const duration = 7.0;
+  const duration = 6.0;
+
+  // Crawling slug length for the living venom wave head
+  const headLen = Math.max(160, Math.min(300, totalLen * 0.3));
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Pre-glow of life awakening: Soft aura permeating into the black branch ahead of the flow */}
+      {/* 1. Behind the venom wave: Awakened living body that stays alive once infused */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#004D2B"
-        strokeWidth={14 * strokeScale}
+        strokeWidth={13 * strokeScale}
         strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.8, 0.95] }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-        style={{ filter: "blur(3px)" }}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+        opacity={0.88}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#006B3C"
-        strokeWidth={10 * strokeScale}
+        strokeWidth={9 * strokeScale}
         strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.85, 0.92] }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
-        style={{ filter: "blur(1.5px)" }}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+        opacity={0.85}
       />
 
-      {/* 2. Deep Living Flesh of the Vine: Saturated rich emerald life infusing into the dark branch */}
+      {/* 2. Crawling Living Venom Organism (Venom Thaan Uyir) - Organic Fluid Head creeping & spreading */}
+      <g style={{ filter: "url(#livingVenomFluidDistort)" }}>
+        {/* Venom Aura Canopy creeping along branch */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#008F4C"
+          strokeWidth={16 * strokeScale}
+          strokeLinecap="round"
+          strokeDasharray={`${headLen} ${distance + 600}`}
+          initial={{ strokeDashoffset: headLen }}
+          animate={{ strokeDashoffset: -(distance + 120) }}
+          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+          opacity={0.9}
+          style={{ filter: "blur(2.5px)" }}
+        />
+
+        {/* Dense Living Venom Slime/Body */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#00C853"
+          strokeWidth={11.5 * strokeScale}
+          strokeLinecap="round"
+          strokeDasharray={`${headLen - 15} ${distance + 600}`}
+          initial={{ strokeDashoffset: headLen - 15 }}
+          animate={{ strokeDashoffset: -(distance + 120) }}
+          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+          opacity={0.95}
+        />
+      </g>
+
+      {/* 3. Awakened Living Body trailing right behind the crawl */}
       <motion.path
         d={pathD}
         fill="none"
@@ -84,56 +119,86 @@ function LokiLifePowerSpread({
         strokeWidth={12 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.9, 0.98] }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        animate={{ pathLength: 1, opacity: 0.9 }}
+        transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#00C853"
-        strokeWidth={9 * strokeScale}
+        strokeWidth={8.5 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.95, 1] }}
-        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        animate={{ pathLength: 1, opacity: 0.95 }}
+        transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
       />
 
-      {/* 3. The Sacred Pulse of Life: Electric Green & Mint heartbeat flowing through the core */}
+      {/* 4. The Sacred Electric Core of Life: Traveling venom pulse & living inner pulse */}
       <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-        {/* Living Core Vein */}
+        {/* Traveling high-energy venom core head */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
-          strokeWidth={5.5 * strokeScale}
+          strokeWidth={6.5 * strokeScale}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: [0, 1, 1] }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          strokeDasharray={`${headLen - 30} ${distance + 600}`}
+          initial={{ strokeDashoffset: headLen - 30 }}
+          animate={{ strokeDashoffset: -(distance + 120) }}
+          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+          opacity={1}
         />
 
-        {/* Life Essence Core Stream (Mint / Starlight) */}
+        {/* Awakened living continuous vein behind head */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#39FF14"
+          strokeWidth={4.5 * strokeScale}
+          strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 0.95 }}
+          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+        />
+
+        {/* Bright Mint Living Spark Head */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth={Math.max(1.2, 2.5 * strokeScale)}
+          strokeWidth={Math.max(1.5, 3 * strokeScale)}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: [0, 1, 1] }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          strokeDasharray={`${headLen - 45} ${distance + 600}`}
+          initial={{ strokeDashoffset: headLen - 45 }}
+          animate={{ strokeDashoffset: -(distance + 120) }}
+          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+          opacity={1}
         />
 
-        {/* Vital Spark - Pure White Living Thread */}
+        {/* Continuous mint vein */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#B9FFD0"
+          strokeWidth={Math.max(1, 2 * strokeScale)}
+          strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 0.9 }}
+          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+        />
+
+        {/* Pure White Spark Point */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.6, 1.0 * strokeScale)}
+          strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: [0, 0.8, 0.7] }}
-          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          strokeDasharray={`40 ${distance + 600}`}
+          initial={{ strokeDashoffset: 40 }}
+          animate={{ strokeDashoffset: -(distance + 100) }}
+          transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+          opacity={0.9}
         />
       </g>
     </g>
@@ -501,6 +566,12 @@ export default function LokiTimelinePortal() {
 
           <filter id="smoothBranchGlow" x="-30%" y="-30%" width="160%" height="160%">
             <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#010f0b" floodOpacity="0.9" />
+          </filter>
+
+          {/* Dynamic Living Venom Fluid filter: creeping fluid tendrils that grasp and flow with true life */}
+          <filter id="livingVenomFluidDistort" x="-25%" y="-50%" width="150%" height="200%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.02 0.09" numOctaves="3" result="venomNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="8.5" xChannelSelector="R" yChannelSelector="G" />
           </filter>
 
           {/* Organic Venom filter for inner core: 40% organic fluid wave ripple */}
