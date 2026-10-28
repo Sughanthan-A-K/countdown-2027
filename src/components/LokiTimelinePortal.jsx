@@ -182,34 +182,6 @@ function LokiLifePowerSpread({
 
   return (
     <g>
-      {/* Tap Point Origin Awakening: Loki's Magic Hand Flare that ignites the root spread */}
-      {tapPt && (
-        <g>
-          {/* Outer magical aurora burst */}
-          <motion.circle
-            cx={tapPt.x}
-            cy={tapPt.y}
-            r={30 * strokeScale}
-            fill="radial-gradient(circle, #39FF14 0%, #008F4C 50%, transparent 75%)"
-            initial={{ r: 4, opacity: 1 }}
-            animate={{ r: 42 * strokeScale, opacity: 0 }}
-            transition={{ duration: 1.4, ease: "easeOut" }}
-            style={{ filter: "blur(6px)" }}
-          />
-          {/* Intense core spark */}
-          <motion.circle
-            cx={tapPt.x}
-            cy={tapPt.y}
-            r={8 * strokeScale}
-            fill="#ffffff"
-            initial={{ r: 2, opacity: 1 }}
-            animate={{ r: 12 * strokeScale, opacity: [1, 0.8, 0] }}
-            transition={{ duration: 1.0, ease: "easeOut" }}
-            style={{ filter: "drop-shadow(0 0 10px #7CFFB2)" }}
-          />
-        </g>
-      )}
-
       {/* Symmetrical Bi-Directional Root Cracking: Right and Left Veins spreading */}
       {renderRootVeinSystem(rightD, rightVeinB, rightVeinC, rightDistance, "roots-right")}
       {renderRootVeinSystem(leftD, leftVeinB, leftVeinC, leftDistance, "roots-left")}
