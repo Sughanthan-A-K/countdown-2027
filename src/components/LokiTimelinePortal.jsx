@@ -684,26 +684,30 @@ export default function LokiTimelinePortal() {
           - Exactly Centered Portal (LEAN, SLENDER, SLEEK shape - NO bulky/fat look)
           - Intro opens ultra-slowly across 20.0 seconds!
           - Mystical slender vertical spacetime tear aperture.
-          - On 2nd Tap (portalVoyageStage === 1): Portal STAYS AT ITS PLACE for 2.5s while branches are pulled!
-          - When portalVoyageStage === 2: We fly through the portal into the void!
+          - On 2nd Tap (portalVoyageStage === 1): Portal draws timelines into its gravitational singularity!
+          - portalVoyageStage === 2: The portal horizon engulfs camera as we dive through it!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ opacity: 0 }}
         animate={
           portalVoyageStage === 1
-            ? { opacity: 1, scale: 1.15, z: 10 }
+            ? { 
+                opacity: 1, 
+                scale: [1, 1.35, 1.9], 
+                filter: ['brightness(1) contrast(1)', 'brightness(1.5) contrast(1.3)', 'brightness(2) contrast(1.6)'] 
+              }
             : portalVoyageStage >= 2
-            ? { opacity: 0.1, scale: 28, z: 300 }
+            ? { opacity: 0.1, scale: 35 }
             : portalStage > 0
-            ? { opacity: 1, scale: 1, z: 0 }
-            : { opacity: 0, scale: 0.8, z: -100 }
+            ? { opacity: 1, scale: 1 }
+            : { opacity: 0, scale: 0.8 }
         }
         transition={
           portalVoyageStage === 1
-            ? { duration: 2.5, ease: "easeOut" }
+            ? { duration: 2.5, ease: [0.22, 1, 0.36, 1] }
             : portalVoyageStage >= 2
-            ? { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
+            ? { duration: 1.0, ease: "easeOut" }
             : { duration: 2.0, ease: "easeOut" }
         }
         style={{ transformOrigin: "50% 50%" }}
@@ -884,27 +888,42 @@ export default function LokiTimelinePortal() {
         </defs>
 
         {/* SVG Container wrapping all branches:
-            Elastic branch pull & gathering into hand for first 2.5s while portal stays in place!
-            Then at Stage 2, as we fly through portal, branches follow through our hand into the wormhole!
+            REAL ELASTIC LIGHT-SPEED STRETCH & SUCTION INTO PORTAL:
+            When user holds (Stage 1), branches pull & stretch elastically like rubber strings
+            drawn into the center portal singularity!
+            At Stage 2 (Dive), user's held bunch rushes directly forward into the vortex!
         */}
         <motion.g
           animate={
             portalVoyageStage === 1
-              ? { scale: [1, 1.05, 0.98], opacity: 1 }
+              ? { 
+                  // Elastic rubber band pull: stretches horizontally, pinches vertically, and pulls towards center portal!
+                  scaleX: [1, 1.3, 0.75, 0.6],
+                  scaleY: [1, 0.7, 0.55, 0.45],
+                  x: [0, (500 - (gripPoint?.x || 500)) * 0.4, (500 - (gripPoint?.x || 500)) * 0.85],
+                  y: [0, (500 - (gripPoint?.y || 500)) * 0.4, (500 - (gripPoint?.y || 500)) * 0.85],
+                  opacity: 1
+                }
               : portalVoyageStage >= 2 && portalVoyageStage < 4
-              ? { scale: 0.65, opacity: 0.85, y: 40 }
+              ? { 
+                  // Traveling through portal: held bunch stays in front of user as we fly into wormhole!
+                  scale: [0.6, 0.35, 0.15], 
+                  opacity: [1, 0.9, 0.6], 
+                  y: [20, 60, 100],
+                  filter: 'blur(0.5px)'
+                }
               : portalVoyageStage >= 4
               ? { opacity: 0 }
               : { scale: 1, opacity: 1 }
           }
           transition={
             portalVoyageStage === 1
-              ? { duration: 2.5, ease: "easeInOut" }
+              ? { duration: 2.5, ease: [0.16, 1, 0.3, 1] }
               : portalVoyageStage >= 2
-              ? { duration: 1.0, ease: "easeOut" }
+              ? { duration: 3.7, ease: "easeIn" }
               : { duration: 0.5 }
           }
-          style={{ transformOrigin: "500px 500px" }}
+          style={{ transformOrigin: `${gripPoint?.x || 500}px ${gripPoint?.y || 500}px` }}
         >
         {/* ------------------------------------------------------------- */}
         {/* MULTIVERSE TAPESTRY FILAMENTS (LOKI YGGDRASIL WORLD TREE)     */}
