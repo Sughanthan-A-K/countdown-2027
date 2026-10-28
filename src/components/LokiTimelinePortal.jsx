@@ -28,164 +28,119 @@ function LokiLifePowerSpread({
   // Pulse length: standard dynamic slug length
   const pulseLen = 220;
 
-  // Generate natural continuous spine path from start to end (Single Unbroken Path)
-  const fullPathD = useMemo(() => {
-    const samples = 90;
+  // Generate subpath helper
+  const getSubpath = (fromLen, toLen) => {
+    const samples = 40;
     let d = "";
     for (let i = 0; i <= samples; i++) {
-      const prog = i / samples;
-      const l = prog * totalLen;
+      const l = fromLen + (i / samples) * (toLen - fromLen);
       const pt = pathEl.getPointAtLength(l);
-      const wave = Math.sin(prog * 24 + 1) * (Math.sin(prog * Math.PI) * 2.2 * strokeScale);
-      const x = pt.x + wave * 0.4;
-      const y = pt.y + wave;
-      d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+      d += (i === 0 ? `M ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}` : ` L ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`);
     }
     return d;
-  }, [totalLen, strokeScale]);
+  };
 
-  // Secondary fine capillary root veins that branch off organically
-  const fullVeinB = useMemo(() => {
-    const samples = 75;
-    let d = "";
-    for (let i = 0; i <= samples; i++) {
-      const prog = i / samples;
-      const l = prog * totalLen;
-      const pt = pathEl.getPointAtLength(l);
-      const wave = Math.sin(prog * 20 + 3.5) * (Math.sin(prog * Math.PI) * 2.5 * strokeScale);
-      const x = pt.x + wave * 0.4;
-      const y = pt.y + wave;
-      d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
-    }
-    return d;
-  }, [totalLen, strokeScale]);
+  // Rightward path (from tap to end)
+  const rightD = getSubpath(tapLen, totalLen);
+  // Leftward path (from tap to start)
+  const leftD = getSubpath(tapLen, 0);
 
-  const fullVeinC = useMemo(() => {
-    const samples = 75;
-    let d = "";
-    for (let i = 0; i <= samples; i++) {
-      const prog = i / samples;
-      const l = prog * totalLen;
-      const pt = pathEl.getPointAtLength(l);
-      const wave = Math.sin(prog * 22 + 6.0) * (Math.sin(prog * Math.PI) * 2.5 * strokeScale);
-      const x = pt.x + wave * 0.4;
-      const y = pt.y + wave;
-      d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
-    }
-    return d;
-  }, [totalLen, strokeScale]);
-
+  const rightDistance = totalLen - tapLen;
+  const leftDistance = tapLen;
   // Natural biological root awakening - slow, elegant, atmospheric spreading across the timeline
   const duration = 7.5;
 
-  return (
-    <g>
-      {/* Clip path circle expanding outward from tap point: Guarantees 0 seam lines or marks at tap origin! */}
-      <defs>
-        <clipPath id={`life-expand-${branchPathRef.current?.id || totalLen}`}>
-          <motion.circle
-            cx={pathEl.getPointAtLength(tapLen).x}
-            cy={pathEl.getPointAtLength(tapLen).y}
-            initial={{ r: 0 }}
-            animate={{ r: totalLen * 1.25 }}
-            transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-          />
-        </clipPath>
-      </defs>
+  const renderTravelingVeinStream = (pathD, distance, key) => (
+    <g key={key}>
+      {/* 1. Bark Cracking Pre-glow: Emerald warmth glowing through cracked wood */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#004D2B"
+        strokeWidth={13 * strokeScale}
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
+        opacity={0.95}
+        style={{ filter: "blur(3px)" }}
+      />
 
-      {/* Single Unbroken Bio-luminescent Root Vein Network */}
-      <g clipPath={`url(#life-expand-${branchPathRef.current?.id || totalLen})`}>
-        {/* 1. Bark Cracking Pre-glow: Emerald warmth glowing through cracked wood */}
-        <path
-          d={fullPathD}
-          fill="none"
-          stroke="#004D2B"
-          strokeWidth={13 * strokeScale}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.95}
-          style={{ filter: "blur(3px)" }}
-        />
+      {/* 2. Deep Green Bio-luminescent Vascular Flesh */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#008F4C"
+        strokeWidth={9 * strokeScale}
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
+        opacity={0.98}
+        style={{ filter: "blur(1px)" }}
+      />
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#00C853"
+        strokeWidth={6.5 * strokeScale}
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
+        opacity={1}
+      />
 
-        {/* 2. Deep Green Bio-luminescent Vascular Flesh */}
-        <path
-          d={fullPathD}
+      {/* 3. Electric Neon Core Vein + Starlight Center - Moving in PERFECT sync with the green body */}
+      <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
+        {/* Neon Green Core Pulse */}
+        <motion.path
+          d={pathD}
           fill="none"
-          stroke="#008F4C"
-          strokeWidth={9 * strokeScale}
+          stroke="#39FF14"
+          strokeWidth={4.5 * strokeScale}
           strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.98}
-          style={{ filter: "blur(1px)" }}
-        />
-        <path
-          d={fullPathD}
-          fill="none"
-          stroke="#00C853"
-          strokeWidth={6.5 * strokeScale}
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
           opacity={1}
         />
 
-        {/* 3. Secondary Capillary Vein Roots (Naram bugal branching & weaving) */}
-        <path
-          d={fullVeinB}
+        {/* Mint Star Vein Filament */}
+        <motion.path
+          d={pathD}
           fill="none"
-          stroke="#00E676"
-          strokeWidth={Math.max(1.2, 2.8 * strokeScale)}
+          stroke="#B9FFD0"
+          strokeWidth={Math.max(1.2, 2.2 * strokeScale)}
           strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.88}
-          style={{ filter: "blur(0.6px)" }}
-        />
-        <path
-          d={fullVeinC}
-          fill="none"
-          stroke="#7CFFB2"
-          strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.92}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
+          opacity={1}
         />
 
-        {/* 4. Electric Neon Core Vein + Solid Pure White Core - Highly Visible & Vibrant */}
-        <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-          {/* Neon Green Core Pulse */}
-          <path
-            d={fullPathD}
-            fill="none"
-            stroke="#39FF14"
-            strokeWidth={5.5 * strokeScale}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity={1}
-          />
-
-          {/* Mint Star Vein Filament */}
-          <path
-            d={fullPathD}
-            fill="none"
-            stroke="#B9FFD0"
-            strokeWidth={Math.max(1.8, 3.2 * strokeScale)}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity={1}
-          />
-
-          {/* Pure White Core (Nalla Visible-aana Pure White Line - Green oda sernthu flow aagum) */}
-          <path
-            d={fullPathD}
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth={Math.max(1.8, 2.5 * strokeScale)}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity={1}
-            style={{ filter: "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 12px #B9FFD0)" }}
-          />
-        </g>
+        {/* Pure White Starlight Center Core - Single continuous clean glowing line */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
+          strokeLinecap="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
+          opacity={1}
+          style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.8))" }}
+        />
       </g>
+    </g>
+  );
+
+  return (
+    <g>
+      {/* Symmetrical Bi-Directional Root Cracking: Right and Left Veins visibly spreading from tap point */}
+      {renderTravelingVeinStream(rightD, rightDistance, "veins-right")}
+      {renderTravelingVeinStream(leftD, leftDistance, "veins-left")}
 
       {/* Awakened Breathing Life: Once infused, the branch gently breathes and pulses with living energy */}
       {allEnergizedStage && (
@@ -833,23 +788,21 @@ export default function LokiTimelinePortal() {
                         d={f.d}
                         fill="none"
                         stroke="#B9FFD0"
-                        strokeWidth={Math.max(1.0, f.width * 1.2)}
+                        strokeWidth={Math.max(0.6, f.width * 0.7)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
                         animate={{ pathLength: 1, opacity: 1 }}
                         transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
                       />
-                      {/* High-visibility Pure White Core in Filaments */}
                       <motion.path
                         d={f.d}
                         fill="none"
                         stroke="#ffffff"
-                        strokeWidth={Math.max(0.8, f.width * 0.9)}
+                        strokeWidth={Math.max(0.4, f.width * 0.4)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: 1 }}
+                        animate={{ pathLength: 1, opacity: 0.9 }}
                         transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ filter: "drop-shadow(0 0 4px #ffffff)" }}
                       />
                     </g>
                   </g>
