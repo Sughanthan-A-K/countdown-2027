@@ -590,6 +590,7 @@ export default function LokiTimelinePortal() {
   // Loki Hand Grip Convergence Physics:
   // When user holds, all branches and filaments MUST pass EXACTLY through the user's hand point (gx, gy)
   // tightly clustered into one single fist / handle bundle like Loki holding the gathered timelines!
+  // All lines extend far beyond the screen edges (startX: -800, endX: 1800) so ends are NEVER visible!
   const getBranchPath = (baseD, branchId) => {
     if (!gripPoint) return baseD;
     const gx = gripPoint.x;
@@ -597,36 +598,34 @@ export default function LokiTimelinePortal() {
 
     // Fixed realistic handle bundle diameter: max 2px to 4px tight grip bundle
     if (branchId === 'branch-1') {
-      return `M -400 310 Q ${gx * 0.45} ${gy + 4}, ${gx} ${gy} T 1450 390`;
+      return `M -800 310 Q ${gx * 0.45} ${gy + 4}, ${gx} ${gy} T 1800 390`;
     }
     if (branchId === 'branch-2') {
-      return `M -350 40 Q ${gx * 0.4} ${gy - 4}, ${gx} ${gy - 1.5} T 1420 120`;
+      return `M -800 40 Q ${gx * 0.4} ${gy - 4}, ${gx} ${gy - 1.5} T 1800 120`;
     }
     if (branchId === 'branch-5') {
-      return `M -320 540 Q ${gx * 0.45} ${gy + 4}, ${gx} ${gy + 1.5} T 1420 520`;
+      return `M -800 540 Q ${gx * 0.45} ${gy + 4}, ${gx} ${gy + 1.5} T 1800 520`;
     }
     if (branchId === 'branch-3') {
-      return `M -380 890 Q ${gx * 0.40} ${gy + 6}, ${gx} ${gy + 2} T 1450 820`;
+      return `M -800 890 Q ${gx * 0.40} ${gy + 6}, ${gx} ${gy + 2} T 1800 820`;
     }
     if (branchId === 'branch-4') {
-      return `M 1450 30 Q ${gx * 1.3} ${gy - 6}, ${gx} ${gy - 2} T -350 940`;
+      return `M 1800 30 Q ${gx * 1.3} ${gy - 6}, ${gx} ${gy - 2} T -800 940`;
     }
 
     // For filaments (filament-0 to filament-15):
-    // All 16 filaments extend across the ENTIRE full screen width (from -600 to +1600)
-    // passing through the hand grip point (gx, gy) WITHOUT getting cut or having visible endpoints!
+    // All 16 filaments extend far off-screen (-800 to 1800) with full continuous length
     if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
       const idx = parseInt(branchId.replace('filament-', ''), 10) || 0;
-      // Tight handle knot spread: strictly between -2.5px and +2.5px
-      const gripOffsetY = ((idx % 7) - 3) * 0.8;
+      // Tight handle knot spread: strictly between -3px and +3px
+      const gripOffsetY = ((idx % 7) - 3) * 0.9;
       const isLeft = idx % 2 === 0;
-      // Start and End way outside viewport bounds (-600 and 1600) so tips never enter screen!
-      const startX = isLeft ? -600 : 1600;
+      const startX = isLeft ? -800 : 1800;
       const startY = (idx * 60 + 50) % 950;
-      const endX = isLeft ? 1600 : -600;
+      const endX = isLeft ? 1800 : -800;
       const endY = (startY + 320) % 950;
 
-      // Curve gracefully sweeps across full screen, pinches tightly at (gx, gy), then flows out
+      // Curve gracefully sweeps from infinity, pinches EXACTLY through the hand grip point (gx, gy), then continues outward far off-screen
       const ctrlX1 = isLeft ? (startX + gx) * 0.48 : (startX + gx) * 0.52;
       const ctrlY1 = (startY + gy) * 0.5;
       const ctrlX2 = isLeft ? (gx + endX) * 0.52 : (gx + endX) * 0.48;
@@ -812,6 +811,30 @@ export default function LokiTimelinePortal() {
           }}
           className="absolute w-5 h-5 rounded-full bg-[#ffffff] blur-[3px] shadow-[0_0_20px_#ffffff,0_0_35px_#B9FFD0,0_0_55px_#00FF66] pointer-events-none"
         />
+
+        {/* Slender White-Mint Core Aperture Spine - Starts as hairline vertical crack, expands smoothly over 20s */}
+        {/* On voyage travel (portalVoyageStage >= 2), fades out so there is NO vertical line inside the wormhole! */}
+        <motion.div
+          animate={
+            portalVoyageStage >= 2 ? {
+              opacity: 0,
+              width: "0px"
+            } : portalStage === 2 ? {
+              width: "7px",
+              opacity: 0.9
+            } : {
+              width: portalStage === 1 ? "1.5px" : "0px",
+              opacity: portalStage === 1 ? 0.75 : 0
+            }
+          }
+          transition={{ duration: portalVoyageStage >= 2 ? 0.4 : 20.0, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute h-[270px] sm:h-[330px] pointer-events-none rounded-[50%]"
+          style={{
+            background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.85) 15%, rgba(255,255,255,0.95) 50%, rgba(124,255,178,0.85) 85%, transparent 100%)',
+            boxShadow: '0 0 15px rgba(255,255,255,0.8), 0 0 30px #B9FFD0, 0 0 50px #00FF66',
+            filter: 'url(#lokiOrganicRiftEdge) blur(0.8px)'
+          }}
+        />
       </motion.div>
 
       {/* ========================================================================= */}
@@ -872,26 +895,27 @@ export default function LokiTimelinePortal() {
         </defs>
 
         {/* SVG Container wrapping all branches:
-            FULL-LENGTH CONTINUOUS TIMELINES (NO VISIBLE ENDS / TRUNCATION):
-            Branches stay full-length spanning beyond screen borders while being gathered
-            into the hand and pulled towards the portal!
+            REAL ELASTIC LIGHT-SPEED STRETCH & SUCTION INTO PORTAL:
+            When user holds (Stage 1), branches pull & stretch elastically into center singularity!
+            Maintains full width stretching across the entire canvas so ends NEVER appear cut.
         */}
         <motion.g
           animate={
             portalVoyageStage === 1
               ? { 
-                  // Elastic rubber band pull: gentle natural compression without shrinking branch length!
-                  scaleY: [1, 0.88, 0.78],
-                  x: [0, (500 - (gripPoint?.x || 500)) * 0.25, (500 - (gripPoint?.x || 500)) * 0.55],
-                  y: [0, (500 - (gripPoint?.y || 500)) * 0.25, (500 - (gripPoint?.y || 500)) * 0.55],
+                  // Elastic rubber band pull: stretches and pulls toward center singularity, but width stays wide enough to cover screen edges!
+                  scaleY: [1, 0.75, 0.55],
+                  x: [0, (500 - (gripPoint?.x || 500)) * 0.35, (500 - (gripPoint?.x || 500)) * 0.75],
+                  y: [0, (500 - (gripPoint?.y || 500)) * 0.35, (500 - (gripPoint?.y || 500)) * 0.75],
                   opacity: 1
                 }
               : portalVoyageStage >= 2 && portalVoyageStage < 4
               ? { 
                   // Traveling through portal: held bunch stays in front of user as we fly into wormhole!
-                  scale: [0.75, 0.5, 0.25], 
+                  scale: [0.8, 0.55, 0.35], 
                   opacity: [1, 0.9, 0.6], 
-                  y: [20, 50, 80],
+                  y: [20, 60, 100],
+                  filter: 'blur(0.5px)'
                 }
               : portalVoyageStage >= 4
               ? { opacity: 0 }
