@@ -150,31 +150,17 @@ function LokiLifePowerSpread({
           transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        {/* Pure White Starlight Center Crack - Crisp & clear along the whole vein */}
+        {/* Pure White Starlight Center Core - Single continuous clean glowing line */}
         <motion.path
           d={pathMain}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
+          strokeWidth={Math.max(1.0, 1.6 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-        />
-
-        {/* 5. Pure White Tip at the Green Edge (Uyir Munai): Exactly touching and leading the green flow front */}
-        <motion.path
-          d={pathMain}
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth={Math.max(2.4, 4.2 * strokeScale)}
-          strokeLinecap="round"
-          strokeDasharray={`18 ${distance + 400}`}
-          initial={{ strokeDashoffset: 18 }}
-          animate={{ strokeDashoffset: -(distance + 8) }}
-          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-          opacity={1}
-          style={{ filter: "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 12px #39FF14)" }}
+          style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.8))" }}
         />
       </g>
     </g>
