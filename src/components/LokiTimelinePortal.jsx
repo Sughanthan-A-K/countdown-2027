@@ -95,68 +95,66 @@ function LokiLifePowerSpread({
 
       {/* Single Unbroken Bio-luminescent Root Vein Network - Light, delicate stroke */}
       <g clipPath={`url(#life-expand-${branchPathRef.current?.id || totalLen})`}>
-        {/* 1. Bark Cracking Pre-glow: Emerald warmth glowing gently */}
+        {/* 1. Subtle Sub-surface Bark Warmth */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#004D2B"
-          strokeWidth={8 * strokeScale}
+          strokeWidth={4.5 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.85}
-          style={{ filter: "blur(2.5px)" }}
+          opacity={0.7}
+          style={{ filter: "blur(2px)" }}
         />
 
-        {/* 2. Deep Green Bio-luminescent Vascular Flesh - Light stroke */}
+        {/* 2. Delicate Bio-luminescent Vascular Vine - Slender & graceful */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#008F4C"
-          strokeWidth={5.5 * strokeScale}
+          strokeWidth={3.0 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.92}
-          style={{ filter: "blur(0.8px)" }}
+          opacity={0.88}
         />
         <path
           d={fullPathD}
           fill="none"
           stroke="#00C853"
-          strokeWidth={3.8 * strokeScale}
+          strokeWidth={2.0 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity={0.95}
         />
 
-        {/* 3. Secondary Capillary Vein Roots - Delicate capillary fibers */}
+        {/* 3. Secondary Micro-Capillary Root Veins */}
         <path
           d={fullVeinB}
           fill="none"
           stroke="#00E676"
-          strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
+          strokeWidth={Math.max(0.6, 1.1 * strokeScale)}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.8}
-          style={{ filter: "blur(0.5px)" }}
+          opacity={0.75}
         />
         <path
           d={fullVeinC}
           fill="none"
           stroke="#7CFFB2"
-          strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
+          strokeWidth={Math.max(0.4, 0.8 * strokeScale)}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.85}
+          opacity={0.8}
         />
 
-        {/* 4. Electric Neon Core Vein + Starlight Center - Delicate, fine glowing thread */}
+        {/* 4. Fine Electric Neon Core & Needle-Thin White Starlight Filament */}
         <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-          {/* Neon Green Core Pulse */}
+          {/* Neon Green Core Pulse - Slender hairline */}
           <path
             d={fullPathD}
             fill="none"
             stroke="#39FF14"
-            strokeWidth={2.6 * strokeScale}
+            strokeWidth={1.5 * strokeScale}
             strokeLinecap="round"
             strokeLinejoin="round"
             opacity={0.95}
@@ -167,22 +165,22 @@ function LokiLifePowerSpread({
             d={fullPathD}
             fill="none"
             stroke="#B9FFD0"
-            strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
+            strokeWidth={Math.max(0.6, 0.9 * strokeScale)}
             strokeLinecap="round"
             strokeLinejoin="round"
             opacity={0.95}
           />
 
-          {/* Pure White Starlight Center Core - Delicate fine glowing thread */}
+          {/* Pure White Starlight Center Core - Fine needle-thin glowing crack line */}
           <path
             d={fullPathD}
             fill="none"
             stroke="#ffffff"
-            strokeWidth={Math.max(0.5, 0.9 * strokeScale)}
+            strokeWidth={Math.max(0.4, 0.6 * strokeScale)}
             strokeLinecap="round"
             strokeLinejoin="round"
             opacity={0.95}
-            style={{ filter: "drop-shadow(0 0 2.5px rgba(255,255,255,0.7))" }}
+            style={{ filter: "drop-shadow(0 0 2px rgba(255,255,255,0.8))" }}
           />
         </g>
       </g>
@@ -802,59 +800,59 @@ export default function LokiTimelinePortal() {
                 {/* 2. Slow Bio-Luminescent Root Vein Infusion into Filaments (Same unified look as main branches) */}
                 {isEnergized && (
                   <g>
-                    {/* Living outer atmospheric envelope */}
+                    {/* Living outer atmospheric envelope - Delicate slender root */}
                     <motion.path
                       d={f.d}
                       fill="none"
                       stroke="#008F4C"
-                      strokeWidth={f.width * 2.6}
+                      strokeWidth={f.width * 1.5}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: [0, 0.8, 0.9] }}
-                      transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
-                      style={{ filter: "blur(1.5px)" }}
+                      animate={{ pathLength: 1, opacity: [0, 0.75, 0.85] }}
+                      transition={{ duration: 10.5, ease: [0.16, 1, 0.3, 1] }}
+                      style={{ filter: "blur(1.0px)" }}
                     />
                     <motion.path
                       d={f.d}
                       fill="none"
                       stroke="#00C853"
-                      strokeWidth={f.width * 1.8}
+                      strokeWidth={f.width * 1.0}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: [0, 0.9, 0.98] }}
-                      transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+                      animate={{ pathLength: 1, opacity: [0, 0.85, 0.95] }}
+                      transition={{ duration: 10.5, ease: [0.16, 1, 0.3, 1] }}
                     />
-                    {/* Inner core life spark & starlight line moving in sync */}
+                    {/* Inner core needle life spark */}
                     <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
                       <motion.path
                         d={f.d}
                         fill="none"
                         stroke="#39FF14"
-                        strokeWidth={f.width * 1.2}
+                        strokeWidth={Math.max(0.6, f.width * 0.7)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
                         animate={{ pathLength: 1, opacity: 1 }}
-                        transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 10.5, ease: [0.16, 1, 0.3, 1] }}
                       />
                       <motion.path
                         d={f.d}
                         fill="none"
                         stroke="#B9FFD0"
-                        strokeWidth={Math.max(0.6, f.width * 0.7)}
+                        strokeWidth={Math.max(0.4, f.width * 0.45)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
                         animate={{ pathLength: 1, opacity: 1 }}
-                        transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 10.5, ease: [0.16, 1, 0.3, 1] }}
                       />
                       <motion.path
                         d={f.d}
                         fill="none"
                         stroke="#ffffff"
-                        strokeWidth={Math.max(0.4, f.width * 0.4)}
+                        strokeWidth={Math.max(0.3, f.width * 0.3)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
                         animate={{ pathLength: 1, opacity: 0.9 }}
-                        transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 10.5, ease: [0.16, 1, 0.3, 1] }}
                       />
                     </g>
                   </g>
