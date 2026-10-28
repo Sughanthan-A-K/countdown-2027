@@ -93,73 +93,73 @@ function LokiLifePowerSpread({
         </clipPath>
       </defs>
 
-      {/* Single Unbroken Bio-luminescent Root Vein Network - Light, delicate stroke */}
+      {/* Single Unbroken Bio-luminescent Root Vein Network - Clear & Prominent 3X Scale */}
       <g clipPath={`url(#life-expand-${branchPathRef.current?.id || totalLen})`}>
         {/* 1. Bark Cracking Pre-glow: Emerald warmth glowing gently */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#004D2B"
-          strokeWidth={8 * strokeScale}
+          strokeWidth={20 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity={0.85}
-          style={{ filter: "blur(2.5px)" }}
+          style={{ filter: "blur(4px)" }}
         />
 
-        {/* 2. Deep Green Bio-luminescent Vascular Flesh - Light stroke */}
+        {/* 2. Deep Green Bio-luminescent Vascular Flesh - 3X width for easy mobile viewing */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#008F4C"
-          strokeWidth={5.5 * strokeScale}
+          strokeWidth={14 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity={0.92}
-          style={{ filter: "blur(0.8px)" }}
+          style={{ filter: "blur(1.5px)" }}
         />
         <path
           d={fullPathD}
           fill="none"
           stroke="#00C853"
-          strokeWidth={3.8 * strokeScale}
+          strokeWidth={10 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity={0.95}
         />
 
-        {/* 3. Secondary Capillary Vein Roots - Delicate capillary fibers */}
+        {/* 3. Secondary Capillary Vein Roots - Clear capillary fibers */}
         <path
           d={fullVeinB}
           fill="none"
           stroke="#00E676"
-          strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
+          strokeWidth={Math.max(1.8, 4.5 * strokeScale)}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.8}
-          style={{ filter: "blur(0.5px)" }}
+          opacity={0.85}
+          style={{ filter: "blur(0.8px)" }}
         />
         <path
           d={fullVeinC}
           fill="none"
           stroke="#7CFFB2"
-          strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
+          strokeWidth={Math.max(1.4, 3.2 * strokeScale)}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.85}
+          opacity={0.9}
         />
 
-        {/* 4. Electric Neon Core Vein + Starlight Center - Delicate, fine glowing thread */}
+        {/* 4. Electric Neon Core Vein + Starlight Center - Clear bright core */}
         <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
           {/* Neon Green Core Pulse */}
           <path
             d={fullPathD}
             fill="none"
             stroke="#39FF14"
-            strokeWidth={2.6 * strokeScale}
+            strokeWidth={6.8 * strokeScale}
             strokeLinecap="round"
             strokeLinejoin="round"
-            opacity={0.95}
+            opacity={0.98}
           />
 
           {/* Mint Star Vein Filament */}
@@ -167,22 +167,22 @@ function LokiLifePowerSpread({
             d={fullPathD}
             fill="none"
             stroke="#B9FFD0"
-            strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
+            strokeWidth={Math.max(1.8, 3.8 * strokeScale)}
             strokeLinecap="round"
             strokeLinejoin="round"
-            opacity={0.95}
+            opacity={1}
           />
 
-          {/* Pure White Starlight Center Core - Delicate fine glowing thread */}
+          {/* Pure White Starlight Center Core - Prominent glowing center thread */}
           <path
             d={fullPathD}
             fill="none"
             stroke="#ffffff"
-            strokeWidth={Math.max(0.5, 0.9 * strokeScale)}
+            strokeWidth={Math.max(1.0, 2.2 * strokeScale)}
             strokeLinecap="round"
             strokeLinejoin="round"
-            opacity={0.95}
-            style={{ filter: "drop-shadow(0 0 2.5px rgba(255,255,255,0.7))" }}
+            opacity={1}
+            style={{ filter: "drop-shadow(0 0 5px rgba(255,255,255,0.9))" }}
           />
         </g>
       </g>
@@ -394,6 +394,14 @@ export default function LokiTimelinePortal() {
   // Portal opening stage: 0 = hidden, 1 = thin hairline vertical crack, 2 = slowly opening organic portal
   const [portalStage, setPortalStage] = useState(0);
 
+  // Cinematic Portal Travel & Cut-to-Black Stage:
+  // travelStage: 'idle' -> 'approaching' -> 'hyperspace' -> 'whiteout' -> 'blackout'
+  const [travelStage, setTravelStage] = useState('idle');
+
+  // Convergence Grip Point: Where all branches get held together by Loki's hand on 2nd tap after portal opened
+  const [gripPoint, setGripPoint] = useState(null);
+  const [isGatheringHand, setIsGatheringHand] = useState(false);
+
   // Dev Shortcut: Press "Shift + R" to replay/reset portal scene instantly without tapping 3 times!
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -405,6 +413,9 @@ export default function LokiTimelinePortal() {
         setVoyageProgress(0);
         setHasDiscovered(false);
         setPortalStage(0);
+        setTravelStage('idle');
+        setGripPoint(null);
+        setIsGatheringHand(false);
         setReplayKey(k => k + 1);
       }
     };
@@ -418,7 +429,7 @@ export default function LokiTimelinePortal() {
       setHasDiscovered(true);
     }
 
-    // Energize Branch 1
+    // First Tap: Normal organic life spread from Branch 1 to all branches in natural tree sequence!
     setEnergizedBranches(prev => {
       if (prev[id]?.active) return prev; // already energized
       const updated = {
@@ -431,27 +442,19 @@ export default function LokiTimelinePortal() {
         }
       };
 
-      // Organic Tree Branching Propagation:
-      // Life spreading organically across the tree tapestry:
+      // Normal Organic Tree Branching Propagation:
       // Branch 1 uyir perum pothu, adhutha branches ku uyir thodarndhu slow & calm-ah paravudhu
       const cascadeConfig = [
-        // Tier 2: Branch 1 uyir paravum pothu (at 3.8s & 5.2s), Branch 2 & 5 ignite aagudhu
         { id: 'branch-2', tapRatio: 0.02, delay: 3800 },
         { id: 'branch-5', tapRatio: 0.98, delay: 5200 },
-
-        // Tier 3: Uyir thodarndhu adutha branches & filaments ku paravudhu
         { id: 'branch-3', tapRatio: 0.02, delay: 7500 },
         { id: 'filament-1', tapRatio: 0.02, delay: 8200 },
         { id: 'filament-6', tapRatio: 0.98, delay: 9000 },
-
-        // Tier 4: Multiverse tree-oda naram bugal ellam uyir perudhu
         { id: 'branch-4', tapRatio: 0.98, delay: 10800 },
         { id: 'filament-3', tapRatio: 0.02, delay: 11500 },
         { id: 'filament-9', tapRatio: 0.98, delay: 12200 },
         { id: 'filament-0', tapRatio: 0.02, delay: 13000 },
         { id: 'filament-4', tapRatio: 0.98, delay: 13800 },
-
-        // Tier 5: Rest of the filaments gently awaken
         { id: 'filament-2', tapRatio: 0.02, delay: 15200 },
         { id: 'filament-5', tapRatio: 0.98, delay: 16000 },
         { id: 'filament-7', tapRatio: 0.02, delay: 16800 },
@@ -494,6 +497,45 @@ export default function LokiTimelinePortal() {
     });
   };
 
+  // 2nd Interaction: When portal has opened (portalStage >= 2), user taps anywhere!
+  // All 20 branches physically converge into the user's tap point, the portal pulls forward
+  // swallowing all branches, we travel through the portal for ~3 seconds, flash bright white light,
+  // and cut immediately to pure black screen!
+  const getSvgCoordinates = (e) => {
+    const svg = e.currentTarget.closest('svg') || document.querySelector('svg#loki-timeline-svg');
+    if (!svg) return { x: 500, y: 500 };
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return { x: svgP.x, y: svgP.y };
+  };
+
+  const handlePointerDownGather = (e) => {
+    if (portalStage < 2 || travelStage !== 'idle') return;
+    const coords = getSvgCoordinates(e);
+    setGripPoint(coords);
+
+    // Sequence of Cinematic Void Voyage:
+    // 1. Immediately: All branches bend into hand & portal surges closer pulling everything in
+    setTravelStage('approaching');
+
+    // 2. At 1.5s: Enters inner portal rift, hyperspace travel through green spacetime tunnel for 3 seconds!
+    setTimeout(() => {
+      setTravelStage('hyperspace');
+    }, 1500);
+
+    // 3. At 4.5s (after 3s of portal travel): Blinding bright cosmic white light flash!
+    setTimeout(() => {
+      setTravelStage('whiteout');
+    }, 4500);
+
+    // 4. At 5.1s: Instant Cut to Black Screen!
+    setTimeout(() => {
+      setTravelStage('blackout');
+    }, 5100);
+  };
+
   // Total energized count (0 to 5):
   // As user crosses branches one by one, the distant portal gently approaches closer step-by-step!
   const energizedCount = Object.keys(energizedBranches).length;
@@ -504,25 +546,63 @@ export default function LokiTimelinePortal() {
   const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
   // Deep Multiverse Tapestry Filaments (~16 subtle background timelines that form the Yggdrasil tree tapestry)
-  // Distance-scaled physics: Farther branches are noticeably thinner and more atmospheric
+  // Scaled up ~3x for distinct visibility on mobile screens while maintaining distance hierarchy
   const cosmicFilaments = [
-    { d: "M -350 180 Q 180 80, 520 220 T 1400 160", width: 0.9, opacity: 0.22, color: "#00C853", windDur: 32 },
-    { d: "M -300 280 Q 300 380, 750 260 T 1420 320", width: 1.1, opacity: 0.28, color: "#39FF14", windDur: 36 },
-    { d: "M -380 420 Q 220 540, 620 440 T 1450 480", width: 0.7, opacity: 0.18, color: "#00E676", windDur: 34 },
-    { d: "M -320 620 Q 350 500, 780 640 T 1400 580", width: 1.0, opacity: 0.25, color: "#7CFFB2", windDur: 38 },
-    { d: "M -400 780 Q 250 860, 680 760 T 1420 840", width: 1.2, opacity: 0.30, color: "#00FF66", windDur: 30 },
-    { d: "M 1400 90 Q 750 280, 380 140 T -320 240", width: 0.8, opacity: 0.22, color: "#00C853", windDur: 35 },
-    { d: "M 1420 380 Q 820 240, 420 410 T -350 360", width: 1.1, opacity: 0.27, color: "#39FF14", windDur: 33 },
-    { d: "M 1450 680 Q 780 780, 350 630 T -300 720", width: 0.9, opacity: 0.22, color: "#00FF66", windDur: 39 },
-    { d: "M -360 80 Q 420 180, 850 100 T 1420 190", width: 0.6, opacity: 0.16, color: "#B9FFD0", windDur: 40 },
-    { d: "M -340 490 Q 150 390, 580 510 T 1450 430", width: 1.0, opacity: 0.26, color: "#00E676", windDur: 37 },
-    { d: "M -390 850 Q 320 720, 710 880 T 1400 790", width: 0.7, opacity: 0.19, color: "#39FF14", windDur: 31 },
-    { d: "M 1420 220 Q 900 420, 460 300 T -350 420", width: 0.9, opacity: 0.24, color: "#00C853", windDur: 36 },
-    { d: "M 1450 510 Q 880 620, 490 530 T -320 610", width: 0.8, opacity: 0.21, color: "#7CFFB2", windDur: 34 },
-    { d: "M -350 950 Q 280 820, 680 940 T 1420 890", width: 1.1, opacity: 0.28, color: "#00FF66", windDur: 32 },
-    { d: "M -320 15 Q 380 120, 780 40 T 1450 110", width: 0.5, opacity: 0.15, color: "#B9FFD0", windDur: 42 },
-    { d: "M 1400 820 Q 850 930, 420 840 T -340 910", width: 0.8, opacity: 0.22, color: "#00E676", windDur: 35 }
+    { d: "M -350 180 Q 180 80, 520 220 T 1400 160", width: 2.7, opacity: 0.32, color: "#00C853", windDur: 32 },
+    { d: "M -300 280 Q 300 380, 750 260 T 1420 320", width: 3.2, opacity: 0.38, color: "#39FF14", windDur: 36 },
+    { d: "M -380 420 Q 220 540, 620 440 T 1450 480", width: 2.2, opacity: 0.28, color: "#00E676", windDur: 34 },
+    { d: "M -320 620 Q 350 500, 780 640 T 1400 580", width: 3.0, opacity: 0.35, color: "#7CFFB2", windDur: 38 },
+    { d: "M -400 780 Q 250 860, 680 760 T 1420 840", width: 3.5, opacity: 0.40, color: "#00FF66", windDur: 30 },
+    { d: "M 1400 90 Q 750 280, 380 140 T -320 240", width: 2.4, opacity: 0.30, color: "#00C853", windDur: 35 },
+    { d: "M 1420 380 Q 820 240, 420 410 T -350 360", width: 3.2, opacity: 0.36, color: "#39FF14", windDur: 33 },
+    { d: "M 1450 680 Q 780 780, 350 630 T -300 720", width: 2.6, opacity: 0.32, color: "#00FF66", windDur: 39 },
+    { d: "M -360 80 Q 420 180, 850 100 T 1420 190", width: 1.8, opacity: 0.25, color: "#B9FFD0", windDur: 40 },
+    { d: "M -340 490 Q 150 390, 580 510 T 1450 430", width: 2.9, opacity: 0.34, color: "#00E676", windDur: 37 },
+    { d: "M -390 850 Q 320 720, 710 880 T 1400 790", width: 2.2, opacity: 0.28, color: "#39FF14", windDur: 31 },
+    { d: "M 1420 220 Q 900 420, 460 300 T -350 420", width: 2.7, opacity: 0.32, color: "#00C853", windDur: 36 },
+    { d: "M 1450 510 Q 880 620, 490 530 T -320 610", width: 2.4, opacity: 0.30, color: "#7CFFB2", windDur: 34 },
+    { d: "M -350 950 Q 280 820, 680 940 T 1420 890", width: 3.2, opacity: 0.38, color: "#00FF66", windDur: 32 },
+    { d: "M -320 15 Q 380 120, 780 40 T 1450 110", width: 1.6, opacity: 0.24, color: "#B9FFD0", windDur: 42 },
+    { d: "M 1400 820 Q 850 930, 420 840 T -340 910", width: 2.4, opacity: 0.30, color: "#00E676", windDur: 35 }
   ];
+
+  // Loki Hand Grip Convergence Physics:
+  // When user taps on 2nd tap (or holds and moves), all branches AND all 16 filaments
+  // physically bend and gather into Loki's hand coordinate (gx, gy) like in the finale!
+  const getBranchPath = (baseD, branchId) => {
+    if (!gripPoint) return baseD;
+    const gx = gripPoint.x;
+    const gy = gripPoint.y;
+
+    if (branchId === 'branch-1') {
+      return `M -400 310 Q ${gx * 0.45} ${gy + 10}, ${gx} ${gy} T 1450 390`;
+    }
+    if (branchId === 'branch-2') {
+      return `M -350 40 Q ${gx * 0.38} ${gy - 12}, ${gx} ${gy - 4} T 1420 120`;
+    }
+    if (branchId === 'branch-5') {
+      return `M -320 540 Q ${gx * 0.45} ${gy + 14}, ${gx} ${gy + 4} T 1420 520`;
+    }
+    if (branchId === 'branch-3') {
+      return `M -380 890 Q ${gx * 0.40} ${gy + 20}, ${gx} ${gy + 8} T 1450 820`;
+    }
+    if (branchId === 'branch-4') {
+      return `M 1450 30 Q ${gx * 1.3} ${gy - 15}, ${gx} ${gy - 6} T -350 940`;
+    }
+
+    // For filaments (filament-0 to filament-15):
+    if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
+      const idx = parseInt(branchId.replace('filament-', ''), 10) || 0;
+      const spreadY = ((idx % 7) - 3) * 3; // tiny natural yarn spread in fist
+      const startX = idx % 2 === 0 ? -360 : 1440;
+      const startY = (idx * 60 + 50) % 950;
+      const endX = idx % 2 === 0 ? 1440 : -360;
+      const endY = (startY + 300) % 950;
+      return `M ${startX} ${startY} Q ${gx * 0.5 + (idx % 3) * 10} ${gy + spreadY}, ${gx} ${gy + spreadY} T ${endX} ${endY}`;
+    }
+
+    return baseD;
+  };
 
   return (
     <div key={replayKey} className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
@@ -557,6 +637,13 @@ export default function LokiTimelinePortal() {
             <feTurbulence type="fractalNoise" baseFrequency="0.035 0.12" numOctaves="3" result="venomNoise" />
             <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="5.5" xChannelSelector="R" yChannelSelector="G" />
           </filter>
+
+          <radialGradient id="venomGripPulseGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#39FF14" stopOpacity="0.9" />
+            <stop offset="40%" stopColor="#00C853" stopOpacity="0.6" />
+            <stop offset="70%" stopColor="#004D2B" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+          </radialGradient>
         </defs>
       </svg>
 
@@ -569,15 +656,22 @@ export default function LokiTimelinePortal() {
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ opacity: 0 }}
-        animate={portalStage > 0 ? {
-          opacity: 1
-        } : {
-          opacity: 0
-        }}
-        transition={{
-          duration: 2.0,
-          ease: "easeOut"
-        }}
+        animate={
+          travelStage === 'hyperspace' || travelStage === 'whiteout'
+            ? { opacity: 1, scale: [1.2, 5.5, 9.0] }
+            : travelStage === 'approaching'
+            ? { opacity: 1, scale: 1.4 }
+            : portalStage > 0
+            ? { opacity: 1, scale: 1 }
+            : { opacity: 0, scale: 0.8 }
+        }
+        transition={
+          travelStage === 'hyperspace' || travelStage === 'whiteout'
+            ? { duration: 3.2, ease: [0.16, 0.8, 0.2, 1] }
+            : travelStage === 'approaching'
+            ? { duration: 1.5, ease: "easeOut" }
+            : { duration: 2.0, ease: "easeOut" }
+        }
         style={{ transformOrigin: "50% 50%" }}
       >
         {/* Layer 1: Slender Cosmic Aurora Halo (Lean vertical ellipse) */}
@@ -721,10 +815,24 @@ export default function LokiTimelinePortal() {
         - Layer 5 (1px near portal): Sweeps past camera (17s -> 24s)
         - Portal: Approaches from depth simultaneously and locks into full bloom (0s -> 24s)!
       */}
-      <svg 
+      <motion.svg 
+        id="loki-timeline-svg"
         viewBox="0 0 1000 1000" 
         preserveAspectRatio="none"
-        className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-10" 
+        onPointerDown={portalStage >= 2 ? handlePointerDownGather : undefined}
+        animate={
+          travelStage === 'hyperspace' || travelStage === 'whiteout' || travelStage === 'blackout'
+            ? { scale: 3.5, opacity: [1, 0.4, 0] }
+            : travelStage === 'approaching'
+            ? { scale: 1.15 }
+            : { scale: 1, opacity: 1 }
+        }
+        transition={
+          travelStage === 'hyperspace' || travelStage === 'whiteout' || travelStage === 'blackout'
+            ? { duration: 3.0, ease: [0.25, 0.1, 0.25, 1] }
+            : { duration: 1.5, ease: "easeOut" }
+        }
+        className="absolute inset-0 w-full h-full overflow-visible z-10 select-none pointer-events-none" 
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
@@ -763,6 +871,7 @@ export default function LokiTimelinePortal() {
           {cosmicFilaments.map((f, i) => {
             const filamentId = `filament-${i}`;
             const isEnergized = energizedBranches[filamentId]?.active;
+            const filamentD = getBranchPath(f.d, filamentId);
             return (
               <motion.g
                 key={filamentId}
@@ -777,7 +886,7 @@ export default function LokiTimelinePortal() {
               >
                 {/* 1. Slim dark silhouette body */}
                 <path
-                  d={f.d}
+                  d={filamentD}
                   fill="none"
                   stroke="#000000"
                   strokeWidth={f.width * 2.0}
@@ -785,14 +894,14 @@ export default function LokiTimelinePortal() {
                   opacity={0.85}
                 />
                 <path
-                  d={f.d}
+                  d={filamentD}
                   fill="none"
                   stroke="#050a08"
                   strokeWidth={f.width * 1.4}
                   strokeLinecap="round"
                 />
                 <path
-                  d={f.d}
+                  d={filamentD}
                   fill="none"
                   stroke="#062d22"
                   strokeWidth={Math.max(0.5, f.width * 0.7)}
@@ -805,7 +914,7 @@ export default function LokiTimelinePortal() {
                   <g>
                     {/* Living outer atmospheric envelope */}
                     <motion.path
-                      d={f.d}
+                      d={filamentD}
                       fill="none"
                       stroke="#008F4C"
                       strokeWidth={f.width * 2.6}
@@ -816,7 +925,7 @@ export default function LokiTimelinePortal() {
                       style={{ filter: "blur(1.5px)" }}
                     />
                     <motion.path
-                      d={f.d}
+                      d={filamentD}
                       fill="none"
                       stroke="#00C853"
                       strokeWidth={f.width * 1.8}
@@ -828,7 +937,7 @@ export default function LokiTimelinePortal() {
                     {/* Inner core life spark & starlight line moving in sync */}
                     <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
                       <motion.path
-                        d={f.d}
+                        d={filamentD}
                         fill="none"
                         stroke="#39FF14"
                         strokeWidth={f.width * 1.2}
@@ -838,7 +947,7 @@ export default function LokiTimelinePortal() {
                         transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
                       />
                       <motion.path
-                        d={f.d}
+                        d={filamentD}
                         fill="none"
                         stroke="#B9FFD0"
                         strokeWidth={Math.max(0.6, f.width * 0.7)}
@@ -848,7 +957,7 @@ export default function LokiTimelinePortal() {
                         transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
                       />
                       <motion.path
-                        d={f.d}
+                        d={filamentD}
                         fill="none"
                         stroke="#ffffff"
                         strokeWidth={Math.max(0.4, f.width * 0.4)}
@@ -878,9 +987,9 @@ export default function LokiTimelinePortal() {
           <motion.g>
             <DraggableBranch
               id="branch-4"
-              pathData="M 1450 30 Q 820 420, 480 620 T -350 940"
+              pathData={getBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
               origin="500px 520px"
-              strokeScale={0.38}
+              strokeScale={0.42}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-4']}
               allEnergizedStage={awakenedStages['branch-4']}
@@ -894,7 +1003,7 @@ export default function LokiTimelinePortal() {
               }}
             >
               <path
-                d="M 1450 30 Q 820 420, 480 620 T -350 940"
+                d={getBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -902,27 +1011,27 @@ export default function LokiTimelinePortal() {
                 strokeLinecap="round"
               />
               <path
-                d="M 1450 30 Q 820 420, 480 620 T -350 940"
+                d={getBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
                 fill="none"
                 stroke="#000000"
-                strokeWidth="1.5"
+                strokeWidth="4.2"
                 strokeLinecap="round"
-                opacity="0.65"
+                opacity="0.75"
               />
               <path
-                d="M 1450 30 Q 820 420, 480 620 T -350 940"
+                d={getBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="0.9"
+                strokeWidth="2.6"
                 strokeLinecap="round"
               />
               <path
-                d="M 1450 29 Q 820 419, 480 619 T -350 939"
+                d={getBranchPath("M 1450 29 Q 820 419, 480 619 T -350 939", 'branch-4')}
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="0.5"
+                strokeWidth="1.2"
                 strokeLinecap="round"
-                opacity="0.3"
+                opacity="0.35"
               />
             </DraggableBranch>
           </motion.g>
@@ -933,9 +1042,9 @@ export default function LokiTimelinePortal() {
           <motion.g>
             <DraggableBranch
               id="branch-3"
-              pathData="M -380 890 Q 200 680, 580 720 T 1450 820"
+              pathData={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
               origin="500px 720px"
-              strokeScale={0.52}
+              strokeScale={0.58}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-3']}
               allEnergizedStage={awakenedStages['branch-3']}
@@ -949,7 +1058,7 @@ export default function LokiTimelinePortal() {
               }}
             >
               <path
-                d="M -380 890 Q 200 680, 580 720 T 1450 820"
+                d={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -957,27 +1066,27 @@ export default function LokiTimelinePortal() {
                 strokeLinecap="round"
               />
               <path
-                d="M -380 890 Q 200 680, 580 720 T 1450 820"
+                d={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
                 fill="none"
                 stroke="#000000"
-                strokeWidth="2.0"
+                strokeWidth="5.8"
                 strokeLinecap="round"
-                opacity="0.75"
+                opacity="0.8"
               />
               <path
-                d="M -380 890 Q 200 680, 580 720 T 1450 820"
+                d={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="1.3"
+                strokeWidth="3.6"
                 strokeLinecap="round"
               />
               <path
-                d="M -380 889 Q 200 679, 580 719 T 1450 819"
+                d={getBranchPath("M -380 889 Q 200 679, 580 719 T 1450 819", 'branch-3')}
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="0.6"
+                strokeWidth="1.5"
                 strokeLinecap="round"
-                opacity="0.35"
+                opacity="0.4"
               />
             </DraggableBranch>
           </motion.g>
@@ -988,9 +1097,9 @@ export default function LokiTimelinePortal() {
           <motion.g>
             <DraggableBranch
               id="branch-5"
-              pathData="M -320 540 Q 280 430, 720 560 T 1420 520"
+              pathData={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
               origin="500px 540px"
-              strokeScale={0.7}
+              strokeScale={0.75}
               onEnergize={handleBranchEnergize}
               energizedData={energizedBranches['branch-5']}
               allEnergizedStage={awakenedStages['branch-5']}
@@ -1004,7 +1113,7 @@ export default function LokiTimelinePortal() {
               }}
             >
               <path
-                d="M -320 540 Q 280 430, 720 560 T 1420 520"
+                d={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1012,27 +1121,27 @@ export default function LokiTimelinePortal() {
                 strokeLinecap="round"
               />
               <path
-                d="M -320 540 Q 280 430, 720 560 T 1420 520"
+                d={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
                 fill="none"
                 stroke="#000000"
-                strokeWidth="2.8"
+                strokeWidth="7.8"
                 strokeLinecap="round"
-                opacity="0.8"
+                opacity="0.85"
               />
               <path
-                d="M -320 540 Q 280 430, 720 560 T 1420 520"
+                d={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="1.8"
+                strokeWidth="5.0"
                 strokeLinecap="round"
               />
               <path
-                d="M -320 539 Q 280 429, 720 559 T 1420 519"
+                d={getBranchPath("M -320 539 Q 280 429, 720 559 T 1420 519", 'branch-5')}
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="0.8"
+                strokeWidth="2.2"
                 strokeLinecap="round"
-                opacity="0.4"
+                opacity="0.45"
               />
             </DraggableBranch>
           </motion.g>
@@ -1043,7 +1152,7 @@ export default function LokiTimelinePortal() {
           <motion.g>
             <DraggableBranch
               id="branch-2"
-              pathData="M -350 40 Q 250 220, 680 160 T 1420 120"
+              pathData={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
               origin="500px 160px"
               strokeScale={0.88}
               onEnergize={handleBranchEnergize}
@@ -1059,7 +1168,7 @@ export default function LokiTimelinePortal() {
               }}
             >
               <path
-                d="M -350 40 Q 250 220, 680 160 T 1420 120"
+                d={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1067,27 +1176,27 @@ export default function LokiTimelinePortal() {
                 strokeLinecap="round"
               />
               <path
-                d="M -350 40 Q 250 220, 680 160 T 1420 120"
+                d={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
                 fill="none"
                 stroke="#000000"
-                strokeWidth="3.6"
+                strokeWidth="10.0"
                 strokeLinecap="round"
-                opacity="0.85"
+                opacity="0.88"
               />
               <path
-                d="M -350 40 Q 250 220, 680 160 T 1420 120"
+                d={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="2.4"
+                strokeWidth="6.5"
                 strokeLinecap="round"
               />
               <path
-                d="M -350 39 Q 250 219, 680 159 T 1420 119"
+                d={getBranchPath("M -350 39 Q 250 219, 680 159 T 1420 119", 'branch-2')}
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="1.0"
+                strokeWidth="2.8"
                 strokeLinecap="round"
-                opacity="0.4"
+                opacity="0.5"
               />
             </DraggableBranch>
           </motion.g>
@@ -1100,7 +1209,7 @@ export default function LokiTimelinePortal() {
         <motion.g>
           <DraggableBranch
             id="branch-1"
-            pathData="M -400 310 Q 150 480, 520 440 T 1450 390"
+            pathData={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
             origin="500px 440px"
             onEnergize={handleBranchEnergize}
             energizedData={energizedBranches['branch-1']}
@@ -1117,50 +1226,137 @@ export default function LokiTimelinePortal() {
           >
             {/* Invisible extra-wide hit-area stroke for effortless grab anywhere across the branch */}
             <path
-              d="M -400 310 Q 150 480, 520 440 T 1450 390"
+              d={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
               fill="none"
               stroke="#000000"
               strokeOpacity="0.001"
-              strokeWidth="120"
+              strokeWidth="140"
               strokeLinecap="round"
             />
             {/* Ambient drop shadow */}
             <path
-              d="M -400 310 Q 150 480, 520 440 T 1450 390"
+              d={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
               fill="none"
               stroke="#000000"
-              strokeWidth="5"
+              strokeWidth="16"
               strokeLinecap="round"
-              opacity="0.6"
+              opacity="0.8"
             />
-            {/* Main Dark Silhouette Body - Normal lean branch width */}
+            {/* Main Dark Silhouette Body - 3X Larger Forefront Branch for effortless mobile view & tap */}
             <path
-              d="M -400 310 Q 150 480, 520 440 T 1450 390"
+              d={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
               fill="none"
               stroke="#000000"
-              strokeWidth="3.8"
+              strokeWidth="13"
               strokeLinecap="round"
-              opacity="0.85"
+              opacity="0.95"
             />
             <path
-              d="M -400 310 Q 150 480, 520 440 T 1450 390"
+              d={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
               fill="none"
               stroke="#050a08"
-              strokeWidth="2.4"
+              strokeWidth="8.5"
               strokeLinecap="round"
             />
             {/* Subtle dark emerald glint */}
             <path
-              d="M -400 309 Q 150 479, 520 439 T 1450 389"
+              d={getBranchPath("M -400 309 Q 150 479, 520 439 T 1450 389", 'branch-1')}
               fill="none"
               stroke="#062d22"
-              strokeWidth="1.0"
+              strokeWidth="3.5"
               strokeLinecap="round"
-              opacity="0.4"
+              opacity="0.55"
             />
           </DraggableBranch>
         </motion.g>
-      </svg>
+
+        {/* ========================================================================= */}
+        {/* LOKI GOD OF STORIES: THE SACRED HAND GRIP KNOT                           */}
+        {/* Visual tension knot/fist where all cosmic timelines converge in user's touch */}
+        {/* ========================================================================= */}
+        {gripPoint && (
+          <motion.g
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: [0, 1.25, 1], opacity: 1 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* Outer Godly Atmospheric Glow around Hand */}
+            <circle
+              cx={gripPoint.x}
+              cy={gripPoint.y}
+              r="34"
+              fill="url(#venomGripPulseGlow)"
+              opacity="0.75"
+              style={{ filter: "blur(6px)" }}
+            />
+            {/* Loki Emerald Ring Tendrils wrapping the bundle */}
+            <circle
+              cx={gripPoint.x}
+              cy={gripPoint.y}
+              r="18"
+              fill="none"
+              stroke="#00FF66"
+              strokeWidth="2.8"
+              strokeDasharray="4 3"
+              opacity="0.85"
+            />
+            <circle
+              cx={gripPoint.x}
+              cy={gripPoint.y}
+              r="12"
+              fill="none"
+              stroke="#B9FFD0"
+              strokeWidth="2"
+              opacity="0.95"
+            />
+            {/* Core Pure Light Spark inside the Grip */}
+            <circle
+              cx={gripPoint.x}
+              cy={gripPoint.y}
+              r="5"
+              fill="#ffffff"
+              opacity="1"
+              style={{ filter: "drop-shadow(0 0 8px #39FF14)" }}
+            />
+          </motion.g>
+        )}
+      </motion.svg>
+
+      {/* ========================================================================= */}
+      {/* 4. CINEMATIC PORTAL HYPERSPACE VOYAGE & CUT-TO-BLACK OVERLAYS             */}
+      {/* ========================================================================= */}
+      
+      {/* Transparent Click-Catcher for 2nd Tap once Portal is Open */}
+      {portalStage >= 2 && travelStage === 'idle' && (
+        <div
+          onPointerDown={handlePointerDownGather}
+          className="fixed inset-0 pointer-events-auto cursor-pointer z-30"
+        />
+      )}
+
+      {/* Blinding Pure Starlight Cosmic Flash ("apdiye oru velicham varuthu") */}
+      <motion.div
+        className="fixed inset-0 pointer-events-none z-[95] bg-[#ffffff]"
+        initial={{ opacity: 0 }}
+        animate={travelStage === 'whiteout' ? {
+          opacity: [0, 1, 0.95]
+        } : {
+          opacity: 0
+        }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+      />
+
+      {/* Sudden Hard Cut to Black Screen ("odane cut black screen thaan") */}
+      <motion.div
+        className="fixed inset-0 pointer-events-auto z-[100] bg-[#000000]"
+        initial={{ opacity: 0 }}
+        animate={travelStage === 'blackout' ? {
+          opacity: 1
+        } : {
+          opacity: 0
+        }}
+        transition={{ duration: 0.05, ease: "linear" }}
+      />
     </div>
   );
 }
