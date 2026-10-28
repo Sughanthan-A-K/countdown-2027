@@ -365,38 +365,36 @@ export default function LokiTimelinePortal() {
       };
 
       // Organic Tree Branching Propagation:
-      // Tier 1: Single root branch (Branch 1) starts alone
-      // Tier 2: Splits into 2 branches (Branch 2 & Branch 5)
-      // Tier 3: Splits organically into 3-4 filaments (some starting from the middle / random ratio)
-      // Tier 4: Natural chain reaction rapidly ignites remaining filaments
+      // All branches flow end-to-end naturally (tapRatio ~0.02 to 0.05 / 0.95 to 0.98)
+      // Oru branch venom poite irukkura andha time-laye (naduvulaye), parallel-ah adutha branches start aagum!
       const cascadeConfig = [
-        // Tier 2: 2 branches ignite as Branch 1 spreads (staggered slightly)
-        { id: 'branch-2', tapRatio: 0.05, delay: 2200 },
-        { id: 'branch-5', tapRatio: 0.92, delay: 2800 },
+        // Tier 2: Branch 1 naduvula poite irukkumbothe (at 1.6s & 2.2s), Branch 2 & 5 start aagum
+        { id: 'branch-2', tapRatio: 0.02, delay: 1600 },
+        { id: 'branch-5', tapRatio: 0.98, delay: 2200 },
 
-        // Tier 3: Multiplies into ~3 branches (some starting from the middle / natural intersections)
-        { id: 'branch-3', tapRatio: 0.50, delay: 4400 }, // starts right in the middle!
-        { id: 'filament-1', tapRatio: 0.08, delay: 4800 },
-        { id: 'filament-6', tapRatio: 0.88, delay: 5200 },
+        // Tier 3: Branch 2 & 5 naduvula poite irukkumbothe, 3 branches end-to-end ignite aagum
+        { id: 'branch-3', tapRatio: 0.02, delay: 3500 },
+        { id: 'filament-1', tapRatio: 0.02, delay: 3900 },
+        { id: 'filament-6', tapRatio: 0.98, delay: 4300 },
 
-        // Tier 4: Multiplies into 4-5 branches at varied organic times
-        { id: 'branch-4', tapRatio: 0.45, delay: 6500 }, // starts mid-path!
-        { id: 'filament-3', tapRatio: 0.05, delay: 6900 },
-        { id: 'filament-9', tapRatio: 0.95, delay: 7300 },
-        { id: 'filament-0', tapRatio: 0.52, delay: 7700 }, // starts mid-path!
-        { id: 'filament-4', tapRatio: 0.08, delay: 8100 },
+        // Tier 4: Parallel branches multiply while previous are still flowing
+        { id: 'branch-4', tapRatio: 0.98, delay: 5400 },
+        { id: 'filament-3', tapRatio: 0.02, delay: 5800 },
+        { id: 'filament-9', tapRatio: 0.98, delay: 6200 },
+        { id: 'filament-0', tapRatio: 0.02, delay: 6600 },
+        { id: 'filament-4', tapRatio: 0.98, delay: 7000 },
 
-        // Tier 5: Rapid organic tapestry cascade igniting the rest across staggered delays
-        { id: 'filament-2', tapRatio: 0.05, delay: 9200 },
-        { id: 'filament-5', tapRatio: 0.95, delay: 9500 },
-        { id: 'filament-7', tapRatio: 0.48, delay: 9800 },
-        { id: 'filament-8', tapRatio: 0.05, delay: 10100 },
-        { id: 'filament-10', tapRatio: 0.92, delay: 10400 },
-        { id: 'filament-11', tapRatio: 0.55, delay: 10700 },
-        { id: 'filament-12', tapRatio: 0.08, delay: 11000 },
-        { id: 'filament-13', tapRatio: 0.90, delay: 11300 },
-        { id: 'filament-14', tapRatio: 0.42, delay: 11600 },
-        { id: 'filament-15', tapRatio: 0.05, delay: 11900 },
+        // Tier 5: The rest of the multiverse filaments cascade smoothly
+        { id: 'filament-2', tapRatio: 0.02, delay: 7900 },
+        { id: 'filament-5', tapRatio: 0.98, delay: 8200 },
+        { id: 'filament-7', tapRatio: 0.02, delay: 8500 },
+        { id: 'filament-8', tapRatio: 0.98, delay: 8800 },
+        { id: 'filament-10', tapRatio: 0.02, delay: 9100 },
+        { id: 'filament-11', tapRatio: 0.98, delay: 9400 },
+        { id: 'filament-12', tapRatio: 0.02, delay: 9700 },
+        { id: 'filament-13', tapRatio: 0.98, delay: 10000 },
+        { id: 'filament-14', tapRatio: 0.02, delay: 10300 },
+        { id: 'filament-15', tapRatio: 0.98, delay: 10600 },
       ];
 
       cascadeConfig.forEach(item => {
@@ -414,16 +412,16 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // Once venom has naturally branched across the whole tapestry (~13.0s):
+      // Once venom has spread across the whole tapestry (~11.5s):
       // Stage 1: A subtle thin vertical hairline tear appears in the center!
       setTimeout(() => {
         setPortalStage(1);
-      }, 13000);
+      }, 11500);
 
-      // Stage 2 (~14.5s): Slowly, organically cracks open into a lean slender spacetime portal!
+      // Stage 2 (~13.0s): Slowly, organically cracks open into a lean slender spacetime portal!
       setTimeout(() => {
         setPortalStage(2);
-      }, 14500);
+      }, 13000);
 
       return updated;
     });
