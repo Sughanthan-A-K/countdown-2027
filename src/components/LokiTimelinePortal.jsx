@@ -415,6 +415,26 @@ export default function LokiTimelinePortal() {
   // Starting normal width = 16px (w-4), progressively widens up to 56px (w-14) as user infuses branches
   const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
+  // Deep Multiverse Tapestry Filaments (~16 subtle background timelines that form the Yggdrasil tree tapestry)
+  const cosmicFilaments = [
+    { d: "M -350 180 Q 180 80, 520 220 T 1400 160", width: 1.2, opacity: 0.28, color: "#00C853", windDur: 27 },
+    { d: "M -300 280 Q 300 380, 750 260 T 1420 320", width: 1.5, opacity: 0.35, color: "#39FF14", windDur: 31 },
+    { d: "M -380 420 Q 220 540, 620 440 T 1450 480", width: 1.0, opacity: 0.25, color: "#00E676", windDur: 29 },
+    { d: "M -320 620 Q 350 500, 780 640 T 1400 580", width: 1.3, opacity: 0.32, color: "#7CFFB2", windDur: 33 },
+    { d: "M -400 780 Q 250 860, 680 760 T 1420 840", width: 1.6, opacity: 0.38, color: "#00FF66", windDur: 26 },
+    { d: "M 1400 90 Q 750 280, 380 140 T -320 240", width: 1.1, opacity: 0.30, color: "#00C853", windDur: 30 },
+    { d: "M 1420 380 Q 820 240, 420 410 T -350 360", width: 1.4, opacity: 0.36, color: "#39FF14", windDur: 28 },
+    { d: "M 1450 680 Q 780 780, 350 630 T -300 720", width: 1.2, opacity: 0.28, color: "#00FF66", windDur: 34 },
+    { d: "M -360 80 Q 420 180, 850 100 T 1420 190", width: 0.9, opacity: 0.22, color: "#B9FFD0", windDur: 35 },
+    { d: "M -340 490 Q 150 390, 580 510 T 1450 430", width: 1.4, opacity: 0.34, color: "#00E676", windDur: 32 },
+    { d: "M -390 850 Q 320 720, 710 880 T 1400 790", width: 1.0, opacity: 0.26, color: "#39FF14", windDur: 25 },
+    { d: "M 1420 220 Q 900 420, 460 300 T -350 420", width: 1.3, opacity: 0.32, color: "#00C853", windDur: 31 },
+    { d: "M 1450 510 Q 880 620, 490 530 T -320 610", width: 1.1, opacity: 0.28, color: "#7CFFB2", windDur: 29 },
+    { d: "M -350 950 Q 280 820, 680 940 T 1420 890", width: 1.5, opacity: 0.35, color: "#00FF66", windDur: 27 },
+    { d: "M -320 15 Q 380 120, 780 40 T 1450 110", width: 0.8, opacity: 0.20, color: "#B9FFD0", windDur: 36 },
+    { d: "M 1400 820 Q 850 930, 420 840 T -340 910", width: 1.2, opacity: 0.29, color: "#00E676", windDur: 30 }
+  ];
+
   return (
     <div key={replayKey} className="fixed inset-0 flex items-center justify-center pointer-events-none z-[80] overflow-hidden">
       {/* 0. Full Page Darkness Background */}
@@ -653,6 +673,73 @@ export default function LokiTimelinePortal() {
             );
           })}
         </defs>
+
+        {/* ------------------------------------------------------------- */}
+        {/* MULTIVERSE TAPESTRY FILAMENTS (LOKI YGGDRASIL WORLD TREE)     */}
+        {/* Rendered at deepest layer right in front of the distant portal */}
+        {/* Sweeps gracefully out past the camera as the journey advances */}
+        {/* ------------------------------------------------------------- */}
+        <g 
+          style={{ 
+            opacity: hasDiscovered ? 1 : 0, 
+            transition: 'opacity 3.0s ease-out 0.8s',
+            pointerEvents: 'none'
+          }}
+        >
+          {cosmicFilaments.map((f, i) => (
+            <motion.g
+              key={`filament-${i}`}
+              animate={voyageProgress > 0 ? {
+                scale: [1, 1.4, 3.2],
+                y: [0, (i % 2 === 0 ? -1 : 1) * (200 + i * 40), (i % 2 === 0 ? -1 : 1) * 1600],
+                x: [0, (i % 3 === 0 ? 1 : -1) * (60 + i * 15), (i % 3 === 0 ? 1 : -1) * 700],
+                opacity: [f.opacity, f.opacity * 1.5, 0]
+              } : {
+                y: [i % 2 === 0 ? 6 : -6, i % 2 === 0 ? -6 : 6, i % 2 === 0 ? 6 : -6],
+                opacity: [f.opacity, f.opacity * 1.3, f.opacity]
+              }}
+              transition={voyageProgress > 0 ? {
+                duration: 22.0,
+                delay: 0,
+                ease: [0.25, 0.1, 0.25, 1.0],
+                times: [0, 0.5, 0.9 + (i % 3) * 0.04]
+              } : {
+                duration: f.windDur,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              {/* Soft dark shadow line */}
+              <path
+                d={f.d}
+                fill="none"
+                stroke="#000805"
+                strokeWidth={f.width * 2.8}
+                strokeLinecap="round"
+                opacity={0.7}
+              />
+              {/* Outer timeline glowing filament */}
+              <path
+                d={f.d}
+                fill="none"
+                stroke={f.color}
+                strokeWidth={f.width * 1.8}
+                strokeLinecap="round"
+                opacity={0.6}
+                style={{ filter: "blur(1.5px)" }}
+              />
+              {/* Core bright neon timeline filament */}
+              <path
+                d={f.d}
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={Math.max(0.6, f.width * 0.7)}
+                strokeLinecap="round"
+                opacity={0.85}
+              />
+            </motion.g>
+          ))}
+        </g>
 
         {/* ------------------------------------------------------------- */}
         {/* DEPTH LAYER 5: Branch 4 (~1px near Portal, diagonal thread)    */}
