@@ -48,7 +48,7 @@ function LokiLifePowerSpread({
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
   // Natural organic life infusion travel duration: slow, graceful spreading across the timeline
-  const duration = 6.0;
+  const duration = 5.0;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
@@ -57,22 +57,22 @@ function LokiLifePowerSpread({
         d={pathD}
         fill="none"
         stroke="#004D2B"
-        strokeWidth={13 * strokeScale}
+        strokeWidth={14 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "linear" }}
-        opacity={0.88}
+        transition={{ duration, ease: "easeInOut" }}
+        opacity={0.9}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#006B3C"
-        strokeWidth={9.5 * strokeScale}
+        strokeWidth={10 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "linear" }}
+        transition={{ duration, ease: "easeInOut" }}
         opacity={0.85}
       />
 
@@ -83,12 +83,12 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#008F4C"
-          strokeWidth={14 * strokeScale}
+          strokeWidth={15 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "linear" }}
-          opacity={0.92}
+          transition={{ duration, ease: "easeInOut" }}
+          opacity={0.95}
           style={{ filter: "blur(2px)" }}
         />
         {/* Vibrant Loki Green Life Stream spreading */}
@@ -96,12 +96,12 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#00C853"
-          strokeWidth={10 * strokeScale}
+          strokeWidth={11 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "linear" }}
-          opacity={0.96}
+          transition={{ duration, ease: "easeInOut" }}
+          opacity={0.98}
         />
       </g>
 
@@ -112,11 +112,11 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#39FF14"
-          strokeWidth={6 * strokeScale}
+          strokeWidth={7 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "linear" }}
+          transition={{ duration, ease: "easeInOut" }}
           opacity={1}
         />
 
@@ -125,11 +125,11 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth={Math.max(1.5, 3 * strokeScale)}
+          strokeWidth={Math.max(1.8, 3.5 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "linear" }}
+          transition={{ duration, ease: "easeInOut" }}
           opacity={1}
         />
 
@@ -138,12 +138,12 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
+          strokeWidth={Math.max(0.8, 1.5 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "linear" }}
-          opacity={0.75}
+          transition={{ duration, ease: "easeInOut" }}
+          opacity={0.9}
         />
       </g>
     </g>
