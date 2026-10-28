@@ -591,25 +591,42 @@ export default function LokiTimelinePortal() {
   // Starting normal width = 16px (w-4), progressively widens up to 56px (w-14) as user infuses branches
   const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
-  // Deep Multiverse Tapestry Filaments (~16 subtle background timelines that form the Yggdrasil tree tapestry)
-  // Scaled up ~3x for distinct visibility on mobile screens while maintaining distance hierarchy
+  // Deep Multiverse Tapestry Filaments (~24 rich omni-directional timelines that form the Yggdrasil tree tapestry)
+  // Extending in ALL angles: diagonal, vertical, steep slants, horizontal, top-to-bottom criss-cross!
+  // All coordinates extend far beyond screen (-800 to 1800) so ends are NEVER visible!
   const cosmicFilaments = [
-    { d: "M -350 180 Q 180 80, 520 220 T 1400 160", width: 2.7, opacity: 0.32, color: "#00C853", windDur: 32 },
-    { d: "M -300 280 Q 300 380, 750 260 T 1420 320", width: 3.2, opacity: 0.38, color: "#39FF14", windDur: 36 },
-    { d: "M -380 420 Q 220 540, 620 440 T 1450 480", width: 2.2, opacity: 0.28, color: "#00E676", windDur: 34 },
-    { d: "M -320 620 Q 350 500, 780 640 T 1400 580", width: 3.0, opacity: 0.35, color: "#7CFFB2", windDur: 38 },
-    { d: "M -400 780 Q 250 860, 680 760 T 1420 840", width: 3.5, opacity: 0.40, color: "#00FF66", windDur: 30 },
-    { d: "M 1400 90 Q 750 280, 380 140 T -320 240", width: 2.4, opacity: 0.30, color: "#00C853", windDur: 35 },
-    { d: "M 1420 380 Q 820 240, 420 410 T -350 360", width: 3.2, opacity: 0.36, color: "#39FF14", windDur: 33 },
-    { d: "M 1450 680 Q 780 780, 350 630 T -300 720", width: 2.6, opacity: 0.32, color: "#00FF66", windDur: 39 },
-    { d: "M -360 80 Q 420 180, 850 100 T 1420 190", width: 1.8, opacity: 0.25, color: "#B9FFD0", windDur: 40 },
-    { d: "M -340 490 Q 150 390, 580 510 T 1450 430", width: 2.9, opacity: 0.34, color: "#00E676", windDur: 37 },
-    { d: "M -390 850 Q 320 720, 710 880 T 1400 790", width: 2.2, opacity: 0.28, color: "#39FF14", windDur: 31 },
-    { d: "M 1420 220 Q 900 420, 460 300 T -350 420", width: 2.7, opacity: 0.32, color: "#00C853", windDur: 36 },
-    { d: "M 1450 510 Q 880 620, 490 530 T -320 610", width: 2.4, opacity: 0.30, color: "#7CFFB2", windDur: 34 },
-    { d: "M -350 950 Q 280 820, 680 940 T 1420 890", width: 3.2, opacity: 0.38, color: "#00FF66", windDur: 32 },
-    { d: "M -320 15 Q 380 120, 780 40 T 1450 110", width: 1.6, opacity: 0.24, color: "#B9FFD0", windDur: 42 },
-    { d: "M 1400 820 Q 850 930, 420 840 T -340 910", width: 2.4, opacity: 0.30, color: "#00E676", windDur: 35 }
+    // --- STEEP DIAGONALS: TOP-LEFT TO BOTTOM-RIGHT (Criss-Cross Layer) ---
+    { d: "M -900 -500 Q 200 250, 750 700 T 1900 1500", width: 3.2, opacity: 0.40, color: "#00C853", windDur: 32 },
+    { d: "M -700 -400 Q 350 380, 850 780 T 1800 1400", width: 2.8, opacity: 0.35, color: "#39FF14", windDur: 36 },
+    { d: "M -500 -600 Q 220 220, 800 680 T 1900 1300", width: 2.6, opacity: 0.32, color: "#00E676", windDur: 34 },
+
+    // --- STEEP DIAGONALS: TOP-RIGHT TO BOTTOM-LEFT (Criss-Cross Layer) ---
+    { d: "M 1900 -500 Q 800 250, 250 700 T -900 1500", width: 3.2, opacity: 0.40, color: "#7CFFB2", windDur: 38 },
+    { d: "M 1800 -400 Q 650 380, 150 780 T -700 1400", width: 2.8, opacity: 0.35, color: "#00FF66", windDur: 30 },
+    { d: "M 1900 -600 Q 780 220, 200 680 T -500 1300", width: 2.6, opacity: 0.32, color: "#00C853", windDur: 35 },
+
+    // --- HIGH-SLANT NEAR VERTICALS (Top Edge to Bottom Edge) ---
+    { d: "M 80 -600 Q 240 380, 380 820 T 520 1600", width: 3.0, opacity: 0.38, color: "#39FF14", windDur: 33 },
+    { d: "M 920 -600 Q 760 380, 620 820 T 480 1600", width: 3.0, opacity: 0.38, color: "#00FF66", windDur: 39 },
+    { d: "M 320 -650 Q 450 350, 520 780 T 680 1650", width: 2.5, opacity: 0.30, color: "#B9FFD0", windDur: 40 },
+    { d: "M 680 -650 Q 550 420, 480 780 T 320 1650", width: 2.5, opacity: 0.30, color: "#00E676", windDur: 37 },
+
+    // --- SWEEPING X-WEAVE PASSING THROUGH CENTER ---
+    { d: "M -900 100 Q 250 600, 780 350 T 1900 900", width: 2.9, opacity: 0.34, color: "#39FF14", windDur: 31 },
+    { d: "M 1900 100 Q 750 600, 220 350 T -900 900", width: 2.9, opacity: 0.34, color: "#00C853", windDur: 36 },
+    { d: "M -900 850 Q 380 250, 820 680 T 1900 200", width: 2.7, opacity: 0.32, color: "#7CFFB2", windDur: 34 },
+    { d: "M 1900 850 Q 620 250, 180 680 T -900 200", width: 2.7, opacity: 0.32, color: "#00FF66", windDur: 32 },
+
+    // --- HIGH & LOW ARCHING FIBERS ---
+    { d: "M -900 -50 Q 500 420, 950 180 T 1900 -80", width: 2.4, opacity: 0.28, color: "#B9FFD0", windDur: 42 },
+    { d: "M -900 1050 Q 500 580, 950 820 T 1900 1080", width: 2.5, opacity: 0.30, color: "#00E676", windDur: 35 },
+    { d: "M 1900 -50 Q 500 420, 50 180 T -900 -80", width: 2.4, opacity: 0.28, color: "#39FF14", windDur: 38 },
+    { d: "M 1900 1050 Q 500 580, 50 820 T -900 1080", width: 2.5, opacity: 0.30, color: "#00C853", windDur: 33 },
+
+    // --- BACKGROUND HORIZONTAL DRIFTERS ---
+    { d: "M -900 200 Q 250 380, 750 180 T 1900 240", width: 2.8, opacity: 0.32, color: "#00FF66", windDur: 36 },
+    { d: "M -900 500 Q 320 620, 720 380 T 1900 520", width: 3.0, opacity: 0.35, color: "#7CFFB2", windDur: 35 },
+    { d: "M -900 780 Q 280 520, 780 720 T 1900 720", width: 2.8, opacity: 0.32, color: "#39FF14", windDur: 37 }
   ];
 
   // Loki Hand Grip Convergence Physics:
@@ -659,7 +676,15 @@ export default function LokiTimelinePortal() {
       return `M ${startX} ${startY} Q ${ctrlX1.toFixed(1)} ${ctrlY1.toFixed(1)}, ${gx.toFixed(1)} ${(gy + gripOffsetY).toFixed(1)} Q ${ctrlX2.toFixed(1)} ${ctrlY2.toFixed(1)}, ${endX} ${endY}`;
     }
 
-    return baseD;
+    // When not holding, return standard base path extending infinitely
+    if (!gripPoint) {
+      if (branchId === 'branch-1') return "M -900 310 Q 150 480, 520 440 T 1900 390";
+      if (branchId === 'branch-2') return "M -900 40 Q 250 220, 680 160 T 1900 120";
+      if (branchId === 'branch-5') return "M -900 540 Q 280 430, 720 560 T 1900 520";
+      if (branchId === 'branch-3') return "M -900 890 Q 200 680, 580 720 T 1900 820";
+      if (branchId === 'branch-4') return "M 1900 30 Q 820 420, 480 620 T -900 940";
+      return baseD;
+    }
   };
 
   return (
@@ -1063,31 +1088,16 @@ export default function LokiTimelinePortal() {
             return (
               <motion.g
                 key={filamentId}
-                initial={{
-                  scaleX: 0.15,
-                  scaleY: 0.2,
-                  rotate: (i % 2 === 0 ? 1 : -1) * (i * 4),
-                  opacity: 0.2
-                }}
                 animate={{
-                  scaleX: 1,
-                  scaleY: 1,
-                  rotate: 0,
-                  opacity: 1,
                   y: [i % 2 === 0 ? 5 : -5, i % 2 === 0 ? -5 : 5, i % 2 === 0 ? 5 : -5]
                 }}
                 transition={{
-                  scaleX: { duration: 4.8, ease: [0.16, 1, 0.3, 1] },
-                  scaleY: { duration: 4.8, ease: [0.16, 1, 0.3, 1] },
-                  rotate: { duration: 4.8, ease: [0.16, 1, 0.3, 1] },
-                  opacity: { duration: 2.0 },
                   y: {
                     duration: f.windDur,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }
                 }}
-                style={{ transformOrigin: "500px 500px" }}
               >
                 {/* 1. Slim dark silhouette body */}
                 <path
@@ -1188,15 +1198,10 @@ export default function LokiTimelinePortal() {
             pointerEvents: 'none'
           }}
         >
-          <motion.g
-            initial={{ scaleX: 0.2, scaleY: 0.3, opacity: 0.3 }}
-            animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
-            transition={{ duration: 4.8, ease: [0.16, 1, 0.3, 1] }}
-            style={{ transformOrigin: "500px 500px" }}
-          >
+          <motion.g>
             <DraggableBranch
               id="branch-4"
-              pathData={getBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
+              pathData={getBranchPath("M 1900 30 Q 820 420, 480 620 T -900 940", 'branch-4')}
               origin="500px 520px"
               strokeScale={0.42}
               onEnergize={handleBranchEnergize}
@@ -1212,7 +1217,7 @@ export default function LokiTimelinePortal() {
               }}
             >
               <path
-                d={getBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
+                d={getBranchPath("M 1900 30 Q 820 420, 480 620 T -900 940", 'branch-4')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1220,7 +1225,7 @@ export default function LokiTimelinePortal() {
                 strokeLinecap="round"
               />
               <path
-                d={getBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
+                d={getBranchPath("M 1900 30 Q 820 420, 480 620 T -900 940", 'branch-4')}
                 fill="none"
                 stroke="#000000"
                 strokeWidth="4.2"
@@ -1228,14 +1233,14 @@ export default function LokiTimelinePortal() {
                 opacity="0.75"
               />
               <path
-                d={getBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
+                d={getBranchPath("M 1900 30 Q 820 420, 480 620 T -900 940", 'branch-4')}
                 fill="none"
                 stroke="#050a08"
                 strokeWidth="2.6"
                 strokeLinecap="round"
               />
               <path
-                d={getBranchPath("M 1450 29 Q 820 419, 480 619 T -350 939", 'branch-4')}
+                d={getBranchPath("M 1900 29 Q 820 419, 480 619 T -900 939", 'branch-4')}
                 fill="none"
                 stroke="#062d22"
                 strokeWidth="1.2"
@@ -1251,7 +1256,7 @@ export default function LokiTimelinePortal() {
           <motion.g>
             <DraggableBranch
               id="branch-3"
-              pathData={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
+              pathData={getBranchPath("M -900 890 Q 200 680, 580 720 T 1900 820", 'branch-3')}
               origin="500px 720px"
               strokeScale={0.58}
               onEnergize={handleBranchEnergize}
@@ -1267,7 +1272,7 @@ export default function LokiTimelinePortal() {
               }}
             >
               <path
-                d={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
+                d={getBranchPath("M -900 890 Q 200 680, 580 720 T 1900 820", 'branch-3')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1275,7 +1280,7 @@ export default function LokiTimelinePortal() {
                 strokeLinecap="round"
               />
               <path
-                d={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
+                d={getBranchPath("M -900 890 Q 200 680, 580 720 T 1900 820", 'branch-3')}
                 fill="none"
                 stroke="#000000"
                 strokeWidth="5.8"
@@ -1283,14 +1288,14 @@ export default function LokiTimelinePortal() {
                 opacity="0.8"
               />
               <path
-                d={getBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
+                d={getBranchPath("M -900 890 Q 200 680, 580 720 T 1900 820", 'branch-3')}
                 fill="none"
                 stroke="#050a08"
                 strokeWidth="3.6"
                 strokeLinecap="round"
               />
               <path
-                d={getBranchPath("M -380 889 Q 200 679, 580 719 T 1450 819", 'branch-3')}
+                d={getBranchPath("M -900 889 Q 200 679, 580 719 T 1900 819", 'branch-3')}
                 fill="none"
                 stroke="#062d22"
                 strokeWidth="1.5"
@@ -1306,7 +1311,7 @@ export default function LokiTimelinePortal() {
           <motion.g>
             <DraggableBranch
               id="branch-5"
-              pathData={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
+              pathData={getBranchPath("M -900 540 Q 280 430, 720 560 T 1900 520", 'branch-5')}
               origin="500px 540px"
               strokeScale={0.75}
               onEnergize={handleBranchEnergize}
@@ -1322,7 +1327,7 @@ export default function LokiTimelinePortal() {
               }}
             >
               <path
-                d={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
+                d={getBranchPath("M -900 540 Q 280 430, 720 560 T 1900 520", 'branch-5')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1330,7 +1335,7 @@ export default function LokiTimelinePortal() {
                 strokeLinecap="round"
               />
               <path
-                d={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
+                d={getBranchPath("M -900 540 Q 280 430, 720 560 T 1900 520", 'branch-5')}
                 fill="none"
                 stroke="#000000"
                 strokeWidth="7.8"
@@ -1338,14 +1343,14 @@ export default function LokiTimelinePortal() {
                 opacity="0.85"
               />
               <path
-                d={getBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
+                d={getBranchPath("M -900 540 Q 280 430, 720 560 T 1900 520", 'branch-5')}
                 fill="none"
                 stroke="#050a08"
                 strokeWidth="5.0"
                 strokeLinecap="round"
               />
               <path
-                d={getBranchPath("M -320 539 Q 280 429, 720 559 T 1420 519", 'branch-5')}
+                d={getBranchPath("M -900 539 Q 280 429, 720 559 T 1900 519", 'branch-5')}
                 fill="none"
                 stroke="#062d22"
                 strokeWidth="2.2"
@@ -1361,7 +1366,7 @@ export default function LokiTimelinePortal() {
           <motion.g>
             <DraggableBranch
               id="branch-2"
-              pathData={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
+              pathData={getBranchPath("M -900 40 Q 250 220, 680 160 T 1900 120", 'branch-2')}
               origin="500px 160px"
               strokeScale={0.88}
               onEnergize={handleBranchEnergize}
@@ -1377,7 +1382,7 @@ export default function LokiTimelinePortal() {
               }}
             >
               <path
-                d={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
+                d={getBranchPath("M -900 40 Q 250 220, 680 160 T 1900 120", 'branch-2')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1385,7 +1390,7 @@ export default function LokiTimelinePortal() {
                 strokeLinecap="round"
               />
               <path
-                d={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
+                d={getBranchPath("M -900 40 Q 250 220, 680 160 T 1900 120", 'branch-2')}
                 fill="none"
                 stroke="#000000"
                 strokeWidth="10.0"
@@ -1393,14 +1398,14 @@ export default function LokiTimelinePortal() {
                 opacity="0.88"
               />
               <path
-                d={getBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
+                d={getBranchPath("M -900 40 Q 250 220, 680 160 T 1900 120", 'branch-2')}
                 fill="none"
                 stroke="#050a08"
                 strokeWidth="6.5"
                 strokeLinecap="round"
               />
               <path
-                d={getBranchPath("M -350 39 Q 250 219, 680 159 T 1420 119", 'branch-2')}
+                d={getBranchPath("M -900 39 Q 250 219, 680 159 T 1900 119", 'branch-2')}
                 fill="none"
                 stroke="#062d22"
                 strokeWidth="2.8"
@@ -1415,15 +1420,10 @@ export default function LokiTimelinePortal() {
         {/* DEPTH LAYER 1: FOREFRONT MAIN TIMELINE (Branch 1 - Forefront) */}
         {/* User grabs/taps to start the God of Stories power cascade!    */}
         {/* ------------------------------------------------------------- */}
-        <motion.g
-          initial={{ scaleX: 0.25, scaleY: 0.35, opacity: 0.3 }}
-          animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
-          transition={{ duration: 4.8, ease: [0.16, 1, 0.3, 1] }}
-          style={{ transformOrigin: "500px 500px" }}
-        >
+        <motion.g>
           <DraggableBranch
             id="branch-1"
-            pathData={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
+            pathData={getBranchPath("M -900 310 Q 150 480, 520 440 T 1900 390", 'branch-1')}
             origin="500px 440px"
             onEnergize={handleBranchEnergize}
             energizedData={energizedBranches['branch-1']}
@@ -1440,7 +1440,7 @@ export default function LokiTimelinePortal() {
           >
             {/* Invisible extra-wide hit-area stroke for effortless grab anywhere across the branch */}
             <path
-              d={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
+              d={getBranchPath("M -900 310 Q 150 480, 520 440 T 1900 390", 'branch-1')}
               fill="none"
               stroke="#000000"
               strokeOpacity="0.001"
@@ -1449,7 +1449,7 @@ export default function LokiTimelinePortal() {
             />
             {/* Ambient drop shadow */}
             <path
-              d={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
+              d={getBranchPath("M -900 310 Q 150 480, 520 440 T 1900 390", 'branch-1')}
               fill="none"
               stroke="#000000"
               strokeWidth="16"
@@ -1458,7 +1458,7 @@ export default function LokiTimelinePortal() {
             />
             {/* Main Dark Silhouette Body - 3X Larger Forefront Branch for effortless mobile view & tap */}
             <path
-              d={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
+              d={getBranchPath("M -900 310 Q 150 480, 520 440 T 1900 390", 'branch-1')}
               fill="none"
               stroke="#000000"
               strokeWidth="13"
@@ -1466,7 +1466,7 @@ export default function LokiTimelinePortal() {
               opacity="0.95"
             />
             <path
-              d={getBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
+              d={getBranchPath("M -900 310 Q 150 480, 520 440 T 1900 390", 'branch-1')}
               fill="none"
               stroke="#050a08"
               strokeWidth="8.5"
@@ -1474,7 +1474,7 @@ export default function LokiTimelinePortal() {
             />
             {/* Subtle dark emerald glint */}
             <path
-              d={getBranchPath("M -400 309 Q 150 479, 520 439 T 1450 389", 'branch-1')}
+              d={getBranchPath("M -900 309 Q 150 479, 520 439 T 1900 389", 'branch-1')}
               fill="none"
               stroke="#062d22"
               strokeWidth="3.5"
