@@ -131,7 +131,7 @@ function LokiLifePowerSpread({
           d={pathMain}
           fill="none"
           stroke="#39FF14"
-          strokeWidth={4.2 * strokeScale}
+          strokeWidth={4.5 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
@@ -143,23 +143,38 @@ function LokiLifePowerSpread({
           d={pathMain}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth={Math.max(1, 2.0 * strokeScale)}
+          strokeWidth={Math.max(1.2, 2.2 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        {/* Pure White Starlight Center Crack - Locked inside and moving together with the green wave */}
+        {/* Pure White Starlight Center Crack - Crisp & clear along the whole vein */}
         <motion.path
           d={pathMain}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
+          strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.95 }}
+          animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
+        />
+
+        {/* 5. Pure White Tip at the Green Edge (Uyir Munai): Exactly touching and leading the green flow front */}
+        <motion.path
+          d={pathMain}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth={Math.max(2.4, 4.2 * strokeScale)}
+          strokeLinecap="round"
+          strokeDasharray={`18 ${distance + 400}`}
+          initial={{ strokeDashoffset: 18 }}
+          animate={{ strokeDashoffset: -(distance + 8) }}
+          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
+          opacity={1}
+          style={{ filter: "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 12px #39FF14)" }}
         />
       </g>
     </g>
