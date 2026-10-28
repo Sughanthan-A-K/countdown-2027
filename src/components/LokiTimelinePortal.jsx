@@ -57,8 +57,8 @@ function LokiLifePowerSpread({
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  // Natural biological root cracking velocity
-  const duration = 4.8;
+  // Natural biological root awakening - slow, elegant, atmospheric spreading across the timeline
+  const duration = 7.5;
 
   // Tap Point Coordinates
   const tapPt = pathEl.getPointAtLength(tapLen);
@@ -110,7 +110,7 @@ function LokiLifePowerSpread({
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: [0, 0.9, 0.85] }}
-        transition={{ duration: duration * 1.05, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
         style={{ filter: "blur(0.6px)" }}
       />
       <motion.path
@@ -121,11 +121,12 @@ function LokiLifePowerSpread({
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: [0, 1, 0.9] }}
-        transition={{ duration: duration * 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
       />
 
-      {/* 4. Electric Neon Core Vein - High voltage life pulse cracking through */}
+      {/* 4. Electric Neon Core Vein + Starlight Center - Moving in PERFECT sync with the green body */}
       <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
+        {/* Neon Green Core Pulse */}
         <motion.path
           d={pathMain}
           fill="none"
@@ -149,31 +150,16 @@ function LokiLifePowerSpread({
           transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        {/* Pure Starlight Crack Line */}
+        {/* Pure White Starlight Center Crack - Locked inside and moving together with the green wave */}
         <motion.path
           d={pathMain}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.6, 1.0 * strokeScale)}
+          strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 0.95 }}
           transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-        />
-
-        {/* 5. Leading Root-Growth Tip: Piercing starlight root-head driving forward */}
-        <motion.path
-          d={pathMain}
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth={Math.max(2.2, 3.8 * strokeScale)}
-          strokeLinecap="round"
-          strokeDasharray={`35 ${distance + 400}`}
-          initial={{ strokeDashoffset: 35 }}
-          animate={{ strokeDashoffset: -(distance + 60) }}
-          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-          opacity={1}
-          style={{ filter: "drop-shadow(0 0 8px #39FF14)" }}
         />
       </g>
     </g>
@@ -818,7 +804,7 @@ export default function LokiTimelinePortal() {
                   opacity={0.5}
                 />
 
-                {/* 2. Slow Life Infusion into Filaments */}
+                {/* 2. Slow Bio-Luminescent Root Vein Infusion into Filaments (Same unified look as main branches) */}
                 {isEnergized && (
                   <g>
                     {/* Living outer atmospheric envelope */}
@@ -829,8 +815,8 @@ export default function LokiTimelinePortal() {
                       strokeWidth={f.width * 2.6}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: [0, 0.75, 0.85] }}
-                      transition={{ duration: 7.5, ease: [0.25, 0.1, 0.25, 1] }}
+                      animate={{ pathLength: 1, opacity: [0, 0.8, 0.9] }}
+                      transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
                       style={{ filter: "blur(1.5px)" }}
                     />
                     <motion.path
@@ -840,30 +826,40 @@ export default function LokiTimelinePortal() {
                       strokeWidth={f.width * 1.8}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: [0, 0.85, 0.95] }}
-                      transition={{ duration: 7.5, ease: [0.25, 0.1, 0.25, 1] }}
+                      animate={{ pathLength: 1, opacity: [0, 0.9, 0.98] }}
+                      transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
                     />
-                    {/* Inner core life spark */}
+                    {/* Inner core life spark & starlight line moving in sync */}
                     <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
                       <motion.path
                         d={f.d}
                         fill="none"
                         stroke="#39FF14"
-                        strokeWidth={f.width * 1.1}
+                        strokeWidth={f.width * 1.2}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: [0, 1, 1] }}
-                        transition={{ duration: 7.5, ease: [0.25, 0.1, 0.25, 1] }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+                      />
+                      <motion.path
+                        d={f.d}
+                        fill="none"
+                        stroke="#B9FFD0"
+                        strokeWidth={Math.max(0.6, f.width * 0.7)}
+                        strokeLinecap="round"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
                       />
                       <motion.path
                         d={f.d}
                         fill="none"
                         stroke="#ffffff"
-                        strokeWidth={Math.max(0.5, f.width * 0.4)}
+                        strokeWidth={Math.max(0.4, f.width * 0.4)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: [0, 0.7, 0.6] }}
-                        transition={{ duration: 7.5, ease: [0.25, 0.1, 0.25, 1] }}
+                        animate={{ pathLength: 1, opacity: 0.9 }}
+                        transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
                       />
                     </g>
                   </g>
