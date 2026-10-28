@@ -588,38 +588,49 @@ export default function LokiTimelinePortal() {
   ];
 
   // Loki Hand Grip Convergence Physics:
-  // When user taps on 2nd tap (or holds and moves), all branches AND all 16 filaments
-  // physically bend and gather into Loki's hand coordinate (gx, gy) like in the finale!
+  // When user holds, all branches and filaments MUST pass EXACTLY through the user's hand point (gx, gy)
+  // tightly clustered into one single fist / handle bundle like Loki holding the gathered timelines!
   const getBranchPath = (baseD, branchId) => {
     if (!gripPoint) return baseD;
     const gx = gripPoint.x;
     const gy = gripPoint.y;
 
+    // Fixed realistic handle bundle diameter: max 2px to 4px tight grip bundle
     if (branchId === 'branch-1') {
-      return `M -400 310 Q ${gx * 0.45} ${gy + 10}, ${gx} ${gy} T 1450 390`;
+      return `M -400 310 Q ${gx * 0.45} ${gy + 4}, ${gx} ${gy} T 1450 390`;
     }
     if (branchId === 'branch-2') {
-      return `M -350 40 Q ${gx * 0.38} ${gy - 12}, ${gx} ${gy - 4} T 1420 120`;
+      return `M -350 40 Q ${gx * 0.4} ${gy - 4}, ${gx} ${gy - 1.5} T 1420 120`;
     }
     if (branchId === 'branch-5') {
-      return `M -320 540 Q ${gx * 0.45} ${gy + 14}, ${gx} ${gy + 4} T 1420 520`;
+      return `M -320 540 Q ${gx * 0.45} ${gy + 4}, ${gx} ${gy + 1.5} T 1420 520`;
     }
     if (branchId === 'branch-3') {
-      return `M -380 890 Q ${gx * 0.40} ${gy + 20}, ${gx} ${gy + 8} T 1450 820`;
+      return `M -380 890 Q ${gx * 0.40} ${gy + 6}, ${gx} ${gy + 2} T 1450 820`;
     }
     if (branchId === 'branch-4') {
-      return `M 1450 30 Q ${gx * 1.3} ${gy - 15}, ${gx} ${gy - 6} T -350 940`;
+      return `M 1450 30 Q ${gx * 1.3} ${gy - 6}, ${gx} ${gy - 2} T -350 940`;
     }
 
     // For filaments (filament-0 to filament-15):
+    // All 16 filaments pass DIRECTLY through (gx, gy) with microscopic handle bundle spread (max ±3px)
     if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
       const idx = parseInt(branchId.replace('filament-', ''), 10) || 0;
-      const spreadY = ((idx % 7) - 3) * 3; // tiny natural yarn spread in fist
-      const startX = idx % 2 === 0 ? -360 : 1440;
+      // Tight handle knot spread: strictly between -3px and +3px
+      const gripOffsetY = ((idx % 7) - 3) * 0.9;
+      const isLeft = idx % 2 === 0;
+      const startX = isLeft ? -360 : 1440;
       const startY = (idx * 60 + 50) % 950;
-      const endX = idx % 2 === 0 ? 1440 : -360;
-      const endY = (startY + 300) % 950;
-      return `M ${startX} ${startY} Q ${gx * 0.5 + (idx % 3) * 10} ${gy + spreadY}, ${gx} ${gy + spreadY} T ${endX} ${endY}`;
+      const endX = isLeft ? 1440 : -360;
+      const endY = (startY + 320) % 950;
+
+      // Curve gracefully sweeps from infinity, pinches EXACTLY through the hand grip point (gx, gy), then continues outward
+      const ctrlX1 = isLeft ? (startX + gx) * 0.48 : (startX + gx) * 0.52;
+      const ctrlY1 = (startY + gy) * 0.5;
+      const ctrlX2 = isLeft ? (gx + endX) * 0.52 : (gx + endX) * 0.48;
+      const ctrlY2 = (gy + endY) * 0.5;
+
+      return `M ${startX} ${startY} Q ${ctrlX1.toFixed(1)} ${ctrlY1.toFixed(1)}, ${gx.toFixed(1)} ${(gy + gripOffsetY).toFixed(1)} Q ${ctrlX2.toFixed(1)} ${ctrlY2.toFixed(1)}, ${endX} ${endY}`;
     }
 
     return baseD;
