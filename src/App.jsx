@@ -1339,9 +1339,9 @@ function App() {
                 </div>
               )}
 
-              {/* Loki Time Portal on stage 5: Rendered directly at root level with fixed inset-0 to ensure 100% full screen coverage without any top/bottom dead bars */}
-              {lokiCrackStage >= 5 && (
-                <LokiTimelinePortal />
+              {/* Loki Time Portal & Multiverse Branches: Mounted on stage 3 so tight Loom bundle is visible inside the card's light, then shatters & unbinds smoothly on stage 5 */}
+              {lokiCrackStage >= 3 && (
+                <LokiTimelinePortal crackStage={lokiCrackStage} />
               )}
             </>
           )}
