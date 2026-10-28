@@ -28,119 +28,164 @@ function LokiLifePowerSpread({
   // Pulse length: standard dynamic slug length
   const pulseLen = 220;
 
-  // Generate subpath helper
-  const getSubpath = (fromLen, toLen) => {
-    const samples = 40;
+  // Generate natural continuous spine path from start to end (Single Unbroken Path)
+  const fullPathD = useMemo(() => {
+    const samples = 90;
     let d = "";
     for (let i = 0; i <= samples; i++) {
-      const l = fromLen + (i / samples) * (toLen - fromLen);
+      const prog = i / samples;
+      const l = prog * totalLen;
       const pt = pathEl.getPointAtLength(l);
-      d += (i === 0 ? `M ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}` : ` L ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`);
+      const wave = Math.sin(prog * 24 + 1) * (Math.sin(prog * Math.PI) * 2.2 * strokeScale);
+      const x = pt.x + wave * 0.4;
+      const y = pt.y + wave;
+      d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
     }
     return d;
-  };
+  }, [totalLen, strokeScale]);
 
-  // Rightward path (from tap to end)
-  const rightD = getSubpath(tapLen, totalLen);
-  // Leftward path (from tap to start)
-  const leftD = getSubpath(tapLen, 0);
+  // Secondary fine capillary root veins that branch off organically
+  const fullVeinB = useMemo(() => {
+    const samples = 75;
+    let d = "";
+    for (let i = 0; i <= samples; i++) {
+      const prog = i / samples;
+      const l = prog * totalLen;
+      const pt = pathEl.getPointAtLength(l);
+      const wave = Math.sin(prog * 20 + 3.5) * (Math.sin(prog * Math.PI) * 2.5 * strokeScale);
+      const x = pt.x + wave * 0.4;
+      const y = pt.y + wave;
+      d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+    }
+    return d;
+  }, [totalLen, strokeScale]);
 
-  const rightDistance = totalLen - tapLen;
-  const leftDistance = tapLen;
-  // Natural biological root awakening - slow, elegant, atmospheric spreading across the timeline
-  const duration = 7.5;
+  const fullVeinC = useMemo(() => {
+    const samples = 75;
+    let d = "";
+    for (let i = 0; i <= samples; i++) {
+      const prog = i / samples;
+      const l = prog * totalLen;
+      const pt = pathEl.getPointAtLength(l);
+      const wave = Math.sin(prog * 22 + 6.0) * (Math.sin(prog * Math.PI) * 2.5 * strokeScale);
+      const x = pt.x + wave * 0.4;
+      const y = pt.y + wave;
+      d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+    }
+    return d;
+  }, [totalLen, strokeScale]);
 
-  const renderTravelingVeinStream = (pathD, distance, key) => (
-    <g key={key}>
-      {/* 1. Bark Cracking Pre-glow: Emerald warmth glowing through cracked wood */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#004D2B"
-        strokeWidth={13 * strokeScale}
-        strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-        opacity={0.95}
-        style={{ filter: "blur(3px)" }}
-      />
-
-      {/* 2. Deep Green Bio-luminescent Vascular Flesh */}
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#008F4C"
-        strokeWidth={9 * strokeScale}
-        strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-        opacity={0.98}
-        style={{ filter: "blur(1px)" }}
-      />
-      <motion.path
-        d={pathD}
-        fill="none"
-        stroke="#00C853"
-        strokeWidth={6.5 * strokeScale}
-        strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-        opacity={1}
-      />
-
-      {/* 3. Electric Neon Core Vein + Starlight Center - Moving in PERFECT sync with the green body */}
-      <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-        {/* Neon Green Core Pulse */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#39FF14"
-          strokeWidth={4.5 * strokeScale}
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-          opacity={1}
-        />
-
-        {/* Mint Star Vein Filament */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#B9FFD0"
-          strokeWidth={Math.max(1.2, 2.2 * strokeScale)}
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-          opacity={1}
-        />
-
-        {/* Pure White Starlight Center Core - Single continuous clean glowing line */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration, ease: [0.16, 1, 0.3, 1] }}
-          opacity={1}
-          style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.8))" }}
-        />
-      </g>
-    </g>
-  );
+  // Natural biological root awakening - slower, calmer, majestic spreading across the timeline
+  const duration = 10.5;
 
   return (
     <g>
-      {/* Symmetrical Bi-Directional Root Cracking: Right and Left Veins visibly spreading from tap point */}
-      {renderTravelingVeinStream(rightD, rightDistance, "veins-right")}
-      {renderTravelingVeinStream(leftD, leftDistance, "veins-left")}
+      {/* Clip path circle expanding outward from tap point: Guarantees 0 seam lines or marks at tap origin! */}
+      <defs>
+        <clipPath id={`life-expand-${branchPathRef.current?.id || totalLen}`}>
+          <motion.circle
+            cx={pathEl.getPointAtLength(tapLen).x}
+            cy={pathEl.getPointAtLength(tapLen).y}
+            initial={{ r: 0 }}
+            animate={{ r: totalLen * 1.3 }}
+            transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </clipPath>
+      </defs>
+
+      {/* Single Unbroken Bio-luminescent Root Vein Network - Light, delicate stroke */}
+      <g clipPath={`url(#life-expand-${branchPathRef.current?.id || totalLen})`}>
+        {/* 1. Bark Cracking Pre-glow: Emerald warmth glowing gently */}
+        <path
+          d={fullPathD}
+          fill="none"
+          stroke="#004D2B"
+          strokeWidth={8 * strokeScale}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.85}
+          style={{ filter: "blur(2.5px)" }}
+        />
+
+        {/* 2. Deep Green Bio-luminescent Vascular Flesh - Light stroke */}
+        <path
+          d={fullPathD}
+          fill="none"
+          stroke="#008F4C"
+          strokeWidth={5.5 * strokeScale}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.92}
+          style={{ filter: "blur(0.8px)" }}
+        />
+        <path
+          d={fullPathD}
+          fill="none"
+          stroke="#00C853"
+          strokeWidth={3.8 * strokeScale}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.95}
+        />
+
+        {/* 3. Secondary Capillary Vein Roots - Delicate capillary fibers */}
+        <path
+          d={fullVeinB}
+          fill="none"
+          stroke="#00E676"
+          strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.8}
+          style={{ filter: "blur(0.5px)" }}
+        />
+        <path
+          d={fullVeinC}
+          fill="none"
+          stroke="#7CFFB2"
+          strokeWidth={Math.max(0.6, 1.2 * strokeScale)}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.85}
+        />
+
+        {/* 4. Electric Neon Core Vein + Starlight Center - Delicate, fine glowing thread */}
+        <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
+          {/* Neon Green Core Pulse */}
+          <path
+            d={fullPathD}
+            fill="none"
+            stroke="#39FF14"
+            strokeWidth={2.6 * strokeScale}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity={0.95}
+          />
+
+          {/* Mint Star Vein Filament */}
+          <path
+            d={fullPathD}
+            fill="none"
+            stroke="#B9FFD0"
+            strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity={0.95}
+          />
+
+          {/* Pure White Starlight Center Core - Delicate fine glowing thread */}
+          <path
+            d={fullPathD}
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth={Math.max(0.5, 0.9 * strokeScale)}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity={0.95}
+            style={{ filter: "drop-shadow(0 0 2.5px rgba(255,255,255,0.7))" }}
+          />
+        </g>
+      </g>
 
       {/* Awakened Breathing Life: Once infused, the branch gently breathes and pulses with living energy */}
       {allEnergizedStage && (
@@ -388,35 +433,35 @@ export default function LokiTimelinePortal() {
 
       // Organic Tree Branching Propagation:
       // Life spreading organically across the tree tapestry:
-      // Branch 1 uyir perum pothu, adhutha branches ku uyir thodarndhu slow-ah paravudhu!
+      // Branch 1 uyir perum pothu, adhutha branches ku uyir thodarndhu slow & calm-ah paravudhu
       const cascadeConfig = [
-        // Tier 2: Branch 1 uyir paravum pothu (at 2.8s & 3.8s), Branch 2 & 5 ignite aagudhu
-        { id: 'branch-2', tapRatio: 0.02, delay: 2800 },
-        { id: 'branch-5', tapRatio: 0.98, delay: 3800 },
+        // Tier 2: Branch 1 uyir paravum pothu (at 3.8s & 5.2s), Branch 2 & 5 ignite aagudhu
+        { id: 'branch-2', tapRatio: 0.02, delay: 3800 },
+        { id: 'branch-5', tapRatio: 0.98, delay: 5200 },
 
         // Tier 3: Uyir thodarndhu adutha branches & filaments ku paravudhu
-        { id: 'branch-3', tapRatio: 0.02, delay: 5600 },
-        { id: 'filament-1', tapRatio: 0.02, delay: 6200 },
-        { id: 'filament-6', tapRatio: 0.98, delay: 6800 },
+        { id: 'branch-3', tapRatio: 0.02, delay: 7500 },
+        { id: 'filament-1', tapRatio: 0.02, delay: 8200 },
+        { id: 'filament-6', tapRatio: 0.98, delay: 9000 },
 
         // Tier 4: Multiverse tree-oda naram bugal ellam uyir perudhu
-        { id: 'branch-4', tapRatio: 0.98, delay: 8200 },
-        { id: 'filament-3', tapRatio: 0.02, delay: 8800 },
-        { id: 'filament-9', tapRatio: 0.98, delay: 9400 },
-        { id: 'filament-0', tapRatio: 0.02, delay: 10000 },
-        { id: 'filament-4', tapRatio: 0.98, delay: 10600 },
+        { id: 'branch-4', tapRatio: 0.98, delay: 10800 },
+        { id: 'filament-3', tapRatio: 0.02, delay: 11500 },
+        { id: 'filament-9', tapRatio: 0.98, delay: 12200 },
+        { id: 'filament-0', tapRatio: 0.02, delay: 13000 },
+        { id: 'filament-4', tapRatio: 0.98, delay: 13800 },
 
         // Tier 5: Rest of the filaments gently awaken
-        { id: 'filament-2', tapRatio: 0.02, delay: 11800 },
-        { id: 'filament-5', tapRatio: 0.98, delay: 12400 },
-        { id: 'filament-7', tapRatio: 0.02, delay: 13000 },
-        { id: 'filament-8', tapRatio: 0.98, delay: 13600 },
-        { id: 'filament-10', tapRatio: 0.02, delay: 14200 },
-        { id: 'filament-11', tapRatio: 0.98, delay: 14800 },
-        { id: 'filament-12', tapRatio: 0.02, delay: 15400 },
-        { id: 'filament-13', tapRatio: 0.98, delay: 16000 },
-        { id: 'filament-14', tapRatio: 0.02, delay: 16600 },
-        { id: 'filament-15', tapRatio: 0.98, delay: 17200 },
+        { id: 'filament-2', tapRatio: 0.02, delay: 15200 },
+        { id: 'filament-5', tapRatio: 0.98, delay: 16000 },
+        { id: 'filament-7', tapRatio: 0.02, delay: 16800 },
+        { id: 'filament-8', tapRatio: 0.98, delay: 17600 },
+        { id: 'filament-10', tapRatio: 0.02, delay: 18400 },
+        { id: 'filament-11', tapRatio: 0.98, delay: 19200 },
+        { id: 'filament-12', tapRatio: 0.02, delay: 20000 },
+        { id: 'filament-13', tapRatio: 0.98, delay: 20800 },
+        { id: 'filament-14', tapRatio: 0.02, delay: 21600 },
+        { id: 'filament-15', tapRatio: 0.98, delay: 22400 },
       ];
 
       cascadeConfig.forEach(item => {
@@ -434,16 +479,16 @@ export default function LokiTimelinePortal() {
         }
       });
 
-      // Once life has fully spread across the whole cosmic tree (~18s):
-      // Stage 1: A subtle thin vertical hairline tear appears in the center!
+      // Once life has fully spread across the whole cosmic tree (~23s):
+      // Stage 1: A subtle thin vertical hairline tear appears in the center gently!
       setTimeout(() => {
         setPortalStage(1);
-      }, 18000);
+      }, 23000);
 
-      // Stage 2 (~20.5s): Slowly, organically cracks open into a lean slender spacetime portal!
+      // Stage 2 (~26s): Slowly, organically cracks open into a lean slender spacetime portal!
       setTimeout(() => {
         setPortalStage(2);
-      }, 20500);
+      }, 26000);
 
       return updated;
     });
@@ -613,33 +658,40 @@ export default function LokiTimelinePortal() {
           }}
         />
 
-        {/* Center Point of Origin Light Star */}
+        {/* Center Point of Origin Light Star - Gentle, smooth breathing glow (NO sudden on/off) */}
         <motion.div
           animate={portalStage > 0 ? {
-            scale: [0.85, 1.25, 0.85],
-            opacity: 1
+            scale: [0.95, 1.1, 0.95],
+            opacity: [0.65, 0.9, 0.65]
           } : {
             scale: 0,
             opacity: 0
           }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute w-6 h-6 rounded-full bg-[#ffffff] blur-sm shadow-[0_0_25px_#ffffff,0_0_50px_#B9FFD0,0_0_80px_#00FF66] pointer-events-none"
+          transition={portalStage > 0 ? {
+            duration: 5.0,
+            repeat: Infinity,
+            ease: "easeInOut"
+          } : {
+            duration: 2.5,
+            ease: "easeOut"
+          }}
+          className="absolute w-5 h-5 rounded-full bg-[#ffffff] blur-[3px] shadow-[0_0_20px_#ffffff,0_0_35px_#B9FFD0,0_0_55px_#00FF66] pointer-events-none"
         />
 
         {/* Slender White-Mint Core Aperture Spine - Starts as hairline vertical crack, expands smoothly over 20s */}
         <motion.div
           animate={portalStage === 2 ? {
-            width: "8px",
-            opacity: 0.95
+            width: "7px",
+            opacity: 0.9
           } : {
             width: portalStage === 1 ? "1.5px" : "0px",
-            opacity: portalStage === 1 ? 0.9 : 0
+            opacity: portalStage === 1 ? 0.75 : 0
           }}
           transition={{ duration: 20.0, ease: [0.16, 1, 0.3, 1] }}
           className="absolute h-[270px] sm:h-[330px] pointer-events-none rounded-[50%]"
           style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.95) 15%, #ffffff 50%, rgba(124,255,178,0.95) 85%, transparent 100%)',
-            boxShadow: '0 0 20px #ffffff, 0 0 40px #B9FFD0, 0 0 65px #00FF66',
+            background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.85) 15%, rgba(255,255,255,0.95) 50%, rgba(124,255,178,0.85) 85%, transparent 100%)',
+            boxShadow: '0 0 15px rgba(255,255,255,0.8), 0 0 30px #B9FFD0, 0 0 50px #00FF66',
             filter: 'url(#lokiOrganicRiftEdge) blur(0.8px)'
           }}
         />
