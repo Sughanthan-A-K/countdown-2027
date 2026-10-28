@@ -503,10 +503,10 @@ export default function LokiTimelinePortal() {
   };
 
   // 2nd Interaction: When portal has opened (portalStage >= 2), user simply taps / holds anywhere!
-  // 1. All branches instantly converge into the user's hand without needing any grip effect circles.
-  // 2. Portal rushes close to the foreground and draws all branches into its cosmic rift vortex.
-  // 3. User travels inside the portal for ~3 seconds with swirling multiverse light.
-  // 4. Brilliant blinding white flash of light, followed by sudden dramatic CUT TO BLACK!
+  // 1. All branches instantly stretch & converge into user's hand with elastic light-speed tension.
+  // 2. Portal grows massive to engulf the full screen (`scale: 40`), pulling user & branches into its vortex.
+  // 3. Multiverse Bifrost / Heimdall warp tunnel voyage with spinning galaxies & timeline filaments (~3.5s).
+  // 4. User holds the branch bunch all the way into the tunnel until a sudden bright flash cuts to BLACK!
   const getSvgCoordinates = (e) => {
     const svg = e.currentTarget.closest('svg') || document.querySelector('svg#loki-timeline-svg');
     if (!svg) return { x: 500, y: 500 };
@@ -523,27 +523,27 @@ export default function LokiTimelinePortal() {
     setGripPoint(coords);
     setIsGatheringHand(true);
 
-    // Sequence 1: Portal approaches close and draws all branches inside (0s -> 1.8s)
+    // Sequence 1: Elastic Light-Speed Snap & Portal expands to full screen size (0s -> 1.5s)
     setPortalVoyageStage(1);
 
-    // Sequence 2: Dive inside the portal warp tunnel, 3 seconds travel (1.8s -> 4.8s)
+    // Sequence 2: Dive into the Heimdall / Bifrost Multiverse wormhole (1.5s -> 5.0s, exactly 3.5s deep travel)
     setTimeout(() => {
       setPortalVoyageStage(2);
-    }, 1800);
+    }, 1500);
 
-    // Sequence 3: Pure white flash burst (at 4.8s)
+    // Sequence 3: Pure blinding light burst at the end of tunnel (at 5.0s)
     setTimeout(() => {
       setPortalVoyageStage(3);
-    }, 4800);
+    }, 5000);
 
-    // Sequence 4: Sudden dramatic CUT TO BLACK SCREEN! (at 5.3s)
+    // Sequence 4: Sudden dramatic CUT TO PITCH BLACK SCREEN (at 5.4s)
     setTimeout(() => {
       setPortalVoyageStage(4);
-    }, 5300);
+    }, 5400);
   };
 
   const handlePointerMoveGather = (e) => {
-    if (!isGatheringHand || portalVoyageStage >= 2) return;
+    if (!isGatheringHand || portalVoyageStage >= 4) return;
     const coords = getSvgCoordinates(e);
     setGripPoint(coords);
   };
@@ -668,25 +668,25 @@ export default function LokiTimelinePortal() {
           - Exactly Centered Portal (LEAN, SLENDER, SLEEK shape - NO bulky/fat look)
           - Intro opens ultra-slowly across 20.0 seconds!
           - Mystical slender vertical spacetime tear aperture.
-          - On 2nd Tap (portalVoyageStage >= 1): Portal accelerates forward to camera!
+          - On 2nd Tap (portalVoyageStage >= 1): Portal expands smoothly to engulf entire screen!
       */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ opacity: 0 }}
         animate={
           portalVoyageStage === 1
-            ? { opacity: 1, scale: 2.8, z: 50 }
+            ? { opacity: 1, scale: 18, z: 200 }
             : portalVoyageStage >= 2
-            ? { opacity: 1, scale: 12, z: 200 }
+            ? { opacity: 0.15, scale: 50, z: 400 }
             : portalStage > 0
             ? { opacity: 1, scale: 1, z: 0 }
             : { opacity: 0, scale: 0.8, z: -100 }
         }
         transition={
           portalVoyageStage === 1
-            ? { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
+            ? { duration: 1.5, ease: [0.22, 1, 0.36, 1] }
             : portalVoyageStage >= 2
-            ? { duration: 3.2, ease: "easeIn" }
+            ? { duration: 1.0, ease: "easeOut" }
             : { duration: 2.0, ease: "easeOut" }
         }
         style={{ transformOrigin: "50% 50%" }}
@@ -866,20 +866,25 @@ export default function LokiTimelinePortal() {
           })}
         </defs>
 
-        {/* SVG Container wrapping all branches with entrance/portal-pull transforms */}
+        {/* SVG Container wrapping all branches:
+            Elastic light-speed stretch & suction towards user's hand & portal interior
+            User continues to hold the branch bunch even inside the warp voyage!
+        */}
         <motion.g
           animate={
             portalVoyageStage === 1
-              ? { scale: 0.7, opacity: 0.95 }
-              : portalVoyageStage >= 2
-              ? { scale: 0.05, opacity: 0 }
+              ? { scaleX: [1, 1.45, 0.85], scaleY: [1, 0.65, 0.85], opacity: 1 }
+              : portalVoyageStage >= 2 && portalVoyageStage < 4
+              ? { scale: 0.55, opacity: 0.9, y: 30 }
+              : portalVoyageStage >= 4
+              ? { opacity: 0 }
               : { scale: 1, opacity: 1 }
           }
           transition={
             portalVoyageStage === 1
-              ? { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
+              ? { duration: 1.5, ease: [0.16, 1, 0.3, 1] }
               : portalVoyageStage >= 2
-              ? { duration: 1.2, ease: "easeIn" }
+              ? { duration: 0.8, ease: "easeOut" }
               : { duration: 0.5 }
           }
           style={{ transformOrigin: "500px 500px" }}
@@ -1307,73 +1312,109 @@ export default function LokiTimelinePortal() {
       </svg>
 
       {/* ========================================================================= */}
-      {/* 4. TRAVELING INSIDE THE PORTAL: 3 SECONDS HYPERSPACE WARP VOYAGE          */}
+      {/* 4. TRAVELING INSIDE THE PORTAL: HEIMDALL / BIFROST MULTIVERSE WARP VOYAGE   */}
+      {/* Deep cosmic journey through multiple swirling universes & timeline dimensions */}
+      {/* NO bright initial flash! Deep, rich dark space filled with cosmic nebulae & rays */}
       {/* ========================================================================= */}
       {portalVoyageStage >= 2 && portalVoyageStage < 4 && (
         <motion.div
           className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden z-20"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          {/* Swirling emerald timeline energy tunnel */}
+          {/* Deep Dark Multiverse Void */}
+          <div className="absolute inset-0 bg-[#000805]" />
+
+          {/* Multiple Universes & Galaxies Passing in Depth (Heimdall Rainbow / Multiverse Bridges) */}
           <motion.div
-            className="absolute w-[800px] h-[800px] rounded-full"
+            className="absolute w-[950px] h-[950px] rounded-full"
             style={{
-              background: 'conic-gradient(from 0deg, #00FF66, #004D2B, #39FF14, #002213, #7CFFB2, #00FF66)',
-              filter: 'blur(40px)',
+              background: 'conic-gradient(from 180deg, #004D2B, #001A0E, #008F4C, #002B19, #00FF66, #00361F, #004D2B)',
+              filter: 'blur(50px)',
             }}
-            animate={{ rotate: 360, scale: [1, 2.5, 4] }}
+            animate={{ rotate: 360, scale: [0.9, 1.8, 3.2] }}
             transition={{
-              rotate: { duration: 1.5, repeat: Infinity, ease: "linear" },
-              scale: { duration: 3.0, ease: "easeInOut" }
+              rotate: { duration: 3.5, repeat: Infinity, ease: "linear" },
+              scale: { duration: 3.5, ease: "easeInOut" }
             }}
           />
 
-          {/* Streaking spacetime warp rays */}
+          {/* Drifting Multiverse Star-Clusters & Galaxies (Pala Universes passing by) */}
+          {[
+            { x: -280, y: -220, color: 'rgba(0,255,102,0.3)', size: 320, dur: 3.5 },
+            { x: 300, y: 180, color: 'rgba(57,255,20,0.25)', size: 280, dur: 3.2 },
+            { x: -160, y: 260, color: 'rgba(185,255,208,0.2)', size: 240, dur: 3.8 },
+            { x: 220, y: -250, color: 'rgba(0,200,83,0.3)', size: 300, dur: 3.0 }
+          ].map((gal, idx) => (
+            <motion.div
+              key={idx}
+              className="absolute rounded-full pointer-events-none"
+              style={{
+                width: gal.size,
+                height: gal.size,
+                background: `radial-gradient(circle, ${gal.color} 0%, transparent 75%)`,
+                filter: 'blur(35px)',
+              }}
+              animate={{
+                x: [gal.x * 0.4, gal.x * 1.8],
+                y: [gal.y * 0.4, gal.y * 1.8],
+                scale: [0.5, 2.2],
+                opacity: [0.3, 0.9, 0]
+              }}
+              transition={{
+                duration: gal.dur,
+                ease: "easeIn",
+                repeat: Infinity
+              }}
+            />
+          ))}
+
+          {/* Streaking Bifrost Warp Light Streaks pulling into infinity */}
           <div className="absolute inset-0 flex items-center justify-center">
-            {[...Array(16)].map((_, i) => (
+            {[...Array(24)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-[3px] bg-gradient-to-t from-transparent via-[#B9FFD0] to-white rounded-full"
+                className="absolute w-[2.5px] bg-gradient-to-t from-transparent via-[#00FF66] to-[#B9FFD0] rounded-full"
                 style={{
-                  height: '120vh',
-                  transform: `rotate(${i * 22.5}deg)`,
+                  height: '140vh',
+                  transform: `rotate(${i * 15}deg)`,
                   transformOrigin: '50% 50%',
-                  filter: 'blur(1px)'
+                  filter: 'blur(0.8px)'
                 }}
                 animate={{
-                  scaleY: [0.2, 1.8, 2.4],
-                  opacity: [0.3, 1, 0.4]
+                  scaleY: [0.3, 2.2, 3.0],
+                  opacity: [0.2, 0.85, 0.2]
                 }}
                 transition={{
-                  duration: 0.8,
+                  duration: 0.7,
                   repeat: Infinity,
-                  delay: (i % 4) * 0.15,
+                  delay: (i % 6) * 0.1,
                   ease: "easeInOut"
                 }}
               />
             ))}
           </div>
 
-          {/* Deep focal hyperspace star */}
+          {/* Distant Spacetime Singularity Destination Star (Approaching destination) */}
           <motion.div
-            className="absolute w-24 h-24 rounded-full bg-white blur-xl shadow-[0_0_80px_#ffffff,0_0_150px_#00FF66]"
-            animate={{ scale: [1, 3, 8] }}
-            transition={{ duration: 3.0, ease: "easeIn" }}
+            className="absolute w-14 h-14 rounded-full bg-[#B9FFD0] blur-[10px] shadow-[0_0_50px_#00FF66,0_0_100px_#008F4C]"
+            animate={{ scale: [0.6, 2.5, 6.0] }}
+            transition={{ duration: 3.5, ease: "easeIn" }}
           />
         </motion.div>
       )}
 
       {/* ========================================================================= */}
-      {/* 5. BRILLIANT WHITE FLASHOUT (Stage 3)                                    */}
+      {/* 5. BRILLIANT WHITE FLASHOUT: ONLY AT THE END OF THE JOURNEY (Stage 3)     */}
+      {/* Sudden intense cosmic arrival flash (0.4s) before cutting to black        */}
       {/* ========================================================================= */}
       {portalVoyageStage >= 3 && portalVoyageStage < 4 && (
         <motion.div
           className="absolute inset-0 bg-white pointer-events-none z-30"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.45, ease: "easeIn" }}
+          transition={{ duration: 0.35, ease: "easeIn" }}
         />
       )}
 
