@@ -78,30 +78,30 @@ function LokiLifePowerSpread({
       />
 
       {/* 2. The Traveling Pulse - Loki Authentic Sacred Timeline Color Flow */}
-      {/* Strictly contained inside branch borders without overflowing outside */}
+      {/* Covers branch edge-to-edge eliminating any noticeable black border */}
       <g style={{ filter: "url(#venomPulseDistort)" }}>
-        {/* Layer A: Volumetric Edge Glow - Continuous smooth linear sweep */}
+        {/* Layer A: Full edge-to-edge glow canopy covering branch sides */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#008F4C"
-          strokeWidth={14 * strokeScale}
+          strokeWidth={17 * strokeScale}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0.8 }}
-          animate={{ pathLength: 1, opacity: 0.8 }}
+          initial={{ pathLength: 0, opacity: 0.9 }}
+          animate={{ pathLength: 1, opacity: 0.9 }}
           transition={{ duration, ease: "linear" }}
-          style={{ filter: "blur(2px)" }}
+          style={{ filter: "blur(2.5px)" }}
         />
 
-        {/* Layer B: True Loki Green & Electric Green Body */}
+        {/* Layer B: True Loki Green & Electric Green Body covering branch width */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#00C853"
-          strokeWidth={9 * strokeScale}
+          strokeWidth={12 * strokeScale}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0.9 }}
-          animate={{ pathLength: 1, opacity: 0.9 }}
+          initial={{ pathLength: 0, opacity: 0.95 }}
+          animate={{ pathLength: 1, opacity: 0.95 }}
           transition={{ duration, ease: "linear" }}
         />
 
@@ -110,7 +110,7 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#39FF14"
-          strokeWidth={5 * strokeScale}
+          strokeWidth={7 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 1 }}
           animate={{ pathLength: 1, opacity: 1 }}
@@ -122,7 +122,7 @@ function LokiLifePowerSpread({
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth={Math.max(1, 2 * strokeScale)}
+          strokeWidth={Math.max(1.5, 3 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0, opacity: 1 }}
           animate={{ pathLength: 1, opacity: 1 }}
@@ -138,17 +138,17 @@ function LokiLifePowerSpread({
       {renderTravelingPulse(rightD, rightDistance, "pulse-right")}
       {renderTravelingPulse(leftD, leftDistance, "pulse-left")}
 
-      {/* Full Living Pulsation when branch awakens (Stays within branch silhouette borders) */}
+      {/* Full Living Pulsation when branch awakens (Spans edge-to-edge) */}
       {allEnergizedStage && (
         <g style={{ filter: "url(#venomPulseDistort)" }}>
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#008F4C"
-            strokeWidth={15 * strokeScale}
+            strokeWidth={18 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.85, 0.7] }}
+            animate={{ opacity: [0, 0.9, 0.8] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
             style={{ filter: "blur(3px)" }}
           />
@@ -156,17 +156,17 @@ function LokiLifePowerSpread({
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#00C853"
-            strokeWidth={9 * strokeScale}
+            strokeWidth={12 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.95, 0.85] }}
+            animate={{ opacity: [0, 1, 0.9] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
           />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#39FF14"
-            strokeWidth={5 * strokeScale}
+            strokeWidth={7 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.95] }}
@@ -176,7 +176,7 @@ function LokiLifePowerSpread({
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#B9FFD0"
-            strokeWidth={Math.max(1, 2 * strokeScale)}
+            strokeWidth={Math.max(1.5, 3 * strokeScale)}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.98] }}
@@ -694,42 +694,42 @@ export default function LokiTimelinePortal() {
                   ease: "easeInOut"
                 }}
               >
-                {/* 1. Pure dark silhouette body */}
+                {/* 1. Slim dark silhouette body */}
                 <path
                   d={f.d}
                   fill="none"
                   stroke="#000000"
-                  strokeWidth={f.width * 2.8}
+                  strokeWidth={f.width * 2.0}
                   strokeLinecap="round"
-                  opacity={0.92}
+                  opacity={0.85}
                 />
                 <path
                   d={f.d}
                   fill="none"
                   stroke="#050a08"
-                  strokeWidth={f.width * 1.8}
+                  strokeWidth={f.width * 1.4}
                   strokeLinecap="round"
                 />
                 <path
                   d={f.d}
                   fill="none"
                   stroke="#062d22"
-                  strokeWidth={Math.max(0.6, f.width * 0.8)}
+                  strokeWidth={Math.max(0.5, f.width * 0.7)}
                   strokeLinecap="round"
-                  opacity={0.6}
+                  opacity={0.5}
                 />
 
-                {/* 2. Proportional Venom Life Pulse when energized */}
+                {/* 2. Venom Life Pulse covering edges completely */}
                 {isEnergized && (
                   <g style={{ filter: "url(#venomPulseDistort)" }}>
                     <motion.path
                       d={f.d}
                       fill="none"
                       stroke="#008F4C"
-                      strokeWidth={f.width * 2.5}
+                      strokeWidth={f.width * 3.2}
                       strokeLinecap="round"
-                      initial={{ pathLength: 0, opacity: 0.8 }}
-                      animate={{ pathLength: 1, opacity: 0.8 }}
+                      initial={{ pathLength: 0, opacity: 0.9 }}
+                      animate={{ pathLength: 1, opacity: 0.9 }}
                       transition={{ duration: 5.5, ease: "linear" }}
                       style={{ filter: "blur(1.5px)" }}
                     />
@@ -737,17 +737,17 @@ export default function LokiTimelinePortal() {
                       d={f.d}
                       fill="none"
                       stroke="#00C853"
-                      strokeWidth={f.width * 1.6}
+                      strokeWidth={f.width * 2.2}
                       strokeLinecap="round"
-                      initial={{ pathLength: 0, opacity: 0.9 }}
-                      animate={{ pathLength: 1, opacity: 0.9 }}
+                      initial={{ pathLength: 0, opacity: 0.95 }}
+                      animate={{ pathLength: 1, opacity: 0.95 }}
                       transition={{ duration: 5.5, ease: "linear" }}
                     />
                     <motion.path
                       d={f.d}
                       fill="none"
                       stroke="#39FF14"
-                      strokeWidth={f.width * 0.9}
+                      strokeWidth={f.width * 1.3}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 1 }}
                       animate={{ pathLength: 1, opacity: 1 }}
@@ -757,7 +757,7 @@ export default function LokiTimelinePortal() {
                       d={f.d}
                       fill="none"
                       stroke="#ffffff"
-                      strokeWidth={Math.max(0.5, f.width * 0.4)}
+                      strokeWidth={Math.max(0.6, f.width * 0.6)}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 1 }}
                       animate={{ pathLength: 1, opacity: 1 }}
@@ -810,24 +810,24 @@ export default function LokiTimelinePortal() {
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="7"
+                strokeWidth="5"
                 strokeLinecap="round"
-                opacity="0.9"
+                opacity="0.8"
               />
               <path
                 d="M 1450 30 Q 820 420, 480 620 T -350 940"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="4.5"
+                strokeWidth="3.5"
                 strokeLinecap="round"
               />
               <path
                 d="M 1450 29 Q 820 419, 480 619 T -350 939"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="1.5"
+                strokeWidth="1.2"
                 strokeLinecap="round"
-                opacity="0.6"
+                opacity="0.5"
               />
             </DraggableBranch>
           </motion.g>
@@ -865,24 +865,24 @@ export default function LokiTimelinePortal() {
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="11"
+                strokeWidth="8"
                 strokeLinecap="round"
-                opacity="0.95"
+                opacity="0.85"
               />
               <path
                 d="M -380 890 Q 200 680, 580 720 T 1450 820"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="7"
+                strokeWidth="5.5"
                 strokeLinecap="round"
               />
               <path
                 d="M -380 889 Q 200 679, 580 719 T 1450 819"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2"
+                strokeWidth="1.8"
                 strokeLinecap="round"
-                opacity="0.6"
+                opacity="0.5"
               />
             </DraggableBranch>
           </motion.g>
@@ -920,24 +920,24 @@ export default function LokiTimelinePortal() {
                 d="M -320 540 Q 280 430, 720 560 T 1420 520"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="12"
+                strokeWidth="9"
                 strokeLinecap="round"
-                opacity="0.9"
+                opacity="0.85"
               />
               <path
                 d="M -320 540 Q 280 430, 720 560 T 1420 520"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="8"
+                strokeWidth="6.5"
                 strokeLinecap="round"
               />
               <path
                 d="M -320 539 Q 280 429, 720 559 T 1420 519"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2.2"
+                strokeWidth="1.8"
                 strokeLinecap="round"
-                opacity="0.6"
+                opacity="0.5"
               />
             </DraggableBranch>
           </motion.g>
@@ -975,24 +975,24 @@ export default function LokiTimelinePortal() {
                 d="M -350 40 Q 250 220, 680 160 T 1420 120"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="15"
+                strokeWidth="11"
                 strokeLinecap="round"
-                opacity="0.9"
+                opacity="0.85"
               />
               <path
                 d="M -350 40 Q 250 220, 680 160 T 1420 120"
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="10"
+                strokeWidth="8"
                 strokeLinecap="round"
               />
               <path
                 d="M -350 39 Q 250 219, 680 159 T 1420 119"
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2.5"
+                strokeWidth="2"
                 strokeLinecap="round"
-                opacity="0.6"
+                opacity="0.5"
               />
             </DraggableBranch>
           </motion.g>
@@ -1034,24 +1034,24 @@ export default function LokiTimelinePortal() {
               d="M -400 310 Q 150 480, 520 440 T 1450 390"
               fill="none"
               stroke="#000000"
-              strokeWidth="20"
+              strokeWidth="14"
               strokeLinecap="round"
-              opacity="0.95"
+              opacity="0.85"
             />
-            {/* Main Dark Silhouette Body - Forefront Width: 16 */}
+            {/* Main Dark Silhouette Body */}
             <path
               d="M -400 310 Q 150 480, 520 440 T 1450 390"
               fill="none"
               stroke="#000000"
-              strokeWidth="16"
+              strokeWidth="12"
               strokeLinecap="round"
-              opacity="0.95"
+              opacity="0.9"
             />
             <path
               d="M -400 310 Q 150 480, 520 440 T 1450 390"
               fill="none"
               stroke="#050a08"
-              strokeWidth="11"
+              strokeWidth="8.5"
               strokeLinecap="round"
             />
             {/* Subtle dark emerald glint */}
@@ -1059,9 +1059,9 @@ export default function LokiTimelinePortal() {
               d="M -400 309 Q 150 479, 520 439 T 1450 389"
               fill="none"
               stroke="#062d22"
-              strokeWidth="2.5"
+              strokeWidth="2"
               strokeLinecap="round"
-              opacity="0.6"
+              opacity="0.5"
             />
           </DraggableBranch>
         </motion.g>
