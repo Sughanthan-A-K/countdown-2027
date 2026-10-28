@@ -77,23 +77,35 @@ function LokiLifePowerSpread({
         opacity={0.85}
       />
 
-      {/* 2. Boundary Layers - Clean, smooth cylindrical border edges (NO distortion outside) */}
+      {/* 2. Boundary Layers - Clean cylindrical borders with a subtle 10% dark defining edge contour */}
+      {/* 10% dark defining border stroke along outer edge */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#01140c"
+        strokeWidth={15.5 * strokeScale}
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0.65 }}
+        animate={{ pathLength: 1, opacity: 0.65 }}
+        transition={{ duration, ease: "linear" }}
+      />
+      {/* Outer Emerald Glow Layer */}
       <motion.path
         d={pathD}
         fill="none"
         stroke="#008F4C"
-        strokeWidth={15 * strokeScale}
+        strokeWidth={13.5 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0.9 }}
         animate={{ pathLength: 1, opacity: 0.9 }}
         transition={{ duration, ease: "linear" }}
-        style={{ filter: "blur(2px)" }}
+        style={{ filter: "blur(1.5px)" }}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#00C853"
-        strokeWidth={11 * strokeScale}
+        strokeWidth={10.5 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0.95 }}
         animate={{ pathLength: 1, opacity: 0.95 }}
@@ -150,23 +162,33 @@ function LokiLifePowerSpread({
       {/* Full Living Pulsation when branch awakens */}
       {allEnergizedStage && (
         <g>
-          {/* Clean outer cylindrical boundary */}
+          {/* Clean outer cylindrical boundary with subtle 10% dark contour */}
+          <motion.path
+            d={pathEl.getAttribute('d')}
+            fill="none"
+            stroke="#01140c"
+            strokeWidth={15.5 * strokeScale}
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.65, 0.6] }}
+            transition={{ duration: 1.8, ease: "easeOut" }}
+          />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#008F4C"
-            strokeWidth={15 * strokeScale}
+            strokeWidth={13.5 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.9, 0.8] }}
             transition={{ duration: 1.8, ease: "easeOut" }}
-            style={{ filter: "blur(2px)" }}
+            style={{ filter: "blur(1.5px)" }}
           />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
             stroke="#00C853"
-            strokeWidth={11 * strokeScale}
+            strokeWidth={10.5 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.92] }}
@@ -746,12 +768,23 @@ export default function LokiTimelinePortal() {
                 {/* 2. Cylindrical outer boundary with inner core venom ripple */}
                 {isEnergized && (
                   <g>
+                    {/* Subtle 10% dark defining edge contour */}
+                    <motion.path
+                      d={f.d}
+                      fill="none"
+                      stroke="#01140c"
+                      strokeWidth={f.width * 2.8}
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 0.65 }}
+                      animate={{ pathLength: 1, opacity: 0.65 }}
+                      transition={{ duration: 5.5, ease: "linear" }}
+                    />
                     {/* Clean outer cylindrical boundaries */}
                     <motion.path
                       d={f.d}
                       fill="none"
                       stroke="#008F4C"
-                      strokeWidth={f.width * 2.8}
+                      strokeWidth={f.width * 2.3}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0.85 }}
                       animate={{ pathLength: 1, opacity: 0.85 }}
@@ -762,7 +795,7 @@ export default function LokiTimelinePortal() {
                       d={f.d}
                       fill="none"
                       stroke="#00C853"
-                      strokeWidth={f.width * 2.0}
+                      strokeWidth={f.width * 1.8}
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0.95 }}
                       animate={{ pathLength: 1, opacity: 0.95 }}
