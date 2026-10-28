@@ -47,12 +47,12 @@ function LokiLifePowerSpread({
 
   const rightDistance = totalLen - tapLen;
   const leftDistance = tapLen;
-  // Natural organic life infusion travel duration: slow, graceful spreading across the timeline
+  // Natural organic life infusion travel duration: graceful awakening across the timeline
   const duration = 5.0;
 
   const renderTravelingPulse = (pathD, distance, key) => (
     <g key={key}>
-      {/* 1. Underlying living body base */}
+      {/* 1. Pre-glow of life: Soft emerald warmth permeating into the black wood */}
       <motion.path
         d={pathD}
         fill="none"
@@ -61,89 +61,101 @@ function LokiLifePowerSpread({
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "easeInOut" }}
-        opacity={0.9}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        opacity={0.92}
+        style={{ filter: "blur(2.5px)" }}
       />
       <motion.path
         d={pathD}
         fill="none"
         stroke="#006B3C"
-        strokeWidth={10 * strokeScale}
+        strokeWidth={11 * strokeScale}
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration, ease: "easeInOut" }}
-        opacity={0.85}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        opacity={0.9}
+        style={{ filter: "blur(1.2px)" }}
       />
 
-      {/* 2. Living Venom Expanding Canopy - Organically spreading along the branch */}
-      <g style={{ filter: "url(#livingVenomFluidDistort)" }}>
-        {/* Saturated deep emerald life infusing and spreading forward */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#008F4C"
-          strokeWidth={15 * strokeScale}
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "easeInOut" }}
-          opacity={0.95}
-          style={{ filter: "blur(2px)" }}
-        />
-        {/* Vibrant Loki Green Life Stream spreading */}
-        <motion.path
-          d={pathD}
-          fill="none"
-          stroke="#00C853"
-          strokeWidth={11 * strokeScale}
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "easeInOut" }}
-          opacity={0.98}
-        />
-      </g>
+      {/* 2. Living Flesh of the Vine: Saturated rich Loki emerald spreading continuously */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#008F4C"
+        strokeWidth={12 * strokeScale}
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        opacity={0.95}
+      />
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#00C853"
+        strokeWidth={8.5 * strokeScale}
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+        opacity={0.98}
+      />
 
-      {/* 3. The Sacred Pulse of Life: Electric Green & Mint heartbeat spreading through the core */}
+      {/* 3. The Core Living Vein & Spark Head: Spreading organically through the branch */}
       <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-        {/* Electric Neon Green Life Stream spreading */}
+        {/* Living Radiant Core Vein spreading along path */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#39FF14"
-          strokeWidth={7 * strokeScale}
+          strokeWidth={5 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "easeInOut" }}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
           opacity={1}
         />
 
-        {/* Life Essence Core Stream (Mint / Starlight) */}
+        {/* Mint Life Stream */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#B9FFD0"
-          strokeWidth={Math.max(1.8, 3.5 * strokeScale)}
+          strokeWidth={Math.max(1.2, 2.5 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "easeInOut" }}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
           opacity={1}
         />
 
-        {/* Vital Spark - Pure White Living Thread */}
+        {/* Center Starlight Spark Line */}
         <motion.path
           d={pathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(0.8, 1.5 * strokeScale)}
+          strokeWidth={Math.max(0.6, 1.0 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration, ease: "easeInOut" }}
-          opacity={0.9}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          opacity={0.8}
+        />
+
+        {/* 4. Leading Spark of Life (Uyir Munai): Glinting starlight tip that leads the spread! */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth={Math.max(1.8, 3.2 * strokeScale)}
+          strokeLinecap="round"
+          strokeDasharray={`28 ${distance + 400}`}
+          initial={{ strokeDashoffset: 28 }}
+          animate={{ strokeDashoffset: -(distance + 50) }}
+          transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+          opacity={1}
+          style={{ filter: "drop-shadow(0 0 6px #B9FFD0)" }}
         />
       </g>
     </g>
