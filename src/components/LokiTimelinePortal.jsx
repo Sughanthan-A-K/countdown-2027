@@ -149,14 +149,14 @@ function LokiLifePowerSpread({
           opacity={0.92}
         />
 
-        {/* 4. Electric Neon Core Vein + Starlight Center - 100% Single Continuous Seam-free Line */}
+        {/* 4. Electric Neon Core Vein + Solid Pure White Core - Highly Visible & Vibrant */}
         <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
           {/* Neon Green Core Pulse */}
           <path
             d={fullPathD}
             fill="none"
             stroke="#39FF14"
-            strokeWidth={4.5 * strokeScale}
+            strokeWidth={5.5 * strokeScale}
             strokeLinecap="round"
             strokeLinejoin="round"
             opacity={1}
@@ -167,22 +167,22 @@ function LokiLifePowerSpread({
             d={fullPathD}
             fill="none"
             stroke="#B9FFD0"
-            strokeWidth={Math.max(1.2, 2.2 * strokeScale)}
+            strokeWidth={Math.max(1.8, 3.2 * strokeScale)}
             strokeLinecap="round"
             strokeLinejoin="round"
             opacity={1}
           />
 
-          {/* Pure White Starlight Center Core - Single continuous clean glowing line */}
+          {/* Pure White Core (Nalla Visible-aana Pure White Line - Green oda sernthu flow aagum) */}
           <path
             d={fullPathD}
             fill="none"
             stroke="#ffffff"
-            strokeWidth={Math.max(0.8, 1.4 * strokeScale)}
+            strokeWidth={Math.max(1.8, 2.5 * strokeScale)}
             strokeLinecap="round"
             strokeLinejoin="round"
             opacity={1}
-            style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.8))" }}
+            style={{ filter: "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 12px #B9FFD0)" }}
           />
         </g>
       </g>
@@ -833,21 +833,23 @@ export default function LokiTimelinePortal() {
                         d={f.d}
                         fill="none"
                         stroke="#B9FFD0"
-                        strokeWidth={Math.max(0.6, f.width * 0.7)}
+                        strokeWidth={Math.max(1.0, f.width * 1.2)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
                         animate={{ pathLength: 1, opacity: 1 }}
                         transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
                       />
+                      {/* High-visibility Pure White Core in Filaments */}
                       <motion.path
                         d={f.d}
                         fill="none"
                         stroke="#ffffff"
-                        strokeWidth={Math.max(0.4, f.width * 0.4)}
+                        strokeWidth={Math.max(0.8, f.width * 0.9)}
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: 0.9 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
                         transition={{ duration: 7.5, ease: [0.16, 1, 0.3, 1] }}
+                        style={{ filter: "drop-shadow(0 0 4px #ffffff)" }}
                       />
                     </g>
                   </g>
