@@ -1339,8 +1339,8 @@ function App() {
                 </div>
               )}
 
-              {/* Loki Time Portal & Multiverse Branches: Mounted on stage 3 so tight Loom bundle is visible inside the card's light, then shatters & unbinds smoothly on stage 5 */}
-              {lokiCrackStage >= 3 && (
+              {/* Loki Time Portal & Multiverse Branches: Mounted on stage 3 so the bundle branch network is alive behind the card during Tap 3 cracks, and unbundles smoothly into the universe upon card explosion (Stage 5) */}
+              {isDec16Card && lokiCrackStage >= 3 && (
                 <LokiTimelinePortal crackStage={lokiCrackStage} />
               )}
             </>
@@ -1761,18 +1761,15 @@ function App() {
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
-                          const next = Math.min(prev + 1, 3);
-                          // On 3rd tap (Tap 3 is now the Climax!):
-                          // 1. Surrounding & center cracks spread with Tak... Tak, Tak, Tak acceleration
-                          // 2. Center green radial circle grows from small to full 160px size
-                          // 3. All lights morph smoothly from vibrant sacred green into pure supernova white
-                          // 4. At 4.5s (giving full 1.8s intense pure white blinding power hold), glass shatters into Stage 5 Multiverse Portal!
+                          const next = prev < 3 ? prev + 1 : 5;
                           if (next === 3) {
                             setIsDarkMode(true);
                             localStorage.setItem('isDarkMode', 'true');
+                            // Tap 3: Branch bundle forms behind the card, 11 light beams shoot out!
+                            // Card automatically shatters and explodes into cosmic light after 4.5s
                             setTimeout(() => {
                               setLokiCrackStage(5);
-                            }, 4600);
+                            }, 4500);
                           }
                           return next;
                         });

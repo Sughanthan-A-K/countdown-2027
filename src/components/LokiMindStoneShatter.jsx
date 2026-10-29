@@ -169,31 +169,6 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
         </motion.div>
       ))}
 
-      {/* 5. Fine Dispersing Glass Dust Sparks */}
-      {[...Array(30)].map((_, i) => {
-        const angle = (i / 30) * Math.PI * 2;
-        const dist = 340 + (i % 6) * 75;
-        const targetX = Math.cos(angle) * dist;
-        const targetY = Math.sin(angle) * dist;
-
-        return (
-          <motion.div
-            key={`glass-dust-${i}`}
-            initial={{ x: 0, y: 0, scale: 1.8, opacity: 1 }}
-            animate={{ 
-              x: targetX, 
-              y: targetY, 
-              scale: 0.1, 
-              opacity: 0 
-            }}
-            transition={{
-              duration: 1.4 + (i % 5) * 0.25,
-              ease: [0.08, 0.88, 0.28, 1]
-            }}
-            className="absolute w-2 h-2 rounded-full bg-white shadow-[0_0_14px_#34d399]"
-          />
-        );
-      })}
     </div>
   );
 }

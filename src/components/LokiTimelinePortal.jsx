@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 /**
  * LokiLifePowerSpread
@@ -385,33 +385,56 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
   const [voyageProgress, setVoyageProgress] = useState(0);
 
   // Cinematic Intro State:
-  // hasDiscovered = false -> Only single isolated mystery vine in darkness, portal stays far away in deep space!
-  const [hasDiscovered, setHasDiscovered] = useState(false);
+  // Starts true when portal mounts on explosion so all scattering branches in deep space are visible in the explosion light!
+  const [hasDiscovered, setHasDiscovered] = useState(true);
 
   // Replay key to force full fresh mount reset on Shift + R
   const [replayKey, setReplayKey] = useState(0);
 
-  // STEP 1: LOOM CARD EXPLOSION & SCATTER TIMELINE STATE (0s to 8s+)
+  // STEP 1: LOOM CARD EXPLOSION & SCATTER TIMELINE STATE (Ultra Slow & Majestic 8.5s Unbundling)
   // loomExplodePhase:
-  // 0 = Tap 3 / Loom state: Branches tightly held/woven behind the card's light
-  // 1 = (0s -> 7.8s): Multicolored explosion aurora (orange/cyan/green) blazes while branches relax & unbind ultra-slowly!
-  // 2 = (7.8s onwards): Explosion light smoothly darkens into pitch black, leaving dying dead branches in space.
+  // 0 = (crackStage < 5): Card Tap 3 / Loom state. Branches gently fade-in behind the card, bundled at center!
+  // 1 = (crackStage >= 5, 0s -> 8.5s): High-exposure multicolor cosmic aurora blazes while branches naturally unbundle ultra-slowly across 8.5s!
+  // 2 = (8.5s onwards): Explosion light smoothly fades into pure pitch black (#000403), resting in deep space
   const [loomExplodePhase, setLoomExplodePhase] = useState(() => (crackStage >= 5 ? 1 : 0));
+  // Unbundle morph progress (0 = bundled in loom behind card, 1 = fully expanded into open cosmos)
+  const [unbundleProgress, setUnbundleProgress] = useState(() => (crackStage >= 5 ? 1 : 0));
 
   useEffect(() => {
     if (crackStage >= 5) {
-      // Stage 1: Multicolored Loom explosion light blazes immediately on card shatter
       setLoomExplodePhase(1);
 
-      // Stage 2: After 7.8 seconds (giving full ultra-slow relax viridhal), light smoothly fades to pure black
-      const timer = setTimeout(() => {
-        setLoomExplodePhase(2);
-      }, 7800);
+      // Start unbundle animation smoothly from 0 to 1 across 8.5 seconds for majestic, slow unwinding
+      setUnbundleProgress(0);
+      let startTime = null;
+      let animFrameId = null;
+      const duration = 8500; // 8.5 seconds (ultra slow & peaceful)
 
-      return () => clearTimeout(timer);
+      const step = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const rawProgress = Math.min(1, elapsed / duration);
+        // Ultra smooth & gentle ease-in-out curve (smoothstep):
+        // Card vedicha odane bundle sudden-ah viriyama, romba porumaiyaa, slow-ah start aagi,
+        // apdiye smooth-ah pirinju relax aagum (like unfolding natural silk vines).
+        const eased = rawProgress * rawProgress * (3 - 2 * rawProgress);
+        setUnbundleProgress(eased);
+
+        if (rawProgress < 1) {
+          animFrameId = requestAnimationFrame(step);
+        } else {
+          setLoomExplodePhase(2);
+        }
+      };
+
+      animFrameId = requestAnimationFrame(step);
+
+      return () => {
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+      };
     } else {
-      // In crackStage 3: bundle state
       setLoomExplodePhase(0);
+      setUnbundleProgress(0);
     }
   }, [crackStage, replayKey]);
 
@@ -446,6 +469,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         setGripPoint(null);
         setIsGatheringHand(false);
         setPortalVoyageStage(0);
+        setLoomExplodePhase(1);
         setReplayKey(k => k + 1);
       }
     };
@@ -596,43 +620,105 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
   // Starting normal width = 16px (w-4), progressively widens up to 56px (w-14) as user infuses branches
   const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
-  // Deep Multiverse Tapestry Filaments (~24 rich organic curved branches - Valainju Nelainju)
-  // Extending in ALL angles with natural undulating bends and curls!
-  // All coordinates extend far beyond screen (-900 to 1900) so cut ends are NEVER visible!
+  // Deep Multiverse Tapestry Filaments (~16 subtle background timelines that form the Yggdrasil tree tapestry)
+  // Scaled up ~3x for distinct visibility on mobile screens while maintaining distance hierarchy
   const cosmicFilaments = [
-    // --- STEEP ORGANIC DIAGONALS: TOP-LEFT TO BOTTOM-RIGHT (Rich undulating curves) ---
-    { d: "M -900 -500 C -200 -200, 150 450, 480 320 S 1100 850, 1900 1500", width: 3.2, opacity: 0.40, color: "#00C853", windDur: 32 },
-    { d: "M -700 -400 C -100 -50, 320 620, 680 440 S 1350 950, 1800 1400", width: 2.8, opacity: 0.35, color: "#39FF14", windDur: 36 },
-    { d: "M -500 -600 C 50 -150, 180 380, 520 220 S 1200 780, 1900 1300", width: 2.6, opacity: 0.32, color: "#00E676", windDur: 34 },
-
-    // --- STEEP ORGANIC DIAGONALS: TOP-RIGHT TO BOTTOM-LEFT (Winding S-curves) ---
-    { d: "M 1900 -500 C 1200 -200, 850 420, 520 340 S -100 880, -900 1500", width: 3.2, opacity: 0.40, color: "#7CFFB2", windDur: 38 },
-    { d: "M 1800 -400 C 1100 -50, 680 580, 320 460 S -350 980, -700 1400", width: 2.8, opacity: 0.35, color: "#00FF66", windDur: 30 },
-    { d: "M 1900 -600 C 950 -120, 820 360, 480 240 S -200 820, -500 1300", width: 2.6, opacity: 0.32, color: "#00C853", windDur: 35 },
-
-    // --- HIGH-SLANT NEAR VERTICAL ORGANIC TRUNKS (Top Edge to Bottom Edge) ---
-    { d: "M 80 -600 C 120 -100, 380 320, 260 680 S 450 1200, 520 1600", width: 3.0, opacity: 0.38, color: "#39FF14", windDur: 33 },
-    { d: "M 920 -600 C 880 -100, 620 340, 740 680 S 550 1200, 480 1600", width: 3.0, opacity: 0.38, color: "#00FF66", windDur: 39 },
-    { d: "M 320 -650 C 280 -50, 580 420, 420 850 S 720 1300, 680 1650", width: 2.5, opacity: 0.30, color: "#B9FFD0", windDur: 40 },
-    { d: "M 680 -650 C 720 -50, 420 420, 580 850 S 280 1300, 320 1650", width: 2.5, opacity: 0.30, color: "#00E676", windDur: 37 },
-
-    // --- SWEEPING X-WEAVE WITH ORGANIC FLEXES ---
-    { d: "M -900 100 C -150 350, 420 720, 680 380 S 1400 680, 1900 900", width: 2.9, opacity: 0.34, color: "#39FF14", windDur: 31 },
-    { d: "M 1900 100 C 1150 350, 580 720, 320 380 S -400 680, -900 900", width: 2.9, opacity: 0.34, color: "#00C853", windDur: 36 },
-    { d: "M -900 850 C -250 550, 450 180, 620 540 S 1350 320, 1900 200", width: 2.7, opacity: 0.32, color: "#7CFFB2", windDur: 34 },
-    { d: "M 1900 850 C 1250 550, 550 180, 380 540 S -350 320, -900 200", width: 2.7, opacity: 0.32, color: "#00FF66", windDur: 32 },
-
-    // --- HIGH & LOW ARCHING ORGANIC BOUGHS ---
-    { d: "M -900 -50 C -100 280, 420 550, 780 240 S 1450 120, 1900 -80", width: 2.4, opacity: 0.28, color: "#B9FFD0", windDur: 42 },
-    { d: "M -900 1050 C -150 750, 420 450, 780 760 S 1450 880, 1900 1080", width: 2.5, opacity: 0.30, color: "#00E676", windDur: 35 },
-    { d: "M 1900 -50 C 1100 280, 580 550, 220 240 S -450 120, -900 -80", width: 2.4, opacity: 0.28, color: "#39FF14", windDur: 38 },
-    { d: "M 1900 1050 C 1150 750, 580 450, 220 760 S -450 880, -900 1080", width: 2.5, opacity: 0.30, color: "#00C853", windDur: 33 },
-
-    // --- BACKGROUND ORGANIC VINES ---
-    { d: "M -900 200 C -200 420, 350 120, 720 380 S 1380 160, 1900 240", width: 2.8, opacity: 0.32, color: "#00FF66", windDur: 36 },
-    { d: "M -900 500 C -250 680, 280 280, 680 620 S 1450 420, 1900 520", width: 3.0, opacity: 0.35, color: "#7CFFB2", windDur: 35 },
-    { d: "M -900 780 C -180 520, 380 880, 740 560 S 1350 820, 1900 720", width: 2.8, opacity: 0.32, color: "#39FF14", windDur: 37 }
+    { d: "M -350 180 Q 180 80, 520 220 T 1400 160", width: 2.7, opacity: 0.32, color: "#00C853", windDur: 32 },
+    { d: "M -300 280 Q 300 380, 750 260 T 1420 320", width: 3.2, opacity: 0.38, color: "#39FF14", windDur: 36 },
+    { d: "M -380 420 Q 220 540, 620 440 T 1450 480", width: 2.2, opacity: 0.28, color: "#00E676", windDur: 34 },
+    { d: "M -320 620 Q 350 500, 780 640 T 1400 580", width: 3.0, opacity: 0.35, color: "#7CFFB2", windDur: 38 },
+    { d: "M -400 780 Q 250 860, 680 760 T 1420 840", width: 3.5, opacity: 0.40, color: "#00FF66", windDur: 30 },
+    { d: "M 1400 90 Q 750 280, 380 140 T -320 240", width: 2.4, opacity: 0.30, color: "#00C853", windDur: 35 },
+    { d: "M 1420 380 Q 820 240, 420 410 T -350 360", width: 3.2, opacity: 0.36, color: "#39FF14", windDur: 33 },
+    { d: "M 1450 680 Q 780 780, 350 630 T -300 720", width: 2.6, opacity: 0.32, color: "#00FF66", windDur: 39 },
+    { d: "M -360 80 Q 420 180, 850 100 T 1420 190", width: 1.8, opacity: 0.25, color: "#B9FFD0", windDur: 40 },
+    { d: "M -340 490 Q 150 390, 580 510 T 1450 430", width: 2.9, opacity: 0.34, color: "#00E676", windDur: 37 },
+    { d: "M -390 850 Q 320 720, 710 880 T 1400 790", width: 2.2, opacity: 0.28, color: "#39FF14", windDur: 31 },
+    { d: "M 1420 220 Q 900 420, 460 300 T -350 420", width: 2.7, opacity: 0.32, color: "#00C853", windDur: 36 },
+    { d: "M 1450 510 Q 880 620, 490 530 T -320 610", width: 2.4, opacity: 0.30, color: "#7CFFB2", windDur: 34 },
+    { d: "M -350 950 Q 280 820, 680 940 T 1420 890", width: 3.2, opacity: 0.38, color: "#00FF66", windDur: 32 },
+    { d: "M -320 15 Q 380 120, 780 40 T 1450 110", width: 1.6, opacity: 0.24, color: "#B9FFD0", windDur: 42 },
+    { d: "M 1400 820 Q 850 930, 420 840 T -340 910", width: 2.4, opacity: 0.30, color: "#00E676", windDur: 35 }
   ];
+
+  // Dynamic Bundled Curve Path Generator (Tap 3: Branches curve into center bundle behind card)
+  // Matching user's drawing: Branches enter from top/bottom left/right edges and bend inward
+  // into a tight convergent waist cluster at the center (cx: 500, cy: 462).
+  // ALL PATHS PRESERVE EXACT IDENTICAL SVG TOKENS (11 tokens: M x0 y0 Q cx cy x1 y1 T x2 y2)
+  // so that numerical morphing between bundled and open state is 100% mathematically continuous!
+  const getBundlePath = (baseD, branchId) => {
+    const cx = 500;
+    const cy = 462;
+
+    if (branchId === 'branch-1') {
+      // Base: M -400 310 Q 150 480, 520 440 T 1450 390
+      return `M -400 120 Q 200 380, ${cx} ${cy} T 1450 800`;
+    }
+    if (branchId === 'branch-2') {
+      // Base: M -350 40 Q 250 220, 680 160 T 1420 120
+      return `M -350 -100 Q 180 260, ${cx} ${cy - 4} T 1420 950`;
+    }
+    if (branchId === 'branch-5') {
+      // Base: M -320 540 Q 280 430, 720 560 T 1420 520
+      return `M -320 850 Q 220 580, ${cx} ${cy + 4} T 1420 150`;
+    }
+    if (branchId === 'branch-3') {
+      // Base: M -380 890 Q 200 680, 580 720 T 1450 820
+      return `M -380 1050 Q 190 690, ${cx} ${cy + 8} T 1450 50`;
+    }
+    if (branchId === 'branch-4') {
+      // Base: M 1450 30 Q 820 420, 480 620 T -350 940
+      return `M 1450 -150 Q 820 280, ${cx} ${cy - 8} T -350 1020`;
+    }
+
+    if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
+      const idx = parseInt(branchId.replace('filament-', ''), 10) || 0;
+      const baseTokens = baseD.match(/[a-df-z]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/gi);
+      if (!baseTokens || baseTokens.length < 11) return baseD;
+      const startX = baseTokens[1];
+      const endX = baseTokens[9];
+      const isLeft = parseFloat(startX) < parseFloat(endX);
+      const waistY = (cy + ((idx % 7) - 3) * 2.5).toFixed(1);
+      const ctrlX = isLeft ? 150 : 850;
+      const startY = (idx * 40 - 20).toFixed(1);
+      const endY = (980 - idx * 35).toFixed(1);
+
+      return `M ${startX} ${startY} Q ${ctrlX} ${waistY}, ${cx} ${waistY} T ${endX} ${endY}`;
+    }
+
+    return baseD;
+  };
+
+  // Helper to numerically interpolate SVG path coordinates between bundled shape and natural expanded shape
+  const morphBetweenPaths = (pathA, pathB, t) => {
+    if (t <= 0) return pathA;
+    if (t >= 1) return pathB;
+
+    // Split paths into SVG tokens (commands and coordinate numbers)
+    const tokensA = pathA.match(/[a-df-z]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/gi);
+    const tokensB = pathB.match(/[a-df-z]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/gi);
+
+    if (!tokensA || !tokensB || tokensA.length !== tokensB.length) {
+      // In case structure differs, smoothly blend
+      return t < 0.5 ? pathA : pathB;
+    }
+
+    let result = '';
+    for (let i = 0; i < tokensA.length; i++) {
+      const tokA = tokensA[i];
+      const tokB = tokensB[i];
+      const numA = parseFloat(tokA);
+      const numB = parseFloat(tokB);
+
+      if (!isNaN(numA) && !isNaN(numB)) {
+        const val = numA + (numB - numA) * t;
+        result += (i === 0 ? '' : ' ') + val.toFixed(1);
+      } else {
+        result += (i === 0 ? '' : ' ') + tokA;
+      }
+    }
+    return result;
+  };
 
   // Loki Hand Grip Convergence Physics:
   // When user holds, all branches and filaments MUST pass EXACTLY through the user's hand point (gx, gy)
@@ -681,65 +767,55 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
       return `M ${startX} ${startY} Q ${ctrlX1.toFixed(1)} ${ctrlY1.toFixed(1)}, ${gx.toFixed(1)} ${(gy + gripOffsetY).toFixed(1)} Q ${ctrlX2.toFixed(1)} ${ctrlY2.toFixed(1)}, ${endX} ${endY}`;
     }
 
-    // When not holding, return standard base path extending infinitely with natural organic branches
-    if (!gripPoint) {
-      if (branchId === 'branch-1') return "M -900 310 C -250 480, 220 540, 520 440 S 1350 320, 1900 390";
-      if (branchId === 'branch-2') return "M -900 40 C -150 280, 320 80, 680 160 S 1400 60, 1900 120";
-      if (branchId === 'branch-5') return "M -900 540 C -200 410, 380 620, 720 560 S 1380 480, 1900 520";
-      if (branchId === 'branch-3') return "M -900 890 C -120 720, 350 640, 580 720 S 1350 880, 1900 820";
-      if (branchId === 'branch-4') return "M 1900 30 C 1300 380, 780 420, 480 620 S -300 820, -900 940";
-      return baseD;
-    }
-  };
-
-  // Helper to generate coordinates in the tight Loom bundle state:
-  // All branches & filaments are woven tightly through card center (500, 462)
-  const getBundlePath = (baseD, branchId) => {
-    const cx = 500;
-    const cy = 462; // Center of the card's aperture in 1000x1000 SVG coordinates
-
-    if (branchId === 'branch-1') {
-      return `M -900 450 C -200 455, 200 460, ${cx} ${cy} S 1300 462, 1900 465`;
-    }
-    if (branchId === 'branch-2') {
-      return `M -900 440 C -200 448, 220 455, ${cx} ${cy - 4} S 1300 468, 1900 470`;
-    }
-    if (branchId === 'branch-5') {
-      return `M -900 475 C -200 468, 240 465, ${cx} ${cy + 3} S 1300 458, 1900 460`;
-    }
-    if (branchId === 'branch-3') {
-      return `M -900 485 C -200 475, 210 470, ${cx} ${cy + 6} S 1300 452, 1900 450`;
-    }
-    if (branchId === 'branch-4') {
-      return `M 1900 455 C 1300 458, 800 460, ${cx} ${cy - 5} S -200 468, -900 470`;
-    }
-
-    if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
-      const idx = parseInt(branchId.replace('filament-', ''), 10) || 0;
-      const offset = ((idx % 7) - 3) * 2.5; // -7.5px to +7.5px tight bundle spread
-      const isLeft = idx % 2 === 0;
-      const startX = isLeft ? -900 : 1900;
-      const endX = isLeft ? 1900 : -900;
-      const startY = 462 + ((idx * 17) % 60 - 30);
-      const endY = 462 + (((idx + 3) * 19) % 60 - 30);
-      return `M ${startX} ${startY} C ${isLeft ? -100 : 1100} ${462 + offset * 0.3}, ${cx * 0.7} ${cy + offset * 0.7}, ${cx} ${cy + offset} S ${isLeft ? 1100 : -100} ${endY}, ${endX} ${endY}`;
-    }
-
     return baseD;
   };
 
-  // Select whether we render in tight bundle mode (Loom state during Tap 3) or unbundled natural scattered mode
+  // Resolve path for branches & filaments:
+  // - Tap 3 (crackStage < 5 && loomExplodePhase === 0): tightly bundled behind the card (t = 0)
+  // - Explosion (loomExplodePhase === 1): smoothly morphs from bundled shape to fully open cosmic paths across 5.0s (t = unbundleProgress)
+  // - Settled (loomExplodePhase === 2): resting in open deep space (t = 1)
+  // - Portal voyage (when user grabs with hand): pulls branches to user hand point
   const isBundled = crackStage < 5 && loomExplodePhase === 0;
-  const resolvePath = (baseD, branchId) => {
-    if (isBundled) {
-      return getBundlePath(baseD, branchId);
+
+  const resolveBranchPath = (baseD, branchId) => {
+    // 1. If user is gathering branches in hand during portal voyage:
+    if (portalVoyageStage > 0 && gripPoint) {
+      return getBranchPath(baseD, branchId);
     }
-    return getBranchPath(baseD, branchId);
+
+    const bundleD = getBundlePath(baseD, branchId);
+
+    // 2. Tap 3 (before explosion): strictly bundled behind card
+    if (isBundled) {
+      return bundleD;
+    }
+
+    // 3. During 5.0s unbundling animation:
+    if (loomExplodePhase === 1) {
+      // Natural organic stagger: each branch starts releasing with a tiny individual delay
+      let branchStaggerOffset = 0;
+      if (branchId === 'branch-1') branchStaggerOffset = 0.0;
+      else if (branchId === 'branch-2') branchStaggerOffset = 0.05;
+      else if (branchId === 'branch-5') branchStaggerOffset = 0.08;
+      else if (branchId === 'branch-3') branchStaggerOffset = 0.12;
+      else if (branchId === 'branch-4') branchStaggerOffset = 0.16;
+      else if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
+        const fIdx = parseInt(branchId.replace('filament-', ''), 10) || 0;
+        branchStaggerOffset = 0.04 + (fIdx % 6) * 0.03;
+      }
+
+      // Re-map progress with stagger
+      const t = Math.max(0, Math.min(1, (unbundleProgress - branchStaggerOffset) / (1 - branchStaggerOffset)));
+      return morphBetweenPaths(bundleD, baseD, t);
+    }
+
+    // 4. Settled open cosmos state:
+    return baseD;
   };
 
   return (
-    <div key={replayKey} className={`fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden ${crackStage >= 5 ? 'z-[80]' : 'z-[5]'}`}>
-      {/* 0. Full Page Darkness Background */}
+    <div key={replayKey} className={`fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden ${crackStage >= 5 ? 'z-[80]' : 'z-[10]'}`}>
+      {/* 0. Full Page Darkness Background (Transparent during Tap 3 so card remains visible, fades to black on stage 5 explosion) */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: crackStage >= 5 ? 1 : 0 }}
@@ -748,74 +824,71 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
       />
 
       {/* ========================================================================= */}
-      {/* STEP 1: THE TEMPORAL LOOM EXPLOSION: 7.8-SECOND MULTICOLOR COSMIC AURORA   */}
-      {/* Brilliant, fully saturated, vivid cinematic exposure matching User's 2nd reference image! */}
-      {/* Luminous warm amber-orange rays on left, vivid turquoise-cyan on right, and glowing central cosmic Loom light */}
-      {/* Fades smoothly into pitch black after 7.8 seconds                        */}
+      {/* STEP 1: THE TEMPORAL LOOM EXPLOSION: 8.5-SECOND COHESIVE COSMIC LIGHT     */}
+      {/* Naturally generated from the card's emerald-mint explosion core,           */}
+      {/* physics-based expansion, smooth particle diffusion across 8.5 seconds!     */}
       {/* ========================================================================= */}
-      <AnimatePresence>
-        {crackStage >= 5 && loomExplodePhase === 1 && (
+      {loomExplodePhase === 1 && (
+        <motion.div
+          key="loom-explosion-aurora"
+          className="absolute inset-0 pointer-events-none overflow-hidden z-0"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: [1, 1, 0.9, 0] }}
+          transition={{ duration: 8.5, times: [0, 0.1, 0.88, 1], ease: "linear" }}
+        >
+          {/* 1. Cohesive Celestial Atmosphere: Born from the emerald core (#00c853, #10b981) + warm gold corona (#ffcc66) */}
           <motion.div
-            key="loom-explosion-aurora"
-            className="absolute inset-0 pointer-events-none overflow-hidden z-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 1, 0.9, 0] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 8.0, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(ellipse at 50% 46%, rgba(16, 185, 129, 0.85) 0%, rgba(5, 150, 105, 0.65) 30%, rgba(6, 78, 59, 0.5) 60%, rgba(0, 4, 3, 0.95) 90%)',
+              filter: 'brightness(1.2) contrast(1.15)',
+            }}
+            animate={{ opacity: [1, 1, 0.85, 0] }}
+            transition={{ duration: 8.5, times: [0, 0.1, 0.88, 1], ease: "easeOut" }}
+          />
+
+          {/* 2. Natural Loom Flare (Leftward expansion corona) */}
+          <motion.div
+            className="absolute top-[10%] -left-[10%] w-[650px] h-[650px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle at 50% 50%, rgba(255, 204, 102, 0.7) 0%, rgba(52, 211, 153, 0.4) 45%, transparent 75%)',
+              filter: 'blur(50px)',
+              mixBlendMode: 'screen'
+            }}
+            animate={{ scale: [0.9, 1.3, 1.6], opacity: [1, 1, 0.7, 0] }}
+            transition={{ duration: 8.5, times: [0, 0.15, 0.85, 1], ease: "easeOut" }}
+          />
+
+          {/* 3. Cyan-Mint Multiverse Discharge (Rightward expansion corona) */}
+          <motion.div
+            className="absolute top-[15%] -right-[10%] w-[650px] h-[650px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle at 50% 50%, rgba(102, 255, 255, 0.65) 0%, rgba(16, 185, 129, 0.45) 50%, transparent 80%)',
+              filter: 'blur(50px)',
+              mixBlendMode: 'screen'
+            }}
+            animate={{ scale: [0.9, 1.3, 1.6], opacity: [1, 1, 0.7, 0] }}
+            transition={{ duration: 8.5, times: [0, 0.15, 0.85, 1], ease: "easeOut" }}
+          />
+
+          {/* 4. Center Radiant Loom Core Flash (Anchored at Card Epicenter 50% 46%) */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{ transform: "translateY(-4%)" }}
           >
-            {/* 1. Full-screen Luminous Cosmic Sky Base - Golden amber on left, cyan on right */}
             <motion.div
-              className="absolute inset-0"
+              className="w-[800px] h-[800px] rounded-full"
               style={{
-                background: 'linear-gradient(115deg, rgba(230,140,50,0.85) 0%, rgba(190,110,40,0.65) 25%, rgba(60,160,110,0.6) 55%, rgba(20,190,180,0.85) 85%, rgba(10,140,160,0.95) 100%)',
-                filter: 'brightness(1.25) contrast(1.15)',
-              }}
-              animate={{ opacity: [0.3, 1, 0.95, 0] }}
-              transition={{ duration: 7.8, ease: "easeOut" }}
-            />
-
-            {/* 2. Intense Warm Amber-Gold Loom Flare (Left Hemisphere Explosion Corona) */}
-            <motion.div
-              className="absolute -top-[20%] -left-[15%] w-[800px] h-[800px] rounded-full"
-              style={{
-                background: 'radial-gradient(circle at 45% 45%, #ffcc66 0%, #ff9933 25%, #cc5500 55%, transparent 80%)',
+                background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.7) 0%, rgba(167,243,208,0.55) 25%, rgba(16,185,129,0.35) 50%, transparent 75%)',
                 filter: 'blur(45px)',
                 mixBlendMode: 'screen'
               }}
-              animate={{ scale: [0.6, 1.3, 1.7], opacity: [0.6, 1, 0] }}
-              transition={{ duration: 7.8, ease: "easeOut" }}
+              animate={{ scale: [0.4, 1.4, 2.2], opacity: [0.9, 0.7, 0.35, 0] }}
+              transition={{ duration: 8.5, times: [0, 0.12, 0.75, 1], ease: "easeOut" }}
             />
-
-            {/* 3. Intense Cyan-Turquoise Cosmic Discharge (Top & Right Hemisphere) */}
-            <motion.div
-              className="absolute -top-[15%] right-[-10%] w-[750px] h-[750px] rounded-full"
-              style={{
-                background: 'radial-gradient(circle at 55% 45%, #66ffff 0%, #00cccc 30%, #008888 60%, transparent 85%)',
-                filter: 'blur(45px)',
-                mixBlendMode: 'screen'
-              }}
-              animate={{ scale: [0.6, 1.25, 1.6], opacity: [0.5, 0.95, 0] }}
-              transition={{ duration: 7.8, ease: "easeOut" }}
-            />
-
-            {/* 4. Center Radiant Loom Core Flash (Supernova shockwave at card center) */}
-            <motion.div
-              className="absolute inset-0 flex items-center justify-center"
-            >
-              <motion.div
-                className="w-[900px] h-[900px] rounded-full"
-                style={{
-                  background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.95) 0%, rgba(255,220,150,0.8) 20%, rgba(100,255,180,0.5) 45%, transparent 75%)',
-                  filter: 'blur(40px)',
-                  mixBlendMode: 'screen'
-                }}
-                animate={{ scale: [0.2, 1.4, 2.2], opacity: [1, 0.9, 0] }}
-                transition={{ duration: 7.5, ease: "easeOut" }}
-              />
-            </motion.div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      )}
 
       {/* SVG Organic Distortion Filters for the irregular jagged portal border & venom tendrils */}
       <svg className="absolute w-0 h-0 pointer-events-none">
@@ -1075,24 +1148,27 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
 
         {/* SVG Container wrapping all branches:
             REAL ELASTIC LIGHT-SPEED STRETCH & SUCTION INTO PORTAL:
-            When user holds (Stage 1), branches pull & gather elastically.
-            At Stage 2 (Portal entry), user holding the branch bunch moves smoothly into the opening!
-            At Stage 3 (Wormhole voyage), branches stay held in hand through the voyage!
+            When card is in Tap 3 (crackStage === 3, loomExplodePhase === 0), branches curve and bundle tightly
+            behind the card at the center card core (scale: 1, full visibility).
+            On card explosion (loomExplodePhase === 1), all branches smoothly and naturally unbundle
+            into their organic full positions over 5.0 seconds!
         */}
         <motion.g
+          initial={{ opacity: 0.9 }}
           animate={
-            isBundled
+            loomExplodePhase === 0
               ? {
-                  // In Loom bundled state behind card: soft breathing pulse
-                  scale: 0.98,
-                  opacity: 0.85
+                  // Bundled state behind the card during Tap 3: gently fades in behind the cracked card!
+                  scale: 1,
+                  opacity: 0.95,
+                  transition: { duration: 1.2, ease: "easeOut" }
                 }
               : loomExplodePhase === 1
               ? {
-                  // Ultra-slow, majestic relax & unbinding viridhal matching user's exact direction!
-                  scale: [0.98, 1.0],
-                  opacity: [0.85, 1],
-                  transition: { duration: 6.5, ease: [0.16, 1, 0.3, 1] }
+                  // Natural 5.0s un-bundling across space with zero stutter
+                  scale: 1.0,
+                  opacity: 1.0,
+                  transition: { duration: 5.0, ease: [0.16, 1, 0.3, 1] }
                 }
               : portalVoyageStage === 1
               ? { 
@@ -1119,10 +1195,14 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 }
               : portalVoyageStage >= 4
               ? { opacity: 0 }
-              : { scale: 1, opacity: 1 }
+              : { scaleX: 1, scaleY: 1, opacity: 1 }
           }
           transition={
-            portalVoyageStage === 1
+            loomExplodePhase === 0
+              ? { duration: 1.2, ease: "easeOut" }
+              : loomExplodePhase === 1
+              ? { duration: 5.0, ease: [0.16, 1, 0.3, 1] }
+              : portalVoyageStage === 1
               ? { duration: 2.0, ease: "easeInOut" }
               : portalVoyageStage === 2
               ? { duration: 2.5, ease: [0.25, 0.1, 0.25, 1] }
@@ -1130,13 +1210,12 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               ? { duration: 3.5, ease: "easeIn" }
               : { duration: 0.5 }
           }
-          style={{ transformOrigin: `${gripPoint?.x || 500}px ${gripPoint?.y || 500}px` }}
+          style={{ transformOrigin: portalVoyageStage > 0 ? `${gripPoint?.x || 500}px ${gripPoint?.y || 500}px` : "500px 462px" }}
         >
         {/* ------------------------------------------------------------- */}
         {/* MULTIVERSE TAPESTRY FILAMENTS (LOKI YGGDRASIL WORLD TREE)     */}
         {/* Rendered at deepest layer, pure dark black silhouette branches */}
         {/* Awakens with venom pulse proportional to its thickness        */}
-        {/* In Step 1: Branches scatter from Loom center across the 5s explosion! */}
         {/* ------------------------------------------------------------- */}
         <g 
           style={{ 
@@ -1147,7 +1226,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           {cosmicFilaments.map((f, i) => {
             const filamentId = `filament-${i}`;
             const isEnergized = energizedBranches[filamentId]?.active;
-            const filamentD = resolvePath(f.d, filamentId);
+            const filamentD = resolveBranchPath(f.d, filamentId);
             return (
               <motion.g
                 key={filamentId}
@@ -1155,11 +1234,9 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                   y: [i % 2 === 0 ? 5 : -5, i % 2 === 0 ? -5 : 5, i % 2 === 0 ? 5 : -5]
                 }}
                 transition={{
-                  y: {
-                    duration: f.windDur,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }
+                  duration: f.windDur,
+                  repeat: Infinity,
+                  ease: "easeInOut"
                 }}
               >
                 {/* 1. Slim dark silhouette body */}
@@ -1264,7 +1341,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           <motion.g>
             <DraggableBranch
               id="branch-4"
-              pathData={resolvePath("M 1900 30 C 1300 380, 780 420, 480 620 S -300 820, -900 940", 'branch-4')}
+              pathData={resolveBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
               origin="500px 520px"
               strokeScale={0.42}
               onEnergize={handleBranchEnergize}
@@ -1280,7 +1357,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               }}
             >
               <path
-                d={resolvePath("M 1900 30 C 1300 380, 780 420, 480 620 S -300 820, -900 940", 'branch-4')}
+                d={resolveBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1288,27 +1365,27 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 strokeLinecap="round"
               />
               <path
-                d={resolvePath("M 1900 30 C 1300 380, 780 420, 480 620 S -300 820, -900 940", 'branch-4')}
+                d={resolveBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
                 fill="none"
                 stroke="#000000"
                 strokeWidth="4.2"
                 strokeLinecap="round"
-                opacity="0.75"
+                opacity={0.75}
               />
               <path
-                d={resolvePath("M 1900 30 C 1300 380, 780 420, 480 620 S -300 820, -900 940", 'branch-4')}
+                d={resolveBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
                 fill="none"
                 stroke="#050a08"
                 strokeWidth="2.6"
                 strokeLinecap="round"
               />
               <path
-                d={resolvePath("M 1900 29 C 1300 379, 780 419, 480 619 S -300 819, -900 939", 'branch-4')}
+                d={resolveBranchPath("M 1450 29 Q 820 419, 480 619 T -350 939", 'branch-4')}
                 fill="none"
                 stroke="#062d22"
                 strokeWidth="1.2"
                 strokeLinecap="round"
-                opacity="0.35"
+                opacity={0.35}
               />
             </DraggableBranch>
           </motion.g>
@@ -1319,7 +1396,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           <motion.g>
             <DraggableBranch
               id="branch-3"
-              pathData={resolvePath("M -900 890 C -120 720, 350 640, 580 720 S 1350 880, 1900 820", 'branch-3')}
+              pathData={resolveBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
               origin="500px 720px"
               strokeScale={0.58}
               onEnergize={handleBranchEnergize}
@@ -1335,7 +1412,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               }}
             >
               <path
-                d={resolvePath("M -900 890 C -120 720, 350 640, 580 720 S 1350 880, 1900 820", 'branch-3')}
+                d={resolveBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1343,27 +1420,27 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 strokeLinecap="round"
               />
               <path
-                d={resolvePath("M -900 890 C -120 720, 350 640, 580 720 S 1350 880, 1900 820", 'branch-3')}
+                d={resolveBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
                 fill="none"
                 stroke="#000000"
                 strokeWidth="5.8"
                 strokeLinecap="round"
-                opacity="0.8"
+                opacity={0.8}
               />
               <path
-                d={resolvePath("M -900 890 C -120 720, 350 640, 580 720 S 1350 880, 1900 820", 'branch-3')}
+                d={resolveBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
                 fill="none"
                 stroke="#050a08"
                 strokeWidth="3.6"
                 strokeLinecap="round"
               />
               <path
-                d={resolvePath("M -900 889 C -120 719, 350 639, 580 719 S 1350 879, 1900 819", 'branch-3')}
+                d={resolveBranchPath("M -380 889 Q 200 679, 580 719 T 1450 819", 'branch-3')}
                 fill="none"
                 stroke="#062d22"
                 strokeWidth="1.5"
                 strokeLinecap="round"
-                opacity="0.4"
+                opacity={0.4}
               />
             </DraggableBranch>
           </motion.g>
@@ -1374,7 +1451,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           <motion.g>
             <DraggableBranch
               id="branch-5"
-              pathData={resolvePath("M -900 540 C -200 410, 380 620, 720 560 S 1380 480, 1900 520", 'branch-5')}
+              pathData={resolveBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
               origin="500px 540px"
               strokeScale={0.75}
               onEnergize={handleBranchEnergize}
@@ -1390,7 +1467,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               }}
             >
               <path
-                d={resolvePath("M -900 540 C -200 410, 380 620, 720 560 S 1380 480, 1900 520", 'branch-5')}
+                d={resolveBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1398,27 +1475,27 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 strokeLinecap="round"
               />
               <path
-                d={resolvePath("M -900 540 C -200 410, 380 620, 720 560 S 1380 480, 1900 520", 'branch-5')}
+                d={resolveBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
                 fill="none"
                 stroke="#000000"
                 strokeWidth="7.8"
                 strokeLinecap="round"
-                opacity="0.85"
+                opacity={0.85}
               />
               <path
-                d={resolvePath("M -900 540 C -200 410, 380 620, 720 560 S 1380 480, 1900 520", 'branch-5')}
+                d={resolveBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
                 fill="none"
                 stroke="#050a08"
                 strokeWidth="5.0"
                 strokeLinecap="round"
               />
               <path
-                d={resolvePath("M -900 539 C -200 409, 380 619, 720 559 S 1380 479, 1900 519", 'branch-5')}
+                d={resolveBranchPath("M -320 539 Q 280 429, 720 559 T 1420 519", 'branch-5')}
                 fill="none"
                 stroke="#062d22"
                 strokeWidth="2.2"
                 strokeLinecap="round"
-                opacity="0.45"
+                opacity={0.45}
               />
             </DraggableBranch>
           </motion.g>
@@ -1429,7 +1506,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           <motion.g>
             <DraggableBranch
               id="branch-2"
-              pathData={resolvePath("M -900 40 C -150 280, 320 80, 680 160 S 1400 60, 1900 120", 'branch-2')}
+              pathData={resolveBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
               origin="500px 160px"
               strokeScale={0.88}
               onEnergize={handleBranchEnergize}
@@ -1445,7 +1522,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               }}
             >
               <path
-                d={resolvePath("M -900 40 C -150 280, 320 80, 680 160 S 1400 60, 1900 120", 'branch-2')}
+                d={resolveBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
@@ -1453,22 +1530,22 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 strokeLinecap="round"
               />
               <path
-                d={resolvePath("M -900 40 C -150 280, 320 80, 680 160 S 1400 60, 1900 120", 'branch-2')}
+                d={resolveBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
                 fill="none"
                 stroke="#000000"
                 strokeWidth="10.0"
                 strokeLinecap="round"
-                opacity="0.88"
+                opacity={0.88}
               />
               <path
-                d={resolvePath("M -900 40 C -150 280, 320 80, 680 160 S 1400 60, 1900 120", 'branch-2')}
+                d={resolveBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
                 fill="none"
                 stroke="#050a08"
                 strokeWidth="6.5"
                 strokeLinecap="round"
               />
               <path
-                d={resolvePath("M -900 39 C -150 279, 320 79, 680 159 S 1400 59, 1900 119", 'branch-2')}
+                d={resolveBranchPath("M -350 39 Q 250 219, 680 159 T 1420 119", 'branch-2')}
                 fill="none"
                 stroke="#062d22"
                 strokeWidth="2.8"
@@ -1486,13 +1563,13 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         <motion.g>
           <DraggableBranch
             id="branch-1"
-            pathData={resolvePath("M -900 310 C -250 480, 220 540, 520 440 S 1350 320, 1900 390", 'branch-1')}
+            pathData={resolveBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
             origin="500px 440px"
             onEnergize={handleBranchEnergize}
             energizedData={energizedBranches['branch-1']}
             allEnergizedStage={awakenedStages['branch-1']}
             isFinalBranch={lastTappedBranchId === 'branch-1'}
-            isClickable={!isBundled && !energizedBranches['branch-1']?.active} // Clickable only until first tap
+            isClickable={!energizedBranches['branch-1']?.active} // Clickable only until first tap
             windConfig={{
               y: [-18, 18, -18],
               x: [12, -12, 12],
@@ -1503,7 +1580,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           >
             {/* Invisible extra-wide hit-area stroke for effortless grab anywhere across the branch */}
             <path
-              d={resolvePath("M -900 310 C -250 480, 220 540, 520 440 S 1350 320, 1900 390", 'branch-1')}
+              d={resolveBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
               fill="none"
               stroke="#000000"
               strokeOpacity="0.001"
@@ -1512,24 +1589,24 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             />
             {/* Ambient drop shadow */}
             <path
-              d={resolvePath("M -900 310 C -250 480, 220 540, 520 440 S 1350 320, 1900 390", 'branch-1')}
+              d={resolveBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
               fill="none"
               stroke="#000000"
               strokeWidth="16"
               strokeLinecap="round"
-              opacity="0.8"
+              opacity={0.8}
             />
             {/* Main Dark Silhouette Body - 3X Larger Forefront Branch for effortless mobile view & tap */}
             <path
-              d={resolvePath("M -900 310 C -250 480, 220 540, 520 440 S 1350 320, 1900 390", 'branch-1')}
+              d={resolveBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
               fill="none"
               stroke="#000000"
               strokeWidth="13"
               strokeLinecap="round"
-              opacity="0.95"
+              opacity={0.95}
             />
             <path
-              d={resolvePath("M -900 310 C -250 480, 220 540, 520 440 S 1350 320, 1900 390", 'branch-1')}
+              d={resolveBranchPath("M -400 310 Q 150 480, 520 440 T 1450 390", 'branch-1')}
               fill="none"
               stroke="#050a08"
               strokeWidth="8.5"
@@ -1537,12 +1614,12 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             />
             {/* Subtle dark emerald glint */}
             <path
-              d={resolvePath("M -900 309 C -250 479, 220 539, 520 439 S 1350 319, 1900 389", 'branch-1')}
+              d={resolveBranchPath("M -400 309 Q 150 479, 520 439 T 1450 389", 'branch-1')}
               fill="none"
               stroke="#062d22"
               strokeWidth="3.5"
               strokeLinecap="round"
-              opacity="0.55"
+              opacity={0.55}
             />
           </DraggableBranch>
         </motion.g>
