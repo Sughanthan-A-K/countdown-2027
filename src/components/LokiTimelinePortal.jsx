@@ -115,7 +115,7 @@ function LokiLifePowerSpread({
         />
 
         {/* 2. Crawling Living Venom Head (Compact PL: 100px - 140px) - Organic fluid creeping along the branch */}
-        <g style={{ filter: "url(#livingVenomFluidDistort)" }}>
+        <g style={{ filter: "url(#livingVenomFluidDistort)", willChange: "transform, opacity" }}>
           <motion.path
             d={pathD}
             fill="none"
@@ -142,7 +142,7 @@ function LokiLifePowerSpread({
         </g>
 
         {/* 3. Electric neon spark & white filament at the creeping tip */}
-        <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
+        <g style={{ filter: "url(#venomInnerCoreDistort)", willChange: "transform, opacity" }}>
           <motion.path
             d={pathD}
             fill="none"
@@ -431,31 +431,44 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         setLastTappedBranchId(id);
 
         // User requested:
-        // 1. "after 3 tap apdiye random ah poghatum onu onnua oru oru time la konjam gap vittu kooda varatum nalla paaka nalla irukum"
-        // 2. Slow natural calm timing: 1.2s to 2.2s gaps between each timeline awakening
+        // "gap eduthu varathu ok but apdiye onu rendu nu ore nerathula random timing la konjam neraiya varatom... paaka nalla irukum... la"
+        // Natural organic clusters: Sila neram 1 branch, sila neram 2 branches ore nerathula start aagum!
         const untapptMainBranches = allMainBranchIds.filter(bId => !updated[bId]?.active);
         const filamentOrder = [7, 2, 11, 4, 14, 0, 9, 5, 12, 1, 8, 15, 3, 10, 6, 13];
         
-        // Combine remaining untrapped main branches + background filaments in organic shuffled order
+        // Group branches into organic waves (pairs and singles)
         const allRemaining = [...untapptMainBranches, ...filamentOrder.map(idx => `filament-${idx}`)];
-        let cumulativeDelay = 2000;
+        let cumulativeDelay = 1200;
 
-        allRemaining.forEach((branchKey, seq) => {
-          // Generous natural slow gaps (2.2s to 4.0s) - ultra slow, peaceful, cosmic timeline awakening!
-          const stepGap = 2200 + ((seq * 541) % 1800);
-          cumulativeDelay += stepGap;
+        // Group into clusters of 1 to 2 branches firing simultaneously or with tiny micro-offsets (100ms)
+        let i = 0;
+        while (i < allRemaining.length) {
+          // 60% chance of a pair firing together, 40% chance of single
+          const clusterSize = (i + 1 < allRemaining.length && (i % 3 !== 1)) ? 2 : 1;
+          const currentCluster = allRemaining.slice(i, i + clusterSize);
+          
+          currentCluster.forEach((branchKey, subIdx) => {
+            const microOffset = subIdx * 120; // Slight organic ripple offset between paired branches
+            const fireTime = cumulativeDelay + microOffset;
 
-          setTimeout(() => {
-            setEnergizedBranches(fPrev => ({
-              ...fPrev,
-              [branchKey]: {
-                active: true,
-                tapRatio: seq % 2 === 0 ? 0.02 : 0.98,
-                timestamp: Date.now()
-              }
-            }));
-          }, cumulativeDelay);
-        });
+            setTimeout(() => {
+              setEnergizedBranches(fPrev => ({
+                ...fPrev,
+                [branchKey]: {
+                  active: true,
+                  tapRatio: (i + subIdx) % 2 === 0 ? 0.02 : 0.98,
+                  timestamp: Date.now()
+                }
+              }));
+            }, fireTime);
+          });
+
+          i += clusterSize;
+
+          // Natural organic pause before the next cluster appears (1.0s to 1.8s)
+          const nextGap = 1100 + ((i * 353) % 750);
+          cumulativeDelay += nextGap;
+        }
 
         // Stage 1: Center spacetime hairline tear appears gently midway through the timelines spreading
         setTimeout(() => {
@@ -465,7 +478,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         // Stage 2: Spacetime portal organically opens wide after timelines finish spreading
         setTimeout(() => {
           setPortalStage(2);
-        }, cumulativeDelay + 2500);
+        }, cumulativeDelay + 2200);
       }
 
       return updated;
@@ -1228,7 +1241,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                     />
 
                     {/* Crawling living venom head across entire filament (Compact PL: 110px) */}
-                    <g style={{ filter: "url(#livingVenomFluidDistort)" }}>
+                    <g style={{ filter: "url(#livingVenomFluidDistort)", willChange: "transform, opacity" }}>
                       <motion.path
                         d={filamentD}
                         fill="none"
@@ -1243,7 +1256,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                     </g>
 
                     {/* Electric spark tip */}
-                    <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
+                    <g style={{ filter: "url(#venomInnerCoreDistort)", willChange: "transform, opacity" }}>
                       <motion.path
                         d={filamentD}
                         fill="none"
