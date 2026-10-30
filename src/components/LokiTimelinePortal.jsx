@@ -434,22 +434,22 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         // User requested:
         // "gap eduthu varathu ok but apdiye onu rendu nu ore nerathula random timing la konjam neraiya varatom... paaka nalla irukum... la"
         // Natural organic clusters: Sila neram 1 branch, sila neram 2 branches ore nerathula start aagum!
-        // Natural organic clusters across the 80 multiverse filaments + remaining main branches
+        // Natural organic clusters across the optimized multiverse filaments + remaining main branches
         const untapptMainBranches = allMainBranchIds.filter(bId => !updated[bId]?.active);
-        const filamentOrder = [50, 20, 7, 14, 69, 27, 33, 38, 32, 39, 25, 4, 6, 22, 51, 45, 49, 63, 62, 70, 46, 10, 48, 79, 74, 3, 29, 21, 52, 75, 2, 76, 60, 55, 78, 77, 13, 19, 17, 64, 65, 47, 31, 53, 1, 43, 41, 67, 11, 15, 42, 12, 5, 24, 59, 26, 54, 71, 36, 23, 66, 56, 61, 30, 37, 35, 57, 44, 73, 68, 18, 58, 34, 40, 9, 72, 28, 8, 16, 0];
+        const filamentOrder = [22, 4, 9, 15, 3, 5, 2, 14, 0, 24, 21, 16, 17, 18, 23, 7, 12, 25, 1, 10, 19, 13, 20, 11, 8, 26, 6];
         
-        // Group branches into organic waves (pairs, trios, and singles)
+        // Group branches into organic waves (pairs and singles)
         const allRemaining = [...untapptMainBranches, ...filamentOrder.map(idx => `filament-${idx}`)];
         let cumulativeDelay = 1200;
 
-        // Group into clusters of 1 to 3 branches firing simultaneously or with tiny micro-offsets (80ms)
+        // Group into clusters of 1 to 2 branches firing simultaneously or with tiny micro-offsets (100ms)
         let i = 0;
         while (i < allRemaining.length) {
-          const clusterSize = (i % 3 === 0) ? 3 : (i % 2 === 0 ? 2 : 1);
+          const clusterSize = (i + 1 < allRemaining.length && (i % 3 !== 1)) ? 2 : 1;
           const currentCluster = allRemaining.slice(i, i + clusterSize);
           
           currentCluster.forEach((branchKey, subIdx) => {
-            const microOffset = subIdx * 80; // Slight organic ripple offset between paired branches
+            const microOffset = subIdx * 100; // Slight organic ripple offset between paired branches
             const fireTime = cumulativeDelay + microOffset;
 
             setTimeout(() => {
@@ -466,8 +466,8 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
 
           i += clusterSize;
 
-          // Natural organic pause between clusters (350ms to 750ms) so 80 filaments sweep across ~16s
-          const nextGap = 360 + ((i * 197) % 400);
+          // Natural organic pause between clusters (800ms to 1400ms)
+          const nextGap = 850 + ((i * 277) % 550);
           cumulativeDelay += nextGap;
         }
 
