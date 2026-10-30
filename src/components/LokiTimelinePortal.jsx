@@ -38,8 +38,8 @@ function LokiLifePowerSpread({
   // Crawling living venom fluid head length
   const headLen = Math.max(160, Math.min(260, totalLen * 0.25));
 
-  // Slower, majestic organic life crawl across the full branch (~5.5s)
-  const duration = 5.5;
+  // Majestic, slow, organic life crawl across the full branch (~8.5s) - smooth, natural, and calm!
+  const duration = 8.5;
 
   // Subpath helper for sampling points along specific length
   const getSubpath = (fromLen, toLen) => {
@@ -421,62 +421,50 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         }
       };
 
-      // Count how many of the main branches have been tapped (user requested: "first 5 kooda vena just 3 tap pothum")
-      const mainBranches = ['branch-1', 'branch-2', 'branch-5'];
-      const tappedCount = mainBranches.filter(bId => updated[bId]?.active).length;
+      // Count how many branches user has tapped in total (ANY 3 branches: branch-1, branch-2, branch-3, branch-4, branch-5)
+      const allMainBranchIds = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'];
+      const tappedCount = allMainBranchIds.filter(bId => updated[bId]?.active).length;
 
-      // When 3 main branches are tapped by user (effortless mobile flow):
+      // When ANY 3 branches are tapped by user:
       if (tappedCount >= 3) {
         setLastTappedBranchId(id);
 
         // User requested:
-        // 1. "naan oru branch ah click panna enga click pandrano anga irundhu apdiye antha uyir antha branch full-ah poganum"
-        // 2. "after 3rd tap, matha meethi irukura branches-layum side-la irundhu antha uyir vanthu full branch-kum poganum, naduvula maraiya koodadhu!"
+        // 1. "after 3 tap apdiye random ah poghatum onu onnua oru oru time la konjam gap vittu kooda varatum nalla paaka nalla irukum"
+        // 2. Slow natural calm timing: 1.2s to 2.2s gaps between each timeline awakening
+        const untapptMainBranches = allMainBranchIds.filter(bId => !updated[bId]?.active);
         const filamentOrder = [7, 2, 11, 4, 14, 0, 9, 5, 12, 1, 8, 15, 3, 10, 6, 13];
-        let cumulativeDelay = 1000;
+        
+        // Combine remaining untrapped main branches + background filaments in organic shuffled order
+        const allRemaining = [...untapptMainBranches, ...filamentOrder.map(idx => `filament-${idx}`)];
+        let cumulativeDelay = 1400;
 
-        // Also awaken Branch-3 and Branch-4 if user didn't tap them
-        ['branch-3', 'branch-4'].forEach((extraId, idx) => {
-          if (!updated[extraId]?.active) {
-            setTimeout(() => {
-              setEnergizedBranches(ePrev => ({
-                ...ePrev,
-                [extraId]: {
-                  active: true,
-                  tapRatio: 0.1,
-                  timestamp: Date.now()
-                }
-              }));
-            }, 600 + idx * 800);
-          }
-        });
-
-        filamentOrder.forEach((fIdx, seq) => {
-          // Natural random pacing between 700ms and 1400ms per branch
-          const stepDelay = 800 + ((fIdx * 137) % 700);
-          cumulativeDelay += stepDelay;
+        allRemaining.forEach((branchKey, seq) => {
+          // Generous natural gaps (1200ms to 2400ms) - slow, organic, like individual cosmic timelines slowly awakening
+          const stepGap = 1300 + ((seq * 389) % 1100);
+          cumulativeDelay += stepGap;
 
           setTimeout(() => {
             setEnergizedBranches(fPrev => ({
               ...fPrev,
-              [`filament-${fIdx}`]: {
+              [branchKey]: {
                 active: true,
-                tapRatio: fIdx % 2 === 0 ? 0.02 : 0.98,
+                tapRatio: seq % 2 === 0 ? 0.02 : 0.98,
                 timestamp: Date.now()
               }
             }));
           }, cumulativeDelay);
         });
 
-        // Stage 1: Center spacetime hairline tear appears after life begins flowing into background timelines
+        // Stage 1: Center spacetime hairline tear appears gently midway through the timelines spreading
         setTimeout(() => {
           setPortalStage(1);
-        }, cumulativeDelay * 0.55);
+        }, cumulativeDelay * 0.5);
 
-        // Stage 2: Spacetime portal organically opens wide
+        // Stage 2: Spacetime portal organically opens wide after timelines finish spreading
         setTimeout(() => {
           setPortalStage(2);
-        }, cumulativeDelay + 1800);
+        }, cumulativeDelay + 2500);
       }
 
       return updated;
@@ -1202,7 +1190,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 {/* 2. Slow Bio-Luminescent Root Vein Infusion into Filaments (Full Length Venom Wave) */}
                 {isEnergized && (
                   <g>
-                    {/* Living outer subtle dark green trail across entire filament path */}
+                    {/* Living outer subtle dark green trail across entire filament path - silky, calm reveal */}
                     <motion.path
                       d={filamentD}
                       fill="none"
@@ -1211,7 +1199,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 5.5, ease: [0.18, 0.8, 0.25, 1] }}
+                      transition={{ duration: 8.5, ease: [0.18, 0.8, 0.25, 1] }}
                       style={{ filter: "blur(1.5px)" }}
                       opacity={0.8}
                     />
@@ -1223,7 +1211,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 5.5, ease: [0.18, 0.8, 0.25, 1] }}
+                      transition={{ duration: 8.5, ease: [0.18, 0.8, 0.25, 1] }}
                       opacity={0.9}
                     />
                     <motion.path
@@ -1234,7 +1222,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 5.5, ease: [0.18, 0.8, 0.25, 1] }}
+                      transition={{ duration: 8.5, ease: [0.18, 0.8, 0.25, 1] }}
                       opacity={0.85}
                     />
 
@@ -1249,7 +1237,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         strokeDasharray="160 2200"
                         initial={{ strokeDashoffset: 160 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 0.95, 0.95, 0] }}
-                        transition={{ duration: 5.5, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
+                        transition={{ duration: 8.5, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
                       />
                     </g>
 
@@ -1264,7 +1252,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         strokeDasharray="100 2200"
                         initial={{ strokeDashoffset: 100 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 1, 1, 0] }}
-                        transition={{ duration: 5.5, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
+                        transition={{ duration: 8.5, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
                       />
                       <motion.path
                         d={filamentD}
@@ -1275,7 +1263,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         strokeDasharray="55 2200"
                         initial={{ strokeDashoffset: 55 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 1, 1, 0] }}
-                        transition={{ duration: 5.5, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
+                        transition={{ duration: 8.5, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
                         style={{ filter: "drop-shadow(0 0 3px #ffffff)" }}
                       />
                     </g>
