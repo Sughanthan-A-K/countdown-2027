@@ -555,9 +555,8 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
   const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
   // Dynamic Bundled Curve Path Generator (Tap 3: Branches curve into center bundle behind card)
-  // Matching user's drawing: Branches enter horizontally from left flank (-380),
-  // tightly bundle directly behind the card at center (cx: 500, cy: 462),
-  // and exit horizontally out through the right flank (+1380).
+  // Matching user's drawing: Branches enter from top/bottom left/right edges and bend inward
+  // into a tight convergent waist cluster at the center (cx: 500, cy: 462).
   // ALL PATHS PRESERVE EXACT IDENTICAL SVG TOKENS (11 tokens: M x0 y0 Q cx cy x1 y1 T x2 y2)
   // so that numerical morphing between bundled and open state is 100% mathematically continuous!
   const getBundlePath = (baseD, branchId) => {
@@ -565,36 +564,38 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
     const cy = 462;
 
     if (branchId === 'branch-1') {
-      // Forefront main timeline: center waist flow
-      return `M -380 460 Q 200 461, ${cx} ${cy} T 1380 464`;
+      // Branch 1 natural: M -380 260 Q 180 490, 540 430 T 1420 540
+      return `M -380 160 Q 200 390, ${cx} ${cy} T 1420 780`;
     }
     if (branchId === 'branch-2') {
-      // Upper timeline: enters from upper-left, pinches behind card, exits upper-right
-      return `M -380 370 Q 190 445, ${cx} ${cy - 4} T 1380 390`;
+      // Branch 2 natural: M 160 -250 Q 380 210, 560 490 T 1350 1150 (Steep Top-Left to Bottom-Right)
+      return `M 160 -250 Q 280 180, ${cx} ${cy - 4} T 1350 1150`;
     }
     if (branchId === 'branch-3') {
-      // Lower timeline: enters from lower-left, pinches behind card, exits lower-right
-      return `M -380 550 Q 210 478, ${cx} ${cy + 6} T 1380 540`;
+      // Branch 3 natural: M -320 980 Q 260 740, 580 510 T 1360 -120 (Rising Bottom-Left to Top-Right)
+      return `M -320 980 Q 180 720, ${cx} ${cy + 8} T 1360 -120`;
     }
     if (branchId === 'branch-4') {
-      // Mid-upper timeline
-      return `M -380 415 Q 185 452, ${cx} ${cy - 2} T 1380 425`;
+      // Branch 4 natural: M 880 -250 Q 660 220, 480 520 T -220 1180 (Steep Top-Right to Bottom-Left)
+      return `M 880 -250 Q 720 190, ${cx} ${cy - 8} T -220 1180`;
     }
     if (branchId === 'branch-5') {
-      // Mid-lower timeline
-      return `M -380 505 Q 215 471, ${cx} ${cy + 3} T 1380 495`;
+      // Branch 5 natural: M 1320 1060 Q 780 720, 460 450 T -280 -100 (Rising Bottom-Right to Top-Left)
+      return `M 1320 1060 Q 780 720, ${cx} ${cy + 4} T -280 -100`;
     }
 
     if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
       const idx = parseInt(branchId.replace('filament-', ''), 10) || 0;
-      const total = cosmicFilaments.length || 27;
-      const norm = (idx / Math.max(1, total - 1)) - 0.5; // -0.5 to +0.5
-      const startY = Math.round(cy + norm * 260 + ((idx % 5) - 2) * 8);
-      const endY = Math.round(cy + norm * 240 + ((idx % 4) - 1.5) * 10);
-      const waistY = +(cy + norm * 18).toFixed(1);
-      const ctrlX = 180 + ((idx % 3) - 1) * 20;
+      const baseTokens = baseD.match(/[a-df-z]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/gi);
+      if (!baseTokens || baseTokens.length < 11) return baseD;
+      const startX = baseTokens[1];
+      const startY = baseTokens[2];
+      const endX = baseTokens[9];
+      const endY = baseTokens[10];
+      const waistY = (cy + ((idx % 7) - 3) * 2.5).toFixed(1);
+      const ctrlX = (parseFloat(startX) + cx) * 0.5;
 
-      return `M -380 ${startY} Q ${ctrlX} ${waistY}, ${cx} ${waistY} T 1380 ${endY}`;
+      return `M ${startX} ${startY} Q ${ctrlX.toFixed(1)} ${waistY}, ${cx} ${waistY} T ${endX} ${endY}`;
     }
 
     return baseD;
@@ -741,6 +742,105 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
       />
 
       {/* ========================================================================= */}
+      {/* TAP 3 & 4: THE SACRED TEMPORAL LOOM APPARATUS BEHIND THE CARD            */}
+      {/* Exact replica from Loki finale screenshot:                                */}
+      {/* Radiant golden perspective rings, loom core aperture,                     */}
+      {/* and glowing chromatic timeline weave stream before the card explodes!    */}
+      {/* ========================================================================= */}
+      {crackStage < 5 && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0" style={{ transform: "translateY(-4%)" }}>
+          {/* 1. Massive Golden Loom Corona Flare */}
+          <motion.div
+            className="absolute w-[680px] h-[680px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.75) 0%, rgba(255, 165, 0, 0.45) 30%, rgba(255, 120, 0, 0.2) 55%, transparent 75%)',
+              filter: 'blur(35px)',
+              mixBlendMode: 'screen'
+            }}
+            animate={{
+              scale: [0.95, 1.08, 0.95],
+              opacity: crackStage >= 4 ? [0.85, 1.0, 0.85] : [0.65, 0.8, 0.65]
+            }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* 2. Chromatic Timeline Loom Beam (Golden, Cyan & Rose energy streaming into the core) */}
+          <motion.div
+            className="absolute w-[950px] h-[180px]"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.5) 15%, rgba(255, 235, 160, 0.9) 45%, rgba(244, 63, 94, 0.5) 75%, transparent 100%)',
+              filter: 'blur(16px)',
+              mixBlendMode: 'screen'
+            }}
+            animate={{
+              scaleX: [0.92, 1.04, 0.92],
+              scaleY: [0.88, 1.12, 0.88],
+              opacity: [0.75, 0.95, 0.75]
+            }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* 3. The 3 Glowing Golden Perspective Loom Rings (Exact Loki Walkway Apparatus) */}
+          <svg className="absolute w-[620px] h-[340px] overflow-visible" viewBox="0 0 620 340">
+            <defs>
+              <linearGradient id="loomGoldRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFF2A3" />
+                <stop offset="50%" stopColor="#FFC72C" />
+                <stop offset="100%" stopColor="#FF8C00" />
+              </linearGradient>
+              <filter id="loomGoldGlow">
+                <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Distant Ring 3 (Smaller, deeper in perspective) */}
+            <motion.ellipse
+              cx="390" cy="170" rx="42" ry="85"
+              fill="none"
+              stroke="url(#loomGoldRingGrad)"
+              strokeWidth="5"
+              filter="url(#loomGoldGlow)"
+              animate={{ opacity: [0.65, 0.9, 0.65], rx: [40, 44, 40] }}
+              transition={{ duration: 2.0, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Mid Ring 2 */}
+            <motion.ellipse
+              cx="330" cy="170" rx="58" ry="115"
+              fill="none"
+              stroke="url(#loomGoldRingGrad)"
+              strokeWidth="7"
+              filter="url(#loomGoldGlow)"
+              animate={{ opacity: [0.75, 1, 0.75], rx: [56, 62, 56] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+            />
+            {/* Front Ring 1 (Largest, closest to card) */}
+            <motion.ellipse
+              cx="250" cy="170" rx="78" ry="145"
+              fill="none"
+              stroke="url(#loomGoldRingGrad)"
+              strokeWidth="9"
+              filter="url(#loomGoldGlow)"
+              animate={{ opacity: [0.85, 1, 0.85], rx: [75, 82, 75] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+            />
+
+            {/* Glowing Core Axis Rings (Connecting perspective walkway tube) */}
+            <path
+              d="M 250 25 L 390 85 M 250 315 L 390 255"
+              stroke="#FFE885"
+              strokeWidth="3.5"
+              strokeDasharray="6 4"
+              opacity="0.8"
+            />
+          </svg>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
       {/* STEP 1: THE TEMPORAL LOOM EXPLOSION: 7.0-SECOND COHESIVE COSMIC LIGHT     */}
       {/* Naturally generated from the card's emerald-mint explosion core,           */}
       {/* physics-based expansion, smooth particle diffusion across 7.0 seconds!     */}
@@ -753,16 +853,36 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           animate={{ opacity: [1, 1, 0.9, 0] }}
           transition={{ duration: 7.0, times: [0, 0.1, 0.88, 1], ease: "linear" }}
         >
-          {/* 1. Cohesive Celestial Atmosphere: Born from the emerald core (#00c853, #10b981) + warm gold corona (#ffcc66) */}
+          {/* 1. Cohesive Celestial Atmosphere: Golden-Amber Loom Blast expanding outward */}
           <motion.div
             className="absolute inset-0"
             style={{
-              background: 'radial-gradient(ellipse at 50% 46%, rgba(16, 185, 129, 0.85) 0%, rgba(5, 150, 105, 0.65) 30%, rgba(6, 78, 59, 0.5) 60%, rgba(0, 4, 3, 0.95) 90%)',
-              filter: 'brightness(1.2) contrast(1.15)',
+              background: 'radial-gradient(ellipse at 50% 46%, rgba(255, 215, 0, 0.9) 0%, rgba(255, 140, 0, 0.7) 25%, rgba(16, 185, 129, 0.55) 50%, rgba(0, 4, 3, 0.98) 85%)',
+              filter: 'brightness(1.3) contrast(1.2)',
             }}
-            animate={{ opacity: [1, 1, 0.85, 0] }}
+            animate={{ opacity: [1, 1, 0.85, 0], scale: [0.85, 1.35, 1.8] }}
             transition={{ duration: 7.0, times: [0, 0.1, 0.88, 1], ease: "easeOut" }}
           />
+
+          {/* 1b. Violently Shattering Loom Rings Disintegration Shockwave */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{ transform: "translateY(-4%)" }}
+          >
+            <motion.div
+              className="w-[280px] h-[280px] rounded-full border-[8px] border-[#FFE57F]"
+              style={{
+                boxShadow: '0 0 60px #FFD700, 0 0 120px #FF8C00, inset 0 0 60px #FFE57F',
+                filter: 'blur(2px)'
+              }}
+              animate={{
+                scale: [0.6, 2.5, 5.0],
+                opacity: [1, 0.85, 0],
+                rotate: [0, 40]
+              }}
+              transition={{ duration: 3.2, ease: [0.12, 0.9, 0.25, 1] }}
+            />
+          </motion.div>
 
           {/* 2. Natural Loom Flare (Leftward expansion corona) */}
           <motion.div
