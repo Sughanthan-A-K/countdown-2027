@@ -35,8 +35,8 @@ function LokiLifePowerSpread({
   const totalLen = pathEl.getTotalLength ? pathEl.getTotalLength() : 1400;
   const tapLen = totalLen * Math.min(0.95, Math.max(0.05, tapRatio));
 
-  // Crawling living venom fluid head length
-  const headLen = Math.max(160, Math.min(260, totalLen * 0.25));
+  // Shorter, sleek crawling living venom fluid head length (user: "PL length athigama iruku")
+  const headLen = Math.max(90, Math.min(150, totalLen * 0.12));
 
   // Ultra slow, majestic, organic life crawl across the full branch (~16.0s) - meditative, deep cosmic grace!
   const duration = 16.0;
@@ -66,12 +66,12 @@ function LokiLifePowerSpread({
     if (distance <= 5) return null;
     return (
       <g key={key}>
-        {/* 1. Behind the venom wave: Awakened living body that stays alive across the entire branch */}
+        {/* 1. Behind the venom wave: Awakened living body - INNUM DEEP DARK ALMOST BLACK (#01170d / #022013) */}
         <motion.path
           d={pathD}
           fill="none"
-          stroke="#00351f"
-          strokeWidth={14 * strokeScale}
+          stroke="#01140b"
+          strokeWidth={13 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
@@ -82,44 +82,45 @@ function LokiLifePowerSpread({
         <motion.path
           d={pathD}
           fill="none"
-          stroke="#004d2b"
-          strokeWidth={9 * strokeScale}
+          stroke="#022114"
+          strokeWidth={8 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
-          opacity={0.9}
+          opacity={0.85}
         />
         <motion.path
           d={pathD}
           fill="none"
-          stroke="#062d22"
-          strokeWidth={6 * strokeScale}
+          stroke="#03301c"
+          strokeWidth={5 * strokeScale}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
-          opacity={0.92}
+          opacity={0.88}
         />
+        {/* Very subtle dim inner vein - dark forest green, no neon filling */}
         <motion.path
           d={pathD}
           fill="none"
-          stroke="#008f4c"
-          strokeWidth={Math.max(0.8, 2.0 * strokeScale)}
+          stroke="#054528"
+          strokeWidth={Math.max(0.6, 1.5 * strokeScale)}
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
-          opacity={0.7}
+          opacity={0.65}
         />
 
-        {/* 2. Crawling Living Venom Organism - Organic fluid head creeping along the branch to the very end */}
+        {/* 2. Crawling Living Venom Head (Compact PL: 100px - 140px) - Organic fluid creeping along the branch */}
         <g style={{ filter: "url(#livingVenomFluidDistort)" }}>
           <motion.path
             d={pathD}
             fill="none"
             stroke="#008f4c"
-            strokeWidth={15 * strokeScale}
+            strokeWidth={13 * strokeScale}
             strokeLinecap="round"
             strokeDasharray={`${headLen} ${distance + 600}`}
             initial={{ strokeDashoffset: headLen }}
@@ -131,10 +132,10 @@ function LokiLifePowerSpread({
             d={pathD}
             fill="none"
             stroke="#00c853"
-            strokeWidth={9.5 * strokeScale}
+            strokeWidth={8 * strokeScale}
             strokeLinecap="round"
-            strokeDasharray={`${headLen - 15} ${distance + 600}`}
-            initial={{ strokeDashoffset: headLen - 15 }}
+            strokeDasharray={`${headLen - 12} ${distance + 600}`}
+            initial={{ strokeDashoffset: headLen - 12 }}
             animate={{ strokeDashoffset: -(distance + 80), opacity: [0, 0.95, 0.95, 0] }}
             transition={{ duration, times: [0, 0.08, 0.88, 1], ease: [0.18, 0.8, 0.25, 1] }}
           />
@@ -146,10 +147,10 @@ function LokiLifePowerSpread({
             d={pathD}
             fill="none"
             stroke="#39ff14"
-            strokeWidth={Math.max(1.5, 4.5 * strokeScale)}
+            strokeWidth={Math.max(1.2, 3.8 * strokeScale)}
             strokeLinecap="round"
-            strokeDasharray={`${headLen * 0.7} ${distance + 600}`}
-            initial={{ strokeDashoffset: headLen * 0.7 }}
+            strokeDasharray={`${headLen * 0.65} ${distance + 600}`}
+            initial={{ strokeDashoffset: headLen * 0.65 }}
             animate={{ strokeDashoffset: -(distance + 80), opacity: [0, 1, 1, 0] }}
             transition={{ duration, times: [0, 0.08, 0.88, 1], ease: [0.18, 0.8, 0.25, 1] }}
           />
@@ -157,13 +158,13 @@ function LokiLifePowerSpread({
             d={pathD}
             fill="none"
             stroke="#ffffff"
-            strokeWidth={Math.max(1.0, 2.2 * strokeScale)}
+            strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
             strokeLinecap="round"
-            strokeDasharray={`${headLen * 0.45} ${distance + 600}`}
-            initial={{ strokeDashoffset: headLen * 0.45 }}
+            strokeDasharray={`${headLen * 0.4} ${distance + 600}`}
+            initial={{ strokeDashoffset: headLen * 0.4 }}
             animate={{ strokeDashoffset: -(distance + 80), opacity: [0, 1, 1, 0] }}
             transition={{ duration, times: [0, 0.08, 0.88, 1], ease: [0.18, 0.8, 0.25, 1] }}
-            style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.9))" }}
+            style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.9))" }}
           />
         </g>
       </g>
@@ -1190,12 +1191,12 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 {/* 2. Slow Bio-Luminescent Root Vein Infusion into Filaments (Full Length Venom Wave) */}
                 {isEnergized && (
                   <g>
-                    {/* Living outer subtle dark green trail across entire filament path - ultra slow, silky reveal */}
+                    {/* Living outer subtle dark green trail across entire filament path - INNUM DEEP DARK ALMOST BLACK */}
                     <motion.path
                       d={filamentD}
                       fill="none"
-                      stroke="#00351f"
-                      strokeWidth={f.width * 2.6}
+                      stroke="#01140b"
+                      strokeWidth={f.width * 2.4}
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
@@ -1206,19 +1207,19 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                     <motion.path
                       d={filamentD}
                       fill="none"
-                      stroke="#004d2b"
-                      strokeWidth={f.width * 1.8}
+                      stroke="#022114"
+                      strokeWidth={f.width * 1.6}
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
                       transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
-                      opacity={0.9}
+                      opacity={0.85}
                     />
                     <motion.path
                       d={filamentD}
                       fill="none"
-                      stroke="#062d22"
-                      strokeWidth={Math.max(0.6, f.width * 1.1)}
+                      stroke="#03301c"
+                      strokeWidth={Math.max(0.5, f.width * 0.95)}
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
@@ -1226,16 +1227,16 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                       opacity={0.85}
                     />
 
-                    {/* Crawling living venom head across entire filament without disappearing in the middle */}
+                    {/* Crawling living venom head across entire filament (Compact PL: 110px) */}
                     <g style={{ filter: "url(#livingVenomFluidDistort)" }}>
                       <motion.path
                         d={filamentD}
                         fill="none"
-                        stroke="#00c853"
-                        strokeWidth={f.width * 1.4}
+                        stroke="#008f4c"
+                        strokeWidth={f.width * 1.3}
                         strokeLinecap="round"
-                        strokeDasharray="160 2200"
-                        initial={{ strokeDashoffset: 160 }}
+                        strokeDasharray="110 2200"
+                        initial={{ strokeDashoffset: 110 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 0.95, 0.95, 0] }}
                         transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
                       />
@@ -1247,10 +1248,10 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         d={filamentD}
                         fill="none"
                         stroke="#39FF14"
-                        strokeWidth={Math.max(0.6, f.width * 0.9)}
+                        strokeWidth={Math.max(0.6, f.width * 0.8)}
                         strokeLinecap="round"
-                        strokeDasharray="100 2200"
-                        initial={{ strokeDashoffset: 100 }}
+                        strokeDasharray="70 2200"
+                        initial={{ strokeDashoffset: 70 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 1, 1, 0] }}
                         transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
                       />
@@ -1258,10 +1259,10 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         d={filamentD}
                         fill="none"
                         stroke="#ffffff"
-                        strokeWidth={Math.max(0.4, f.width * 0.45)}
+                        strokeWidth={Math.max(0.35, f.width * 0.4)}
                         strokeLinecap="round"
-                        strokeDasharray="55 2200"
-                        initial={{ strokeDashoffset: 55 }}
+                        strokeDasharray="35 2200"
+                        initial={{ strokeDashoffset: 35 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 1, 1, 0] }}
                         transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
                         style={{ filter: "drop-shadow(0 0 3px #ffffff)" }}
