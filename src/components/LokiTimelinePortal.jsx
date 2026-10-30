@@ -25,8 +25,9 @@ function LokiLifePowerSpread({
   const totalLen = pathEl.getTotalLength ? pathEl.getTotalLength() : 1400;
   const tapLen = totalLen * Math.min(0.95, Math.max(0.05, tapRatio));
 
-  // Pulse length: standard dynamic slug length
-  const pulseLen = 220;
+  // Particular length slug travel: Exactly covers a specific region (~320px) from tap point
+  const maxTravelDist = Math.min(380, totalLen * 0.38); 
+  const slugLen = 140; // Length of the bright traveling pulse slug
 
   // Generate natural continuous spine path from start to end (Single Unbroken Path)
   const fullPathD = useMemo(() => {
@@ -60,66 +61,61 @@ function LokiLifePowerSpread({
     return d;
   }, [totalLen, strokeScale]);
 
-  const fullVeinC = useMemo(() => {
-    const samples = 75;
-    let d = "";
-    for (let i = 0; i <= samples; i++) {
-      const prog = i / samples;
-      const l = prog * totalLen;
-      const pt = pathEl.getPointAtLength(l);
-      const wave = Math.sin(prog * 22 + 6.0) * (Math.sin(prog * Math.PI) * 2.5 * strokeScale);
-      const x = pt.x + wave * 0.4;
-      const y = pt.y + wave;
-      d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
-    }
-    return d;
-  }, [totalLen, strokeScale]);
+  const tapPt = pathEl.getPointAtLength(tapLen);
 
-  // Natural biological root awakening - slower, calmer, majestic spreading across the timeline
-  const duration = 10.5;
+  // Travel duration for the pulse: calm, measured cosmic flow (~2.2s)
+  const slugDuration = 2.4;
 
   return (
     <g>
-      {/* Clip path circle expanding outward from tap point: Guarantees 0 seam lines or marks at tap origin! */}
+      {/* 
+        1. CLIP PATH FOR SUBTLE LIVING DARK GREEN FOOTPRINT:
+        Only the region where the pulse travels (up to maxTravelDist) is revealed.
+        The rest of the branch remains pitch dark black.
+      */}
       <defs>
         <clipPath id={`life-expand-${branchPathRef.current?.id || totalLen}`}>
           <motion.circle
-            cx={pathEl.getPointAtLength(tapLen).x}
-            cy={pathEl.getPointAtLength(tapLen).y}
+            cx={tapPt.x}
+            cy={tapPt.y}
             initial={{ r: 0 }}
-            animate={{ r: totalLen * 1.3 }}
-            transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+            animate={{ r: maxTravelDist }}
+            transition={{ duration: slugDuration, ease: [0.16, 1, 0.3, 1] }}
           />
         </clipPath>
       </defs>
 
-      {/* Single Unbroken Bio-luminescent Root Vein Network */}
+      {/* 
+        2. SUBTLE LIVING DARK GREEN AWAKENED FOOTPRINT:
+        Revealed strictly within the particular length traveled by the slug.
+      */}
       <g clipPath={`url(#life-expand-${branchPathRef.current?.id || totalLen})`}>
-        {/* Subtle Living Dark Green Awake Body: Only the path the pulse traveled turns into subtle living dark green */}
+        {/* Soft emerald outer ambient halo */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#00351f"
-          strokeWidth={16 * strokeScale}
+          strokeWidth={14 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.8}
-          style={{ filter: "blur(3px)" }}
+          opacity={0.75}
+          style={{ filter: "blur(2.5px)" }}
         />
+        {/* Living dark vascular body */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#004d2b"
-          strokeWidth={10 * strokeScale}
+          strokeWidth={8 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.85}
+          opacity={0.8}
         />
         <path
           d={fullPathD}
           fill="none"
           stroke="#062d22"
-          strokeWidth={6 * strokeScale}
+          strokeWidth={5 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity={0.9}
@@ -128,32 +124,104 @@ function LokiLifePowerSpread({
           d={fullVeinB}
           fill="none"
           stroke="#0b4d35"
-          strokeWidth={Math.max(1.2, 3.0 * strokeScale)}
+          strokeWidth={Math.max(1.0, 2.2 * strokeScale)}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.7}
-          style={{ filter: "blur(0.5px)" }}
+          opacity={0.65}
         />
-        {/* Subtle inner emerald core thread */}
+        {/* Subtle living core vein - dark forest green with quiet life */}
         <path
+          d={fullPathD}
+          fill="none"
+          stroke="#008f4c"
+          strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.6}
+        />
+      </g>
+
+      {/* 
+        3. THE GLOWING TRAVELING PULSE (SLUG):
+        Originates from tap point, travels along the particular length, and gracefully dissipates into the living dark vein.
+      */}
+      <motion.g
+        initial={{ opacity: 1 }}
+        animate={{ opacity: [0, 1, 1, 0.7, 0] }}
+        transition={{ duration: slugDuration, times: [0, 0.08, 0.7, 0.9, 1], ease: "easeInOut" }}
+      >
+        {/* Forward Pulse Slug along path */}
+        <motion.path
           d={fullPathD}
           fill="none"
           stroke="#00e676"
-          strokeWidth={Math.max(1.0, 2.0 * strokeScale)}
+          strokeWidth={12 * strokeScale}
           strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.75}
+          strokeDasharray={`${slugLen} ${totalLen * 2}`}
+          initial={{ strokeDashoffset: -tapLen + slugLen }}
+          animate={{ strokeDashoffset: -tapLen - maxTravelDist }}
+          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
+          style={{ filter: "blur(3px)" }}
         />
-        <path
+        <motion.path
           d={fullPathD}
           fill="none"
-          stroke="#b9ffd0"
-          strokeWidth={Math.max(0.6, 1.0 * strokeScale)}
+          stroke="#39ff14"
+          strokeWidth={6.5 * strokeScale}
           strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.8}
+          strokeDasharray={`${slugLen * 0.85} ${totalLen * 2}`}
+          initial={{ strokeDashoffset: -tapLen + slugLen * 0.85 }}
+          animate={{ strokeDashoffset: -tapLen - maxTravelDist }}
+          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
         />
-      </g>
+        <motion.path
+          d={fullPathD}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth={Math.max(1.2, 2.8 * strokeScale)}
+          strokeLinecap="round"
+          strokeDasharray={`${slugLen * 0.55} ${totalLen * 2}`}
+          initial={{ strokeDashoffset: -tapLen + slugLen * 0.55 }}
+          animate={{ strokeDashoffset: -tapLen - maxTravelDist }}
+          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
+        />
+
+        {/* Backward Pulse Slug along path (symmetrical organic pulse propagation) */}
+        <motion.path
+          d={fullPathD}
+          fill="none"
+          stroke="#00e676"
+          strokeWidth={12 * strokeScale}
+          strokeLinecap="round"
+          strokeDasharray={`${slugLen} ${totalLen * 2}`}
+          initial={{ strokeDashoffset: -tapLen }}
+          animate={{ strokeDashoffset: -tapLen + maxTravelDist + slugLen }}
+          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
+          style={{ filter: "blur(3px)" }}
+        />
+        <motion.path
+          d={fullPathD}
+          fill="none"
+          stroke="#39ff14"
+          strokeWidth={6.5 * strokeScale}
+          strokeLinecap="round"
+          strokeDasharray={`${slugLen * 0.85} ${totalLen * 2}`}
+          initial={{ strokeDashoffset: -tapLen }}
+          animate={{ strokeDashoffset: -tapLen + maxTravelDist + slugLen * 0.85 }}
+          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
+        />
+        <motion.path
+          d={fullPathD}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth={Math.max(1.2, 2.8 * strokeScale)}
+          strokeLinecap="round"
+          strokeDasharray={`${slugLen * 0.55} ${totalLen * 2}`}
+          initial={{ strokeDashoffset: -tapLen }}
+          animate={{ strokeDashoffset: -tapLen + maxTravelDist + slugLen * 0.55 }}
+          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </motion.g>
 
       {/* Awakened Breathing Life: Once infused, the branch gently breathes and pulses with living energy */}
       {allEnergizedStage && (
