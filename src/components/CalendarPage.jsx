@@ -314,13 +314,13 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             }
           }
           className={`w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl flex flex-col relative overflow-visible border-2 z-20 ${
-            isDec16Blocked && lokiCrackStage >= 3 ? 'bg-black/90 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700' :
-            (isDec16Blocked && lokiCrackStage === 2 ? 'bg-neutral-900/90 border-emerald-500/70 shadow-[0_0_25px_rgba(16,185,129,0.3)] transition-all duration-500' :
-            (isDec16Blocked && lokiCrackStage === 1 ? `${cardBg} border-emerald-600/50 transition-all duration-500` :
+            isDec16Blocked && lokiCrackStage >= 3 ? 'bg-black/90 border-[#FFD700] shadow-[0_0_50px_rgba(255,215,0,0.5),0_0_80px_rgba(36,168,73,0.4)] transition-all duration-700' :
+            (isDec16Blocked && lokiCrackStage === 2 ? 'bg-neutral-900/90 border-[#FF8C00]/80 shadow-[0_0_30px_rgba(255,140,0,0.4),0_0_50px_rgba(36,168,73,0.3)] transition-all duration-500' :
+            (isDec16Blocked && lokiCrackStage === 1 ? `${cardBg} border-[#24A849]/60 transition-all duration-500` :
             (diwaliPhase === 1 ? 'border-transparent bg-transparent shadow-none' : `${cardBg} ${cardBorder} transition-all duration-500`)))
           }`}
           style={{
-            boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : (isDec16Blocked && lokiCrackStage >= 3 ? '0 0 60px rgba(16,185,129,0.55)' : (isDec16Blocked && lokiCrackStage === 2 ? '0 0 30px rgba(16,185,129,0.35)' : dropShadow))) : '0 20px 40px -10px rgba(0,0,0,0.1)',
+            boxShadow: isTop ? (diwaliPhase === 1 ? 'none' : (isDec16Blocked && lokiCrackStage >= 3 ? '0 0 60px rgba(255,215,0,0.55), 0 0 90px rgba(36,168,73,0.45)' : (isDec16Blocked && lokiCrackStage === 2 ? '0 0 35px rgba(255,140,0,0.4), 0 0 50px rgba(36,168,73,0.3)' : dropShadow))) : '0 20px 40px -10px rgba(0,0,0,0.1)',
             backfaceVisibility: 'hidden',
             display: isTop && isDec16Blocked && lokiCrackStage >= 5 ? 'none' : 'flex'
           }}
@@ -759,7 +759,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   <h2 
                     className={`text-lg sm:text-xl font-black tracking-widest uppercase transition-all duration-700 ${
                       isDec16Blocked && lokiCrackStage > 0 
-                        ? 'text-white drop-shadow-[0_0_12px_rgba(52,211,153,0.85)]' 
+                        ? 'text-white drop-shadow-[0_0_12px_rgba(255,215,0,0.85)]' 
                         : textPrimary
                     }`}
                   >
@@ -772,7 +772,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     <span 
                       className={`font-bold text-xs sm:text-sm tracking-widest uppercase transition-all duration-700 ${
                         isDec16Blocked && lokiCrackStage > 0 
-                          ? 'text-emerald-300 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]' 
+                          ? 'text-amber-300 drop-shadow-[0_0_8px_rgba(255,140,0,0.8)]' 
                           : textSecondary
                       }`}
                     >
@@ -783,7 +783,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   <h1 
                     className={`text-[7.5rem] sm:text-[9.5rem] font-black leading-none tracking-tighter text-center select-none transition-all duration-700 ${
                       isDec16Blocked && lokiCrackStage > 0 
-                        ? 'text-white drop-shadow-[0_0_35px_rgba(52,211,153,0.9)] text-shadow-[0_0_50px_#10b981]' 
+                        ? 'text-white drop-shadow-[0_0_35px_rgba(255,215,0,0.95)] text-shadow-[0_0_50px_#FF8C00]' 
                         : textPrimary
                     }`}
                   >
@@ -794,7 +794,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     <span 
                       className={`font-bold text-lg sm:text-xl italic transition-all duration-700 ${
                         isDec16Blocked && lokiCrackStage > 0 
-                          ? 'text-emerald-300 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]' 
+                          ? 'text-amber-300 drop-shadow-[0_0_8px_rgba(255,140,0,0.8)]' 
                           : textSecondary
                       }`}
                     >
@@ -807,7 +807,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   <div 
                     className={`px-6 py-2 rounded-full border-2 cursor-default select-none transition-all duration-700 ${
                       isDec16Blocked && lokiCrackStage > 0
-                        ? 'bg-black/90 border-emerald-400 text-emerald-200 shadow-[0_0_15px_rgba(16,185,129,0.6)]'
+                        ? 'bg-black/90 border-[#FFD700] text-amber-200 shadow-[0_0_18px_rgba(255,215,0,0.6)]'
                         : pillBgOutline
                     }`}
                     onClick={(e) => { e.stopPropagation(); if (onDevTap) onDevTap(); }}
@@ -816,7 +816,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     onPointerLeave={(e) => { e.stopPropagation(); if (onDevHoldEnd) onDevHoldEnd(); }}
                   >
                     <span className={`text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase ${
-                      isDec16Blocked && lokiCrackStage > 0 ? 'text-emerald-300' : pillTextOutline
+                      isDec16Blocked && lokiCrackStage > 0 ? 'text-amber-300' : pillTextOutline
                     }`}>
                       To reach 2027
                     </span>

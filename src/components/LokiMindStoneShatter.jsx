@@ -52,18 +52,23 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
         willChange: 'transform, opacity'
       }}
     >
-      {/* 0. FULL-SCREEN BLINDING COSMIC SCREEN FLASH OVERLAY (Spreads across 100vw x 100vh) */}
+      {/* 0. FULL-SCREEN BLINDING COSMIC SCREEN FLASH OVERLAY (Warm golden supernova core with emerald halo) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ 
-            opacity: [0, 0.95, 0.7, 0] 
+            opacity: [0, 0.98, 0.75, 0] 
           }}
           transition={{ duration: 0.85, times: [0, 0.08, 0.25, 1], ease: "easeOut" }}
-          className="fixed inset-0 pointer-events-none z-[150] bg-radial from-white via-emerald-400/60 to-black/80"
-          style={{ mixBlendMode: 'screen', transform: 'translateZ(0)', willChange: 'opacity' }}
+          className="fixed inset-0 pointer-events-none z-[150]"
+          style={{ 
+            background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,1) 0%, rgba(255,215,0,0.8) 25%, rgba(255,140,0,0.6) 45%, rgba(36,168,73,0.5) 70%, rgba(0,0,0,0.9) 95%)',
+            mixBlendMode: 'screen', 
+            transform: 'translateZ(0)', 
+            willChange: 'opacity' 
+          }}
         />
 
-        {/* 0B. Card Center Blinding Supernova Epicenter Burst */}
+        {/* 0B. Card Center Blinding Supernova Epicenter Burst (Loom explosion) */}
         <motion.div
           initial={{ opacity: 1, scale: 0.05 }}
           animate={{ 
@@ -77,12 +82,17 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
         <motion.div
           initial={{ opacity: 1, scale: 0.1 }}
           animate={{ 
-            opacity: [1, 0.85, 0], 
+            opacity: [1, 0.9, 0], 
             scale: [0.1, 5.5, 9.0] 
           }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="absolute w-96 h-96 rounded-full bg-emerald-400/90 blur-3xl pointer-events-none z-[110]"
-          style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
+          className="absolute w-96 h-96 rounded-full pointer-events-none z-[110]"
+          style={{ 
+            background: 'radial-gradient(circle at 50% 50%, #FFD700 0%, #FF8C00 40%, #24A849 70%, transparent 100%)',
+            filter: 'blur(36px)',
+            transform: 'translateZ(0)', 
+            willChange: 'transform, opacity' 
+          }}
         />
 
         {/* 1. Fast Full-Screen High-Velocity Shockwave Ring Expanding outward past screen */}
@@ -97,7 +107,7 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
             duration: 1.2, 
             ease: [0.02, 0.9, 0.2, 1] 
           }}
-          className="absolute rounded-full border-white shadow-[0_0_120px_#34d399,_inset_0_0_80px_#a7f3d0] pointer-events-none z-[100]"
+          className="absolute rounded-full border-white shadow-[0_0_120px_#FFD700,_0_0_80px_#24A849,_inset_0_0_80px_#FF8C00] pointer-events-none z-[100]"
           style={{
             width: '320px',
             height: '320px',

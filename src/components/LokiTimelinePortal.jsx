@@ -742,105 +742,6 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
       />
 
       {/* ========================================================================= */}
-      {/* TAP 3 & 4: THE SACRED TEMPORAL LOOM APPARATUS BEHIND THE CARD            */}
-      {/* Exact replica from Loki finale screenshot:                                */}
-      {/* Radiant golden perspective rings, loom core aperture,                     */}
-      {/* and glowing chromatic timeline weave stream before the card explodes!    */}
-      {/* ========================================================================= */}
-      {crackStage < 5 && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0" style={{ transform: "translateY(-4%)" }}>
-          {/* 1. Massive Golden Loom Corona Flare */}
-          <motion.div
-            className="absolute w-[680px] h-[680px] rounded-full"
-            style={{
-              background: 'radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.75) 0%, rgba(255, 165, 0, 0.45) 30%, rgba(255, 120, 0, 0.2) 55%, transparent 75%)',
-              filter: 'blur(35px)',
-              mixBlendMode: 'screen'
-            }}
-            animate={{
-              scale: [0.95, 1.08, 0.95],
-              opacity: crackStage >= 4 ? [0.85, 1.0, 0.85] : [0.65, 0.8, 0.65]
-            }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-          />
-
-          {/* 2. Chromatic Timeline Loom Beam (Golden, Cyan & Rose energy streaming into the core) */}
-          <motion.div
-            className="absolute w-[950px] h-[180px]"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.5) 15%, rgba(255, 235, 160, 0.9) 45%, rgba(244, 63, 94, 0.5) 75%, transparent 100%)',
-              filter: 'blur(16px)',
-              mixBlendMode: 'screen'
-            }}
-            animate={{
-              scaleX: [0.92, 1.04, 0.92],
-              scaleY: [0.88, 1.12, 0.88],
-              opacity: [0.75, 0.95, 0.75]
-            }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          />
-
-          {/* 3. The 3 Glowing Golden Perspective Loom Rings (Exact Loki Walkway Apparatus) */}
-          <svg className="absolute w-[620px] h-[340px] overflow-visible" viewBox="0 0 620 340">
-            <defs>
-              <linearGradient id="loomGoldRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFF2A3" />
-                <stop offset="50%" stopColor="#FFC72C" />
-                <stop offset="100%" stopColor="#FF8C00" />
-              </linearGradient>
-              <filter id="loomGoldGlow">
-                <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* Distant Ring 3 (Smaller, deeper in perspective) */}
-            <motion.ellipse
-              cx="390" cy="170" rx="42" ry="85"
-              fill="none"
-              stroke="url(#loomGoldRingGrad)"
-              strokeWidth="5"
-              filter="url(#loomGoldGlow)"
-              animate={{ opacity: [0.65, 0.9, 0.65], rx: [40, 44, 40] }}
-              transition={{ duration: 2.0, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Mid Ring 2 */}
-            <motion.ellipse
-              cx="330" cy="170" rx="58" ry="115"
-              fill="none"
-              stroke="url(#loomGoldRingGrad)"
-              strokeWidth="7"
-              filter="url(#loomGoldGlow)"
-              animate={{ opacity: [0.75, 1, 0.75], rx: [56, 62, 56] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-            />
-            {/* Front Ring 1 (Largest, closest to card) */}
-            <motion.ellipse
-              cx="250" cy="170" rx="78" ry="145"
-              fill="none"
-              stroke="url(#loomGoldRingGrad)"
-              strokeWidth="9"
-              filter="url(#loomGoldGlow)"
-              animate={{ opacity: [0.85, 1, 0.85], rx: [75, 82, 75] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-            />
-
-            {/* Glowing Core Axis Rings (Connecting perspective walkway tube) */}
-            <path
-              d="M 250 25 L 390 85 M 250 315 L 390 255"
-              stroke="#FFE885"
-              strokeWidth="3.5"
-              strokeDasharray="6 4"
-              opacity="0.8"
-            />
-          </svg>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
       {/* STEP 1: THE TEMPORAL LOOM EXPLOSION: 7.0-SECOND COHESIVE COSMIC LIGHT     */}
       {/* Naturally generated from the card's emerald-mint explosion core,           */}
       {/* physics-based expansion, smooth particle diffusion across 7.0 seconds!     */}
@@ -853,42 +754,22 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           animate={{ opacity: [1, 1, 0.9, 0] }}
           transition={{ duration: 7.0, times: [0, 0.1, 0.88, 1], ease: "linear" }}
         >
-          {/* 1. Cohesive Celestial Atmosphere: Golden-Amber Loom Blast expanding outward */}
+          {/* 1. Cohesive Celestial Atmosphere: Golden-amber loom blast (#FFD700, #FF8C00) + Signature Emerald Green (#24A849) */}
           <motion.div
             className="absolute inset-0"
             style={{
-              background: 'radial-gradient(ellipse at 50% 46%, rgba(255, 215, 0, 0.9) 0%, rgba(255, 140, 0, 0.7) 25%, rgba(16, 185, 129, 0.55) 50%, rgba(0, 4, 3, 0.98) 85%)',
-              filter: 'brightness(1.3) contrast(1.2)',
+              background: 'radial-gradient(ellipse at 50% 46%, rgba(255, 215, 0, 0.9) 0%, rgba(255, 140, 0, 0.7) 25%, rgba(36, 168, 73, 0.6) 55%, rgba(0, 102, 255, 0.35) 75%, rgba(0, 4, 3, 0.95) 90%)',
+              filter: 'brightness(1.25) contrast(1.18)',
             }}
-            animate={{ opacity: [1, 1, 0.85, 0], scale: [0.85, 1.35, 1.8] }}
+            animate={{ opacity: [1, 1, 0.85, 0] }}
             transition={{ duration: 7.0, times: [0, 0.1, 0.88, 1], ease: "easeOut" }}
           />
 
-          {/* 1b. Violently Shattering Loom Rings Disintegration Shockwave */}
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{ transform: "translateY(-4%)" }}
-          >
-            <motion.div
-              className="w-[280px] h-[280px] rounded-full border-[8px] border-[#FFE57F]"
-              style={{
-                boxShadow: '0 0 60px #FFD700, 0 0 120px #FF8C00, inset 0 0 60px #FFE57F',
-                filter: 'blur(2px)'
-              }}
-              animate={{
-                scale: [0.6, 2.5, 5.0],
-                opacity: [1, 0.85, 0],
-                rotate: [0, 40]
-              }}
-              transition={{ duration: 3.2, ease: [0.12, 0.9, 0.25, 1] }}
-            />
-          </motion.div>
-
-          {/* 2. Natural Loom Flare (Leftward expansion corona) */}
+          {/* 2. Natural Loom Flare (Leftward expansion corona: Golden Yellow + Orange) */}
           <motion.div
             className="absolute top-[10%] -left-[10%] w-[650px] h-[650px] rounded-full"
             style={{
-              background: 'radial-gradient(circle at 50% 50%, rgba(255, 204, 102, 0.7) 0%, rgba(52, 211, 153, 0.4) 45%, transparent 75%)',
+              background: 'radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.8) 0%, rgba(255, 140, 0, 0.55) 45%, rgba(255, 0, 0, 0.25) 70%, transparent 85%)',
               filter: 'blur(50px)',
               mixBlendMode: 'screen'
             }}
@@ -896,11 +777,11 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             transition={{ duration: 7.0, times: [0, 0.15, 0.85, 1], ease: "easeOut" }}
           />
 
-          {/* 3. Cyan-Mint Multiverse Discharge (Rightward expansion corona) */}
+          {/* 3. Cyan-Emerald Multiverse Discharge (Rightward expansion corona: Cyan + Emerald #24A849 + Magenta) */}
           <motion.div
             className="absolute top-[15%] -right-[10%] w-[650px] h-[650px] rounded-full"
             style={{
-              background: 'radial-gradient(circle at 50% 50%, rgba(102, 255, 255, 0.65) 0%, rgba(16, 185, 129, 0.45) 50%, transparent 80%)',
+              background: 'radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.75) 0%, rgba(36, 168, 73, 0.6) 45%, rgba(255, 0, 255, 0.35) 70%, transparent 85%)',
               filter: 'blur(50px)',
               mixBlendMode: 'screen'
             }}
@@ -916,11 +797,11 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             <motion.div
               className="w-[800px] h-[800px] rounded-full"
               style={{
-                background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.7) 0%, rgba(167,243,208,0.55) 25%, rgba(16,185,129,0.35) 50%, transparent 75%)',
+                background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95) 0%, rgba(255,255,0,0.8) 20%, rgba(255,140,0,0.6) 45%, rgba(36,168,73,0.4) 68%, transparent 85%)',
                 filter: 'blur(45px)',
                 mixBlendMode: 'screen'
               }}
-              animate={{ scale: [0.4, 1.4, 2.2], opacity: [0.9, 0.7, 0.35, 0] }}
+              animate={{ scale: [0.4, 1.4, 2.2], opacity: [0.95, 0.75, 0.35, 0] }}
               transition={{ duration: 7.0, times: [0, 0.12, 0.75, 1], ease: "easeOut" }}
             />
           </motion.div>
