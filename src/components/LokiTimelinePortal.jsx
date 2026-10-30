@@ -754,22 +754,22 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           animate={{ opacity: [1, 1, 0.9, 0] }}
           transition={{ duration: 7.0, times: [0, 0.1, 0.88, 1], ease: "linear" }}
         >
-          {/* 1. Cohesive Celestial Atmosphere: Golden-amber loom blast (#FFD700, #FF8C00) + Signature Emerald Green (#24A849) */}
+          {/* 1. Cohesive Celestial Atmosphere: Born from the emerald core (#00c853, #10b981) + warm gold corona (#ffcc66) */}
           <motion.div
             className="absolute inset-0"
             style={{
-              background: 'radial-gradient(ellipse at 50% 46%, rgba(255, 215, 0, 0.9) 0%, rgba(255, 140, 0, 0.7) 25%, rgba(36, 168, 73, 0.6) 55%, rgba(0, 102, 255, 0.35) 75%, rgba(0, 4, 3, 0.95) 90%)',
-              filter: 'brightness(1.25) contrast(1.18)',
+              background: 'radial-gradient(ellipse at 50% 46%, rgba(16, 185, 129, 0.85) 0%, rgba(5, 150, 105, 0.65) 30%, rgba(6, 78, 59, 0.5) 60%, rgba(0, 4, 3, 0.95) 90%)',
+              filter: 'brightness(1.2) contrast(1.15)',
             }}
             animate={{ opacity: [1, 1, 0.85, 0] }}
             transition={{ duration: 7.0, times: [0, 0.1, 0.88, 1], ease: "easeOut" }}
           />
 
-          {/* 2. Natural Loom Flare (Leftward expansion corona: Golden Yellow + Orange) */}
+          {/* 2. Natural Loom Flare (Leftward expansion corona) */}
           <motion.div
             className="absolute top-[10%] -left-[10%] w-[650px] h-[650px] rounded-full"
             style={{
-              background: 'radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.8) 0%, rgba(255, 140, 0, 0.55) 45%, rgba(255, 0, 0, 0.25) 70%, transparent 85%)',
+              background: 'radial-gradient(circle at 50% 50%, rgba(255, 204, 102, 0.7) 0%, rgba(52, 211, 153, 0.4) 45%, transparent 75%)',
               filter: 'blur(50px)',
               mixBlendMode: 'screen'
             }}
@@ -777,11 +777,11 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             transition={{ duration: 7.0, times: [0, 0.15, 0.85, 1], ease: "easeOut" }}
           />
 
-          {/* 3. Cyan-Emerald Multiverse Discharge (Rightward expansion corona: Cyan + Emerald #24A849 + Magenta) */}
+          {/* 3. Cyan-Mint Multiverse Discharge (Rightward expansion corona) */}
           <motion.div
             className="absolute top-[15%] -right-[10%] w-[650px] h-[650px] rounded-full"
             style={{
-              background: 'radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.75) 0%, rgba(36, 168, 73, 0.6) 45%, rgba(255, 0, 255, 0.35) 70%, transparent 85%)',
+              background: 'radial-gradient(circle at 50% 50%, rgba(102, 255, 255, 0.65) 0%, rgba(16, 185, 129, 0.45) 50%, transparent 80%)',
               filter: 'blur(50px)',
               mixBlendMode: 'screen'
             }}
@@ -797,11 +797,11 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             <motion.div
               className="w-[800px] h-[800px] rounded-full"
               style={{
-                background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95) 0%, rgba(255,255,0,0.8) 20%, rgba(255,140,0,0.6) 45%, rgba(36,168,73,0.4) 68%, transparent 85%)',
+                background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.7) 0%, rgba(167,243,208,0.55) 25%, rgba(16,185,129,0.35) 50%, transparent 75%)',
                 filter: 'blur(45px)',
                 mixBlendMode: 'screen'
               }}
-              animate={{ scale: [0.4, 1.4, 2.2], opacity: [0.95, 0.75, 0.35, 0] }}
+              animate={{ scale: [0.4, 1.4, 2.2], opacity: [0.9, 0.7, 0.35, 0] }}
               transition={{ duration: 7.0, times: [0, 0.12, 0.75, 1], ease: "easeOut" }}
             />
           </motion.div>

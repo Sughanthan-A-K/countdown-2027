@@ -110,36 +110,36 @@ export default function LokiTimelineCrack({
         className="absolute inset-0 bg-black/50 pointer-events-none rounded-3xl"
       />
 
-      {/* Behind-the-glass pure loom core ambient light (Golden-amber center + emerald halo) */}
+      {/* Behind-the-glass pure emerald ambient light - Escalates with reflection on Tap 3 */}
       {(crackStage >= 2 || previewAllBeams) && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ 
-            opacity: (crackStage >= 3 || previewAllBeams) ? 0.98 : (crackStage === 2 ? 0.5 : 0.08),
+            opacity: (crackStage >= 3 || previewAllBeams) ? 0.95 : (crackStage === 2 ? 0.45 : 0.08),
             scale: (crackStage >= 3 || previewAllBeams) ? 1.35 : (crackStage === 2 ? 1.0 : 0.8),
           }}
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="absolute w-80 h-96 rounded-full pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(255,215,0,0.85) 0%, rgba(255,140,0,0.65) 25%, rgba(36,168,73,0.55) 55%, transparent 80%)',
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.85) 0%, rgba(5,150,105,0.45) 50%, transparent 75%)',
             filter: 'blur(35px)'
           }}
         />
       )}
 
-      {/* Internal Glass Reflection Glow on Tap 3 / Climax: Temporal Loom radiant fusion */}
+      {/* Internal Glass Reflection Glow on Tap 3 / Climax: Volumetric anime neon-green radiation preserving card text readability */}
       {(crackStage >= 3 || previewAllBeams) && (
         <motion.div
           initial={{ opacity: 0 }}
-          animate={previewAllBeams ? { opacity: 0.3 } : {
-            opacity: [0, 0.25, 0.5, 0.7, 0.85, 0.9],
+          animate={previewAllBeams ? { opacity: 0.25 } : {
+            opacity: [0, 0.2, 0.4, 0.6, 0.72, 0.75],
             background: [
-              "radial-gradient(circle at 50% 46%, rgba(255,215,0,0.4) 0%, rgba(255,140,0,0.25) 30%, rgba(36,168,73,0.2) 60%, transparent 80%)",
-              "radial-gradient(circle at 50% 46%, rgba(255,255,0,0.55) 0%, rgba(255,140,0,0.38) 35%, rgba(0,255,255,0.25) 65%, transparent 85%)",
-              "radial-gradient(circle at 50% 46%, rgba(255,255,255,0.7) 0%, rgba(255,215,0,0.55) 30%, rgba(36,168,73,0.35) 60%, rgba(128,0,255,0.2) 80%, transparent 95%)",
-              "radial-gradient(circle at 50% 46%, rgba(255,255,255,0.85) 0%, rgba(255,215,0,0.7) 28%, rgba(255,105,180,0.4) 55%, rgba(36,168,73,0.35) 75%, transparent 100%)",
-              "radial-gradient(circle at 50% 46%, rgba(255,255,255,0.95) 0%, rgba(255,255,0,0.8) 25%, rgba(255,140,0,0.6) 50%, rgba(36,168,73,0.4) 80%, transparent 100%)",
-              "radial-gradient(circle at 50% 46%, rgba(255,255,255,0.98) 0%, rgba(255,215,0,0.85) 26%, rgba(255,0,128,0.5) 52%, rgba(36,168,73,0.45) 82%, transparent 100%)"
+              "radial-gradient(circle at 50% 46%, rgba(16,185,129,0.3) 0%, rgba(5,150,105,0.15) 45%, transparent 75%)",
+              "radial-gradient(circle at 50% 46%, rgba(52,211,153,0.45) 0%, rgba(16,185,129,0.25) 50%, transparent 80%)",
+              "radial-gradient(circle at 50% 46%, rgba(110,231,183,0.6) 0%, rgba(52,211,153,0.38) 45%, rgba(16,185,129,0.18) 70%, transparent 90%)",
+              "radial-gradient(circle at 50% 46%, rgba(209,250,229,0.7) 0%, rgba(52,211,153,0.5) 40%, rgba(16,185,129,0.22) 75%, transparent 100%)",
+              "radial-gradient(circle at 50% 46%, rgba(236,253,245,0.8) 0%, rgba(110,231,183,0.65) 45%, rgba(16,185,129,0.35) 80%, transparent 100%)",
+              "radial-gradient(circle at 50% 46%, rgba(236,253,245,0.82) 0%, rgba(110,231,183,0.68) 48%, rgba(16,185,129,0.38) 85%, transparent 100%)"
             ]
           }}
           transition={previewAllBeams ? { duration: 0.3 } : {
@@ -164,8 +164,8 @@ export default function LokiTimelineCrack({
             style={{ mixBlendMode: 'screen' }}
           >
             <defs>
-              {/* --- TAP 3 ORIGINAL 2 BEAMS (Prismatic Loom Colours: Gold/Orange & Cyan/Loki Green) --- */}
-              {/* Beam 1: Radiant Golden-Yellow & Amber Loom Fire */}
+              {/* --- TAP 3 ORIGINAL 2 BEAMS (Infinite Screen Piercing) --- */}
+              {/* Beam 1: Origin at crack seam (102, 185) -> (140, 152), shoots OUTWARDS past screen */}
               <linearGradient 
                 id="outwardBeam1" 
                 gradientUnits="userSpaceOnUse"
@@ -174,14 +174,14 @@ export default function LokiTimelineCrack({
                 x2="3500" 
                 y2="-1800"
               >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#FFFF00" stopOpacity="0.95" />
-                <stop offset="22%" stopColor="#FFD700" stopOpacity="0.85" />
-                <stop offset="48%" stopColor="#FF8C00" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#FF0000" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Beam 2: Cyan into Emerald Green (#24A849 Loki Magic) */}
+              {/* Beam 2: From center spine crack seam (102, 185) -> (85, 248), shoots OUTWARDS past screen */}
               <linearGradient 
                 id="outwardBeam2" 
                 gradientUnits="userSpaceOnUse"
@@ -190,15 +190,15 @@ export default function LokiTimelineCrack({
                 x2="-2800" 
                 y2="4200"
               >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="6%" stopColor="#00FFFF" stopOpacity="0.95" />
-                <stop offset="20%" stopColor="#24A849" stopOpacity="0.85" />
-                <stop offset="45%" stopColor="#0066FF" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#8000FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* --- TAP 4 EXTRA BEAMS: MULTIVERSE LOOM KALEIDOSCOPE --- */}
-              {/* Seam 3: Top Spine Crack - Pure Golden White Ray */}
+              {/* --- TAP 4 EXTRA BEAMS FROM EXACT CRACK SEAMS (Infinite Lengths) --- */}
+              {/* Seam 3: Top Spine Crack (104, 65) -> (108, 78) */}
               <linearGradient 
                 id="outwardBeamTopSpine" 
                 gradientUnits="userSpaceOnUse"
@@ -207,14 +207,14 @@ export default function LokiTimelineCrack({
                 x2="-300" 
                 y2="-4000"
               >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="10%" stopColor="#FFD700" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#FFA500" stopOpacity="0.85" />
-                <stop offset="60%" stopColor="#FF8C00" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#FF0000" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 4: Upper-Left Branch - Electric Blue to Purple */}
+              {/* Seam 4: Upper-Left Branch Crack (76, 100) -> (45, 108) */}
               <linearGradient 
                 id="outwardBeamUpperLeft" 
                 gradientUnits="userSpaceOnUse"
@@ -223,14 +223,14 @@ export default function LokiTimelineCrack({
                 x2="-3200" 
                 y2="-2600"
               >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#00FFFF" stopOpacity="0.95" />
-                <stop offset="22%" stopColor="#0066FF" stopOpacity="0.85" />
-                <stop offset="50%" stopColor="#8000FF" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#FF00FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 5: Mid-Left Branch - Magenta / Pink Loom Ray */}
+              {/* Seam 5: Mid-Left Branch Crack (40, 156) -> (26, 172) */}
               <linearGradient 
                 id="outwardBeamMidLeftSeam" 
                 gradientUnits="userSpaceOnUse"
@@ -239,14 +239,14 @@ export default function LokiTimelineCrack({
                 x2="-4000" 
                 y2="500"
               >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#FF69B4" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#FF00FF" stopOpacity="0.85" />
-                <stop offset="55%" stopColor="#8000FF" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#0066FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 6: Mid-Right Branch - Bright Orange to Golden Amber */}
+              {/* Seam 6: Mid-Right Branch Crack (165, 138) -> (182, 148) */}
               <linearGradient 
                 id="outwardBeamMidRightSeam" 
                 gradientUnits="userSpaceOnUse"
@@ -255,14 +255,14 @@ export default function LokiTimelineCrack({
                 x2="4200" 
                 y2="900"
               >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#FFFF00" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#FF8C00" stopOpacity="0.85" />
-                <stop offset="55%" stopColor="#FF4500" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#FF0000" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 7: Lower-Right Branch - Emerald Green (#24A849) & Lime (#00FF00) */}
+              {/* Seam 7: Lower-Right Branch Crack (85, 248) -> (126, 274) */}
               <linearGradient 
                 id="outwardBeamLowerRightSeam" 
                 gradientUnits="userSpaceOnUse"
@@ -271,14 +271,14 @@ export default function LokiTimelineCrack({
                 x2="3500" 
                 y2="4200"
               >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#00FF00" stopOpacity="0.95" />
-                <stop offset="24%" stopColor="#24A849" stopOpacity="0.85" />
-                <stop offset="55%" stopColor="#00FFFF" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#0066FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Seam 8: Bottom Spine - Violet & Deep Indigo */}
+              {/* Seam 8: Bottom Spine Crack (96, 350) -> (102, 400) */}
               <linearGradient 
                 id="outwardBeamBottomSpineSeam" 
                 gradientUnits="userSpaceOnUse"
@@ -287,91 +287,104 @@ export default function LokiTimelineCrack({
                 x2="600" 
                 y2="4500"
               >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#8000FF" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#FF00FF" stopOpacity="0.8" />
-                <stop offset="55%" stopColor="#FF69B4" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#FF8C00" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* --- MICRO-CRACK SLIVERS (Kaleidoscopic) --- */}
+              {/* --- MICRO-CRACK SLIVERS (Infinite lengths) --- */}
+              {/* Micro 1: Top-Right corner micro crack (168, 22 -> 200, 5) */}
               <linearGradient id="microBeamTopRight" gradientUnits="userSpaceOnUse" x1="184" y1="13" x2="3500" y2="-2200">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#FFD700" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#FF8C00" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
+              {/* Micro 2: Upper-Left far edge micro crack (14, 42 -> 0, 15) */}
               <linearGradient id="microBeamUpperEdge" gradientUnits="userSpaceOnUse" x1="7" y1="28" x2="-3500" y2="-1800">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#00FFFF" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#0066FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
+              {/* Micro 3: Bottom-Left corner micro crack (14, 382 -> 0, 400) */}
               <linearGradient id="microBeamBottomCorner" gradientUnits="userSpaceOnUse" x1="7" y1="391" x2="-3500" y2="4200">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#24A849" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#00FF00" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
+              {/* Micro 4: Right edge gap micro crack (155, 210 -> 180, 235) */}
               <linearGradient id="microBeamRightEdge" gradientUnits="userSpaceOnUse" x1="167" y1="222" x2="4000" y2="2800">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#FF69B4" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#8000FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="25%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Climax Center Infinite Beam 1 (Left): Radiant Emerald & Cyan */}
+              {/* Climax Center Infinite Beam 1 (Left): Origin at Center-Left Spine Fissure (92, 122) -> (64, 146) */}
               <linearGradient id="climaxLeftInfiniteBeam" gradientUnits="userSpaceOnUse" x1="78" y1="134" x2="-4500" y2="-600">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="6%" stopColor="#00FFFF" stopOpacity="0.95" />
-                <stop offset="20%" stopColor="#24A849" stopOpacity="0.85" />
-                <stop offset="50%" stopColor="#00FF00" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#FFD700" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
-              {/* Climax Final Infinite Beam 3 (Center Aperture Core): Blinding Golden-Amber Supernova */}
+              {/* Climax Final Infinite Beam 3 (Center Aperture Core): Origin at Center Hub (102, 185) -> blasting East-North-East */}
               <linearGradient id="climaxCenterInfiniteBeam" gradientUnits="userSpaceOnUse" x1="102" y1="185" x2="4800" y2="-800">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="10%" stopColor="#FFFF00" stopOpacity="1" />
-                <stop offset="25%" stopColor="#FFD700" stopOpacity="0.95" />
-                <stop offset="55%" stopColor="#FF8C00" stopOpacity="0.9" />
-                <stop offset="85%" stopColor="#24A849" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="#8000FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="25%" stopColor="#d1fae5" stopOpacity="0.95" />
+                <stop offset="60%" stopColor="#34d399" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#10b981" stopOpacity="0.5" />
               </linearGradient>
 
-              {/* --- 5 NEW CRACK LIGHT GRADIENTS --- */}
+              {/* --- 5 NEW CRACK LIGHT GRADIENTS (From user red-marked fissures) --- */}
+              {/* Red Line 1: Center-Left Spine segment (92, 122 -> 102, 185) -> shooting West-South-West */}
               <linearGradient id="beamRedLine1" gradientUnits="userSpaceOnUse" x1="97" y1="153" x2="-4500" y2="1200">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#FFD700" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#FF8C00" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#FF0000" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
+              {/* Red Line 2: Upper Spine segment (108, 78 -> 92, 122) -> shooting West-North-West */}
               <linearGradient id="beamRedLine2" gradientUnits="userSpaceOnUse" x1="100" y1="100" x2="-4000" y2="-2200">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#00FFFF" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#24A849" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#0066FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
+              {/* Red Line 3: Upper-Right branch segment (140, 45 -> 175, 22) -> shooting North-East */}
               <linearGradient id="beamRedLine3" gradientUnits="userSpaceOnUse" x1="157" y1="33" x2="3800" y2="-3200">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#FF69B4" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#FF00FF" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#8000FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
+              {/* Red Line 4: Mid-Left branch segment (64, 146 -> 40, 156) -> shooting South-West */}
               <linearGradient id="beamRedLine4" gradientUnits="userSpaceOnUse" x1="52" y1="151" x2="-4500" y2="2400">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#FFFF00" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#FF8C00" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#24A849" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
+              {/* Red Line 5: Lower-Right Center branch (140, 152 -> 165, 138 & 155, 210) -> shooting East-South-East */}
               <linearGradient id="beamRedLine5" gradientUnits="userSpaceOnUse" x1="155" y1="210" x2="4500" y2="3400">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="8%" stopColor="#00FF00" stopOpacity="0.95" />
-                <stop offset="25%" stopColor="#24A849" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#0066FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="6%" stopColor="#a7f3d0" stopOpacity="0.95" />
+                <stop offset="18%" stopColor="#34d399" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </linearGradient>
 
               {/* Crisp piercing beam glow */}
@@ -591,22 +604,20 @@ export default function LokiTimelineCrack({
                 </feMerge>
               </filter>
 
-              {/* Temporal Loom High-Energy Core: Golden-Orange interior into signature Emerald Green (#24A849) edge */}
+              {/* Anime High-Energy Neon: Vibrant emerald & mint aura with balanced white specular highlight (protects text contrast) */}
               <radialGradient id="animeNeonGreenCore" cx="50%" cy="48%" r="50%">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-                <stop offset="15%" stopColor="#FFFF00" stopOpacity="0.88" />
-                <stop offset="35%" stopColor="#FFD700" stopOpacity="0.75" />
-                <stop offset="60%" stopColor="#FF8C00" stopOpacity="0.6" />
-                <stop offset="85%" stopColor="#24A849" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#0066FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
+                <stop offset="18%" stopColor="#a7f3d0" stopOpacity="0.75" />
+                <stop offset="45%" stopColor="#34d399" stopOpacity="0.55" />
+                <stop offset="75%" stopColor="#10b981" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0" />
               </radialGradient>
               <radialGradient id="animeSupernovaBurst" cx="50%" cy="48%" r="50%">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="18%" stopColor="#FFFF00" stopOpacity="0.95" />
-                <stop offset="40%" stopColor="#FF8C00" stopOpacity="0.85" />
-                <stop offset="68%" stopColor="#24A849" stopOpacity="0.75" />
-                <stop offset="88%" stopColor="#00FFFF" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#8000FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                <stop offset="22%" stopColor="#d1fae5" stopOpacity="0.85" />
+                <stop offset="50%" stopColor="#34d399" stopOpacity="0.7" />
+                <stop offset="80%" stopColor="#10b981" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0" />
               </radialGradient>
             </defs>
 
@@ -679,7 +690,7 @@ export default function LokiTimelineCrack({
             {/* Emerald glow inside branch seams - Escalates on Tap 4 */}
             <motion.path
               d="M 108 78 L 76 100 L 45 108 M 92 122 L 64 146 L 40 156 M 102 185 L 140 152 L 165 138 M 85 248 L 126 274 L 155 286 M 106 312 L 72 336 L 44 348"
-              stroke="#24A849"
+              stroke="#059669"
               strokeWidth={crackStage >= 3 ? "3.0" : "2.0"}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -688,7 +699,7 @@ export default function LokiTimelineCrack({
               initial={crackStage === 2 ? { pathLength: 0 } : false}
               animate={{ 
                 pathLength: 1,
-                stroke: crackStage >= 4 ? ["#24A849", "#FFD700", "#FF8C00"] : "#24A849",
+                stroke: crackStage >= 4 ? ["#059669", "#34d399", "#a7f3d0"] : "#059669",
                 strokeWidth: crackStage >= 4 ? [3.0, 7.5] : (crackStage >= 3 ? 3.0 : 2.0),
                 opacity: crackStage >= 4 ? [0.8, 1.0] : 0.8
               }}
@@ -721,7 +732,7 @@ export default function LokiTimelineCrack({
             {/* Pure emerald seam glow - Escalates on Tap 4 */}
             <motion.path
               d="M 76 100 L 64 146 M 102 185 L 118 162 L 140 152 M 140 152 L 155 210 L 126 274 M 85 248 L 76 290 L 72 336 L 90 360 M 45 108 L 30 116 M 40 156 L 26 172 M 165 138 L 182 148 M 155 286 L 175 304 M 44 348 L 30 364"
-              stroke="#24A849"
+              stroke="#059669"
               strokeWidth="2.4"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -730,7 +741,7 @@ export default function LokiTimelineCrack({
               initial={crackStage === 3 ? { pathLength: 0 } : false}
               animate={{ 
                 pathLength: 1,
-                stroke: crackStage >= 4 ? ["#24A849", "#FFD700", "#FF8C00"] : "#24A849",
+                stroke: crackStage >= 4 ? ["#059669", "#34d399", "#a7f3d0"] : "#059669",
                 strokeWidth: crackStage >= 4 ? [2.4, 6.5] : 2.4,
                 opacity: crackStage >= 4 ? [0.85, 1.0] : 0.85
               }}
@@ -764,7 +775,7 @@ export default function LokiTimelineCrack({
             {/* --- WAVE 1 (0.15s): Spreading into Upper-Left & Upper-Right Empty Spaces --- */}
             <motion.path
               d="M 45 108 L 30 75 L 14 42 L 0 15 M 30 75 L 15 88 L 0 95 M 104 65 L 135 42 L 168 22 L 200 5 M 140 152 L 168 115 L 186 82 L 200 62"
-              stroke="#FFD700"
+              stroke="#10b981"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -773,7 +784,7 @@ export default function LokiTimelineCrack({
               initial={{ pathLength: 0 }}
               animate={{ 
                 pathLength: 1,
-                stroke: ["#FFD700", "#FF8C00", "#24A849", "#FFFFFF"],
+                stroke: ["#10b981", "#34d399", "#d1fae5", "#ffffff"],
                 strokeWidth: [2.5, 4.5]
               }}
               transition={{ duration: 3.2, delay: previewAllBeams ? 0 : 0.15, ease: "easeOut" }}
@@ -793,7 +804,7 @@ export default function LokiTimelineCrack({
             {/* --- WAVE 2 (after 0.8s): Spreading into Mid-Left (Behind "TODAY") & Mid-Right (Behind "th day") Empty Spaces --- */}
             <motion.path
               d="M 26 172 L 12 188 L 0 205 M 26 172 L 8 155 L 0 145 M 182 148 L 195 165 L 200 185 M 155 210 L 180 235 L 200 252 M 85 248 L 55 235 L 20 220 L 0 215"
-              stroke="#00FFFF"
+              stroke="#10b981"
               strokeWidth="2.2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -802,7 +813,7 @@ export default function LokiTimelineCrack({
               initial={{ pathLength: 0 }}
               animate={{ 
                 pathLength: 1,
-                stroke: ["#00FFFF", "#24A849", "#FFD700", "#FFFFFF"],
+                stroke: ["#10b981", "#34d399", "#d1fae5", "#ffffff"],
                 strokeWidth: [2.2, 4.2]
               }}
               transition={{ duration: 2.8, delay: previewAllBeams ? 0 : 0.8, ease: "easeOut" }}
@@ -822,7 +833,7 @@ export default function LokiTimelineCrack({
             {/* --- WAVE 3 (after 1.5s): Spreading into Bottom-Left & Bottom-Right Empty Corner Spaces --- */}
             <motion.path
               d="M 30 364 L 14 382 L 0 400 M 44 348 L 20 330 L 0 315 M 175 304 L 190 340 L 200 380 M 175 304 L 195 295 L 200 280 M 96 350 L 125 375 L 155 400 M 106 312 L 138 335 L 175 360 L 200 375"
-              stroke="#FF00FF"
+              stroke="#10b981"
               strokeWidth="2.6"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -831,7 +842,7 @@ export default function LokiTimelineCrack({
               initial={{ pathLength: 0 }}
               animate={{ 
                 pathLength: 1,
-                stroke: ["#FF00FF", "#8000FF", "#24A849", "#FFFFFF"],
+                stroke: ["#10b981", "#34d399", "#d1fae5", "#ffffff"],
                 strokeWidth: [2.6, 5.0]
               }}
               transition={{ duration: 2.2, delay: previewAllBeams ? 0 : 1.5, ease: [0.12, 1, 0.28, 1] }}
