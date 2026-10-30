@@ -38,8 +38,8 @@ function LokiLifePowerSpread({
   // Crawling living venom fluid head length
   const headLen = Math.max(160, Math.min(260, totalLen * 0.25));
 
-  // Majestic, slow, organic life crawl across the full branch (~8.5s) - smooth, natural, and calm!
-  const duration = 8.5;
+  // Ultra slow, majestic, organic life crawl across the full branch (~16.0s) - meditative, deep cosmic grace!
+  const duration = 16.0;
 
   // Subpath helper for sampling points along specific length
   const getSubpath = (fromLen, toLen) => {
@@ -437,11 +437,11 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         
         // Combine remaining untrapped main branches + background filaments in organic shuffled order
         const allRemaining = [...untapptMainBranches, ...filamentOrder.map(idx => `filament-${idx}`)];
-        let cumulativeDelay = 1400;
+        let cumulativeDelay = 2000;
 
         allRemaining.forEach((branchKey, seq) => {
-          // Generous natural gaps (1200ms to 2400ms) - slow, organic, like individual cosmic timelines slowly awakening
-          const stepGap = 1300 + ((seq * 389) % 1100);
+          // Generous natural slow gaps (2.2s to 4.0s) - ultra slow, peaceful, cosmic timeline awakening!
+          const stepGap = 2200 + ((seq * 541) % 1800);
           cumulativeDelay += stepGap;
 
           setTimeout(() => {
@@ -1190,7 +1190,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 {/* 2. Slow Bio-Luminescent Root Vein Infusion into Filaments (Full Length Venom Wave) */}
                 {isEnergized && (
                   <g>
-                    {/* Living outer subtle dark green trail across entire filament path - silky, calm reveal */}
+                    {/* Living outer subtle dark green trail across entire filament path - ultra slow, silky reveal */}
                     <motion.path
                       d={filamentD}
                       fill="none"
@@ -1199,7 +1199,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 8.5, ease: [0.18, 0.8, 0.25, 1] }}
+                      transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
                       style={{ filter: "blur(1.5px)" }}
                       opacity={0.8}
                     />
@@ -1211,7 +1211,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 8.5, ease: [0.18, 0.8, 0.25, 1] }}
+                      transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
                       opacity={0.9}
                     />
                     <motion.path
@@ -1222,7 +1222,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 8.5, ease: [0.18, 0.8, 0.25, 1] }}
+                      transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
                       opacity={0.85}
                     />
 
@@ -1237,7 +1237,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         strokeDasharray="160 2200"
                         initial={{ strokeDashoffset: 160 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 0.95, 0.95, 0] }}
-                        transition={{ duration: 8.5, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
+                        transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
                       />
                     </g>
 
@@ -1252,7 +1252,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         strokeDasharray="100 2200"
                         initial={{ strokeDashoffset: 100 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 1, 1, 0] }}
-                        transition={{ duration: 8.5, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
+                        transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
                       />
                       <motion.path
                         d={filamentD}
@@ -1263,7 +1263,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         strokeDasharray="55 2200"
                         initial={{ strokeDashoffset: 55 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 1, 1, 0] }}
-                        transition={{ duration: 8.5, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
+                        transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
                         style={{ filter: "drop-shadow(0 0 3px #ffffff)" }}
                       />
                     </g>
