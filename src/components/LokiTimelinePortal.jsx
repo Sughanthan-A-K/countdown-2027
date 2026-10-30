@@ -93,98 +93,66 @@ function LokiLifePowerSpread({
         </clipPath>
       </defs>
 
-      {/* Single Unbroken Bio-luminescent Root Vein Network - Clear & Prominent 3X Scale */}
+      {/* Single Unbroken Bio-luminescent Root Vein Network */}
       <g clipPath={`url(#life-expand-${branchPathRef.current?.id || totalLen})`}>
-        {/* 1. Bark Cracking Pre-glow: Emerald warmth glowing gently */}
+        {/* Subtle Living Dark Green Awake Body: Only the path the pulse traveled turns into subtle living dark green */}
         <path
           d={fullPathD}
           fill="none"
-          stroke="#004D2B"
-          strokeWidth={20 * strokeScale}
+          stroke="#00351f"
+          strokeWidth={16 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.85}
-          style={{ filter: "blur(4px)" }}
-        />
-
-        {/* 2. Deep Green Bio-luminescent Vascular Flesh - 3X width for easy mobile viewing */}
-        <path
-          d={fullPathD}
-          fill="none"
-          stroke="#008F4C"
-          strokeWidth={14 * strokeScale}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.92}
-          style={{ filter: "blur(1.5px)" }}
+          opacity={0.8}
+          style={{ filter: "blur(3px)" }}
         />
         <path
           d={fullPathD}
           fill="none"
-          stroke="#00C853"
+          stroke="#004d2b"
           strokeWidth={10 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.95}
-        />
-
-        {/* 3. Secondary Capillary Vein Roots - Clear capillary fibers */}
-        <path
-          d={fullVeinB}
-          fill="none"
-          stroke="#00E676"
-          strokeWidth={Math.max(1.8, 4.5 * strokeScale)}
-          strokeLinecap="round"
-          strokeLinejoin="round"
           opacity={0.85}
-          style={{ filter: "blur(0.8px)" }}
         />
         <path
-          d={fullVeinC}
+          d={fullPathD}
           fill="none"
-          stroke="#7CFFB2"
-          strokeWidth={Math.max(1.4, 3.2 * strokeScale)}
+          stroke="#062d22"
+          strokeWidth={6 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity={0.9}
         />
-
-        {/* 4. Electric Neon Core Vein + Starlight Center - Clear bright core */}
-        <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
-          {/* Neon Green Core Pulse */}
-          <path
-            d={fullPathD}
-            fill="none"
-            stroke="#39FF14"
-            strokeWidth={6.8 * strokeScale}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity={0.98}
-          />
-
-          {/* Mint Star Vein Filament */}
-          <path
-            d={fullPathD}
-            fill="none"
-            stroke="#B9FFD0"
-            strokeWidth={Math.max(1.8, 3.8 * strokeScale)}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity={1}
-          />
-
-          {/* Pure White Starlight Center Core - Prominent glowing center thread */}
-          <path
-            d={fullPathD}
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth={Math.max(1.0, 2.2 * strokeScale)}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity={1}
-            style={{ filter: "drop-shadow(0 0 5px rgba(255,255,255,0.9))" }}
-          />
-        </g>
+        <path
+          d={fullVeinB}
+          fill="none"
+          stroke="#0b4d35"
+          strokeWidth={Math.max(1.2, 3.0 * strokeScale)}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.7}
+          style={{ filter: "blur(0.5px)" }}
+        />
+        {/* Subtle inner emerald core thread */}
+        <path
+          d={fullPathD}
+          fill="none"
+          stroke="#00e676"
+          strokeWidth={Math.max(1.0, 2.0 * strokeScale)}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.75}
+        />
+        <path
+          d={fullPathD}
+          fill="none"
+          stroke="#b9ffd0"
+          strokeWidth={Math.max(0.6, 1.0 * strokeScale)}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.8}
+        />
       </g>
 
       {/* Awakened Breathing Life: Once infused, the branch gently breathes and pulses with living energy */}
@@ -391,11 +359,11 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
   // Replay key to force full fresh mount reset on Shift + R
   const [replayKey, setReplayKey] = useState(0);
 
-  // STEP 1: LOOM CARD EXPLOSION & SCATTER TIMELINE STATE (Ultra Slow & Majestic 8.5s Unbundling)
+  // STEP 1: LOOM CARD EXPLOSION & SCATTER TIMELINE STATE (Unbundle starts IMMEDIATELY on explosion)
   // loomExplodePhase:
   // 0 = (crackStage < 5): Card Tap 3 / Loom state. Branches gently fade-in behind the card, bundled at center!
-  // 1 = (crackStage >= 5, 0s -> 8.5s): High-exposure multicolor cosmic aurora blazes while branches naturally unbundle ultra-slowly across 8.5s!
-  // 2 = (8.5s onwards): Explosion light smoothly fades into pure pitch black (#000403), resting in deep space
+  // 1 = (crackStage >= 5, 0s -> 6.5s): Card explodes, bundle IMMEDIATELY starts releasing and unbundling across 6.5s!
+  // 2 = (6.5s onwards): Explosion light smoothly fades into pure pitch black (#000403), resting in deep space
   const [loomExplodePhase, setLoomExplodePhase] = useState(() => (crackStage >= 5 ? 1 : 0));
   // Unbundle morph progress (0 = bundled in loom behind card, 1 = fully expanded into open cosmos)
   const [unbundleProgress, setUnbundleProgress] = useState(() => (crackStage >= 5 ? 1 : 0));
@@ -404,20 +372,20 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
     if (crackStage >= 5) {
       setLoomExplodePhase(1);
 
-      // Start unbundle animation smoothly from 0 to 1 across 8.5 seconds for majestic, slow unwinding
+      // Start unbundle animation IMMEDIATELY from frame 1 when card explodes
       setUnbundleProgress(0);
       let startTime = null;
       let animFrameId = null;
-      const duration = 8500; // 8.5 seconds (ultra slow & peaceful)
+      // High-precision smooth timestamp progression:
+      // Uses smooth exponential ease-out so motion is visible on exact frame 1 and glides like silk
+      const duration = 7000; // 7.0 seconds of butter-smooth continuous unwinding
 
       const step = (timestamp) => {
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
         const rawProgress = Math.min(1, elapsed / duration);
-        // Ultra smooth & gentle ease-in-out curve (smoothstep):
-        // Card vedicha odane bundle sudden-ah viriyama, romba porumaiyaa, slow-ah start aagi,
-        // apdiye smooth-ah pirinju relax aagum (like unfolding natural silk vines).
-        const eased = rawProgress * rawProgress * (3 - 2 * rawProgress);
+        // Exponential silky ease-out: 1 - Math.pow(1 - rawProgress, 2.5)
+        const eased = 1 - Math.pow(1 - rawProgress, 2.5);
         setUnbundleProgress(eased);
 
         if (rawProgress < 1) {
@@ -478,14 +446,16 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
   }, []);
 
   const handleBranchEnergize = (id, clickX, clickY) => {
-    // Only Branch 1 initiates discovery:
+    // Only allow tapping when branches have completely finished unbundling and settled
+    if (loomExplodePhase < 2) return;
+
     if (!hasDiscovered) {
       setHasDiscovered(true);
     }
 
-    // First Tap: Normal organic life spread from Branch 1 to all branches in natural tree sequence!
     setEnergizedBranches(prev => {
       if (prev[id]?.active) return prev; // already energized
+
       const updated = {
         ...prev,
         [id]: {
@@ -496,57 +466,47 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         }
       };
 
-      // Normal Organic Tree Branching Propagation:
-      // Branch 1 uyir perum pothu, adhutha branches ku uyir thodarndhu slow & calm-ah paravudhu
-      // Early ripple: Branch 1 green aagi mudiyuradhuku munnadiye Branch 2 & 5 ignite aagudhu (no awkward pause!)
-      const cascadeConfig = [
-        { id: 'branch-2', tapRatio: 0.02, delay: 1800 },
-        { id: 'branch-5', tapRatio: 0.98, delay: 2800 },
-        { id: 'branch-3', tapRatio: 0.02, delay: 4200 },
-        { id: 'filament-1', tapRatio: 0.02, delay: 4800 },
-        { id: 'filament-6', tapRatio: 0.98, delay: 5400 },
-        { id: 'branch-4', tapRatio: 0.98, delay: 6200 },
-        { id: 'filament-3', tapRatio: 0.02, delay: 6800 },
-        { id: 'filament-9', tapRatio: 0.98, delay: 7400 },
-        { id: 'filament-0', tapRatio: 0.02, delay: 8000 },
-        { id: 'filament-4', tapRatio: 0.98, delay: 8600 },
-        { id: 'filament-2', tapRatio: 0.02, delay: 9200 },
-        { id: 'filament-5', tapRatio: 0.98, delay: 9800 },
-        { id: 'filament-7', tapRatio: 0.02, delay: 10400 },
-        { id: 'filament-8', tapRatio: 0.98, delay: 11000 },
-        { id: 'filament-10', tapRatio: 0.02, delay: 11600 },
-        { id: 'filament-11', tapRatio: 0.98, delay: 12200 },
-        { id: 'filament-12', tapRatio: 0.02, delay: 12800 },
-        { id: 'filament-13', tapRatio: 0.98, delay: 13400 },
-        { id: 'filament-14', tapRatio: 0.02, delay: 14000 },
-        { id: 'filament-15', tapRatio: 0.98, delay: 14600 },
-      ];
+      // Count how many of the 5 main branches have been tapped
+      const mainBranches = ['branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'];
+      const tappedCount = mainBranches.filter(bId => updated[bId]?.active).length;
 
-      cascadeConfig.forEach(item => {
-        if (item.id !== id) {
-          setTimeout(() => {
-            setEnergizedBranches(autoPrev => ({
-              ...autoPrev,
-              [item.id]: {
-                active: true,
-                tapRatio: item.tapRatio,
-                timestamp: Date.now()
-              }
-            }));
-          }, item.delay);
-        }
-      });
+      // When all 5 main branches are tapped by user:
+      if (tappedCount === 5) {
+        setLastTappedBranchId(id);
 
-      // Once life has fully spread across the whole cosmic tree (~15s):
-      // Stage 1: A subtle thin vertical hairline tear appears in the center gently!
-      setTimeout(() => {
-        setPortalStage(1);
-      }, 15000);
+        // All 5 branches awakened! Activate filaments & breathing stage
+        setTimeout(() => {
+          const allAwakened = {};
+          mainBranches.forEach(bId => {
+            allAwakened[bId] = true;
+          });
+          setAwakenedStages(allAwakened);
 
-      // Stage 2 (~17.5s): Slowly, organically cracks open into a lean slender spacetime portal!
-      setTimeout(() => {
-        setPortalStage(2);
-      }, 17500);
+          // Spread subtle life to decorative filaments
+          for (let f = 0; f < 16; f++) {
+            setTimeout(() => {
+              setEnergizedBranches(fPrev => ({
+                ...fPrev,
+                [`filament-${f}`]: {
+                  active: true,
+                  tapRatio: f % 2 === 0 ? 0.05 : 0.95,
+                  timestamp: Date.now()
+                }
+              }));
+            }, f * 120);
+          }
+        }, 1200);
+
+        // Stage 1: Subtle thin vertical hairline tear appears in the center gently
+        setTimeout(() => {
+          setPortalStage(1);
+        }, 2800);
+
+        // Stage 2: Slowly, organically cracks open into spacetime portal!
+        setTimeout(() => {
+          setPortalStage(2);
+        }, 4800);
+      }
 
       return updated;
     });
@@ -689,35 +649,54 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
     return baseD;
   };
 
-  // Helper to numerically interpolate SVG path coordinates between bundled shape and natural expanded shape
+  // Cache for pre-parsed path token pairs for instantaneous, zero-overhead 60FPS interpolation
+  const morphCacheRef = useRef({});
+
+  // High-performance numerical morphing between bundled shape and natural expanded shape
   const morphBetweenPaths = (pathA, pathB, t) => {
     if (t <= 0) return pathA;
     if (t >= 1) return pathB;
 
-    // Split paths into SVG tokens (commands and coordinate numbers)
-    const tokensA = pathA.match(/[a-df-z]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/gi);
-    const tokensB = pathB.match(/[a-df-z]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/gi);
+    const cacheKey = pathA + '||' + pathB;
+    let parsed = morphCacheRef.current[cacheKey];
 
-    if (!tokensA || !tokensB || tokensA.length !== tokensB.length) {
-      // In case structure differs, smoothly blend
-      return t < 0.5 ? pathA : pathB;
-    }
+    if (!parsed) {
+      const tokensA = pathA.match(/[a-df-z]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/gi);
+      const tokensB = pathB.match(/[a-df-z]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/gi);
 
-    let result = '';
-    for (let i = 0; i < tokensA.length; i++) {
-      const tokA = tokensA[i];
-      const tokB = tokensB[i];
-      const numA = parseFloat(tokA);
-      const numB = parseFloat(tokB);
-
-      if (!isNaN(numA) && !isNaN(numB)) {
-        const val = numA + (numB - numA) * t;
-        result += (i === 0 ? '' : ' ') + val.toFixed(1);
-      } else {
-        result += (i === 0 ? '' : ' ') + tokA;
+      if (!tokensA || !tokensB || tokensA.length !== tokensB.length) {
+        return t < 0.5 ? pathA : pathB;
       }
+
+      parsed = {
+        len: tokensA.length,
+        staticTokens: [],
+        numPairs: []
+      };
+
+      for (let i = 0; i < tokensA.length; i++) {
+        const numA = parseFloat(tokensA[i]);
+        const numB = parseFloat(tokensB[i]);
+        if (!isNaN(numA) && !isNaN(numB)) {
+          parsed.numPairs.push({ idx: i, nA: numA, diff: numB - numA });
+        } else {
+          parsed.staticTokens.push({ idx: i, char: tokensA[i] });
+        }
+      }
+      morphCacheRef.current[cacheKey] = parsed;
     }
-    return result;
+
+    const parts = new Array(parsed.len);
+    for (let i = 0; i < parsed.staticTokens.length; i++) {
+      const s = parsed.staticTokens[i];
+      parts[s.idx] = s.char;
+    }
+    for (let i = 0; i < parsed.numPairs.length; i++) {
+      const n = parsed.numPairs[i];
+      parts[n.idx] = (n.nA + n.diff * t).toFixed(1);
+    }
+
+    return parts.join(' ');
   };
 
   // Loki Hand Grip Convergence Physics:
@@ -790,23 +769,10 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
       return bundleD;
     }
 
-    // 3. During 5.0s unbundling animation:
+    // 3. During unbundling animation:
+    // Starts unfolding IMMEDIATELY on explosion frame without any stagger bottlenecks
     if (loomExplodePhase === 1) {
-      // Natural organic stagger: each branch starts releasing with a tiny individual delay
-      let branchStaggerOffset = 0;
-      if (branchId === 'branch-1') branchStaggerOffset = 0.0;
-      else if (branchId === 'branch-2') branchStaggerOffset = 0.05;
-      else if (branchId === 'branch-5') branchStaggerOffset = 0.08;
-      else if (branchId === 'branch-3') branchStaggerOffset = 0.12;
-      else if (branchId === 'branch-4') branchStaggerOffset = 0.16;
-      else if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
-        const fIdx = parseInt(branchId.replace('filament-', ''), 10) || 0;
-        branchStaggerOffset = 0.04 + (fIdx % 6) * 0.03;
-      }
-
-      // Re-map progress with stagger
-      const t = Math.max(0, Math.min(1, (unbundleProgress - branchStaggerOffset) / (1 - branchStaggerOffset)));
-      return morphBetweenPaths(bundleD, baseD, t);
+      return morphBetweenPaths(bundleD, baseD, unbundleProgress);
     }
 
     // 4. Settled open cosmos state:
@@ -824,9 +790,9 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
       />
 
       {/* ========================================================================= */}
-      {/* STEP 1: THE TEMPORAL LOOM EXPLOSION: 8.5-SECOND COHESIVE COSMIC LIGHT     */}
+      {/* STEP 1: THE TEMPORAL LOOM EXPLOSION: 7.0-SECOND COHESIVE COSMIC LIGHT     */}
       {/* Naturally generated from the card's emerald-mint explosion core,           */}
-      {/* physics-based expansion, smooth particle diffusion across 8.5 seconds!     */}
+      {/* physics-based expansion, smooth particle diffusion across 7.0 seconds!     */}
       {/* ========================================================================= */}
       {loomExplodePhase === 1 && (
         <motion.div
@@ -834,7 +800,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           className="absolute inset-0 pointer-events-none overflow-hidden z-0"
           initial={{ opacity: 1 }}
           animate={{ opacity: [1, 1, 0.9, 0] }}
-          transition={{ duration: 8.5, times: [0, 0.1, 0.88, 1], ease: "linear" }}
+          transition={{ duration: 7.0, times: [0, 0.1, 0.88, 1], ease: "linear" }}
         >
           {/* 1. Cohesive Celestial Atmosphere: Born from the emerald core (#00c853, #10b981) + warm gold corona (#ffcc66) */}
           <motion.div
@@ -844,7 +810,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               filter: 'brightness(1.2) contrast(1.15)',
             }}
             animate={{ opacity: [1, 1, 0.85, 0] }}
-            transition={{ duration: 8.5, times: [0, 0.1, 0.88, 1], ease: "easeOut" }}
+            transition={{ duration: 7.0, times: [0, 0.1, 0.88, 1], ease: "easeOut" }}
           />
 
           {/* 2. Natural Loom Flare (Leftward expansion corona) */}
@@ -856,7 +822,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               mixBlendMode: 'screen'
             }}
             animate={{ scale: [0.9, 1.3, 1.6], opacity: [1, 1, 0.7, 0] }}
-            transition={{ duration: 8.5, times: [0, 0.15, 0.85, 1], ease: "easeOut" }}
+            transition={{ duration: 7.0, times: [0, 0.15, 0.85, 1], ease: "easeOut" }}
           />
 
           {/* 3. Cyan-Mint Multiverse Discharge (Rightward expansion corona) */}
@@ -868,7 +834,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               mixBlendMode: 'screen'
             }}
             animate={{ scale: [0.9, 1.3, 1.6], opacity: [1, 1, 0.7, 0] }}
-            transition={{ duration: 8.5, times: [0, 0.15, 0.85, 1], ease: "easeOut" }}
+            transition={{ duration: 7.0, times: [0, 0.15, 0.85, 1], ease: "easeOut" }}
           />
 
           {/* 4. Center Radiant Loom Core Flash (Anchored at Card Epicenter 50% 46%) */}
@@ -884,7 +850,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 mixBlendMode: 'screen'
               }}
               animate={{ scale: [0.4, 1.4, 2.2], opacity: [0.9, 0.7, 0.35, 0] }}
-              transition={{ duration: 8.5, times: [0, 0.12, 0.75, 1], ease: "easeOut" }}
+              transition={{ duration: 7.0, times: [0, 0.12, 0.75, 1], ease: "easeOut" }}
             />
           </motion.div>
         </motion.div>
@@ -1149,9 +1115,9 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         {/* SVG Container wrapping all branches:
             REAL ELASTIC LIGHT-SPEED STRETCH & SUCTION INTO PORTAL:
             When card is in Tap 3 (crackStage === 3, loomExplodePhase === 0), branches curve and bundle tightly
-            behind the card at the center card core (scale: 1, full visibility).
-            On card explosion (loomExplodePhase === 1), all branches smoothly and naturally unbundle
-            into their organic full positions over 5.0 seconds!
+            behind the card at the center card core.
+            On card explosion (loomExplodePhase === 1), the branches path coordinates themselves morph smoothly
+            from bundle to open space without any scale transform conflicts!
         */}
         <motion.g
           initial={{ opacity: 0.9 }}
@@ -1159,16 +1125,14 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             loomExplodePhase === 0
               ? {
                   // Bundled state behind the card during Tap 3: gently fades in behind the cracked card!
-                  scale: 1,
                   opacity: 0.95,
                   transition: { duration: 1.2, ease: "easeOut" }
                 }
               : loomExplodePhase === 1
               ? {
-                  // Natural 5.0s un-bundling across space with zero stutter
-                  scale: 1.0,
+                  // Pure opacity 1 while SVG path coordinates smoothly morph at 60FPS
                   opacity: 1.0,
-                  transition: { duration: 5.0, ease: [0.16, 1, 0.3, 1] }
+                  transition: { duration: 0.5, ease: "easeOut" }
                 }
               : portalVoyageStage === 1
               ? { 
@@ -1335,7 +1299,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         <g 
           style={{ 
             opacity: 1, 
-            pointerEvents: 'none'
+            pointerEvents: loomExplodePhase >= 2 ? 'auto' : 'none'
           }}
         >
           <motion.g>
@@ -1348,6 +1312,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               energizedData={energizedBranches['branch-4']}
               allEnergizedStage={awakenedStages['branch-4']}
               isFinalBranch={lastTappedBranchId === 'branch-4'}
+              isClickable={loomExplodePhase >= 2 && !energizedBranches['branch-4']?.active}
               windConfig={{
                 x: [-8, 8, -8],
                 y: [6, -6, 6],
@@ -1403,6 +1368,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               energizedData={energizedBranches['branch-3']}
               allEnergizedStage={awakenedStages['branch-3']}
               isFinalBranch={lastTappedBranchId === 'branch-3'}
+              isClickable={loomExplodePhase >= 2 && !energizedBranches['branch-3']?.active}
               windConfig={{
                 y: [-12, 12, -12],
                 x: [-6, 6, -6],
@@ -1458,6 +1424,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               energizedData={energizedBranches['branch-5']}
               allEnergizedStage={awakenedStages['branch-5']}
               isFinalBranch={lastTappedBranchId === 'branch-5'}
+              isClickable={loomExplodePhase >= 2 && !energizedBranches['branch-5']?.active}
               windConfig={{
                 y: [12, -12, 12],
                 x: [8, -8, 8],
@@ -1513,6 +1480,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
               energizedData={energizedBranches['branch-2']}
               allEnergizedStage={awakenedStages['branch-2']}
               isFinalBranch={lastTappedBranchId === 'branch-2'}
+              isClickable={loomExplodePhase >= 2 && !energizedBranches['branch-2']?.active}
               windConfig={{
                 y: [16, -16, 16],
                 x: [8, -8, 8],
@@ -1569,7 +1537,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             energizedData={energizedBranches['branch-1']}
             allEnergizedStage={awakenedStages['branch-1']}
             isFinalBranch={lastTappedBranchId === 'branch-1'}
-            isClickable={!energizedBranches['branch-1']?.active} // Clickable only until first tap
+            isClickable={loomExplodePhase >= 2 && !energizedBranches['branch-1']?.active} // Clickable only once unbundled
             windConfig={{
               y: [-18, 18, -18],
               x: [12, -12, 12],

@@ -45,129 +45,145 @@ export default function LokiMindStoneShatter({ onAnimationComplete }) {
   ];
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible">
+    <div 
+      className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-visible"
+      style={{
+        transform: 'translateZ(0)',
+        willChange: 'transform, opacity'
+      }}
+    >
       {/* 0. FULL-SCREEN BLINDING COSMIC SCREEN FLASH OVERLAY (Spreads across 100vw x 100vh) */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ 
-          opacity: [0, 0.95, 0.7, 0] 
-        }}
-        transition={{ duration: 0.85, times: [0, 0.08, 0.25, 1], ease: "easeOut" }}
-        className="fixed inset-0 pointer-events-none z-[150] bg-radial from-white via-emerald-400/60 to-black/80"
-        style={{ mixBlendMode: 'screen' }}
-      />
-
-      {/* 0B. Card Center Blinding Supernova Epicenter Burst */}
-      <motion.div
-        initial={{ opacity: 1, scale: 0.05 }}
-        animate={{ 
-          opacity: [1, 1, 0], 
-          scale: [0.05, 4.5, 7.5] 
-        }}
-        transition={{ duration: 0.6, ease: [0.02, 0.98, 0.15, 1] }}
-        className="absolute w-80 h-80 rounded-full bg-white blur-2xl pointer-events-none z-[120]"
-      />
-      <motion.div
-        initial={{ opacity: 1, scale: 0.1 }}
-        animate={{ 
-          opacity: [1, 0.85, 0], 
-          scale: [0.1, 5.5, 9.0] 
-        }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="absolute w-96 h-96 rounded-full bg-emerald-400/90 blur-3xl pointer-events-none z-[110]"
-      />
-
-      {/* 1. Fast Full-Screen High-Velocity Shockwave Ring Expanding outward past screen */}
-      <motion.div
-        initial={{ scale: 0.05, opacity: 1, borderWidth: '40px' }}
-        animate={{ 
-          scale: [0.05, 8.5], 
-          opacity: [1, 0.9, 0],
-          borderWidth: ['40px', '1px']
-        }}
-        transition={{ 
-          duration: 1.2, 
-          ease: [0.02, 0.9, 0.2, 1] 
-        }}
-        className="absolute rounded-full border-white shadow-[0_0_120px_#34d399,_inset_0_0_80px_#a7f3d0] pointer-events-none z-[100]"
-        style={{
-          width: '320px',
-          height: '320px',
-        }}
-      />
-
-      {/* 2. Secondary Emerald Expansion Shockwave sweeping entire display */}
-      <motion.div
-        initial={{ scale: 0.05, opacity: 1, borderWidth: '32px' }}
-        animate={{ 
-          scale: [0.05, 9.8], 
-          opacity: [1, 0.75, 0],
-          borderWidth: ['32px', '2px']
-        }}
-        transition={{ 
-          duration: 1.4, 
-          delay: 0.03,
-          ease: [0.05, 0.92, 0.25, 1] 
-        }}
-        className="absolute rounded-full border-teal-200 shadow-[0_0_140px_#10b981] pointer-events-none z-[95]"
-        style={{
-          width: '280px',
-          height: '280px',
-        }}
-      />
-
-      {/* 3. Volumetric Jade Atmosphere Wave Covering screen to reveal portal */}
-      <motion.div
-        initial={{ scale: 0.1, opacity: 0.95 }}
-        animate={{ 
-          scale: [0.1, 8.0], 
-          opacity: [0.95, 0] 
-        }}
-        transition={{ 
-          duration: 1.6, 
-          delay: 0.05,
-          ease: "easeOut" 
-        }}
-        className="absolute rounded-full bg-radial from-emerald-300/80 via-teal-500/50 to-transparent blur-3xl pointer-events-none z-[90]"
-        style={{
-          width: '360px',
-          height: '360px',
-        }}
-      />
-
-      {/* 4. Realistic Polygonal Glass Shards scattering with physical tumble & momentum */}
-      {shards.map((s, index) => (
         <motion.div
-          key={`shard-${s.id}`}
-          initial={{ x: 0, y: 0, rotateZ: 0, rotateX: 0, rotateY: 0, scale: 1, opacity: 1 }}
-          animate={{
-            x: s.x,
-            y: s.y,
-            rotateZ: s.rZ,
-            rotateX: s.rX,
-            rotateY: s.rY,
-            scale: s.scale,
-            opacity: 0
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: [0, 0.95, 0.7, 0] 
           }}
-          transition={{
-            duration: s.d,
-            ease: [0.08, 0.85, 0.25, 1],
-            delay: 0.0
+          transition={{ duration: 0.85, times: [0, 0.08, 0.25, 1], ease: "easeOut" }}
+          className="fixed inset-0 pointer-events-none z-[150] bg-radial from-white via-emerald-400/60 to-black/80"
+          style={{ mixBlendMode: 'screen', transform: 'translateZ(0)', willChange: 'opacity' }}
+        />
+
+        {/* 0B. Card Center Blinding Supernova Epicenter Burst */}
+        <motion.div
+          initial={{ opacity: 1, scale: 0.05 }}
+          animate={{ 
+            opacity: [1, 1, 0], 
+            scale: [0.05, 4.5, 7.5] 
           }}
-          onAnimationComplete={index === 0 ? onAnimationComplete : undefined}
-          className="absolute w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl pointer-events-none"
+          transition={{ duration: 0.6, ease: [0.02, 0.98, 0.15, 1] }}
+          className="absolute w-80 h-80 rounded-full bg-white blur-2xl pointer-events-none z-[120]"
+          style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
+        />
+        <motion.div
+          initial={{ opacity: 1, scale: 0.1 }}
+          animate={{ 
+            opacity: [1, 0.85, 0], 
+            scale: [0.1, 5.5, 9.0] 
+          }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="absolute w-96 h-96 rounded-full bg-emerald-400/90 blur-3xl pointer-events-none z-[110]"
+          style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
+        />
+
+        {/* 1. Fast Full-Screen High-Velocity Shockwave Ring Expanding outward past screen */}
+        <motion.div
+          initial={{ scale: 0.05, opacity: 1, borderWidth: '40px' }}
+          animate={{ 
+            scale: [0.05, 8.5], 
+            opacity: [1, 0.9, 0],
+            borderWidth: ['40px', '1px']
+          }}
+          transition={{ 
+            duration: 1.2, 
+            ease: [0.02, 0.9, 0.2, 1] 
+          }}
+          className="absolute rounded-full border-white shadow-[0_0_120px_#34d399,_inset_0_0_80px_#a7f3d0] pointer-events-none z-[100]"
           style={{
-            clipPath: s.clip,
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(52,211,153,0.9) 35%, rgba(5,150,105,0.95) 100%)',
-            border: '2px solid rgba(255, 255, 255, 0.95)',
-            boxShadow: '0 0 35px rgba(52,211,153,0.9), inset 0 0 20px rgba(255,255,255,0.7)',
-            backfaceVisibility: 'hidden'
+            width: '320px',
+            height: '320px',
+            transform: 'translateZ(0)',
+            willChange: 'transform, opacity'
           }}
-        >
-          {/* Glass Specular Glint */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/60 to-transparent pointer-events-none" />
-        </motion.div>
-      ))}
+        />
+
+        {/* 2. Secondary Emerald Expansion Shockwave sweeping entire display */}
+        <motion.div
+          initial={{ scale: 0.05, opacity: 1, borderWidth: '32px' }}
+          animate={{ 
+            scale: [0.05, 9.8], 
+            opacity: [1, 0.75, 0],
+            borderWidth: ['32px', '2px']
+          }}
+          transition={{ 
+            duration: 1.4, 
+            delay: 0.03,
+            ease: [0.05, 0.92, 0.25, 1] 
+          }}
+          className="absolute rounded-full border-teal-200 shadow-[0_0_140px_#10b981] pointer-events-none z-[95]"
+          style={{
+            width: '280px',
+            height: '280px',
+            transform: 'translateZ(0)',
+            willChange: 'transform, opacity'
+          }}
+        />
+
+        {/* 3. Volumetric Jade Atmosphere Wave Covering screen to reveal portal */}
+        <motion.div
+          initial={{ scale: 0.1, opacity: 0.95 }}
+          animate={{ 
+            scale: [0.1, 8.0], 
+            opacity: [0.95, 0] 
+          }}
+          transition={{ 
+            duration: 1.6, 
+            delay: 0.05,
+            ease: "easeOut" 
+          }}
+          className="absolute rounded-full bg-radial from-emerald-300/80 via-teal-500/50 to-transparent blur-3xl pointer-events-none z-[90]"
+          style={{
+            width: '360px',
+            height: '360px',
+            transform: 'translateZ(0)',
+            willChange: 'transform, opacity'
+          }}
+        />
+
+        {/* 4. Realistic Polygonal Glass Shards scattering with physical tumble & momentum */}
+        {shards.map((s, index) => (
+          <motion.div
+            key={`shard-${s.id}`}
+            initial={{ x: 0, y: 0, rotateZ: 0, rotateX: 0, rotateY: 0, scale: 1, opacity: 1 }}
+            animate={{
+              x: s.x,
+              y: s.y,
+              rotateZ: s.rZ,
+              rotateX: s.rX,
+              rotateY: s.rY,
+              scale: s.scale,
+              opacity: 0
+            }}
+            transition={{
+              duration: s.d,
+              ease: [0.08, 0.85, 0.25, 1],
+              delay: 0.0
+            }}
+            onAnimationComplete={index === 0 ? onAnimationComplete : undefined}
+            className="absolute w-[85vw] max-w-[340px] aspect-[3/4] max-h-[450px] rounded-3xl pointer-events-none"
+            style={{
+              clipPath: s.clip,
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(52,211,153,0.9) 35%, rgba(5,150,105,0.95) 100%)',
+              border: '2px solid rgba(255, 255, 255, 0.95)',
+              boxShadow: '0 0 35px rgba(52,211,153,0.9), inset 0 0 20px rgba(255,255,255,0.7)',
+              backfaceVisibility: 'hidden',
+              transform: 'translateZ(0)',
+              willChange: 'transform, opacity'
+            }}
+          >
+            {/* Glass Specular Glint */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/60 to-transparent pointer-events-none" />
+          </motion.div>
+        ))}
 
     </div>
   );
