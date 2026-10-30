@@ -555,8 +555,9 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
   const whiteCoreWidth = Math.min(56, 16 + energizedCount * 8);
 
   // Dynamic Bundled Curve Path Generator (Tap 3: Branches curve into center bundle behind card)
-  // Matching user's drawing: Branches enter from top/bottom left/right edges and bend inward
-  // into a tight convergent waist cluster at the center (cx: 500, cy: 462).
+  // Matching user's drawing: Branches enter horizontally from left flank (-380),
+  // tightly bundle directly behind the card at center (cx: 500, cy: 462),
+  // and exit horizontally out through the right flank (+1380).
   // ALL PATHS PRESERVE EXACT IDENTICAL SVG TOKENS (11 tokens: M x0 y0 Q cx cy x1 y1 T x2 y2)
   // so that numerical morphing between bundled and open state is 100% mathematically continuous!
   const getBundlePath = (baseD, branchId) => {
@@ -564,38 +565,36 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
     const cy = 462;
 
     if (branchId === 'branch-1') {
-      // Branch 1 natural: M -380 260 Q 180 490, 540 430 T 1420 540
-      return `M -380 160 Q 200 390, ${cx} ${cy} T 1420 780`;
+      // Forefront main timeline: center waist flow
+      return `M -380 460 Q 200 461, ${cx} ${cy} T 1380 464`;
     }
     if (branchId === 'branch-2') {
-      // Branch 2 natural: M 160 -250 Q 380 210, 560 490 T 1350 1150 (Steep Top-Left to Bottom-Right)
-      return `M 160 -250 Q 280 180, ${cx} ${cy - 4} T 1350 1150`;
+      // Upper timeline: enters from upper-left, pinches behind card, exits upper-right
+      return `M -380 370 Q 190 445, ${cx} ${cy - 4} T 1380 390`;
     }
     if (branchId === 'branch-3') {
-      // Branch 3 natural: M -320 980 Q 260 740, 580 510 T 1360 -120 (Rising Bottom-Left to Top-Right)
-      return `M -320 980 Q 180 720, ${cx} ${cy + 8} T 1360 -120`;
+      // Lower timeline: enters from lower-left, pinches behind card, exits lower-right
+      return `M -380 550 Q 210 478, ${cx} ${cy + 6} T 1380 540`;
     }
     if (branchId === 'branch-4') {
-      // Branch 4 natural: M 880 -250 Q 660 220, 480 520 T -220 1180 (Steep Top-Right to Bottom-Left)
-      return `M 880 -250 Q 720 190, ${cx} ${cy - 8} T -220 1180`;
+      // Mid-upper timeline
+      return `M -380 415 Q 185 452, ${cx} ${cy - 2} T 1380 425`;
     }
     if (branchId === 'branch-5') {
-      // Branch 5 natural: M 1320 1060 Q 780 720, 460 450 T -280 -100 (Rising Bottom-Right to Top-Left)
-      return `M 1320 1060 Q 780 720, ${cx} ${cy + 4} T -280 -100`;
+      // Mid-lower timeline
+      return `M -380 505 Q 215 471, ${cx} ${cy + 3} T 1380 495`;
     }
 
     if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
       const idx = parseInt(branchId.replace('filament-', ''), 10) || 0;
-      const baseTokens = baseD.match(/[a-df-z]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/gi);
-      if (!baseTokens || baseTokens.length < 11) return baseD;
-      const startX = baseTokens[1];
-      const startY = baseTokens[2];
-      const endX = baseTokens[9];
-      const endY = baseTokens[10];
-      const waistY = (cy + ((idx % 7) - 3) * 2.5).toFixed(1);
-      const ctrlX = (parseFloat(startX) + cx) * 0.5;
+      const total = cosmicFilaments.length || 27;
+      const norm = (idx / Math.max(1, total - 1)) - 0.5; // -0.5 to +0.5
+      const startY = Math.round(cy + norm * 260 + ((idx % 5) - 2) * 8);
+      const endY = Math.round(cy + norm * 240 + ((idx % 4) - 1.5) * 10);
+      const waistY = +(cy + norm * 18).toFixed(1);
+      const ctrlX = 180 + ((idx % 3) - 1) * 20;
 
-      return `M ${startX} ${startY} Q ${ctrlX.toFixed(1)} ${waistY}, ${cx} ${waistY} T ${endX} ${endY}`;
+      return `M -380 ${startY} Q ${ctrlX} ${waistY}, ${cx} ${waistY} T 1380 ${endY}`;
     }
 
     return baseD;
