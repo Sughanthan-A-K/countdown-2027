@@ -25,11 +25,25 @@ function LokiLifePowerSpread({
   const totalLen = pathEl.getTotalLength ? pathEl.getTotalLength() : 1400;
   const tapLen = totalLen * Math.min(0.95, Math.max(0.05, tapRatio));
 
-  // Particular length slug travel: Exactly covers a specific region (~320px) from tap point
-  const maxTravelDist = Math.min(380, totalLen * 0.38); 
-  const slugLen = 140; // Length of the bright traveling pulse slug
+  // Dynamic & Randomized Travel Distance:
+  // Not a static 380px! Randomly varies between 45% to 85% of total branch length per branch/tap!
+  const randomFactor = useMemo(() => {
+    // Deterministic pseudo-random based on tap point + length so it stays stable across renders of this tap
+    const seed = Math.sin(tapLen * 9.876 + 1.234) * 10000;
+    return (seed - Math.floor(seed));
+  }, [tapLen]);
 
-  // Generate natural continuous spine path from start to end (Single Unbroken Path)
+  // Dynamic travel distance: 480px to 950px (varied and organic, covering wide natural reach!)
+  const maxTravelDist = useMemo(() => {
+    const minD = Math.min(totalLen * 0.45, 500);
+    const maxD = Math.min(totalLen * 0.88, 1050);
+    return minD + randomFactor * (maxD - minD);
+  }, [totalLen, randomFactor]);
+
+  // Venom slug length also fluctuates organically (180px - 260px)
+  const slugLen = useMemo(() => 180 + randomFactor * 80, [randomFactor]);
+
+  // Generate natural continuous spine path with undulating vascular venom texture
   const fullPathD = useMemo(() => {
     const samples = 90;
     let d = "";
@@ -37,7 +51,7 @@ function LokiLifePowerSpread({
       const prog = i / samples;
       const l = prog * totalLen;
       const pt = pathEl.getPointAtLength(l);
-      const wave = Math.sin(prog * 24 + 1) * (Math.sin(prog * Math.PI) * 2.2 * strokeScale);
+      const wave = Math.sin(prog * 24 + 1) * (Math.sin(prog * Math.PI) * 2.4 * strokeScale);
       const x = pt.x + wave * 0.4;
       const y = pt.y + wave;
       d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
@@ -47,14 +61,29 @@ function LokiLifePowerSpread({
 
   // Secondary fine capillary root veins that branch off organically
   const fullVeinB = useMemo(() => {
-    const samples = 75;
+    const samples = 80;
     let d = "";
     for (let i = 0; i <= samples; i++) {
       const prog = i / samples;
       const l = prog * totalLen;
       const pt = pathEl.getPointAtLength(l);
-      const wave = Math.sin(prog * 20 + 3.5) * (Math.sin(prog * Math.PI) * 2.5 * strokeScale);
-      const x = pt.x + wave * 0.4;
+      const wave = Math.sin(prog * 20 + 3.5) * (Math.sin(prog * Math.PI) * 3.0 * strokeScale);
+      const x = pt.x + wave * 0.45;
+      const y = pt.y + wave;
+      d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+    }
+    return d;
+  }, [totalLen, strokeScale]);
+
+  const fullVeinC = useMemo(() => {
+    const samples = 80;
+    let d = "";
+    for (let i = 0; i <= samples; i++) {
+      const prog = i / samples;
+      const l = prog * totalLen;
+      const pt = pathEl.getPointAtLength(l);
+      const wave = Math.sin(prog * 26 + 5.2) * (Math.sin(prog * Math.PI) * 2.2 * strokeScale);
+      const x = pt.x + wave * 0.35;
       const y = pt.y + wave;
       d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
     }
@@ -63,111 +92,132 @@ function LokiLifePowerSpread({
 
   const tapPt = pathEl.getPointAtLength(tapLen);
 
-  // Travel duration for the pulse: calm, measured cosmic flow (~2.2s)
-  const slugDuration = 2.4;
+  // Travel duration for the pulse: calm, measured cosmic flow (~2.6s - 3.2s)
+  const slugDuration = 2.8 + randomFactor * 0.6;
+
+  // Mask ID unique per branch
+  const maskId = `venom-feather-mask-${branchPathRef.current?.id || Math.round(totalLen)}`;
 
   return (
     <g>
       {/* 
-        1. CLIP PATH FOR SUBTLE LIVING DARK GREEN FOOTPRINT:
-        Only the region where the pulse travels (up to maxTravelDist) is revealed.
-        The rest of the branch remains pitch dark black.
+        1. FEATHERED GRADIENT MASK FOR ORGANIC VENOM TRAIL:
+        No hard cut-off circle! Uses a radial gradient that smoothly fades out to 0 opacity
+        at the travel boundaries so the living dark green naturally merges into deep space.
       */}
       <defs>
-        <clipPath id={`life-expand-${branchPathRef.current?.id || totalLen}`}>
+        <radialGradient id={`feather-grad-${maskId}`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+          <stop offset="65%" stopColor="#ffffff" stopOpacity="0.9" />
+          <stop offset="85%" stopColor="#ffffff" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+        </radialGradient>
+        <mask id={maskId}>
           <motion.circle
             cx={tapPt.x}
             cy={tapPt.y}
+            fill={`url(#feather-grad-${maskId})`}
             initial={{ r: 0 }}
             animate={{ r: maxTravelDist }}
             transition={{ duration: slugDuration, ease: [0.16, 1, 0.3, 1] }}
           />
-        </clipPath>
+        </mask>
       </defs>
 
       {/* 
-        2. SUBTLE LIVING DARK GREEN AWAKENED FOOTPRINT:
-        Revealed strictly within the particular length traveled by the slug.
+        2. SUBTLE LIVING DARK GREEN AWAKENED FOOTPRINT (VENOM TRAIL):
+        Seamlessly feathered with soft edges and organic vascular veins.
       */}
-      <g clipPath={`url(#life-expand-${branchPathRef.current?.id || totalLen})`}>
+      <g mask={`url(#${maskId})`}>
         {/* Soft emerald outer ambient halo */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#00351f"
-          strokeWidth={14 * strokeScale}
+          strokeWidth={16 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.75}
-          style={{ filter: "blur(2.5px)" }}
+          opacity={0.8}
+          style={{ filter: "blur(3px)" }}
         />
         {/* Living dark vascular body */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#004d2b"
-          strokeWidth={8 * strokeScale}
+          strokeWidth={10 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.8}
+          opacity={0.85}
         />
         <path
           d={fullPathD}
           fill="none"
           stroke="#062d22"
-          strokeWidth={5 * strokeScale}
+          strokeWidth={6.5 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity={0.9}
         />
+        {/* Branching vascular roots */}
         <path
           d={fullVeinB}
           fill="none"
           stroke="#0b4d35"
-          strokeWidth={Math.max(1.0, 2.2 * strokeScale)}
+          strokeWidth={Math.max(1.2, 3.2 * strokeScale)}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.65}
+          opacity={0.7}
+          style={{ filter: "blur(0.8px)" }}
         />
-        {/* Subtle living core vein - dark forest green with quiet life */}
         <path
-          d={fullPathD}
+          d={fullVeinC}
           fill="none"
           stroke="#008f4c"
           strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.6}
+          opacity={0.65}
+        />
+        {/* Subtle living core vein - dark forest emerald with starlight touch */}
+        <path
+          d={fullPathD}
+          fill="none"
+          stroke="#00e676"
+          strokeWidth={Math.max(0.8, 1.6 * strokeScale)}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.55}
         />
       </g>
 
       {/* 
-        3. THE GLOWING TRAVELING PULSE (SLUG):
-        Originates from tap point, travels along the particular length, and gracefully dissipates into the living dark vein.
+        3. THE GLOWING TRAVELING VENOM PULSE:
+        Organic tendril-like pulse traveling outward with wavy capillary creep and smooth fade.
       */}
       <motion.g
         initial={{ opacity: 1 }}
         animate={{ opacity: [0, 1, 1, 0.7, 0] }}
         transition={{ duration: slugDuration, times: [0, 0.08, 0.7, 0.9, 1], ease: "easeInOut" }}
       >
-        {/* Forward Pulse Slug along path */}
+        {/* Forward Pulse along main path */}
         <motion.path
           d={fullPathD}
           fill="none"
           stroke="#00e676"
-          strokeWidth={12 * strokeScale}
+          strokeWidth={14 * strokeScale}
           strokeLinecap="round"
           strokeDasharray={`${slugLen} ${totalLen * 2}`}
           initial={{ strokeDashoffset: -tapLen + slugLen }}
           animate={{ strokeDashoffset: -tapLen - maxTravelDist }}
           transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-          style={{ filter: "blur(3px)" }}
+          style={{ filter: "blur(3.5px)" }}
         />
         <motion.path
           d={fullPathD}
           fill="none"
           stroke="#39ff14"
-          strokeWidth={6.5 * strokeScale}
+          strokeWidth={7 * strokeScale}
           strokeLinecap="round"
           strokeDasharray={`${slugLen * 0.85} ${totalLen * 2}`}
           initial={{ strokeDashoffset: -tapLen + slugLen * 0.85 }}
@@ -178,32 +228,47 @@ function LokiLifePowerSpread({
           d={fullPathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(1.2, 2.8 * strokeScale)}
+          strokeWidth={Math.max(1.2, 3.0 * strokeScale)}
           strokeLinecap="round"
           strokeDasharray={`${slugLen * 0.55} ${totalLen * 2}`}
           initial={{ strokeDashoffset: -tapLen + slugLen * 0.55 }}
           animate={{ strokeDashoffset: -tapLen - maxTravelDist }}
           transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
+          style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.9))" }}
         />
 
-        {/* Backward Pulse Slug along path (symmetrical organic pulse propagation) */}
+        {/* Forward Pulse along capillary root vein B (adds the organic venom branching creep!) */}
+        <motion.path
+          d={fullVeinB}
+          fill="none"
+          stroke="#00e676"
+          strokeWidth={Math.max(1.5, 3.8 * strokeScale)}
+          strokeLinecap="round"
+          strokeDasharray={`${slugLen * 0.7} ${totalLen * 2}`}
+          initial={{ strokeDashoffset: -tapLen + slugLen * 0.7 }}
+          animate={{ strokeDashoffset: -tapLen - maxTravelDist * 0.85 }}
+          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
+          opacity={0.8}
+        />
+
+        {/* Backward Pulse along main path */}
         <motion.path
           d={fullPathD}
           fill="none"
           stroke="#00e676"
-          strokeWidth={12 * strokeScale}
+          strokeWidth={14 * strokeScale}
           strokeLinecap="round"
           strokeDasharray={`${slugLen} ${totalLen * 2}`}
           initial={{ strokeDashoffset: -tapLen }}
           animate={{ strokeDashoffset: -tapLen + maxTravelDist + slugLen }}
           transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-          style={{ filter: "blur(3px)" }}
+          style={{ filter: "blur(3.5px)" }}
         />
         <motion.path
           d={fullPathD}
           fill="none"
           stroke="#39ff14"
-          strokeWidth={6.5 * strokeScale}
+          strokeWidth={7 * strokeScale}
           strokeLinecap="round"
           strokeDasharray={`${slugLen * 0.85} ${totalLen * 2}`}
           initial={{ strokeDashoffset: -tapLen }}
@@ -214,12 +279,27 @@ function LokiLifePowerSpread({
           d={fullPathD}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={Math.max(1.2, 2.8 * strokeScale)}
+          strokeWidth={Math.max(1.2, 3.0 * strokeScale)}
           strokeLinecap="round"
           strokeDasharray={`${slugLen * 0.55} ${totalLen * 2}`}
           initial={{ strokeDashoffset: -tapLen }}
           animate={{ strokeDashoffset: -tapLen + maxTravelDist + slugLen * 0.55 }}
           transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
+          style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.9))" }}
+        />
+
+        {/* Backward Pulse along capillary root vein C */}
+        <motion.path
+          d={fullVeinC}
+          fill="none"
+          stroke="#00e676"
+          strokeWidth={Math.max(1.5, 3.8 * strokeScale)}
+          strokeLinecap="round"
+          strokeDasharray={`${slugLen * 0.7} ${totalLen * 2}`}
+          initial={{ strokeDashoffset: -tapLen }}
+          animate={{ strokeDashoffset: -tapLen + maxTravelDist * 0.85 + slugLen * 0.7 }}
+          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
+          opacity={0.8}
         />
       </motion.g>
 
