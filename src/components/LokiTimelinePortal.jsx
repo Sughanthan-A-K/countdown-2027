@@ -25,25 +25,10 @@ function LokiLifePowerSpread({
   const totalLen = pathEl.getTotalLength ? pathEl.getTotalLength() : 1400;
   const tapLen = totalLen * Math.min(0.95, Math.max(0.05, tapRatio));
 
-  // Dynamic & Randomized Travel Distance:
-  // Not a static 380px! Randomly varies between 45% to 85% of total branch length per branch/tap!
-  const randomFactor = useMemo(() => {
-    // Deterministic pseudo-random based on tap point + length so it stays stable across renders of this tap
-    const seed = Math.sin(tapLen * 9.876 + 1.234) * 10000;
-    return (seed - Math.floor(seed));
-  }, [tapLen]);
+  // Pulse length: standard dynamic slug length
+  const pulseLen = 220;
 
-  // Dynamic travel distance: 480px to 950px (varied and organic, covering wide natural reach!)
-  const maxTravelDist = useMemo(() => {
-    const minD = Math.min(totalLen * 0.45, 500);
-    const maxD = Math.min(totalLen * 0.88, 1050);
-    return minD + randomFactor * (maxD - minD);
-  }, [totalLen, randomFactor]);
-
-  // Venom slug length also fluctuates organically (180px - 260px)
-  const slugLen = useMemo(() => 180 + randomFactor * 80, [randomFactor]);
-
-  // Generate natural continuous spine path with undulating vascular venom texture
+  // Generate natural continuous spine path from start to end (Single Unbroken Path)
   const fullPathD = useMemo(() => {
     const samples = 90;
     let d = "";
@@ -51,7 +36,7 @@ function LokiLifePowerSpread({
       const prog = i / samples;
       const l = prog * totalLen;
       const pt = pathEl.getPointAtLength(l);
-      const wave = Math.sin(prog * 24 + 1) * (Math.sin(prog * Math.PI) * 2.4 * strokeScale);
+      const wave = Math.sin(prog * 24 + 1) * (Math.sin(prog * Math.PI) * 2.2 * strokeScale);
       const x = pt.x + wave * 0.4;
       const y = pt.y + wave;
       d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
@@ -61,14 +46,14 @@ function LokiLifePowerSpread({
 
   // Secondary fine capillary root veins that branch off organically
   const fullVeinB = useMemo(() => {
-    const samples = 80;
+    const samples = 75;
     let d = "";
     for (let i = 0; i <= samples; i++) {
       const prog = i / samples;
       const l = prog * totalLen;
       const pt = pathEl.getPointAtLength(l);
-      const wave = Math.sin(prog * 20 + 3.5) * (Math.sin(prog * Math.PI) * 3.0 * strokeScale);
-      const x = pt.x + wave * 0.45;
+      const wave = Math.sin(prog * 20 + 3.5) * (Math.sin(prog * Math.PI) * 2.5 * strokeScale);
+      const x = pt.x + wave * 0.4;
       const y = pt.y + wave;
       d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
     }
@@ -76,232 +61,131 @@ function LokiLifePowerSpread({
   }, [totalLen, strokeScale]);
 
   const fullVeinC = useMemo(() => {
-    const samples = 80;
+    const samples = 75;
     let d = "";
     for (let i = 0; i <= samples; i++) {
       const prog = i / samples;
       const l = prog * totalLen;
       const pt = pathEl.getPointAtLength(l);
-      const wave = Math.sin(prog * 26 + 5.2) * (Math.sin(prog * Math.PI) * 2.2 * strokeScale);
-      const x = pt.x + wave * 0.35;
+      const wave = Math.sin(prog * 22 + 6.0) * (Math.sin(prog * Math.PI) * 2.5 * strokeScale);
+      const x = pt.x + wave * 0.4;
       const y = pt.y + wave;
       d += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
     }
     return d;
   }, [totalLen, strokeScale]);
 
-  const tapPt = pathEl.getPointAtLength(tapLen);
-
-  // Travel duration for the pulse: calm, measured cosmic flow (~2.6s - 3.2s)
-  const slugDuration = 2.8 + randomFactor * 0.6;
-
-  // Mask ID unique per branch
-  const maskId = `venom-feather-mask-${branchPathRef.current?.id || Math.round(totalLen)}`;
+  // Natural biological root awakening - full branch expansion across the timeline
+  const duration = 9.5;
 
   return (
     <g>
-      {/* 
-        1. FEATHERED GRADIENT MASK FOR ORGANIC VENOM TRAIL:
-        No hard cut-off circle! Uses a radial gradient that smoothly fades out to 0 opacity
-        at the travel boundaries so the living dark green naturally merges into deep space.
-      */}
+      {/* Clip path expanding outward from tap point all the way to both ends of the branch */}
       <defs>
-        <radialGradient id={`feather-grad-${maskId}`} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-          <stop offset="65%" stopColor="#ffffff" stopOpacity="0.9" />
-          <stop offset="85%" stopColor="#ffffff" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-        </radialGradient>
-        <mask id={maskId}>
+        <clipPath id={`life-expand-${branchPathRef.current?.id || totalLen}`}>
           <motion.circle
-            cx={tapPt.x}
-            cy={tapPt.y}
-            fill={`url(#feather-grad-${maskId})`}
+            cx={pathEl.getPointAtLength(tapLen).x}
+            cy={pathEl.getPointAtLength(tapLen).y}
             initial={{ r: 0 }}
-            animate={{ r: maxTravelDist }}
-            transition={{ duration: slugDuration, ease: [0.16, 1, 0.3, 1] }}
+            animate={{ r: totalLen * 1.4 }}
+            transition={{ duration, ease: [0.18, 1, 0.32, 1] }}
           />
-        </mask>
+        </clipPath>
       </defs>
 
-      {/* 
-        2. SUBTLE LIVING DARK GREEN AWAKENED FOOTPRINT (VENOM TRAIL):
-        Seamlessly feathered with soft edges and organic vascular veins.
-      */}
-      <g mask={`url(#${maskId})`}>
-        {/* Soft emerald outer ambient halo */}
+      {/* Single Unbroken Bio-luminescent Root Vein Network - Deep rich living dark emerald */}
+      <g clipPath={`url(#life-expand-${branchPathRef.current?.id || totalLen})`}>
+        {/* 1. Bark Cracking Pre-glow: Deep Emerald warmth glowing gently */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#00351f"
-          strokeWidth={16 * strokeScale}
+          strokeWidth={18 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.8}
-          style={{ filter: "blur(3px)" }}
+          opacity={0.85}
+          style={{ filter: "blur(3.5px)" }}
         />
-        {/* Living dark vascular body */}
+
+        {/* 2. Deep Green Bio-luminescent Vascular Flesh */}
         <path
           d={fullPathD}
           fill="none"
           stroke="#004d2b"
-          strokeWidth={10 * strokeScale}
+          strokeWidth={12 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.85}
+          opacity={0.92}
+          style={{ filter: "blur(1.2px)" }}
         />
         <path
           d={fullPathD}
           fill="none"
           stroke="#062d22"
-          strokeWidth={6.5 * strokeScale}
+          strokeWidth={8 * strokeScale}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.9}
+          opacity={0.95}
         />
-        {/* Branching vascular roots */}
+
+        {/* 3. Secondary Capillary Vein Roots - Clear capillary fibers */}
         <path
           d={fullVeinB}
           fill="none"
-          stroke="#0b4d35"
-          strokeWidth={Math.max(1.2, 3.2 * strokeScale)}
+          stroke="#00a854"
+          strokeWidth={Math.max(1.6, 4.0 * strokeScale)}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.7}
-          style={{ filter: "blur(0.8px)" }}
+          opacity={0.8}
+          style={{ filter: "blur(0.6px)" }}
         />
         <path
           d={fullVeinC}
           fill="none"
-          stroke="#008f4c"
-          strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.65}
-        />
-        {/* Subtle living core vein - dark forest emerald with starlight touch */}
-        <path
-          d={fullPathD}
-          fill="none"
           stroke="#00e676"
-          strokeWidth={Math.max(0.8, 1.6 * strokeScale)}
+          strokeWidth={Math.max(1.2, 2.8 * strokeScale)}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.55}
+          opacity={0.75}
         />
+
+        {/* 4. Living Vascular Core Vein + Starlight Center */}
+        <g style={{ filter: "url(#venomInnerCoreDistort)" }}>
+          {/* Neon Green Core Pulse */}
+          <path
+            d={fullPathD}
+            fill="none"
+            stroke="#10b981"
+            strokeWidth={5.2 * strokeScale}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity={0.9}
+          />
+
+          {/* Mint Star Vein Filament */}
+          <path
+            d={fullPathD}
+            fill="none"
+            stroke="#6ee7b7"
+            strokeWidth={Math.max(1.4, 2.8 * strokeScale)}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity={0.95}
+          />
+
+          {/* Pure White Starlight Center Core - Prominent glowing center thread */}
+          <path
+            d={fullPathD}
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth={Math.max(0.8, 1.8 * strokeScale)}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity={0.9}
+            style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.8))" }}
+          />
+        </g>
       </g>
-
-      {/* 
-        3. THE GLOWING TRAVELING VENOM PULSE:
-        Organic tendril-like pulse traveling outward with wavy capillary creep and smooth fade.
-      */}
-      <motion.g
-        initial={{ opacity: 1 }}
-        animate={{ opacity: [0, 1, 1, 0.7, 0] }}
-        transition={{ duration: slugDuration, times: [0, 0.08, 0.7, 0.9, 1], ease: "easeInOut" }}
-      >
-        {/* Forward Pulse along main path */}
-        <motion.path
-          d={fullPathD}
-          fill="none"
-          stroke="#00e676"
-          strokeWidth={14 * strokeScale}
-          strokeLinecap="round"
-          strokeDasharray={`${slugLen} ${totalLen * 2}`}
-          initial={{ strokeDashoffset: -tapLen + slugLen }}
-          animate={{ strokeDashoffset: -tapLen - maxTravelDist }}
-          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-          style={{ filter: "blur(3.5px)" }}
-        />
-        <motion.path
-          d={fullPathD}
-          fill="none"
-          stroke="#39ff14"
-          strokeWidth={7 * strokeScale}
-          strokeLinecap="round"
-          strokeDasharray={`${slugLen * 0.85} ${totalLen * 2}`}
-          initial={{ strokeDashoffset: -tapLen + slugLen * 0.85 }}
-          animate={{ strokeDashoffset: -tapLen - maxTravelDist }}
-          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <motion.path
-          d={fullPathD}
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth={Math.max(1.2, 3.0 * strokeScale)}
-          strokeLinecap="round"
-          strokeDasharray={`${slugLen * 0.55} ${totalLen * 2}`}
-          initial={{ strokeDashoffset: -tapLen + slugLen * 0.55 }}
-          animate={{ strokeDashoffset: -tapLen - maxTravelDist }}
-          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-          style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.9))" }}
-        />
-
-        {/* Forward Pulse along capillary root vein B (adds the organic venom branching creep!) */}
-        <motion.path
-          d={fullVeinB}
-          fill="none"
-          stroke="#00e676"
-          strokeWidth={Math.max(1.5, 3.8 * strokeScale)}
-          strokeLinecap="round"
-          strokeDasharray={`${slugLen * 0.7} ${totalLen * 2}`}
-          initial={{ strokeDashoffset: -tapLen + slugLen * 0.7 }}
-          animate={{ strokeDashoffset: -tapLen - maxTravelDist * 0.85 }}
-          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-          opacity={0.8}
-        />
-
-        {/* Backward Pulse along main path */}
-        <motion.path
-          d={fullPathD}
-          fill="none"
-          stroke="#00e676"
-          strokeWidth={14 * strokeScale}
-          strokeLinecap="round"
-          strokeDasharray={`${slugLen} ${totalLen * 2}`}
-          initial={{ strokeDashoffset: -tapLen }}
-          animate={{ strokeDashoffset: -tapLen + maxTravelDist + slugLen }}
-          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-          style={{ filter: "blur(3.5px)" }}
-        />
-        <motion.path
-          d={fullPathD}
-          fill="none"
-          stroke="#39ff14"
-          strokeWidth={7 * strokeScale}
-          strokeLinecap="round"
-          strokeDasharray={`${slugLen * 0.85} ${totalLen * 2}`}
-          initial={{ strokeDashoffset: -tapLen }}
-          animate={{ strokeDashoffset: -tapLen + maxTravelDist + slugLen * 0.85 }}
-          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <motion.path
-          d={fullPathD}
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth={Math.max(1.2, 3.0 * strokeScale)}
-          strokeLinecap="round"
-          strokeDasharray={`${slugLen * 0.55} ${totalLen * 2}`}
-          initial={{ strokeDashoffset: -tapLen }}
-          animate={{ strokeDashoffset: -tapLen + maxTravelDist + slugLen * 0.55 }}
-          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-          style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.9))" }}
-        />
-
-        {/* Backward Pulse along capillary root vein C */}
-        <motion.path
-          d={fullVeinC}
-          fill="none"
-          stroke="#00e676"
-          strokeWidth={Math.max(1.5, 3.8 * strokeScale)}
-          strokeLinecap="round"
-          strokeDasharray={`${slugLen * 0.7} ${totalLen * 2}`}
-          initial={{ strokeDashoffset: -tapLen }}
-          animate={{ strokeDashoffset: -tapLen + maxTravelDist * 0.85 + slugLen * 0.7 }}
-          transition={{ duration: slugDuration, ease: [0.22, 1, 0.36, 1] }}
-          opacity={0.8}
-        />
-      </motion.g>
 
       {/* Awakened Breathing Life: Once infused, the branch gently breathes and pulses with living energy */}
       {allEnergizedStage && (
@@ -313,18 +197,18 @@ function LokiLifePowerSpread({
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
-            stroke="#008F4C"
-            strokeWidth={13 * strokeScale}
+            stroke="#004d2b"
+            strokeWidth={14 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.8 }}
             transition={{ duration: 2.0, ease: "easeOut" }}
-            style={{ filter: "blur(2px)" }}
+            style={{ filter: "blur(2.5px)" }}
           />
           <motion.path
             d={pathEl.getAttribute('d')}
             fill="none"
-            stroke="#00C853"
+            stroke="#008f4c"
             strokeWidth={9 * strokeScale}
             strokeLinecap="round"
             initial={{ opacity: 0 }}
@@ -337,7 +221,7 @@ function LokiLifePowerSpread({
             <motion.path
               d={pathEl.getAttribute('d')}
               fill="none"
-              stroke="#39FF14"
+              stroke="#00e676"
               strokeWidth={5.5 * strokeScale}
               strokeLinecap="round"
               initial={{ opacity: 0 }}
@@ -347,7 +231,7 @@ function LokiLifePowerSpread({
             <motion.path
               d={pathEl.getAttribute('d')}
               fill="none"
-              stroke="#B9FFD0"
+              stroke="#a7f3d0"
               strokeWidth={Math.max(1.2, 2.5 * strokeScale)}
               strokeLinecap="round"
               initial={{ opacity: 0 }}
@@ -622,7 +506,9 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
       if (tappedCount === 5) {
         setLastTappedBranchId(id);
 
-        // All 5 branches awakened! Activate filaments & breathing stage
+        // All 5 branches awakened!
+        // User requested: "after 5 tap ku apparm mu matha meethi irukura branches um ithe maarithaan uyir poghanum... purithaa?"
+        // Spread the exact same organic venom pulse sequentially across all 16 background filaments!
         setTimeout(() => {
           const allAwakened = {};
           mainBranches.forEach(bId => {
@@ -630,7 +516,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           });
           setAwakenedStages(allAwakened);
 
-          // Spread subtle life to decorative filaments
+          // Staggered venom life ignition across all 16 filaments
           for (let f = 0; f < 16; f++) {
             setTimeout(() => {
               setEnergizedBranches(fPrev => ({
@@ -641,19 +527,19 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                   timestamp: Date.now()
                 }
               }));
-            }, f * 120);
+            }, f * 180);
           }
         }, 1200);
 
         // Stage 1: Subtle thin vertical hairline tear appears in the center gently
         setTimeout(() => {
           setPortalStage(1);
-        }, 2800);
+        }, 3200);
 
         // Stage 2: Slowly, organically cracks open into spacetime portal!
         setTimeout(() => {
           setPortalStage(2);
-        }, 4800);
+        }, 5200);
       }
 
       return updated;
@@ -1474,31 +1360,31 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
-                strokeWidth="100"
+                strokeWidth="160"
                 strokeLinecap="round"
               />
               <path
                 d={resolveBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
                 fill="none"
                 stroke="#000000"
-                strokeWidth="4.2"
+                strokeWidth="8.0"
                 strokeLinecap="round"
-                opacity={0.75}
+                opacity={0.8}
               />
               <path
                 d={resolveBranchPath("M 1450 30 Q 820 420, 480 620 T -350 940", 'branch-4')}
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="2.6"
+                strokeWidth="5.0"
                 strokeLinecap="round"
               />
               <path
                 d={resolveBranchPath("M 1450 29 Q 820 419, 480 619 T -350 939", 'branch-4')}
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="1.2"
+                strokeWidth="2.5"
                 strokeLinecap="round"
-                opacity={0.35}
+                opacity={0.45}
               />
             </DraggableBranch>
           </motion.g>
@@ -1530,31 +1416,31 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
-                strokeWidth="110"
+                strokeWidth="160"
                 strokeLinecap="round"
               />
               <path
                 d={resolveBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
                 fill="none"
                 stroke="#000000"
-                strokeWidth="5.8"
+                strokeWidth="9.0"
                 strokeLinecap="round"
-                opacity={0.8}
+                opacity={0.85}
               />
               <path
                 d={resolveBranchPath("M -380 890 Q 200 680, 580 720 T 1450 820", 'branch-3')}
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="3.6"
+                strokeWidth="5.5"
                 strokeLinecap="round"
               />
               <path
                 d={resolveBranchPath("M -380 889 Q 200 679, 580 719 T 1450 819", 'branch-3')}
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="1.5"
+                strokeWidth="2.8"
                 strokeLinecap="round"
-                opacity={0.4}
+                opacity={0.48}
               />
             </DraggableBranch>
           </motion.g>
@@ -1586,31 +1472,31 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
-                strokeWidth="110"
+                strokeWidth="160"
                 strokeLinecap="round"
               />
               <path
                 d={resolveBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
                 fill="none"
                 stroke="#000000"
-                strokeWidth="7.8"
+                strokeWidth="11.0"
                 strokeLinecap="round"
-                opacity={0.85}
+                opacity={0.9}
               />
               <path
                 d={resolveBranchPath("M -320 540 Q 280 430, 720 560 T 1420 520", 'branch-5')}
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="5.0"
+                strokeWidth="7.0"
                 strokeLinecap="round"
               />
               <path
                 d={resolveBranchPath("M -320 539 Q 280 429, 720 559 T 1420 519", 'branch-5')}
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2.2"
+                strokeWidth="3.2"
                 strokeLinecap="round"
-                opacity={0.45}
+                opacity={0.52}
               />
             </DraggableBranch>
           </motion.g>
@@ -1642,31 +1528,31 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                 fill="none"
                 stroke="#000000"
                 strokeOpacity="0.001"
-                strokeWidth="110"
+                strokeWidth="160"
                 strokeLinecap="round"
               />
               <path
                 d={resolveBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
                 fill="none"
                 stroke="#000000"
-                strokeWidth="10.0"
+                strokeWidth="13.0"
                 strokeLinecap="round"
-                opacity={0.88}
+                opacity={0.92}
               />
               <path
                 d={resolveBranchPath("M -350 40 Q 250 220, 680 160 T 1420 120", 'branch-2')}
                 fill="none"
                 stroke="#050a08"
-                strokeWidth="6.5"
+                strokeWidth="8.0"
                 strokeLinecap="round"
               />
               <path
                 d={resolveBranchPath("M -350 39 Q 250 219, 680 159 T 1420 119", 'branch-2')}
                 fill="none"
                 stroke="#062d22"
-                strokeWidth="2.8"
+                strokeWidth="3.6"
                 strokeLinecap="round"
-                opacity="0.5"
+                opacity="0.55"
               />
             </DraggableBranch>
           </motion.g>
