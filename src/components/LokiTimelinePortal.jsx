@@ -126,9 +126,9 @@ function LokiLifePowerSpread({
             strokeLinecap="round"
             strokeDasharray={`${headLen} ${distance + 600}`}
             initial={{ strokeDashoffset: headLen }}
-            animate={{ strokeDashoffset: -(distance + 80), opacity: [0, 0.9, 0.9, 0] }}
-            transition={{ duration, times: [0, 0.08, 0.88, 1], ease: [0.18, 0.8, 0.25, 1] }}
-            style={{ filter: "blur(2px)" }}
+            animate={{ strokeDashoffset: -(distance + 80) }}
+            transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
+            style={{ filter: "blur(2px)", opacity: 0.9 }}
           />
           <motion.path
             d={pathD}
@@ -138,8 +138,9 @@ function LokiLifePowerSpread({
             strokeLinecap="round"
             strokeDasharray={`${headLen - 12} ${distance + 600}`}
             initial={{ strokeDashoffset: headLen - 12 }}
-            animate={{ strokeDashoffset: -(distance + 80), opacity: [0, 0.95, 0.95, 0] }}
-            transition={{ duration, times: [0, 0.08, 0.88, 1], ease: [0.18, 0.8, 0.25, 1] }}
+            animate={{ strokeDashoffset: -(distance + 80) }}
+            transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
+            style={{ opacity: 0.95 }}
           />
         </g>
 
@@ -153,9 +154,9 @@ function LokiLifePowerSpread({
             strokeLinecap="round"
             strokeDasharray={`${headLen * 0.65} ${distance + 600}`}
             initial={{ strokeDashoffset: headLen * 0.65 }}
-            animate={{ strokeDashoffset: -(distance + 80), opacity: [0, 1, 1, 0] }}
-            transition={{ duration, times: [0, 0.08, 0.88, 1], ease: [0.18, 0.8, 0.25, 1] }}
-            style={{ filter: "drop-shadow(0 0 4px #39ff14)" }}
+            animate={{ strokeDashoffset: -(distance + 80) }}
+            transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
+            style={{ filter: "drop-shadow(0 0 4px #39ff14)", opacity: 1 }}
           />
           <motion.path
             d={pathD}
@@ -165,9 +166,9 @@ function LokiLifePowerSpread({
             strokeLinecap="round"
             strokeDasharray={`${headLen * 0.4} ${distance + 600}`}
             initial={{ strokeDashoffset: headLen * 0.4 }}
-            animate={{ strokeDashoffset: -(distance + 80), opacity: [0, 1, 1, 0] }}
-            transition={{ duration, times: [0, 0.08, 0.88, 1], ease: [0.18, 0.8, 0.25, 1] }}
-            style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.9))" }}
+            animate={{ strokeDashoffset: -(distance + 80) }}
+            transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
+            style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.9))", opacity: 1 }}
           />
         </g>
       </g>
@@ -1231,9 +1232,9 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         strokeLinecap="round"
                         strokeDasharray="110 2200"
                         initial={{ strokeDashoffset: 110 }}
-                        animate={{ strokeDashoffset: -2200, opacity: [0, 0.95, 0.95, 0] }}
-                        transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
-                        style={{ filter: "blur(1.5px)" }}
+                        animate={{ strokeDashoffset: -2200 }}
+                        transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
+                        style={{ filter: "blur(1.5px)", opacity: 0.95 }}
                       />
                     </g>
 
@@ -1247,9 +1248,9 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         strokeLinecap="round"
                         strokeDasharray="70 2200"
                         initial={{ strokeDashoffset: 70 }}
-                        animate={{ strokeDashoffset: -2200, opacity: [0, 1, 1, 0] }}
-                        transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
-                        style={{ filter: "drop-shadow(0 0 3px #39FF14)" }}
+                        animate={{ strokeDashoffset: -2200 }}
+                        transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
+                        style={{ filter: "drop-shadow(0 0 3px #39FF14)", opacity: 1 }}
                       />
                       <motion.path
                         d={filamentD}
@@ -1259,9 +1260,9 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         strokeLinecap="round"
                         strokeDasharray="35 2200"
                         initial={{ strokeDashoffset: 35 }}
-                        animate={{ strokeDashoffset: -2200, opacity: [0, 1, 1, 0] }}
-                        transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
-                        style={{ filter: "drop-shadow(0 0 3px #ffffff)" }}
+                        animate={{ strokeDashoffset: -2200 }}
+                        transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
+                        style={{ filter: "drop-shadow(0 0 3px #ffffff)", opacity: 1 }}
                       />
                     </g>
                   </g>
