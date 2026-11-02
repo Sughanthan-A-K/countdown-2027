@@ -680,15 +680,15 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
       return `M 1400 -800 Q ${gx * 1.3} ${gy - 6}, ${gx} ${gy - 2} T -600 1600`;
     }
 
-    // For filaments (filament-0 to filament-15):
-    // All 16 filaments extend far off-screen (-800 to 1800) with full continuous length
+    // For filaments (filament-0 to filament-26):
+    // All filaments extend far off-screen (-800 to 1800) with full continuous length
     if (typeof branchId === 'string' && branchId.startsWith('filament-')) {
       const idx = parseInt(branchId.replace('filament-', ''), 10) || 0;
-      // Tight handle knot spread: strictly between -3px and +3px
+      // Tight handle knot spread: strictly between -4px and +4px
       const gripOffsetY = ((idx % 7) - 3) * 0.9;
       const isLeft = idx % 2 === 0;
       const startX = isLeft ? -800 : 1800;
-      const startY = (idx * 60 + 50) % 950;
+      const startY = (idx * 55 + 40) % 950;
       const endX = isLeft ? 1800 : -800;
       const endY = (startY + 320) % 950;
 
@@ -952,7 +952,10 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             opacity: portalStage === 1 ? 0.85 : 0
           }}
           transition={{ duration: 20.0, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute h-[290px] sm:h-[350px] w-[35px] sm:w-[48px] pointer-events-none rounded-[50%]"
+          onPointerDown={portalStage >= 2 ? handlePointerDownGather : undefined}
+          className={`absolute h-[290px] sm:h-[350px] w-[50px] sm:w-[65px] rounded-[50%] ${
+            portalStage >= 2 && portalVoyageStage === 0 ? 'pointer-events-auto cursor-pointer z-30' : 'pointer-events-none'
+          }`}
           style={{
             transformOrigin: "50% 50%",
             background: 'radial-gradient(ellipse at 50% 50%, #002213 0%, #004225 50%, #0B1F16 85%, transparent 100%)',
@@ -1037,13 +1040,11 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         id="loki-timeline-svg"
         viewBox="0 0 1000 1000" 
         preserveAspectRatio="none"
-        onPointerDown={portalStage >= 2 ? handlePointerDownGather : undefined}
-        onPointerMove={portalStage >= 2 ? handlePointerMoveGather : undefined}
-        onPointerUp={portalStage >= 2 ? handlePointerUpGather : undefined}
-        onPointerLeave={portalStage >= 2 ? handlePointerUpGather : undefined}
-        className={`absolute inset-0 w-full h-full overflow-visible z-10 select-none ${
-          portalStage >= 2 ? 'pointer-events-auto cursor-grab active:cursor-grabbing' : 'pointer-events-none'
-        }`} 
+        onPointerDown={portalVoyageStage > 0 ? handlePointerDownGather : undefined}
+        onPointerMove={portalVoyageStage > 0 ? handlePointerMoveGather : undefined}
+        onPointerUp={portalVoyageStage > 0 ? handlePointerUpGather : undefined}
+        onPointerLeave={portalVoyageStage > 0 ? handlePointerUpGather : undefined}
+        className="absolute inset-0 w-full h-full overflow-visible z-10 select-none pointer-events-none" 
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
