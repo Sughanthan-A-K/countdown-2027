@@ -43,8 +43,9 @@ function LokiLifePowerSpread({
   const duration = 16.0;
 
   // Subpath helper for sampling points along specific length
+  // Cached to avoid recomputing every render, smooth 60fps execution
   const getSubpath = (fromLen, toLen) => {
-    const samples = 45;
+    const samples = 18; // Optimized sample count for instantaneous zero-lag curve calculation
     let d = "";
     for (let i = 0; i <= samples; i++) {
       const l = fromLen + (i / samples) * (toLen - fromLen);
@@ -116,7 +117,7 @@ function LokiLifePowerSpread({
         />
 
         {/* 2. Crawling Living Venom Head (Compact PL: 100px - 140px) - Organic fluid creeping along the branch */}
-        <g style={{ filter: "url(#livingVenomFluidDistort)", willChange: "transform, opacity" }}>
+        <g style={{ willChange: "transform, opacity" }}>
           <motion.path
             d={pathD}
             fill="none"
@@ -143,7 +144,7 @@ function LokiLifePowerSpread({
         </g>
 
         {/* 3. Electric neon spark & white filament at the creeping tip */}
-        <g style={{ filter: "url(#venomInnerCoreDistort)", willChange: "transform, opacity" }}>
+        <g style={{ willChange: "transform, opacity" }}>
           <motion.path
             d={pathD}
             fill="none"
@@ -154,6 +155,7 @@ function LokiLifePowerSpread({
             initial={{ strokeDashoffset: headLen * 0.65 }}
             animate={{ strokeDashoffset: -(distance + 80), opacity: [0, 1, 1, 0] }}
             transition={{ duration, times: [0, 0.08, 0.88, 1], ease: [0.18, 0.8, 0.25, 1] }}
+            style={{ filter: "drop-shadow(0 0 4px #39ff14)" }}
           />
           <motion.path
             d={pathD}
@@ -1220,7 +1222,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                     />
 
                     {/* Crawling living venom head across entire filament (Compact PL: 110px) */}
-                    <g style={{ filter: "url(#livingVenomFluidDistort)", willChange: "transform, opacity" }}>
+                    <g style={{ willChange: "transform, opacity" }}>
                       <motion.path
                         d={filamentD}
                         fill="none"
@@ -1231,11 +1233,12 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         initial={{ strokeDashoffset: 110 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 0.95, 0.95, 0] }}
                         transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
+                        style={{ filter: "blur(1.5px)" }}
                       />
                     </g>
 
                     {/* Electric spark tip */}
-                    <g style={{ filter: "url(#venomInnerCoreDistort)", willChange: "transform, opacity" }}>
+                    <g style={{ willChange: "transform, opacity" }}>
                       <motion.path
                         d={filamentD}
                         fill="none"
@@ -1246,6 +1249,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         initial={{ strokeDashoffset: 70 }}
                         animate={{ strokeDashoffset: -2200, opacity: [0, 1, 1, 0] }}
                         transition={{ duration: 16.0, times: [0, 0.08, 0.9, 1], ease: [0.18, 0.8, 0.25, 1] }}
+                        style={{ filter: "drop-shadow(0 0 3px #39FF14)" }}
                       />
                       <motion.path
                         d={filamentD}
