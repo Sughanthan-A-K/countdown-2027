@@ -712,11 +712,6 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
   const isBundled = crackStage < 5 && loomExplodePhase === 0;
 
   const resolveBranchPath = (baseD, branchId) => {
-    // 1. If user is gathering branches in hand during portal voyage:
-    if (portalVoyageStage > 0 && gripPoint) {
-      return getBranchPath(baseD, branchId);
-    }
-
     const bundleD = getBundlePath(baseD, branchId);
 
     // 2. Tap 3 (before explosion): strictly bundled behind card
@@ -1091,30 +1086,22 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                   transition: { duration: 0.5, ease: "easeOut" }
                 }
               : portalVoyageStage === 1
-              ? { 
-                  scaleY: [1, 0.85, 0.7],
-                  x: [0, (500 - (gripPoint?.x || 500)) * 0.25, (500 - (gripPoint?.x || 500)) * 0.55],
-                  y: [0, (500 - (gripPoint?.y || 500)) * 0.25, (500 - (gripPoint?.y || 500)) * 0.55],
+              ? {
+                  scale: 1,
                   opacity: 1
                 }
               : portalVoyageStage === 2
               ? { 
-                  // Entering the portal mouth: lines pull forward into the glowing vertical rift
-                  scale: [1, 0.85, 0.65],
-                  x: (500 - (gripPoint?.x || 500)) * 0.9,
-                  y: (500 - (gripPoint?.y || 500)) * 0.9,
-                  opacity: 0.95
+                  scale: 1,
+                  opacity: 1
                 }
               : portalVoyageStage === 3
               ? { 
-                  // Inside wormhole voyage: branch bunch remains held in perspective!
-                  scale: [0.65, 0.45, 0.3], 
-                  opacity: [0.95, 0.85, 0.6], 
-                  y: [20, 60, 90],
-                  filter: 'blur(0.5px)'
+                  scale: 1, 
+                  opacity: 1
                 }
               : portalVoyageStage >= 4
-              ? { opacity: 0 }
+              ? { opacity: 1 }
               : { scaleX: 1, scaleY: 1, opacity: 1 }
           }
           transition={
@@ -1726,29 +1713,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         </motion.div>
       )}
 
-      {/* ========================================================================= */}
-      {/* 5. BRILLIANT WHITE FLASHOUT: ONLY AT THE END OF THE JOURNEY (Stage 4)     */}
-      {/* Sudden intense cosmic arrival flash (0.4s) before cutting to black        */}
-      {/* ========================================================================= */}
-      {portalVoyageStage >= 4 && portalVoyageStage < 5 && (
-        <motion.div
-          className="absolute inset-0 bg-white pointer-events-none z-30"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.35, ease: "easeIn" }}
-        />
-      )}
-
-      {/* ========================================================================= */}
-      {/* 6. DRAMATIC CUT TO PITCH BLACK SCREEN (Stage 5)                          */}
-      {/* ========================================================================= */}
-      {portalVoyageStage === 5 && (
-        <motion.div
-          className="absolute inset-0 bg-[#000000] pointer-events-auto z-40"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 1 }}
-        />
-      )}
+      {/* Stage 5 Blackout removed: branches and portal remain permanently alive & visible */}
     </div>
   );
 }
