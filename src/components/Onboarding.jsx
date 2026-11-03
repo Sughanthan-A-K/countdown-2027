@@ -61,7 +61,7 @@ export default function Onboarding({ onComplete, globalLang, setGlobalLang, tier
         opacity: 0, 
         transition: { duration: 0.7, ease: [0.4, 0, 1, 1] } // Fast swipe-tear to the left
       }}
-      className="fixed inset-0 bg-black flex flex-col items-center justify-center p-8 z-[200] touch-none"
+      className="fixed inset-0 bg-black flex flex-col items-center justify-center p-8 z-[2000] touch-none"
     >
       <AnimatePresence mode="wait">
         <motion.div
