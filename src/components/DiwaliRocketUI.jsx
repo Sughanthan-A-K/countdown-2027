@@ -519,6 +519,36 @@ export default function DiwaliRocketUI({
                     />
                     {/* Intense white root point at rocket base */}
                     <ellipse cx="0" cy="2" rx="22" ry="5.5" fill="#ffffff" />
+
+                    {/* Cute clay-style fiery exhaust bubbles/sparks popping directly out of the flame tip */}
+                    {[
+                      { id: 'b1', cx: -6, cy: 98, r: 5, delay: 0.05, animY: [95, 125], animX: [-6, -14], animScale: [1, 0.4] },
+                      { id: 'b2', cx: 8, cy: 104, r: 4.5, delay: 0.12, animY: [100, 132], animX: [8, 16], animScale: [1, 0.35] },
+                      { id: 'b3', cx: 0, cy: 112, r: 5.5, delay: 0.2, animY: [108, 142], animX: [0, 2], animScale: [1, 0.3] },
+                      { id: 'b4', cx: -10, cy: 118, r: 3.5, delay: 0.28, animY: [115, 148], animX: [-10, -18], animScale: [1, 0.25] },
+                      { id: 'b5', cx: 7, cy: 124, r: 4, delay: 0.35, animY: [120, 155], animX: [7, 12], animScale: [1, 0.2] }
+                    ].map((bubble) => (
+                      <motion.circle
+                        key={bubble.id}
+                        cx={bubble.cx}
+                        cy={bubble.cy}
+                        r={bubble.r}
+                        fill="url(#flyExhaustInner)"
+                        style={{ filter: 'drop-shadow(0 0 6px #f59e0b)' }}
+                        animate={{
+                          cy: bubble.animY,
+                          cx: bubble.animX,
+                          scale: bubble.animScale,
+                          opacity: [1, 0.8, 0]
+                        }}
+                        transition={{
+                          duration: 0.45,
+                          repeat: Infinity,
+                          delay: bubble.delay,
+                          ease: "easeOut"
+                        }}
+                      />
+                    ))}
                   </g>
                 </g>
               </svg>
