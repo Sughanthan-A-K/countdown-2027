@@ -1390,6 +1390,8 @@ function App() {
                     try {
                       localStorage.removeItem('vijayadashamiEventDone_2026');
                       localStorage.removeItem('ayudhaPoojaEventDone_2026');
+                      localStorage.removeItem('has_seen_diwali_rocket_share_hint');
+                      localStorage.removeItem('diwaliEventDone_2026');
                     } catch (e) {}
 
                     // Reset Loki Multiverse crack stages
