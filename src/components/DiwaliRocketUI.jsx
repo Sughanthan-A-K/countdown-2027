@@ -106,44 +106,101 @@ export default function DiwaliRocketUI({
               </defs>
 
               {/* ------------------------------------------------------------- */}
-              {/* Surrounding Tiny 3D Decorative Ornaments                      */}
+              {/* Surrounding Glowing & Rotating Golden Stars (No Circles)      */}
               {/* ------------------------------------------------------------- */}
-              <circle cx="210" cy="50" r="5" fill="url(#sphereGrad)" opacity="0.85" />
-              <circle cx="130" cy="180" r="5" fill="url(#sphereGrad)" opacity="0.85" />
-              <circle cx="295" cy="270" r="5" fill="url(#sphereGrad)" opacity="0.85" />
-              <circle cx="170" cy="320" r="5" fill="url(#sphereGrad)" opacity="0.85" />
-
-              {/* Distant Golden Floating Stars (Twinkling softly) */}
+              {/* Star 1: Top Right */}
               <motion.g 
-                transform="translate(300, 60)"
-                animate={{ scale: [0.7, 1.25, 0.7], opacity: [0.35, 1, 0.35] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                transform="translate(280, 75)"
+                animate={{ 
+                  scale: [0.9, 1.4, 0.9], 
+                  opacity: [0.6, 1, 0.6],
+                  rotate: [0, 90, 180, 270, 360]
+                }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
               >
-                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" className="filter drop-shadow-[0_0_4px_#fde047]" />
+                <path 
+                  d="M 0 -13 L 3.8 -3.8 L 13.5 -3.8 L 5.6 2.2 L 8.6 11.5 L 0 5.6 L -8.6 11.5 L -5.6 2.2 L -13.5 -3.8 L -3.8 -3.8 Z" 
+                  fill="#facc15" 
+                  stroke="#eab308"
+                  strokeWidth="0.8"
+                  className="filter drop-shadow-[0_0_8px_#fde047]" 
+                />
               </motion.g>
 
+              {/* Star 2: Top Left */}
               <motion.g 
-                transform="translate(142, 102)"
-                animate={{ scale: [1.15, 0.6, 1.15], opacity: [1, 0.3, 1] }}
-                transition={{ duration: 2.1, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+                transform="translate(135, 95)"
+                animate={{ 
+                  scale: [1.3, 0.8, 1.3], 
+                  opacity: [1, 0.5, 1],
+                  rotate: [360, 270, 180, 90, 0]
+                }}
+                transition={{ duration: 4.0, repeat: Infinity, ease: "linear", delay: 0.3 }}
               >
-                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" className="filter drop-shadow-[0_0_4px_#fde047]" />
+                <path 
+                  d="M 0 -11 L 3.2 -3.2 L 11.4 -3.2 L 4.8 1.8 L 7.3 9.7 L 0 4.7 L -7.3 9.7 L -4.8 1.8 L -11.4 -3.2 L -3.2 -3.2 Z" 
+                  fill="#facc15" 
+                  stroke="#eab308"
+                  strokeWidth="0.7"
+                  className="filter drop-shadow-[0_0_7px_#fde047]" 
+                />
               </motion.g>
 
+              {/* Star 3: Mid Right */}
               <motion.g 
-                transform="translate(345, 218)"
-                animate={{ scale: [0.6, 1.1, 0.6], opacity: [0.4, 0.95, 0.4] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                transform="translate(325, 205)"
+                animate={{ 
+                  scale: [0.85, 1.35, 0.85], 
+                  opacity: [0.55, 1, 0.55],
+                  rotate: [0, 180, 360]
+                }}
+                transition={{ duration: 3.0, repeat: Infinity, ease: "linear", delay: 0.7 }}
               >
-                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" className="filter drop-shadow-[0_0_3px_#fde047]" />
+                <path 
+                  d="M 0 -9.5 L 2.8 -2.8 L 9.8 -2.8 L 4.1 1.6 L 6.3 8.4 L 0 4.1 L -6.3 8.4 L -4.1 1.6 L -9.8 -2.8 L -2.8 -2.8 Z" 
+                  fill="#facc15" 
+                  stroke="#eab308"
+                  strokeWidth="0.6"
+                  className="filter drop-shadow-[0_0_6px_#fde047]" 
+                />
               </motion.g>
 
+              {/* Star 4: Bottom Right */}
               <motion.g 
-                transform="translate(265, 322)"
-                animate={{ scale: [1.2, 0.65, 1.2], opacity: [0.95, 0.35, 0.95] }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+                transform="translate(260, 305)"
+                animate={{ 
+                  scale: [1.35, 0.85, 1.35], 
+                  opacity: [1, 0.55, 1],
+                  rotate: [360, 180, 0]
+                }}
+                transition={{ duration: 3.8, repeat: Infinity, ease: "linear", delay: 0.5 }}
               >
-                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" className="filter drop-shadow-[0_0_5px_#fde047]" />
+                <path 
+                  d="M 0 -12 L 3.5 -3.5 L 12.5 -3.5 L 5.2 2.0 L 7.9 10.6 L 0 5.2 L -7.9 10.6 L -5.2 2.0 L -12.5 -3.5 L -3.5 -3.5 Z" 
+                  fill="#facc15" 
+                  stroke="#eab308"
+                  strokeWidth="0.7"
+                  className="filter drop-shadow-[0_0_8px_#fde047]" 
+                />
+              </motion.g>
+
+              {/* Star 5: Bottom Left */}
+              <motion.g 
+                transform="translate(100, 240)"
+                animate={{ 
+                  scale: [0.9, 1.3, 0.9], 
+                  opacity: [0.5, 1, 0.5],
+                  rotate: [0, 180, 360]
+                }}
+                transition={{ duration: 3.2, repeat: Infinity, ease: "linear", delay: 1.0 }}
+              >
+                <path 
+                  d="M 0 -10 L 2.9 -2.9 L 10.4 -2.9 L 4.3 1.7 L 6.6 8.8 L 0 4.3 L -6.6 8.8 L -4.3 1.7 L -10.4 -2.9 L -2.9 -2.9 Z" 
+                  fill="#facc15" 
+                  stroke="#eab308"
+                  strokeWidth="0.6"
+                  className="filter drop-shadow-[0_0_7px_#fde047]" 
+                />
               </motion.g>
 
               {/* ------------------------------------------------------------- */}
