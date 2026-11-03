@@ -5,13 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
  * DiwaliRocketUI
  * 
  * 100% Native High-Fidelity SVG Vector implementation strictly matching the reference 3D clay toy rocket:
- * - Ultra-smooth glossy conical nosecone with curved convex rim & light sheen.
- * - Cylindrical capsule body with rounded bottom base and alternate glossy pink & yellow bands.
- * - Thick rounded white fuse (thiri) curving from the base side.
- * - Layered 5-point stars at fuse tip: Pink star nestled slightly behind, 3D beveled Yellow star in front.
- * - Rounded purple peg stick extending diagonally from center-bottom.
- * - Tiny white floating spheres and golden star accents around.
- * - On tap: fuse burns, brilliant base fiery ignition jet bursts, and rocket streaks into the sky.
+ * - Proper original orientation pointing up-right (~28 deg)
+ * - Purple stick positioned on the side rather than dead center
+ * - Super smooth easing transitions for opacity & scale (zero jumpy frames)
+ * - Glossy conical nosecone with smooth convex rim
+ * - Rounded capsule body with hot pink & golden-yellow bands
+ * - Thick curved white fuse with layered pink & yellow 3D stars
  */
 export default function DiwaliRocketUI({ 
   isFlying = false, 
@@ -19,22 +18,27 @@ export default function DiwaliRocketUI({
 }) {
   return (
     <div className="relative w-14 h-14 flex items-center justify-center pointer-events-none select-none">
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {!isFlying && isAmbient && (
           <motion.div
             key="ambient-diwali-rocket"
-            initial={{ opacity: 0, scale: 0.6 }}
+            initial={{ opacity: 0, scale: 0.8 }}
             animate={{ 
               opacity: 1,
-              scale: [0.98, 1.04, 0.98],
+              scale: [1, 1.05, 1],
               y: [0, -3, 0],
               rotate: [0, 2, 0]
             }}
-            exit={{ opacity: 0, scale: 0.8 }}
+            exit={{ 
+              opacity: 0, 
+              scale: 0.9,
+              transition: { duration: 0.25, ease: "easeOut" } 
+            }}
             transition={{ 
-              duration: 3, 
-              repeat: Infinity,
-              ease: "easeInOut" 
+              opacity: { duration: 0.4, ease: "easeOut" },
+              scale: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+              y: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+              rotate: { duration: 3, repeat: Infinity, ease: "easeInOut" }
             }}
             className="relative w-14 h-14 flex items-center justify-center filter drop-shadow-[0_6px_14px_rgba(244,63,94,0.45)]"
           >
@@ -104,38 +108,37 @@ export default function DiwaliRocketUI({
               {/* ------------------------------------------------------------- */}
               {/* Surrounding Tiny 3D Decorative Ornaments                      */}
               {/* ------------------------------------------------------------- */}
-              {/* White Soft Spheres */}
-              <circle cx="220" cy="50" r="5" fill="url(#sphereGrad)" opacity="0.85" />
-              <circle cx="140" cy="170" r="5" fill="url(#sphereGrad)" opacity="0.85" />
-              <circle cx="300" cy="255" r="5" fill="url(#sphereGrad)" opacity="0.85" />
-              <circle cx="178" cy="305" r="5" fill="url(#sphereGrad)" opacity="0.85" />
+              <circle cx="210" cy="50" r="5" fill="url(#sphereGrad)" opacity="0.85" />
+              <circle cx="130" cy="180" r="5" fill="url(#sphereGrad)" opacity="0.85" />
+              <circle cx="295" cy="270" r="5" fill="url(#sphereGrad)" opacity="0.85" />
+              <circle cx="170" cy="320" r="5" fill="url(#sphereGrad)" opacity="0.85" />
 
               {/* Distant Golden Floating Stars */}
-              <g transform="translate(305, 58) scale(1.1)">
+              <g transform="translate(300, 60) scale(1.1)">
                 <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
               </g>
-              <g transform="translate(150, 95) scale(0.9)">
+              <g transform="translate(142, 102) scale(0.9)">
                 <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
               </g>
-              <g transform="translate(345, 205) scale(0.7)">
+              <g transform="translate(345, 218) scale(0.7)">
                 <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
               </g>
-              <g transform="translate(268, 310) scale(1.1)">
+              <g transform="translate(265, 322) scale(1.1)">
                 <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
               </g>
 
               {/* ------------------------------------------------------------- */}
-              {/* MAIN ROCKET MESH (Aligned at ~42 deg towards top-right)       */}
+              {/* MAIN ROCKET MESH (Pointing at ~30 deg towards top-right)      */}
               {/* ------------------------------------------------------------- */}
-              <g transform="translate(200, 200) rotate(-42) translate(-200, -200)">
+              <g transform="translate(200, 200) rotate(30) translate(-200, -200)">
                 
-                {/* 1. Purple Rounded Stick (Center bottom extending out) */}
+                {/* 1. Purple Rounded Stick (Positioned slightly to the side / offset, not dead center) */}
                 <rect 
-                  x="189" 
-                  y="260" 
-                  width="22" 
-                  height="115" 
-                  rx="11" 
+                  x="208" 
+                  y="255" 
+                  width="20" 
+                  height="120" 
+                  rx="10" 
                   fill="url(#stickPurple)" 
                   className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
                 />
@@ -280,9 +283,9 @@ export default function DiwaliRocketUI({
                   </clipPath>
                 </defs>
 
-                <g transform="translate(200, 200) rotate(-42) translate(-200, -200)">
-                  {/* Stick */}
-                  <rect x="189" y="260" width="22" height="120" rx="11" fill="url(#flyStick)" />
+                <g transform="translate(200, 200) rotate(30) translate(-200, -200)">
+                  {/* Stick slightly offset to the side */}
+                  <rect x="208" y="255" width="20" height="120" rx="10" fill="url(#flyStick)" />
 
                   {/* Body */}
                   <g clipPath="url(#flyBodyClip)">
