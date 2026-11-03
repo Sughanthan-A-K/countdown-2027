@@ -276,10 +276,18 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                   }`}
                 >
                   <span>
-                    {(globalLang || localStorage.getItem('globalLang')) === 'english' ? (
-                      <>Tap this <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">invisible button</span> here to share this card! ✨</>
+                    {isDiwaliActive ? (
+                      (globalLang || localStorage.getItem('globalLang')) === 'english' ? (
+                        <>Tap this <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">Rocket</span> to share your Diwali wish! 🚀✨</>
+                      ) : (
+                        <>Intha card-a share panna intha <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">Rocket-a</span> tap pannunga! 🚀✨</>
+                      )
                     ) : (
-                      <>Intha card-a share panna intha <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">invisible button-a</span> tap pannunga! ✨</>
+                      (globalLang || localStorage.getItem('globalLang')) === 'english' ? (
+                        <>Tap this <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">invisible button</span> here to share this card! ✨</>
+                      ) : (
+                        <>Intha card-a share panna intha <span className="text-amber-500 dark:text-amber-400 font-bold underline decoration-amber-400/50 underline-offset-2">invisible button-a</span> tap pannunga! ✨</>
+                      )
                     )}
                   </span>
                   {/* Downward pointing arrow right above the top-right corner invisible button */}
@@ -357,9 +365,9 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                 className="absolute top-0 right-0 w-20 h-20 z-40 cursor-pointer pointer-events-auto flex items-start justify-end p-3.5"
                 title="Tap to share your wish"
               >
-                {/* Modern subtle dashed beacon ripple pointing to the invisible hitbox (replaces star) */}
+                {/* Modern subtle dashed beacon ripple pointing to the invisible hitbox (for non-Diwali special cards) */}
                 <AnimatePresence>
-                  {showShareIntroHint && (
+                  {!isDiwaliActive && showShareIntroHint && (
                     <motion.div
                       key="share-hint-beacon"
                       initial={{ opacity: 0, scale: 0.6 }}
@@ -417,11 +425,11 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     </motion.div>
                   )}
 
-                  {/* Diwali Rocket 3D (Replaces star twinkle for Diwali card) */}
+                  {/* Diwali Custom Vector Rocket (Always visible on Diwali card for all users) */}
                   {isDiwaliActive && (
                     <DiwaliRocketUI 
                       isFlying={isDiwaliRocketFlying} 
-                      isAmbient={showDiwaliRocketAmbient} 
+                      isAmbient={true} 
                     />
                   )}
 
