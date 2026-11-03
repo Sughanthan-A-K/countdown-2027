@@ -28,6 +28,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const [showShareIntroHint, setShowShareIntroHint] = useState(false);
   const [showReturningShareTwinkle, setShowReturningShareTwinkle] = useState(false);
   const [isDiwaliRocketFlying, setIsDiwaliRocketFlying] = useState(false);
+  const [diwaliRocketLaunchStage, setDiwaliRocketLaunchStage] = useState('idle'); // 'idle' | 'burning' | 'launching'
   const [showDiwaliRocketAmbient, setShowDiwaliRocketAmbient] = useState(false);
   const [ayudhaPoojaPhase, setAyudhaPoojaPhase] = useState(() => {
     const isDev = localStorage.getItem('isDevMode') === 'true';
@@ -75,21 +76,30 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
 
   const handleShareTap = () => {
     if (isDiwaliActive) {
-      if (isDiwaliRocketFlying) return; // Prevent double trigger while rocket is swooshing
-      setIsDiwaliRocketFlying(true);
+      if (diwaliRocketLaunchStage !== 'idle' || isDiwaliRocketFlying) return; // Prevent double trigger
+      
+      // Stage 1: Thiri burning with stars swapping depth (yellow front -> back -> front, pink back -> front -> back) for exact 1.0 second
+      setDiwaliRocketLaunchStage('burning');
       if (!hasDismissedShareHint) {
         localStorage.setItem('has_seen_special_share_hint', 'true');
         setHasDismissedShareHint(true);
       }
       setShowShareIntroHint(false);
 
-      // 3D Rocket flight takes ~1.3s to loop & blast out of screen, then open Share!
+      // Stage 2: After 1s burn, fire erupts from rocket base and blasts off to sky
       setTimeout(() => {
-        setIsDiwaliRocketFlying(false);
-        if (onShareSpecialCard) {
-          onShareSpecialCard();
-        }
-      }, 1300);
+        setDiwaliRocketLaunchStage('launching');
+        setIsDiwaliRocketFlying(true);
+
+        // Rocket completes sky flight and native share opens
+        setTimeout(() => {
+          setIsDiwaliRocketFlying(false);
+          setDiwaliRocketLaunchStage('idle');
+          if (onShareSpecialCard) {
+            onShareSpecialCard();
+          }
+        }, 1300);
+      }, 1000);
       return;
     }
 
@@ -261,10 +271,10 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             {showShareIntroHint && (
               <div className="w-[85vw] max-w-[340px] absolute -top-16 z-[100] flex justify-end pointer-events-none">
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.85, y: 8 }}
+                  initial={{ opacity: 0, scale: 0.85, y: 12 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.85, y: 8 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleShareTap();
@@ -425,11 +435,12 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     </motion.div>
                   )}
 
-                  {/* Diwali Custom Vector Rocket (Appears strictly after 5 outs / crackers reveal, or while flying) */}
-                  {isDiwaliActive && (showShareIntroHint || showDiwaliRocketAmbient || isDiwaliRocketFlying) && (
+                  {/* Diwali Custom Vector Rocket (Appears strictly after 5 outs / crackers reveal, or while burning/flying) */}
+                  {isDiwaliActive && (showShareIntroHint || showDiwaliRocketAmbient || isDiwaliRocketFlying || diwaliRocketLaunchStage === 'burning') && (
                     <DiwaliRocketUI 
                       isFlying={isDiwaliRocketFlying} 
                       isAmbient={true} 
+                      launchStage={diwaliRocketLaunchStage}
                     />
                   )}
 

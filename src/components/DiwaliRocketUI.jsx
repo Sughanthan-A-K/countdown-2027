@@ -107,7 +107,8 @@ function RandomTwinkleStar({ index }) {
 
 export default function DiwaliRocketUI({ 
   isFlying = false, 
-  isAmbient = true 
+  isAmbient = true,
+  launchStage = 'idle' // 'idle' | 'burning' | 'launching'
 }) {
   return (
     <div className="relative w-12 h-12 flex items-center justify-center pointer-events-none select-none">
@@ -130,7 +131,7 @@ export default function DiwaliRocketUI({
             />
 
             {/* 1. Dynamic Twinkling Stars appearing at RANDOM positions each cycle */}
-            {[0, 1, 2, 3].map((idx) => (
+            {launchStage === 'idle' && [0, 1, 2, 3].map((idx) => (
               <RandomTwinkleStar key={idx} index={idx} />
             ))}
 
@@ -138,7 +139,12 @@ export default function DiwaliRocketUI({
             <motion.div
               key="ambient-diwali-rocket"
               initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ 
+              animate={launchStage === 'burning' ? {
+                opacity: 1,
+                scale: [1, 1.05, 0.98, 1.04, 1],
+                x: [0, -1, 1.5, -1, 0.5, 0],
+                y: [0, 1, -1, 1.5, 0]
+              } : { 
                 opacity: [0.35, 1, 0.35],
                 scale: [0.96, 1.04, 0.96],
                 y: [2, -3, 2],
@@ -149,7 +155,11 @@ export default function DiwaliRocketUI({
                 scale: 0.9,
                 transition: { duration: 0.25, ease: "easeOut" } 
               }}
-              transition={{ 
+              transition={launchStage === 'burning' ? {
+                duration: 1.0,
+                repeat: Infinity,
+                ease: "linear"
+              } : { 
                 opacity: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
                 scale: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
                 y: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
@@ -291,25 +301,92 @@ export default function DiwaliRocketUI({
                   </g>
 
                   {/* 5. Layered Stars at Tip of Fuse (Point 98, 175) */}
-                  {/* Pink Star (Behind, shifted top-left) */}
-                  <g transform="translate(90, 168) scale(1.65)">
-                    <path 
-                      d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
-                      fill="url(#starPinkBevel)" 
-                      className="filter drop-shadow-[0_2px_4px_rgba(159,18,57,0.5)]"
-                    />
-                  </g>
+                  {/* When burning (launchStage === 'burning'): Stars rapidly swap z-order/depth, scale, and spark! */}
+                  {launchStage === 'burning' ? (
+                    <g>
+                      {/* Burning Thiri Sparks Erupting */}
+                      {[0, 1, 2, 3, 4].map((sp) => (
+                        <motion.circle
+                          key={`thiri-spark-${sp}`}
+                          cx="98"
+                          cy="175"
+                          r="3"
+                          fill="#fef08a"
+                          initial={{ opacity: 1, scale: 0.5 }}
+                          animate={{
+                            opacity: [1, 0.8, 0],
+                            cx: [98, 98 + (sp % 2 === 0 ? 1 : -1) * (15 + sp * 5)],
+                            cy: [175, 175 - 12 - sp * 6],
+                            scale: [1, 1.8, 0.2]
+                          }}
+                          transition={{
+                            duration: 0.35,
+                            repeat: Infinity,
+                            delay: sp * 0.08,
+                            ease: "easeOut"
+                          }}
+                          style={{ filter: 'drop-shadow(0 0 6px #facc15)' }}
+                        />
+                      ))}
 
-                  {/* Yellow 3D Star (Directly on tip, in front) */}
-                  <g transform="translate(100, 176) scale(1.9)">
-                    <path 
-                      d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
-                      fill="url(#starYellowBevel)" 
-                      className="filter drop-shadow-[0_2px_5px_rgba(202,138,4,0.6)]"
-                    />
-                    {/* Subtle 3D faceted center highlight */}
-                    <path d="M 0 -8 L 2.4 -2.4 L 0 0 Z" fill="#ffffff" opacity="0.4" />
-                  </g>
+                      {/* Pink Star (Swaps z-depth: moves from back to front, then back) */}
+                      <motion.g
+                        animate={{
+                          x: [90, 102, 90, 102, 90],
+                          y: [168, 176, 168, 176, 168],
+                          scale: [1.6, 2.2, 1.6, 2.2, 1.6],
+                          rotate: [0, 45, 90, 135, 180]
+                        }}
+                        transition={{ duration: 1.0, ease: "easeInOut" }}
+                      >
+                        <path 
+                          d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
+                          fill="url(#starPinkBevel)" 
+                          className="filter drop-shadow-[0_0_8px_rgba(244,63,94,0.9)]"
+                        />
+                      </motion.g>
+
+                      {/* Yellow Star (Swaps z-depth: moves from front to back, then front) */}
+                      <motion.g
+                        animate={{
+                          x: [100, 88, 100, 88, 100],
+                          y: [176, 166, 176, 166, 176],
+                          scale: [1.9, 1.4, 1.9, 1.4, 1.9],
+                          rotate: [0, -45, -90, -135, -180]
+                        }}
+                        transition={{ duration: 1.0, ease: "easeInOut" }}
+                      >
+                        <path 
+                          d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
+                          fill="url(#starYellowBevel)" 
+                          className="filter drop-shadow-[0_0_10px_rgba(250,204,21,1)]"
+                        />
+                        <path d="M 0 -8 L 2.4 -2.4 L 0 0 Z" fill="#ffffff" opacity="0.6" />
+                      </motion.g>
+                    </g>
+                  ) : (
+                    <g>
+                      {/* Pink Star (Behind, shifted top-left) */}
+                      <g transform="translate(90, 168) scale(1.65)">
+                        <path 
+                          d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
+                          fill="url(#starPinkBevel)" 
+                          className="filter drop-shadow-[0_2px_4px_rgba(159,18,57,0.5)]"
+                        />
+                      </g>
+
+                      {/* Yellow 3D Star (Directly on tip, in front) */}
+                      <g transform="translate(100, 176) scale(1.9)">
+                        <path 
+                          d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
+                          fill="url(#starYellowBevel)" 
+                          className="filter drop-shadow-[0_2px_5px_rgba(202,138,4,0.6)]"
+                        />
+                        {/* Subtle 3D faceted center highlight */}
+                        <path d="M 0 -8 L 2.4 -2.4 L 0 0 Z" fill="#ffffff" opacity="0.4" />
+                      </g>
+                    </g>
+                  )}
                 </g>
               </svg>
             </motion.div>
@@ -387,11 +464,11 @@ export default function DiwaliRocketUI({
                 </g>
               </svg>
 
-              {/* BLAZING FIERY EXHAUST FLAME: Directly at the bottom base of the rocket cylinder */}
+              {/* BLAZING FIERY EXHAUST FLAME: Directly at the bottom base of the rocket cylinder, compact height */}
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ 
-                  scale: [0, 1.3, 1.9, 1.6, 0.4], 
+                  scale: [0, 1.1, 1.35, 1.2, 0.4], 
                   opacity: [0, 1, 1, 0.9, 0] 
                 }}
                 transition={{ 
@@ -399,16 +476,16 @@ export default function DiwaliRocketUI({
                   times: [0, 0.25, 0.5, 0.8, 1],
                   ease: "easeOut" 
                 }}
-                className="absolute left-1/2 bottom-1 -translate-x-1/2 w-10 h-10 pointer-events-none"
+                className="absolute left-1/2 bottom-3 -translate-x-1/2 w-8 h-8 pointer-events-none"
               >
                 {/* Outer warm orange flame glow aura */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-t from-orange-600 via-amber-500 to-yellow-300 blur-sm shadow-[0_0_24px_#f97316]" />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-t from-orange-600 via-amber-500 to-yellow-300 blur-sm shadow-[0_0_18px_#f97316]" />
                 
-                {/* Core bright white-yellow fiery exhaust jet */}
+                {/* Core bright white-yellow fiery exhaust jet (compact height, won't cover stick) */}
                 <motion.div 
-                  animate={{ scaleY: [1, 1.5, 1.2], scaleX: [1, 0.85, 1] }}
+                  animate={{ scaleY: [1, 1.25, 1.1], scaleX: [1, 0.9, 1] }}
                   transition={{ repeat: Infinity, duration: 0.12 }}
-                  className="absolute left-1/2 top-1 -translate-x-1/2 w-5 h-7 rounded-full bg-gradient-to-t from-amber-400 via-yellow-200 to-white shadow-[0_0_14px_#ffffff]"
+                  className="absolute left-1/2 top-1 -translate-x-1/2 w-3.5 h-4.5 rounded-full bg-gradient-to-t from-amber-400 via-yellow-200 to-white shadow-[0_0_10px_#ffffff]"
                 />
               </motion.div>
 
