@@ -24,10 +24,10 @@ export default function DiwaliRocketUI({
             key="ambient-diwali-rocket"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ 
-              opacity: 1,
-              scale: [1, 1.05, 1],
-              y: [0, -3, 0],
-              rotate: [0, 2, 0]
+              opacity: [0.15, 1, 0.15],
+              scale: [0.95, 1.05, 0.95],
+              y: [2, -3, 2],
+              rotate: [-1, 2, -1]
             }}
             exit={{ 
               opacity: 0, 
@@ -35,10 +35,10 @@ export default function DiwaliRocketUI({
               transition: { duration: 0.25, ease: "easeOut" } 
             }}
             transition={{ 
-              opacity: { duration: 0.4, ease: "easeOut" },
-              scale: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-              y: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-              rotate: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+              opacity: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
+              scale: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
+              y: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
+              rotate: { duration: 3.2, repeat: Infinity, ease: "easeInOut" }
             }}
             className="relative w-14 h-14 flex items-center justify-center filter drop-shadow-[0_6px_14px_rgba(244,63,94,0.45)]"
           >
