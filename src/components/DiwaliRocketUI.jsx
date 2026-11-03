@@ -1,95 +1,89 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
  * DiwaliRocketUI
  * 
- * - Rocket is cleanly isolated in its container.
- * - Surrounding golden stars spawn dynamically at random spots around the rocket,
- *   twinkle, rotate, and fade in & out seamlessly on independent random interval cycles!
+ * - Rocket is cleanly isolated in its container with a rich warm Diwali halo glow.
+ * - Surrounding golden diamond stars continuously appear at RANDOM positions around the rocket,
+ *   twinkle brightly with pure white cores, rotate, and fade out.
  * - When tapped (isFlying):
  *    1. Fuse burns with sparks
  *    2. Blazing fiery base exhaust jet ignites
  *    3. Rocket blasts off to the top-right sky
  */
-// Dynamic positions for stars to teleport to each time they twinkle!
-const STAR_POSITIONS = [
-  // Ring 1 (Top-Left of rocket)
-  [
-    { x: -6, y: -4 },
-    { x: -12, y: 6 },
-    { x: -2, y: 12 },
-    { x: -10, y: -10 }
-  ],
-  // Ring 2 (Top-Right / Cone area)
-  [
-    { x: 10, y: -8 },
-    { x: 16, y: 0 },
-    { x: 6, y: -14 },
-    { x: 14, y: -12 }
-  ],
-  // Ring 3 (Bottom-Left / Stick & Fuse area)
-  [
-    { x: -8, y: 14 },
-    { x: -14, y: 22 },
-    { x: -2, y: 24 },
-    { x: -12, y: 16 }
-  ],
-  // Ring 4 (Bottom-Right / Side of cylinder)
-  [
-    { x: 12, y: 12 },
-    { x: 18, y: 20 },
-    { x: 8, y: 26 },
-    { x: 14, y: 6 }
-  ]
+
+// Candidate organic spots tightly surrounding the rocket body
+const CANDIDATE_SPOTS = [
+  { top: '2px', left: '6px' },
+  { top: '8px', left: '0px' },
+  { top: '-2px', right: '10px' },
+  { top: '6px', right: '2px' },
+  { top: '14px', right: '-4px' },
+  { bottom: '12px', left: '4px' },
+  { bottom: '4px', left: '8px' },
+  { bottom: '-2px', left: '16px' },
+  { bottom: '8px', right: '2px' },
+  { bottom: '0px', right: '8px' },
+  { top: '18px', left: '-4px' },
+  { top: '26px', right: '-2px' }
 ];
 
-function WanderingStar({ index, size = 6, dur = 2.4, delay = 0, rotateDir = 1 }) {
-  const [posIdx, setPosIdx] = React.useState(0);
-  const positions = STAR_POSITIONS[index % STAR_POSITIONS.length];
+function RandomTwinkleStar({ index }) {
+  const [starState, setStarState] = useState(() => ({
+    spot: CANDIDATE_SPOTS[index % CANDIDATE_SPOTS.length],
+    size: 5 + Math.random() * 2.5, // 5px - 7.5px
+    key: 0
+  }));
+
+  const cycleDuration = 1.8 + (index * 0.4);
+
+  const handleAnimationComplete = () => {
+    // Pick a new random spot on each fade-in/fade-out cycle
+    const nextSpot = CANDIDATE_SPOTS[Math.floor(Math.random() * CANDIDATE_SPOTS.length)];
+    const nextSize = 5 + Math.random() * 2.5;
+    setStarState(prev => ({
+      spot: nextSpot,
+      size: nextSize,
+      key: prev.key + 1
+    }));
+  };
 
   return (
     <motion.div
+      key={starState.key}
       style={{
         position: 'absolute',
-        width: `${size}px`,
-        height: `${size}px`,
-        left: '50%',
-        top: '50%',
-        marginLeft: `-${size / 2}px`,
-        marginTop: `-${size / 2}px`
+        top: starState.spot.top,
+        left: starState.spot.left,
+        right: starState.spot.right,
+        bottom: starState.spot.bottom,
+        width: `${starState.size}px`,
+        height: `${starState.size}px`
       }}
-      initial={{ opacity: 0, scale: 0.1, x: positions[0].x, y: positions[0].y }}
+      initial={{ opacity: 0, scale: 0.1 }}
       animate={{
         opacity: [0, 1, 0.85, 1, 0],
-        scale: [0.1, 1.35, 1.0, 1.3, 0.1],
-        rotate: rotateDir === 1 ? [0, 180, 360] : [360, 180, 0],
-        x: positions[posIdx].x,
-        y: positions[posIdx].y
+        scale: [0.1, 1.35, 1, 1.3, 0.1],
+        rotate: index % 2 === 0 ? [0, 180, 360] : [360, 180, 0]
       }}
       transition={{
-        duration: dur,
-        repeat: Infinity,
-        delay: delay,
+        duration: cycleDuration,
+        delay: index * 0.45,
         ease: "easeInOut"
       }}
-      onAnimationIteration={() => {
-        // Teleport to a new random spot in its quadrant when it completely fades out!
-        setPosIdx((prev) => (prev + 1 + Math.floor(Math.random() * (positions.length - 1))) % positions.length);
-      }}
+      onAnimationComplete={handleAnimationComplete}
       className="pointer-events-none flex items-center justify-center"
     >
       <svg viewBox="0 0 24 24" className="w-full h-full overflow-visible">
-        {/* Faceted 4-point Diamond Sparkle Star with rich glowing drop-shadow */}
+        {/* Diamond 4-point Sparkle */}
         <path 
           d="M 12 0 Q 12 9 21 12 Q 12 15 12 24 Q 12 15 3 12 Q 12 9 12 0 Z" 
           fill="#fef08a" 
-          style={{ 
-            filter: 'drop-shadow(0 0 5px #facc15) drop-shadow(0 0 10px #eab308) drop-shadow(0 0 16px #ca8a04)' 
-          }}
+          style={{ filter: 'drop-shadow(0 0 5px #facc15) drop-shadow(0 0 10px #eab308)' }}
         />
-        {/* Bright pure white core center */}
-        <circle cx="12" cy="12" r="2.4" fill="#ffffff" />
+        {/* Bright white core center */}
+        <circle cx="12" cy="12" r="2.2" fill="#ffffff" />
       </svg>
     </motion.div>
   );
@@ -105,10 +99,10 @@ export default function DiwaliRocketUI({
         {!isFlying && isAmbient && (
           <div className="relative w-12 h-12 flex items-center justify-center">
             
-            {/* Ambient Warm Golden/Pink Rocket Halo Glow (Enhanced visibility) */}
+            {/* Ambient Warm Golden/Rose Halo Glow (Enhanced balanced glow) */}
             <motion.div
               animate={{
-                scale: [0.92, 1.25, 0.92],
+                scale: [0.95, 1.25, 0.95],
                 opacity: [0.35, 0.65, 0.35]
               }}
               transition={{
@@ -116,21 +110,20 @@ export default function DiwaliRocketUI({
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="absolute -inset-2 rounded-full bg-gradient-to-tr from-rose-500/30 via-amber-400/40 to-yellow-300/30 blur-md pointer-events-none shadow-[0_0_20px_rgba(251,191,36,0.4)]"
+              className="absolute -inset-2 rounded-full bg-gradient-to-tr from-rose-500/30 via-amber-400/35 to-yellow-300/25 blur-md pointer-events-none"
             />
 
-            {/* 1. Wandering Twinkling Golden Stars that jump/teleport to different random spots */}
-            <WanderingStar index={0} size={6.5} dur={2.1} delay={0.1} rotateDir={1} />
-            <WanderingStar index={1} size={7} dur={2.6} delay={0.7} rotateDir={-1} />
-            <WanderingStar index={2} size={6} dur={1.9} delay={1.3} rotateDir={1} />
-            <WanderingStar index={3} size={6.5} dur={2.4} delay={0.4} rotateDir={-1} />
+            {/* 1. Dynamic Twinkling Stars appearing at RANDOM positions each cycle */}
+            {[0, 1, 2, 3].map((idx) => (
+              <RandomTwinkleStar key={idx} index={idx} />
+            ))}
 
-            {/* 2. Main Rocket Body (Breathing with smooth gentle fade & float + rich glow) */}
+            {/* 2. Main Rocket Body (Breathing with smooth gentle fade & float) */}
             <motion.div
               key="ambient-diwali-rocket"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ 
-                opacity: [0.55, 1, 0.55],
+                opacity: [0.35, 1, 0.35],
                 scale: [0.96, 1.04, 0.96],
                 y: [2, -3, 2],
                 rotate: [-1, 2, -1]
@@ -146,7 +139,7 @@ export default function DiwaliRocketUI({
                 y: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
                 rotate: { duration: 3.2, repeat: Infinity, ease: "easeInOut" }
               }}
-              className="relative w-12 h-12 flex items-center justify-center filter drop-shadow-[0_0_10px_rgba(251,191,36,0.5)] drop-shadow-[0_5px_12px_rgba(244,63,94,0.5)]"
+              className="relative w-12 h-12 flex items-center justify-center filter drop-shadow-[0_4px_10px_rgba(244,63,94,0.35)]"
             >
               <svg 
                 viewBox="0 0 400 400" 
