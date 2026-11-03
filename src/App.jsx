@@ -546,6 +546,14 @@ function App() {
     if (devClickCountRef.current >= 10) {
       setIsDevMode(true);
       localStorage.setItem('isDevMode', 'true');
+      
+      // Developer Mode activated -> mark onboarding as completed so developer is never disturbed by tutorial
+      localStorage.setItem('onboardingDone', 'true');
+      setTutorialState(-1);
+      setIsSpecialEventsUnlocked(true);
+      setFinalHintStep('none');
+      setShowBubble(false);
+      
       devClickCountRef.current = 0;
       if (navigator.vibrate) navigator.vibrate([100, 100, 100]);
       setBubbleText("Developer Mode Activated!");
