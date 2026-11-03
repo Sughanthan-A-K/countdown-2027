@@ -16,12 +16,12 @@ export default function DiwaliRocketUI({
   isFlying = false, 
   isAmbient = true 
 }) {
-  // 4 subtle, delicate twinkling stars around the rocket (proportional to rocket size)
+  // Subtle, delicate twinkling stars closely orbiting right around the rocket body
   const ambientStars = [
-    { id: 's1', top: '-2px', left: '-6px', size: 6, dur: 2.0, delay: 0.1, rotateDir: 1 },
-    { id: 's2', top: '-8px', right: '2px', size: 7, dur: 2.5, delay: 0.9, rotateDir: -1 },
-    { id: 's3', bottom: '4px', left: '-8px', size: 5, dur: 1.8, delay: 1.4, rotateDir: 1 },
-    { id: 's4', bottom: '-4px', right: '-4px', size: 6.5, dur: 2.4, delay: 0.5, rotateDir: -1 }
+    { id: 's1', top: '8px', left: '2px', size: 5.5, dur: 2.0, delay: 0.1, rotateDir: 1 },
+    { id: 's2', top: '2px', right: '8px', size: 6, dur: 2.5, delay: 0.8, rotateDir: -1 },
+    { id: 's3', bottom: '10px', left: '6px', size: 5, dur: 1.8, delay: 1.4, rotateDir: 1 },
+    { id: 's4', bottom: '6px', right: '4px', size: 5.5, dur: 2.3, delay: 0.5, rotateDir: -1 }
   ];
 
   return (
