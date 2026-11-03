@@ -112,9 +112,16 @@ export default function DiwaliRocketUI({
 }) {
   return (
     <div className="relative w-12 h-12 flex items-center justify-center pointer-events-none select-none">
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {!isFlying && isAmbient && (
-          <div className="relative w-12 h-12 flex items-center justify-center">
+          <motion.div 
+            key="ambient-diwali-rocket-container"
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.3 } }}
+            transition={{ duration: 1.0, ease: "easeOut" }}
+            className="relative w-12 h-12 flex items-center justify-center"
+          >
             
             {/* Ambient Warm Golden/Rose Halo Glow (Enhanced balanced glow) */}
             <motion.div
@@ -138,12 +145,12 @@ export default function DiwaliRocketUI({
             {/* 2. Main Rocket Body (Breathing with smooth gentle fade & float) */}
             <motion.div
               key="ambient-diwali-rocket"
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0 }}
               animate={launchStage === 'burning' ? {
                 opacity: 1,
-                scale: [1, 1.05, 0.98, 1.04, 1],
-                x: [0, -1, 1.5, -1, 0.5, 0],
-                y: [0, 1, -1, 1.5, 0]
+                scale: [1, 1.04, 0.98, 1.03, 1],
+                x: [0, -1, 1.2, -1, 0.6, 0],
+                y: [0, 0.8, -0.8, 1, 0]
               } : { 
                 opacity: [0.35, 1, 0.35],
                 scale: [0.96, 1.04, 0.96],
@@ -156,7 +163,7 @@ export default function DiwaliRocketUI({
                 transition: { duration: 0.25, ease: "easeOut" } 
               }}
               transition={launchStage === 'burning' ? {
-                duration: 1.0,
+                duration: 0.25,
                 repeat: Infinity,
                 ease: "linear"
               } : { 
@@ -239,14 +246,24 @@ export default function DiwaliRocketUI({
                     className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
                   />
 
-                  {/* 2. White Curved Fuse (Thiri) emerging from left base, curving back up to stars */}
-                  <path 
+                  {/* 2. White Curved Fuse (Thiri) emerging from left base (160,255), curving to tip (98,175) */}
+                  {/* When burning: fuse shortens towards base, and sparks/fire creep down the wire! */}
+                  <motion.path 
                     d="M 160 255 C 105 265, 80 205, 98 175" 
                     fill="none" 
                     stroke="url(#fuseTube)" 
                     strokeWidth="11" 
                     strokeLinecap="round" 
                     className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
+                    animate={launchStage === 'burning' ? {
+                      pathLength: [1, 0.7, 0.4, 0.1, 0]
+                    } : {
+                      pathLength: 1
+                    }}
+                    transition={launchStage === 'burning' ? {
+                      duration: 1.0,
+                      ease: "linear"
+                    } : undefined}
                   />
 
                   {/* 3. Rocket Cylindrical Body (Pill capsule shape with rounded base) */}
@@ -300,68 +317,79 @@ export default function DiwaliRocketUI({
                     />
                   </g>
 
-                  {/* 5. Layered Stars at Tip of Fuse (Point 98, 175) */}
-                  {/* When burning (launchStage === 'burning'): Stars rapidly swap z-order/depth, scale, and spark! */}
+                  {/* 5. Layered Stars & Flame at Tip of Fuse */}
+                  {/* When burning (launchStage === 'burning'): 
+                      - Stars swap depth and burn/shrink as flame travels down the entire curve:
+                        from tip (98, 175) -> mid arc (85, 215) -> bottom curve (115, 258) -> rocket base (158, 255)
+                  */}
                   {launchStage === 'burning' ? (
                     <g>
-                      {/* Burning Thiri Sparks Erupting */}
-                      {[0, 1, 2, 3, 4].map((sp) => (
-                        <motion.circle
-                          key={`thiri-spark-${sp}`}
-                          cx="98"
-                          cy="175"
-                          r="3"
-                          fill="#fef08a"
-                          initial={{ opacity: 1, scale: 0.5 }}
+                      {/* Traveling Flame Ember Point traveling along the fuse */}
+                      <motion.g
+                        animate={{
+                          x: [98, 88, 85, 105, 130, 158],
+                          y: [175, 195, 220, 248, 258, 255]
+                        }}
+                        transition={{ duration: 1.0, ease: "linear" }}
+                      >
+                        {/* Core blazing flame spark on the fuse */}
+                        <circle cx="0" cy="0" r="8" fill="#fef08a" style={{ filter: 'drop-shadow(0 0 10px #f59e0b) drop-shadow(0 0 18px #ea580c)' }} />
+                        <circle cx="0" cy="0" r="4.5" fill="#ffffff" />
+
+                        {/* Erupting Sparks flying off burning fuse */}
+                        {[0, 1, 2, 3, 4, 5].map((sp) => (
+                          <motion.circle
+                            key={`thiri-spark-${sp}`}
+                            cx="0"
+                            cy="0"
+                            r="2.5"
+                            fill="#fef08a"
+                            animate={{
+                              opacity: [1, 0.8, 0],
+                              cx: [0, (sp % 2 === 0 ? 1 : -1) * (12 + sp * 4)],
+                              cy: [0, -10 - sp * 5],
+                              scale: [1, 1.8, 0.2]
+                            }}
+                            transition={{
+                              duration: 0.28,
+                              repeat: Infinity,
+                              delay: sp * 0.05,
+                              ease: "easeOut"
+                            }}
+                            style={{ filter: 'drop-shadow(0 0 5px #facc15)' }}
+                          />
+                        ))}
+
+                        {/* Pink Star (Swaps depth from back to front, shrinks as fuse burns away) */}
+                        <motion.g
                           animate={{
-                            opacity: [1, 0.8, 0],
-                            cx: [98, 98 + (sp % 2 === 0 ? 1 : -1) * (15 + sp * 5)],
-                            cy: [175, 175 - 12 - sp * 6],
-                            scale: [1, 1.8, 0.2]
+                            scale: [1.6, 2.2, 1.4, 0.8, 0],
+                            rotate: [0, 90, 180, 270, 360]
                           }}
-                          transition={{
-                            duration: 0.35,
-                            repeat: Infinity,
-                            delay: sp * 0.08,
-                            ease: "easeOut"
+                          transition={{ duration: 1.0, ease: "easeInOut" }}
+                        >
+                          <path 
+                            d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
+                            fill="url(#starPinkBevel)" 
+                            className="filter drop-shadow-[0_0_8px_rgba(244,63,94,0.9)]"
+                          />
+                        </motion.g>
+
+                        {/* Yellow Star (Swaps depth from front to back, shrinks as fuse burns away) */}
+                        <motion.g
+                          animate={{
+                            scale: [1.9, 1.3, 1.7, 0.9, 0],
+                            rotate: [0, -90, -180, -270, -360]
                           }}
-                          style={{ filter: 'drop-shadow(0 0 6px #facc15)' }}
-                        />
-                      ))}
-
-                      {/* Pink Star (Swaps z-depth: moves from back to front, then back) */}
-                      <motion.g
-                        animate={{
-                          x: [90, 102, 90, 102, 90],
-                          y: [168, 176, 168, 176, 168],
-                          scale: [1.6, 2.2, 1.6, 2.2, 1.6],
-                          rotate: [0, 45, 90, 135, 180]
-                        }}
-                        transition={{ duration: 1.0, ease: "easeInOut" }}
-                      >
-                        <path 
-                          d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
-                          fill="url(#starPinkBevel)" 
-                          className="filter drop-shadow-[0_0_8px_rgba(244,63,94,0.9)]"
-                        />
-                      </motion.g>
-
-                      {/* Yellow Star (Swaps z-depth: moves from front to back, then front) */}
-                      <motion.g
-                        animate={{
-                          x: [100, 88, 100, 88, 100],
-                          y: [176, 166, 176, 166, 176],
-                          scale: [1.9, 1.4, 1.9, 1.4, 1.9],
-                          rotate: [0, -45, -90, -135, -180]
-                        }}
-                        transition={{ duration: 1.0, ease: "easeInOut" }}
-                      >
-                        <path 
-                          d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
-                          fill="url(#starYellowBevel)" 
-                          className="filter drop-shadow-[0_0_10px_rgba(250,204,21,1)]"
-                        />
-                        <path d="M 0 -8 L 2.4 -2.4 L 0 0 Z" fill="#ffffff" opacity="0.6" />
+                          transition={{ duration: 1.0, ease: "easeInOut" }}
+                        >
+                          <path 
+                            d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
+                            fill="url(#starYellowBevel)" 
+                            className="filter drop-shadow-[0_0_10px_rgba(250,204,21,1)]"
+                          />
+                          <path d="M 0 -8 L 2.4 -2.4 L 0 0 Z" fill="#ffffff" opacity="0.6" />
+                        </motion.g>
                       </motion.g>
                     </g>
                   ) : (
@@ -390,7 +418,7 @@ export default function DiwaliRocketUI({
                 </g>
               </svg>
             </motion.div>
-          </div>
+          </motion.div>
         )}
 
         {isFlying && (
@@ -464,28 +492,35 @@ export default function DiwaliRocketUI({
                 </g>
               </svg>
 
-              {/* BLAZING FIERY EXHAUST FLAME: Directly at the bottom base of the rocket cylinder, compact height */}
+              {/* BLAZING FIERY EXHAUST FLAME: Aligned at cylinder base (Center 200, Base 248) pointing down-left along 30deg axis */}
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ 
-                  scale: [0, 1.1, 1.35, 1.2, 0.4], 
+                  scale: [0, 1.2, 1.4, 1.1, 0.3], 
                   opacity: [0, 1, 1, 0.9, 0] 
                 }}
                 transition={{ 
                   duration: 1.3, 
-                  times: [0, 0.25, 0.5, 0.8, 1],
+                  times: [0, 0.2, 0.5, 0.8, 1],
                   ease: "easeOut" 
                 }}
-                className="absolute left-1/2 bottom-3 -translate-x-1/2 w-8 h-8 pointer-events-none"
+                style={{
+                  position: 'absolute',
+                  left: '42%',
+                  top: '64%',
+                  transform: 'translate(-50%, -50%) rotate(210deg)',
+                  transformOrigin: 'top center'
+                }}
+                className="w-4 h-9 pointer-events-none flex flex-col items-center"
               >
-                {/* Outer warm orange flame glow aura */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-t from-orange-600 via-amber-500 to-yellow-300 blur-sm shadow-[0_0_18px_#f97316]" />
+                {/* Outer warm orange flame glow */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-b from-yellow-200 via-orange-500 to-amber-600 blur-[2px] shadow-[0_0_14px_#f97316]" />
                 
-                {/* Core bright white-yellow fiery exhaust jet (compact height, won't cover stick) */}
+                {/* Core bright white-yellow fiery exhaust jet */}
                 <motion.div 
-                  animate={{ scaleY: [1, 1.25, 1.1], scaleX: [1, 0.9, 1] }}
-                  transition={{ repeat: Infinity, duration: 0.12 }}
-                  className="absolute left-1/2 top-1 -translate-x-1/2 w-3.5 h-4.5 rounded-full bg-gradient-to-t from-amber-400 via-yellow-200 to-white shadow-[0_0_10px_#ffffff]"
+                  animate={{ scaleY: [1, 1.3, 1.1], scaleX: [1, 0.85, 1] }}
+                  transition={{ repeat: Infinity, duration: 0.1 }}
+                  className="w-2.5 h-6 rounded-full bg-gradient-to-b from-white via-yellow-200 to-amber-400 shadow-[0_0_8px_#ffffff]"
                 />
               </motion.div>
 
