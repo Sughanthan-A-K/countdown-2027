@@ -452,12 +452,13 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     </motion.div>
                   )}
 
-                  {/* Diwali Custom Vector Rocket (Appears strictly after 5 outs / crackers reveal, or while burning/flying) */}
-                  {isDiwaliActive && (showShareIntroHint || showDiwaliRocketAmbient || isDiwaliRocketFlying || diwaliRocketLaunchStage === 'burning') && (
+                  {/* Diwali Custom Vector Rocket (Appears strictly after 3 outs / crackers reveal for first time, or while burning/flying) */}
+                  {isDiwaliActive && (showShareIntroHint || isDiwaliRocketFlying || diwaliRocketLaunchStage === 'burning') && (
                     <DiwaliRocketUI 
                       isFlying={isDiwaliRocketFlying} 
                       isAmbient={true} 
                       launchStage={diwaliRocketLaunchStage}
+                      hasBurnedOnce={localStorage.getItem('has_seen_diwali_rocket_share_hint') === 'true'}
                     />
                   )}
 
@@ -723,14 +724,9 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     onFirstBurst={onCalendarReveal}
                     onFifthBurst={() => {
                       if (onCtaReady) onCtaReady();
+                      // Only show guidance tooltip and rocket for FIRST TIME users who haven't dismissed it yet!
                       if (!hasDismissedShareHint || isSharedCardView) {
                         setShowShareIntroHint(true);
-                      } else {
-                        // Returning users who dismissed tooltip: show subtle floating 3D rocket in corner
-                        setShowDiwaliRocketAmbient(true);
-                        setTimeout(() => {
-                          setShowDiwaliRocketAmbient(false);
-                        }, 3500);
                       }
                     }} 
                   />

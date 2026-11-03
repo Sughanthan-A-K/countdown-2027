@@ -108,7 +108,8 @@ function RandomTwinkleStar({ index }) {
 export default function DiwaliRocketUI({ 
   isFlying = false, 
   isAmbient = true,
-  launchStage = 'idle' // 'idle' | 'burning' | 'launching'
+  launchStage = 'idle', // 'idle' | 'burning' | 'launching'
+  hasBurnedOnce = false // when true on subsequent clicks, launch without fuse
 }) {
   return (
     <div className="relative w-12 h-12 flex items-center justify-center pointer-events-none select-none">
@@ -247,24 +248,26 @@ export default function DiwaliRocketUI({
                   />
 
                   {/* 2. White Curved Fuse (Thiri) emerging from left base (160,255), curving to tip (98,175) */}
-                  {/* When burning: fuse shortens towards base, and sparks/fire creep down the wire! */}
-                  <motion.path 
-                    d="M 160 255 C 105 265, 80 205, 98 175" 
-                    fill="none" 
-                    stroke="url(#fuseTube)" 
-                    strokeWidth="11" 
-                    strokeLinecap="round" 
-                    className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
-                    animate={launchStage === 'burning' ? {
-                      pathLength: [1, 0.7, 0.4, 0.1, 0]
-                    } : {
-                      pathLength: 1
-                    }}
-                    transition={launchStage === 'burning' ? {
-                      duration: 1.0,
-                      ease: "linear"
-                    } : undefined}
-                  />
+                  {/* On subsequent clicks (hasBurnedOnce = true), fuse has already burned away */}
+                  {!hasBurnedOnce && (
+                    <motion.path 
+                      d="M 160 255 C 105 265, 80 205, 98 175" 
+                      fill="none" 
+                      stroke="url(#fuseTube)" 
+                      strokeWidth="11" 
+                      strokeLinecap="round" 
+                      className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
+                      animate={launchStage === 'burning' ? {
+                        pathLength: [1, 0.7, 0.4, 0.1, 0]
+                      } : {
+                        pathLength: 1
+                      }}
+                      transition={launchStage === 'burning' ? {
+                        duration: 1.0,
+                        ease: "linear"
+                      } : undefined}
+                    />
+                  )}
 
                   {/* 3. Rocket Cylindrical Body (Pill capsule shape with rounded base) */}
                   <g>
@@ -318,11 +321,9 @@ export default function DiwaliRocketUI({
                   </g>
 
                   {/* 5. Layered Stars & Flame at Tip of Fuse */}
-                  {/* When burning (launchStage === 'burning'): 
-                      - Stars swap depth and burn/shrink as flame travels down the entire curve:
-                        from tip (98, 175) -> mid arc (85, 215) -> bottom curve (115, 258) -> rocket base (158, 255)
-                  */}
-                  {launchStage === 'burning' ? (
+                  {/* On subsequent clicks (hasBurnedOnce = true), fuse and stars are already burned off */}
+                  {!hasBurnedOnce && (
+                    launchStage === 'burning' ? (
                     <g>
                       {/* Traveling Flame Ember Point traveling along the fuse */}
                       <motion.g
@@ -414,7 +415,7 @@ export default function DiwaliRocketUI({
                         <path d="M 0 -8 L 2.4 -2.4 L 0 0 Z" fill="#ffffff" opacity="0.4" />
                       </g>
                     </g>
-                  )}
+                  ))}
                 </g>
               </svg>
             </motion.div>
@@ -520,13 +521,13 @@ export default function DiwaliRocketUI({
                     {/* Intense white root point at rocket base */}
                     <ellipse cx="0" cy="2" rx="22" ry="5.5" fill="#ffffff" />
 
-                    {/* Cute clay-style fiery exhaust bubbles/sparks popping directly out of the flame tip */}
+                    {/* Medium clay-style fiery exhaust bubbles popping right at thrust core & flame tip */}
                     {[
-                      { id: 'b1', cx: -6, cy: 98, r: 5, delay: 0.05, animY: [95, 125], animX: [-6, -14], animScale: [1, 0.4] },
-                      { id: 'b2', cx: 8, cy: 104, r: 4.5, delay: 0.12, animY: [100, 132], animX: [8, 16], animScale: [1, 0.35] },
-                      { id: 'b3', cx: 0, cy: 112, r: 5.5, delay: 0.2, animY: [108, 142], animX: [0, 2], animScale: [1, 0.3] },
-                      { id: 'b4', cx: -10, cy: 118, r: 3.5, delay: 0.28, animY: [115, 148], animX: [-10, -18], animScale: [1, 0.25] },
-                      { id: 'b5', cx: 7, cy: 124, r: 4, delay: 0.35, animY: [120, 155], animX: [7, 12], animScale: [1, 0.2] }
+                      { id: 'b1', cx: -10, cy: 75, r: 10, delay: 0.04, animY: [75, 115], animX: [-10, -18], animScale: [1, 0.5] },
+                      { id: 'b2', cx: 12, cy: 82, r: 9, delay: 0.12, animY: [82, 125], animX: [12, 22], animScale: [1, 0.45] },
+                      { id: 'b3', cx: -2, cy: 96, r: 12, delay: 0.20, animY: [96, 142], animX: [-2, 2], animScale: [1, 0.4] },
+                      { id: 'b4', cx: -14, cy: 110, r: 8.5, delay: 0.28, animY: [110, 155], animX: [-14, -24], animScale: [1, 0.35] },
+                      { id: 'b5', cx: 10, cy: 118, r: 9.5, delay: 0.36, animY: [118, 168], animX: [10, 18], animScale: [1, 0.3] }
                     ].map((bubble) => (
                       <motion.circle
                         key={bubble.id}
@@ -534,12 +535,12 @@ export default function DiwaliRocketUI({
                         cy={bubble.cy}
                         r={bubble.r}
                         fill="url(#flyExhaustInner)"
-                        style={{ filter: 'drop-shadow(0 0 6px #f59e0b)' }}
+                        style={{ filter: 'drop-shadow(0 0 8px #f59e0b)' }}
                         animate={{
                           cy: bubble.animY,
                           cx: bubble.animX,
                           scale: bubble.animScale,
-                          opacity: [1, 0.8, 0]
+                          opacity: [1, 0.85, 0]
                         }}
                         transition={{
                           duration: 0.45,
