@@ -503,46 +503,25 @@ export default function DiwaliRocketUI({
                   <path d="M 140 128 Q 200 148 260 128" fill="none" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" opacity="0.6" />
 
                   {/* BLAZING FIERY EXHAUST FLAME: Rendered INSIDE the exact same rotated rocket coordinate space! */}
-                  {/* Cylinder base is centered at x=195, y=252. Flame shoots straight DOWNWARDS (y: 252 to 340) in this group, so it perfectly matches rocket angle! */}
+                  {/* Cylinder base is centered at x=195, y=252. Flame shoots straight DOWNWARDS with increased width matching rocket base */}
                   <g transform="translate(195, 252)">
-                    {/* Outer warm orange flame glow */}
+                    {/* Outer warm orange flame glow - wider and perfectly proportioned to rocket cylinder base */}
                     <path 
-                      d="M -16 0 Q -24 50 0 95 Q 24 50 16 0 Z" 
+                      d="M -32 0 Q -42 45 0 92 Q 42 45 32 0 Z" 
                       fill="url(#flyExhaustOuter)" 
-                      className="filter drop-shadow-[0_0_15px_#f97316]"
+                      className="filter drop-shadow-[0_0_18px_#f97316]"
                     />
                     {/* Inner blazing white/yellow core jet */}
                     <path 
-                      d="M -9 0 Q -14 38 0 72 Q 14 38 9 0 Z" 
+                      d="M -20 0 Q -26 38 0 72 Q 26 38 20 0 Z" 
                       fill="url(#flyExhaustInner)" 
-                      className="filter drop-shadow-[0_0_8px_#ffffff]"
+                      className="filter drop-shadow-[0_0_10px_#ffffff]"
                     />
                     {/* Intense white root point at rocket base */}
-                    <ellipse cx="0" cy="2" rx="10" ry="3.5" fill="#ffffff" />
+                    <ellipse cx="0" cy="2" rx="22" ry="5.5" fill="#ffffff" />
                   </g>
                 </g>
               </svg>
-
-              {/* Continuous Golden Sparkle Exhaust Trail streaming behind rocket */}
-              {[...Array(10)].map((_, i) => (
-                <motion.div
-                  key={`exhaust-spark-${i}`}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ 
-                    opacity: [0, 1, 0.8, 0],
-                    scale: [0.2, 1.4, 0.6, 0],
-                    x: [0, -Math.cos(i * 0.6) * 35 - 15],
-                    y: [10, Math.sin(i * 0.6) * 45 + 30 + i * 8]
-                  }}
-                  transition={{ 
-                    duration: 0.7, 
-                    repeat: Infinity, 
-                    delay: 0.2 + (i % 5) * 0.08,
-                    ease: "easeOut" 
-                  }}
-                  className="absolute left-1/2 bottom-0 w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-yellow-400 to-amber-200 shadow-[0_0_8px_#fde047]"
-                />
-              ))}
             </div>
           </motion.div>
         )}
