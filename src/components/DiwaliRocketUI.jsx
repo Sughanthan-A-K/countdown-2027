@@ -17,7 +17,7 @@ export default function DiwaliRocketUI({
   isAmbient = true 
 }) {
   return (
-    <div className="relative w-14 h-14 flex items-center justify-center pointer-events-none select-none">
+    <div className="relative w-11 h-11 flex items-center justify-center pointer-events-none select-none">
       <AnimatePresence mode="wait">
         {!isFlying && isAmbient && (
           <motion.div
@@ -40,11 +40,11 @@ export default function DiwaliRocketUI({
               y: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
               rotate: { duration: 3.2, repeat: Infinity, ease: "easeInOut" }
             }}
-            className="relative w-14 h-14 flex items-center justify-center filter drop-shadow-[0_6px_14px_rgba(244,63,94,0.45)]"
+            className="relative w-11 h-11 flex items-center justify-center filter drop-shadow-[0_4px_10px_rgba(244,63,94,0.45)]"
           >
             <svg 
               viewBox="0 0 400 400" 
-              className="w-14 h-14 overflow-visible"
+              className="w-11 h-11 overflow-visible"
             >
               <defs>
                 {/* 3D Cylindrical Shading for Pink Body */}
@@ -113,19 +113,38 @@ export default function DiwaliRocketUI({
               <circle cx="295" cy="270" r="5" fill="url(#sphereGrad)" opacity="0.85" />
               <circle cx="170" cy="320" r="5" fill="url(#sphereGrad)" opacity="0.85" />
 
-              {/* Distant Golden Floating Stars */}
-              <g transform="translate(300, 60) scale(1.1)">
-                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
-              </g>
-              <g transform="translate(142, 102) scale(0.9)">
-                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
-              </g>
-              <g transform="translate(345, 218) scale(0.7)">
-                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
-              </g>
-              <g transform="translate(265, 322) scale(1.1)">
-                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
-              </g>
+              {/* Distant Golden Floating Stars (Twinkling softly) */}
+              <motion.g 
+                transform="translate(300, 60)"
+                animate={{ scale: [0.7, 1.25, 0.7], opacity: [0.35, 1, 0.35] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" className="filter drop-shadow-[0_0_4px_#fde047]" />
+              </motion.g>
+
+              <motion.g 
+                transform="translate(142, 102)"
+                animate={{ scale: [1.15, 0.6, 1.15], opacity: [1, 0.3, 1] }}
+                transition={{ duration: 2.1, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+              >
+                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" className="filter drop-shadow-[0_0_4px_#fde047]" />
+              </motion.g>
+
+              <motion.g 
+                transform="translate(345, 218)"
+                animate={{ scale: [0.6, 1.1, 0.6], opacity: [0.4, 0.95, 0.4] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+              >
+                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" className="filter drop-shadow-[0_0_3px_#fde047]" />
+              </motion.g>
+
+              <motion.g 
+                transform="translate(265, 322)"
+                animate={{ scale: [1.2, 0.65, 1.2], opacity: [0.95, 0.35, 0.95] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+              >
+                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" className="filter drop-shadow-[0_0_5px_#fde047]" />
+              </motion.g>
 
               {/* ------------------------------------------------------------- */}
               {/* MAIN ROCKET MESH (Pointing at ~30 deg towards top-right)      */}
