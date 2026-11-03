@@ -425,8 +425,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     </motion.div>
                   )}
 
-                  {/* Diwali Custom Vector Rocket (Always visible on Diwali card for all users) */}
-                  {isDiwaliActive && (
+                  {/* Diwali Custom Vector Rocket (Appears strictly after 5 outs / crackers reveal, or while flying) */}
+                  {isDiwaliActive && (showShareIntroHint || showDiwaliRocketAmbient || isDiwaliRocketFlying) && (
                     <DiwaliRocketUI 
                       isFlying={isDiwaliRocketFlying} 
                       isAmbient={true} 

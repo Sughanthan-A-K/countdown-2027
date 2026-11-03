@@ -57,10 +57,10 @@ export default function DiwaliRocketUI({
                   width: `${star.size}px`,
                   height: `${star.size}px`
                 }}
-                initial={{ opacity: 0, scale: 0.3 }}
+                initial={{ opacity: 0, scale: 0.1 }}
                 animate={{
-                  opacity: [0, 0.9, 0.7, 0],
-                  scale: [0.3, 1.1, 0.9, 0.3],
+                  opacity: [0, 1, 0.8, 1, 0],
+                  scale: [0.1, 1.25, 0.95, 1.2, 0.1],
                   rotate: star.rotateDir === 1 ? [0, 180, 360] : [360, 180, 0]
                 }}
                 transition={{
@@ -72,13 +72,14 @@ export default function DiwaliRocketUI({
                 className="pointer-events-none flex items-center justify-center"
               >
                 <svg viewBox="0 0 24 24" className="w-full h-full overflow-visible">
+                  {/* Faceted 4-point Diamond Sparkle Star */}
                   <path 
-                    d="M 12 1 L 15.2 8.2 L 23 9.3 L 17.5 14.8 L 18.8 22.5 L 12 18.9 L 5.2 22.5 L 6.5 14.8 L 1 9.3 L 8.8 8.2 Z" 
-                    fill="#facc15" 
-                    stroke="#ca8a04" 
-                    strokeWidth="0.8"
-                    style={{ filter: 'drop-shadow(0 0 3px rgba(250, 204, 21, 0.8))' }}
+                    d="M 12 0 Q 12 9 21 12 Q 12 15 12 24 Q 12 15 3 12 Q 12 9 12 0 Z" 
+                    fill="#fef08a" 
+                    style={{ filter: 'drop-shadow(0 0 4px #facc15) drop-shadow(0 0 8px #eab308)' }}
                   />
+                  {/* Pure white core center */}
+                  <circle cx="12" cy="12" r="2.2" fill="#ffffff" />
                 </svg>
               </motion.div>
             ))}
