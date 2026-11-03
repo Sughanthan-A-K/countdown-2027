@@ -458,7 +458,6 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                       isFlying={isDiwaliRocketFlying} 
                       isAmbient={true} 
                       launchStage={diwaliRocketLaunchStage}
-                      hasBurnedOnce={localStorage.getItem('has_seen_diwali_rocket_share_hint') === 'true'}
                     />
                   )}
 

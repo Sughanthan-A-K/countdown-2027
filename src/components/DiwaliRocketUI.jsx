@@ -108,8 +108,7 @@ function RandomTwinkleStar({ index }) {
 export default function DiwaliRocketUI({ 
   isFlying = false, 
   isAmbient = true,
-  launchStage = 'idle', // 'idle' | 'burning' | 'launching'
-  hasBurnedOnce = false // when true on subsequent clicks, launch without fuse
+  launchStage = 'idle' // 'idle' | 'burning' | 'launching'
 }) {
   return (
     <div className="relative w-12 h-12 flex items-center justify-center pointer-events-none select-none">
@@ -248,26 +247,23 @@ export default function DiwaliRocketUI({
                   />
 
                   {/* 2. White Curved Fuse (Thiri) emerging from left base (160,255), curving to tip (98,175) */}
-                  {/* On subsequent clicks (hasBurnedOnce = true), fuse has already burned away */}
-                  {!hasBurnedOnce && (
-                    <motion.path 
-                      d="M 160 255 C 105 265, 80 205, 98 175" 
-                      fill="none" 
-                      stroke="url(#fuseTube)" 
-                      strokeWidth="11" 
-                      strokeLinecap="round" 
-                      className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
-                      animate={launchStage === 'burning' ? {
-                        pathLength: [1, 0.7, 0.4, 0.1, 0]
-                      } : {
-                        pathLength: 1
-                      }}
-                      transition={launchStage === 'burning' ? {
-                        duration: 1.0,
-                        ease: "linear"
-                      } : undefined}
-                    />
-                  )}
+                  <motion.path 
+                    d="M 160 255 C 105 265, 80 205, 98 175" 
+                    fill="none" 
+                    stroke="url(#fuseTube)" 
+                    strokeWidth="11" 
+                    strokeLinecap="round" 
+                    className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
+                    animate={launchStage === 'burning' ? {
+                      pathLength: [1, 0.7, 0.4, 0.1, 0]
+                    } : {
+                      pathLength: 1
+                    }}
+                    transition={launchStage === 'burning' ? {
+                      duration: 1.0,
+                      ease: "linear"
+                    } : undefined}
+                  />
 
                   {/* 3. Rocket Cylindrical Body (Pill capsule shape with rounded base) */}
                   <g>
@@ -321,9 +317,7 @@ export default function DiwaliRocketUI({
                   </g>
 
                   {/* 5. Layered Stars & Flame at Tip of Fuse */}
-                  {/* On subsequent clicks (hasBurnedOnce = true), fuse and stars are already burned off */}
-                  {!hasBurnedOnce && (
-                    launchStage === 'burning' ? (
+                  {launchStage === 'burning' ? (
                     <g>
                       {/* Traveling Flame Ember Point traveling along the fuse */}
                       <motion.g
@@ -415,7 +409,7 @@ export default function DiwaliRocketUI({
                         <path d="M 0 -8 L 2.4 -2.4 L 0 0 Z" fill="#ffffff" opacity="0.4" />
                       </g>
                     </g>
-                  ))}
+                  )}
                 </g>
               </svg>
             </motion.div>
