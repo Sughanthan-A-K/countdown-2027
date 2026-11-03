@@ -931,7 +931,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         currentCrackerRef.current = 'out';
         fireOut(false);
         // After 5th out, trigger callback for Diwali share/rocket/CTA appearance
-        if (burstCountRef.current === 5 && onFifthBurst && !hasFiredFifthBurstCallback.current) {
+        if (burstCountRef.current === 3 && onFifthBurst && !hasFiredFifthBurstCallback.current) {
           hasFiredFifthBurstCallback.current = true;
           onFifthBurst();
         }

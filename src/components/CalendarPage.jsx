@@ -22,7 +22,11 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const [startFinaleLoop, setStartFinaleLoop] = useState(false);
 
   // Special card share hint & sparkle indicator
+  // For Diwali: User should see the intro tooltip/rocket guidance at least once for this new feature!
   const [hasDismissedShareHint, setHasDismissedShareHint] = useState(() => {
+    if (isDiwali || forceDiwaliMode) {
+      return localStorage.getItem('has_seen_diwali_rocket_share_hint') === 'true';
+    }
     return localStorage.getItem('has_seen_special_share_hint') === 'true';
   });
   const [showShareIntroHint, setShowShareIntroHint] = useState(false);
@@ -78,20 +82,33 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     if (isDiwaliActive) {
       if (diwaliRocketLaunchStage !== 'idle' || isDiwaliRocketFlying) return; // Prevent double trigger
       
-      // Stage 1: Thiri burning with stars swapping depth (yellow front -> back -> front, pink back -> front -> back) for exact 1.0 second
-      setDiwaliRocketLaunchStage('burning');
-      if (!hasDismissedShareHint) {
-        localStorage.setItem('has_seen_special_share_hint', 'true');
-        setHasDismissedShareHint(true);
-      }
-      setShowShareIntroHint(false);
+      const hasSeenRocketIntro = localStorage.getItem('has_seen_diwali_rocket_share_hint') === 'true';
 
-      // Stage 2: After 1s burn, fire erupts from rocket base and blasts off to sky
-      setTimeout(() => {
+      if (!hasSeenRocketIntro) {
+        // FIRST TIME USER: Full cinematic tutorial with 1.0s thiri burning & stars swapping
+        localStorage.setItem('has_seen_diwali_rocket_share_hint', 'true');
+        setHasDismissedShareHint(true);
+        setShowShareIntroHint(false);
+        setDiwaliRocketLaunchStage('burning');
+
+        // After 1s burn, fire erupts from rocket base and blasts off to sky
+        setTimeout(() => {
+          setDiwaliRocketLaunchStage('launching');
+          setIsDiwaliRocketFlying(true);
+
+          setTimeout(() => {
+            setIsDiwaliRocketFlying(false);
+            setDiwaliRocketLaunchStage('idle');
+            if (onShareSpecialCard) {
+              onShareSpecialCard();
+            }
+          }, 1300);
+        }, 1000);
+      } else {
+        // SUBSEQUENT TAPS: Instant blast-off! No need to wait for 1s thiri burn again
         setDiwaliRocketLaunchStage('launching');
         setIsDiwaliRocketFlying(true);
 
-        // Rocket completes sky flight and native share opens
         setTimeout(() => {
           setIsDiwaliRocketFlying(false);
           setDiwaliRocketLaunchStage('idle');
@@ -99,7 +116,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
             onShareSpecialCard();
           }
         }, 1300);
-      }, 1000);
+      }
       return;
     }
 

@@ -470,6 +470,18 @@ export default function DiwaliRocketUI({
                     <stop offset="0%" stopColor="#9333ea" />
                     <stop offset="100%" stopColor="#581c87" />
                   </linearGradient>
+                  <linearGradient id="flyExhaustOuter" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#ffffff" />
+                    <stop offset="20%" stopColor="#fef08a" />
+                    <stop offset="55%" stopColor="#f97316" />
+                    <stop offset="100%" stopColor="#dc2626" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient id="flyExhaustInner" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#ffffff" />
+                    <stop offset="40%" stopColor="#fef9c3" />
+                    <stop offset="75%" stopColor="#facc15" />
+                    <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
+                  </linearGradient>
                   <clipPath id="flyBodyClip">
                     <path d="M 148 120 L 252 120 L 252 245 C 252 268, 148 268, 148 245 Z" />
                   </clipPath>
@@ -489,40 +501,27 @@ export default function DiwaliRocketUI({
                   {/* Nosecone */}
                   <path d="M 140 128 Q 200 148 260 128 L 200 52 Z" fill="url(#flyCone)" />
                   <path d="M 140 128 Q 200 148 260 128" fill="none" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" opacity="0.6" />
+
+                  {/* BLAZING FIERY EXHAUST FLAME: Rendered INSIDE the exact same rotated rocket coordinate space! */}
+                  {/* Cylinder base is centered at x=195, y=252. Flame shoots straight DOWNWARDS (y: 252 to 340) in this group, so it perfectly matches rocket angle! */}
+                  <g transform="translate(195, 252)">
+                    {/* Outer warm orange flame glow */}
+                    <path 
+                      d="M -16 0 Q -24 50 0 95 Q 24 50 16 0 Z" 
+                      fill="url(#flyExhaustOuter)" 
+                      className="filter drop-shadow-[0_0_15px_#f97316]"
+                    />
+                    {/* Inner blazing white/yellow core jet */}
+                    <path 
+                      d="M -9 0 Q -14 38 0 72 Q 14 38 9 0 Z" 
+                      fill="url(#flyExhaustInner)" 
+                      className="filter drop-shadow-[0_0_8px_#ffffff]"
+                    />
+                    {/* Intense white root point at rocket base */}
+                    <ellipse cx="0" cy="2" rx="10" ry="3.5" fill="#ffffff" />
+                  </g>
                 </g>
               </svg>
-
-              {/* BLAZING FIERY EXHAUST FLAME: Aligned at cylinder base (Center 200, Base 248) pointing down-left along 30deg axis */}
-              <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ 
-                  scale: [0, 1.2, 1.4, 1.1, 0.3], 
-                  opacity: [0, 1, 1, 0.9, 0] 
-                }}
-                transition={{ 
-                  duration: 1.3, 
-                  times: [0, 0.2, 0.5, 0.8, 1],
-                  ease: "easeOut" 
-                }}
-                style={{
-                  position: 'absolute',
-                  left: '42%',
-                  top: '64%',
-                  transform: 'translate(-50%, -50%) rotate(210deg)',
-                  transformOrigin: 'top center'
-                }}
-                className="w-4 h-9 pointer-events-none flex flex-col items-center"
-              >
-                {/* Outer warm orange flame glow */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-b from-yellow-200 via-orange-500 to-amber-600 blur-[2px] shadow-[0_0_14px_#f97316]" />
-                
-                {/* Core bright white-yellow fiery exhaust jet */}
-                <motion.div 
-                  animate={{ scaleY: [1, 1.3, 1.1], scaleX: [1, 0.85, 1] }}
-                  transition={{ repeat: Infinity, duration: 0.1 }}
-                  className="w-2.5 h-6 rounded-full bg-gradient-to-b from-white via-yellow-200 to-amber-400 shadow-[0_0_8px_#ffffff]"
-                />
-              </motion.div>
 
               {/* Continuous Golden Sparkle Exhaust Trail streaming behind rocket */}
               {[...Array(10)].map((_, i) => (
