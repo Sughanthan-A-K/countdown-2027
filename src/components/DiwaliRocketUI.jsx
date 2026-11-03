@@ -4,142 +4,223 @@ import { motion, AnimatePresence } from 'framer-motion';
 /**
  * DiwaliRocketUI
  * 
- * Custom Vector Diwali Rocket strictly matching reference:
- * - Cylindrical rocket body with alternating hot-pink & yellow stripes
- * - Conical hot-pink head with natural curved arc rim on bottom edge only (NO full transparent circle!)
- * - Side curved wick (thiri) with layered stars on the end:
- *     - Pink star in back, slightly offset
- *     - Yellow star on top
- * - Extended purple wooden stick downwards
- * - Cleaned up: removed distracting floating yellow dots above rocket
- * - When tapped (isFlying):
- *    1. Thiri burns down with sparks (~0.35s)
- *    2. Blazing fiery exhaust flame ignites at rocket base
- *    3. Rocket blasts off upwards to the top-right sky with particle trail!
+ * 100% Native High-Fidelity SVG Vector implementation strictly matching the reference 3D clay toy rocket:
+ * - Ultra-smooth glossy conical nosecone with curved convex rim & light sheen.
+ * - Cylindrical capsule body with rounded bottom base and alternate glossy pink & yellow bands.
+ * - Thick rounded white fuse (thiri) curving from the base side.
+ * - Layered 5-point stars at fuse tip: Pink star nestled slightly behind, 3D beveled Yellow star in front.
+ * - Rounded purple peg stick extending diagonally from center-bottom.
+ * - Tiny white floating spheres and golden star accents around.
+ * - On tap: fuse burns, brilliant base fiery ignition jet bursts, and rocket streaks into the sky.
  */
 export default function DiwaliRocketUI({ 
   isFlying = false, 
   isAmbient = true 
 }) {
   return (
-    <div className="relative w-12 h-12 flex items-center justify-center pointer-events-none select-none">
+    <div className="relative w-14 h-14 flex items-center justify-center pointer-events-none select-none">
       <AnimatePresence>
         {!isFlying && isAmbient && (
           <motion.div
             key="ambient-diwali-rocket"
-            initial={{ opacity: 0, scale: 0.5, rotate: 22 }}
+            initial={{ opacity: 0, scale: 0.6 }}
             animate={{ 
               opacity: 1,
-              scale: [0.95, 1.05, 0.95],
+              scale: [0.98, 1.04, 0.98],
               y: [0, -3, 0],
-              rotate: [20, 24, 20]
+              rotate: [0, 2, 0]
             }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ 
-              duration: 2.8, 
+              duration: 3, 
               repeat: Infinity,
               ease: "easeInOut" 
             }}
-            className="relative w-11 h-11 flex items-center justify-center"
+            className="relative w-14 h-14 flex items-center justify-center filter drop-shadow-[0_6px_14px_rgba(244,63,94,0.45)]"
           >
-            {/* Ambient Outer Warm Glow */}
-            <div className="absolute inset-0 rounded-full bg-amber-400/15 blur-md pointer-events-none" />
-
             <svg 
-              viewBox="0 0 100 120" 
-              className="w-11 h-11 overflow-visible filter drop-shadow-[0_2px_8px_rgba(244,63,94,0.5)]"
+              viewBox="0 0 400 400" 
+              className="w-14 h-14 overflow-visible"
             >
               <defs>
                 {/* 3D Cylindrical Shading for Pink Body */}
-                <linearGradient id="bodyPinkGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#f43f5e" />
-                  <stop offset="35%" stopColor="#fb7185" />
+                <linearGradient id="bodyPinkGloss" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ff4d82" />
+                  <stop offset="30%" stopColor="#f43f5e" />
                   <stop offset="70%" stopColor="#e11d48" />
                   <stop offset="100%" stopColor="#9f1239" />
                 </linearGradient>
 
                 {/* 3D Cylindrical Shading for Yellow Stripes */}
-                <linearGradient id="bodyYellowGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#f59e0b" />
-                  <stop offset="35%" stopColor="#fef08a" />
-                  <stop offset="70%" stopColor="#eab308" />
+                <linearGradient id="yellowBandGloss" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#fef08a" />
+                  <stop offset="35%" stopColor="#facc15" />
+                  <stop offset="80%" stopColor="#eab308" />
                   <stop offset="100%" stopColor="#b45309" />
                 </linearGradient>
 
-                {/* Cone Cap Gradient */}
-                <linearGradient id="conePinkGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#f43f5e" />
-                  <stop offset="40%" stopColor="#fda4af" />
-                  <stop offset="80%" stopColor="#e11d48" />
+                {/* Conical Head Shading */}
+                <linearGradient id="coneHeadGloss" x1="20%" y1="0%" x2="90%" y2="100%">
+                  <stop offset="0%" stopColor="#ff5c8d" />
+                  <stop offset="40%" stopColor="#f43f5e" />
+                  <stop offset="85%" stopColor="#be123c" />
                   <stop offset="100%" stopColor="#881337" />
                 </linearGradient>
 
-                {/* Wooden Stick Gradient (Purple hue) */}
-                <linearGradient id="stickGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#7c3aed" />
-                  <stop offset="50%" stopColor="#a78bfa" />
-                  <stop offset="100%" stopColor="#5b21b6" />
+                {/* Rounded Purple Wooden Stick */}
+                <linearGradient id="stickPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#9333ea" />
+                  <stop offset="45%" stopColor="#7e22ce" />
+                  <stop offset="100%" stopColor="#581c87" />
                 </linearGradient>
+
+                {/* Curved Fuse Tube Shading */}
+                <linearGradient id="fuseTube" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="50%" stopColor="#f1f5f9" />
+                  <stop offset="100%" stopColor="#cbd5e1" />
+                </linearGradient>
+
+                {/* Star Bevel Gradients */}
+                <linearGradient id="starYellowBevel" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#fef9c3" />
+                  <stop offset="40%" stopColor="#facc15" />
+                  <stop offset="100%" stopColor="#ca8a04" />
+                </linearGradient>
+                <linearGradient id="starPinkBevel" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#fda4af" />
+                  <stop offset="40%" stopColor="#f43f5e" />
+                  <stop offset="100%" stopColor="#9f1239" />
+                </linearGradient>
+
+                {/* Ambient Sphere Accents */}
+                <radialGradient id="sphereGrad" cx="35%" cy="35%" r="65%">
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="60%" stopColor="#e2e8f0" />
+                  <stop offset="100%" stopColor="#94a3b8" />
+                </radialGradient>
               </defs>
 
-              {/* Group rotated pointing to top-right (~42deg) */}
-              <g transform="translate(42, 60) rotate(42) translate(-42, -60)">
-                {/* 1. Slim Extended Wooden Stick */}
-                <line 
-                  x1="42" 
-                  y1="72" 
-                  x2="42" 
-                  y2="120" 
-                  stroke="url(#stickGrad)" 
-                  strokeWidth="3.2" 
-                  strokeLinecap="round" 
+              {/* ------------------------------------------------------------- */}
+              {/* Surrounding Tiny 3D Decorative Ornaments                      */}
+              {/* ------------------------------------------------------------- */}
+              {/* White Soft Spheres */}
+              <circle cx="220" cy="50" r="5" fill="url(#sphereGrad)" opacity="0.85" />
+              <circle cx="140" cy="170" r="5" fill="url(#sphereGrad)" opacity="0.85" />
+              <circle cx="300" cy="255" r="5" fill="url(#sphereGrad)" opacity="0.85" />
+              <circle cx="178" cy="305" r="5" fill="url(#sphereGrad)" opacity="0.85" />
+
+              {/* Distant Golden Floating Stars */}
+              <g transform="translate(305, 58) scale(1.1)">
+                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
+              </g>
+              <g transform="translate(150, 95) scale(0.9)">
+                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
+              </g>
+              <g transform="translate(345, 205) scale(0.7)">
+                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
+              </g>
+              <g transform="translate(268, 310) scale(1.1)">
+                <path d="M 0 -8 L 2.5 -2.5 L 8.4 -2.5 L 3.6 1.4 L 5.4 7.2 L 0 3.5 L -5.4 7.2 L -3.6 1.4 L -8.4 -2.5 L -2.5 -2.5 Z" fill="#eab308" />
+              </g>
+
+              {/* ------------------------------------------------------------- */}
+              {/* MAIN ROCKET MESH (Aligned at ~42 deg towards top-right)       */}
+              {/* ------------------------------------------------------------- */}
+              <g transform="translate(200, 200) rotate(-42) translate(-200, -200)">
+                
+                {/* 1. Purple Rounded Stick (Center bottom extending out) */}
+                <rect 
+                  x="189" 
+                  y="260" 
+                  width="22" 
+                  height="115" 
+                  rx="11" 
+                  fill="url(#stickPurple)" 
+                  className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
                 />
 
-                {/* 2. Side Curved Wick (Thiri) curving out from bottom-left corner and ending at (16, 52) */}
+                {/* 2. White Curved Fuse (Thiri) emerging from left base, curving back up to stars */}
                 <path 
-                  d="M 32 72 C 20 74, 12 62, 16 52" 
+                  d="M 160 255 C 105 265, 80 205, 98 175" 
                   fill="none" 
-                  stroke="#f1f5f9" 
-                  strokeWidth="2.2" 
+                  stroke="url(#fuseTube)" 
+                  strokeWidth="11" 
                   strokeLinecap="round" 
+                  className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
                 />
 
-                {/* 3. Rocket Cylindrical Body (hot pink & yellow horizontal bands) */}
-                <rect x="29" y="32" width="26" height="40" rx="3.5" fill="url(#bodyPinkGrad)" />
-                <rect x="29" y="42" width="26" height="8" fill="url(#bodyYellowGrad)" />
-                <rect x="29" y="58" width="26" height="8" fill="url(#bodyYellowGrad)" />
+                {/* 3. Rocket Cylindrical Body (Pill capsule shape with rounded base) */}
+                <g>
+                  {/* Clip path for crisp striped body */}
+                  <clipPath id="rocketBodyClip">
+                    <path d="M 148 120 L 252 120 L 252 245 C 252 268, 148 268, 148 245 Z" />
+                  </clipPath>
 
-                {/* 4. Conical Hot-Pink Cap (Head) */}
-                {/* Solid conical hat */}
-                <path d="M 26 33 Q 42 36.5 58 33 L 42 9 Z" fill="url(#conePinkGrad)" />
-                {/* Single bottom rim white curved highlight line (NO full loop/ellipse!) */}
-                <path 
-                  d="M 26 33 Q 42 36.5 58 33" 
-                  fill="none" 
-                  stroke="#ffffff" 
-                  strokeWidth="1.6" 
-                  strokeLinecap="round"
-                  opacity="0.95" 
-                />
+                  <g clipPath="url(#rocketBodyClip)">
+                    {/* Full Pink Base Capsule */}
+                    <rect x="145" y="115" width="110" height="155" fill="url(#bodyPinkGloss)" />
 
-                {/* 5. Layered Stars at Wick (Thiri) End Point (16, 52) */}
-                {/* Pink Star (behind, slightly offset to top-left) */}
-                <path 
-                  d="M 13.5 44.5 L 14.8 47.7 L 18.2 47.7 L 15.5 49.7 L 16.5 53 L 13.5 51 L 10.5 53 L 11.5 49.7 L 8.8 47.7 L 12.2 47.7 Z" 
-                  fill="#f43f5e" 
-                  stroke="#be123c" 
-                  strokeWidth="0.5"
-                  className="filter drop-shadow-[0_0_4px_#fb7185]"
-                />
+                    {/* Band 1: Golden-Yellow Upper Stripe */}
+                    <rect x="145" y="130" width="110" height="34" fill="url(#yellowBandGloss)" />
 
-                {/* Yellow Star (directly on top of the wick tip, right in front of pink star) */}
-                <path 
-                  d="M 16 46 L 17.6 49.6 L 21.6 49.6 L 18.3 52 L 19.6 55.8 L 16 53.4 L 12.4 55.8 L 13.7 52 L 10.4 49.6 L 14.4 49.6 Z" 
-                  fill="#fde047" 
-                  stroke="#ca8a04" 
-                  strokeWidth="0.6"
-                  className="filter drop-shadow-[0_0_6px_#facc15]"
-                />
+                    {/* Band 2: Golden-Yellow Lower Stripe */}
+                    <rect x="145" y="196" width="110" height="34" fill="url(#yellowBandGloss)" />
+
+                    {/* Left edge 3D gloss specular highlight across cylinder */}
+                    <path d="M 152 120 L 160 120 L 160 255 L 152 250 Z" fill="#ffffff" opacity="0.35" />
+                    {/* Right edge shadow tone */}
+                    <path d="M 244 120 L 252 120 L 252 250 L 244 255 Z" fill="#000000" opacity="0.18" />
+                  </g>
+                </g>
+
+                {/* 4. Conical Nosecone Cap (Realistic overlapping 3D flared cone) */}
+                <g>
+                  {/* Flared conical body */}
+                  <path 
+                    d="M 140 128 Q 200 148 260 128 L 200 52 Z" 
+                    fill="url(#coneHeadGloss)" 
+                    className="filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]"
+                  />
+
+                  {/* Convex curved bottom lip (Solid thick 3D rim) */}
+                  <path 
+                    d="M 140 128 Q 200 148 260 128" 
+                    fill="none" 
+                    stroke="#ffffff" 
+                    strokeWidth="3.5" 
+                    strokeLinecap="round" 
+                    opacity="0.6" 
+                  />
+
+                  {/* Gloss sheen on top face of cone */}
+                  <path 
+                    d="M 148 124 L 200 58 L 200 138 Q 174 135 148 124 Z" 
+                    fill="#ffffff" 
+                    opacity="0.22" 
+                  />
+                </g>
+
+                {/* 5. Layered Stars at Tip of Fuse (Point 98, 175) */}
+                {/* A. Pink Star (Behind, shifted top-left) */}
+                <g transform="translate(90, 168) scale(1.65)">
+                  <path 
+                    d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
+                    fill="url(#starPinkBevel)" 
+                    className="filter drop-shadow-[0_2px_4px_rgba(159,18,57,0.5)]"
+                  />
+                </g>
+
+                {/* B. Yellow 3D Star (Directly on tip, in front) */}
+                <g transform="translate(100, 176) scale(1.9)">
+                  <path 
+                    d="M 0 -8 L 2.4 -2.4 L 8.2 -2.4 L 3.5 1.3 L 5.3 7.0 L 0 3.4 L -5.3 7.0 L -3.5 1.3 L -8.2 -2.4 L -2.4 -2.4 Z" 
+                    fill="url(#starYellowBevel)" 
+                    className="filter drop-shadow-[0_2px_5px_rgba(202,138,4,0.6)]"
+                  />
+                  {/* Subtle 3D faceted center highlight */}
+                  <path d="M 0 -8 L 2.4 -2.4 L 0 0 Z" fill="#ffffff" opacity="0.4" />
+                </g>
               </g>
             </svg>
           </motion.div>
@@ -156,7 +237,7 @@ export default function DiwaliRocketUI({
               rotate: 0 
             }}
             animate={{ 
-              // 1. Thiri burns down (0s -> 0.35s)
+              // 1. Fuse burns (0s -> 0.35s)
               // 2. Powerful fiery blast-off to top-right sky (0.35s -> 1.3s)
               opacity: [1, 1, 1, 1, 0],
               scale: [1, 1.15, 1.35, 1.1, 0.4],
@@ -169,50 +250,50 @@ export default function DiwaliRocketUI({
               times: [0, 0.15, 0.35, 0.75, 1],
               ease: [0.25, 0.1, 0.25, 1]
             }}
-            className="fixed z-[9999] pointer-events-none w-14 h-14"
-            style={{ filter: "drop-shadow(0 0 14px rgba(251,191,36,0.9))" }}
+            className="fixed z-[9999] pointer-events-none w-16 h-16"
+            style={{ filter: "drop-shadow(0 0 16px rgba(251,191,36,0.95))" }}
           >
-            {/* SVG Rocket matching exact colors & structure */}
-            <div className="relative w-14 h-14">
-              <svg viewBox="0 0 100 120" className="w-full h-full overflow-visible">
+            <div className="relative w-16 h-16">
+              <svg viewBox="0 0 400 400" className="w-full h-full overflow-visible">
                 <defs>
-                  <linearGradient id="flyBodyPink" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#f43f5e" />
-                    <stop offset="35%" stopColor="#fb7185" />
-                    <stop offset="70%" stopColor="#e11d48" />
+                  <linearGradient id="flyPink" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#ff4d82" />
+                    <stop offset="40%" stopColor="#f43f5e" />
                     <stop offset="100%" stopColor="#9f1239" />
                   </linearGradient>
-                  <linearGradient id="flyBodyYellow" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#f59e0b" />
-                    <stop offset="35%" stopColor="#fef08a" />
-                    <stop offset="70%" stopColor="#eab308" />
+                  <linearGradient id="flyYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#fef08a" />
+                    <stop offset="40%" stopColor="#facc15" />
                     <stop offset="100%" stopColor="#b45309" />
                   </linearGradient>
-                  <linearGradient id="flyConePink" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#f43f5e" />
-                    <stop offset="40%" stopColor="#fda4af" />
-                    <stop offset="80%" stopColor="#e11d48" />
+                  <linearGradient id="flyCone" x1="20%" y1="0%" x2="90%" y2="100%">
+                    <stop offset="0%" stopColor="#ff5c8d" />
+                    <stop offset="50%" stopColor="#f43f5e" />
                     <stop offset="100%" stopColor="#881337" />
                   </linearGradient>
-                  <linearGradient id="flyStick" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#7c3aed" />
-                    <stop offset="50%" stopColor="#a78bfa" />
-                    <stop offset="100%" stopColor="#5b21b6" />
+                  <linearGradient id="flyStick" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#9333ea" />
+                    <stop offset="100%" stopColor="#581c87" />
                   </linearGradient>
+                  <clipPath id="flyBodyClip">
+                    <path d="M 148 120 L 252 120 L 252 245 C 252 268, 148 268, 148 245 Z" />
+                  </clipPath>
                 </defs>
 
-                <g transform="translate(42, 60) rotate(42) translate(-42, -60)">
-                  {/* Extended Purple Wooden Stick */}
-                  <line x1="42" y1="72" x2="42" y2="124" stroke="url(#flyStick)" strokeWidth="3.2" strokeLinecap="round" />
+                <g transform="translate(200, 200) rotate(-42) translate(-200, -200)">
+                  {/* Stick */}
+                  <rect x="189" y="260" width="22" height="120" rx="11" fill="url(#flyStick)" />
 
-                  {/* Cylindrical Body */}
-                  <rect x="29" y="32" width="26" height="40" rx="3.5" fill="url(#flyBodyPink)" />
-                  <rect x="29" y="42" width="26" height="8" fill="url(#flyBodyYellow)" />
-                  <rect x="29" y="58" width="26" height="8" fill="url(#flyBodyYellow)" />
+                  {/* Body */}
+                  <g clipPath="url(#flyBodyClip)">
+                    <rect x="145" y="115" width="110" height="155" fill="url(#flyPink)" />
+                    <rect x="145" y="130" width="110" height="34" fill="url(#flyYellow)" />
+                    <rect x="145" y="196" width="110" height="34" fill="url(#flyYellow)" />
+                  </g>
 
-                  {/* Conical Cap */}
-                  <path d="M 26 33 Q 42 36.5 58 33 L 42 9 Z" fill="url(#flyConePink)" />
-                  <path d="M 26 33 Q 42 36.5 58 33" fill="none" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round" opacity="0.95" />
+                  {/* Nosecone */}
+                  <path d="M 140 128 Q 200 148 260 128 L 200 52 Z" fill="url(#flyCone)" />
+                  <path d="M 140 128 Q 200 148 260 128" fill="none" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" opacity="0.6" />
                 </g>
               </svg>
 
@@ -220,7 +301,7 @@ export default function DiwaliRocketUI({
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ 
-                  scale: [0, 1.2, 1.8, 1.5, 0.4], 
+                  scale: [0, 1.3, 1.9, 1.6, 0.4], 
                   opacity: [0, 1, 1, 0.9, 0] 
                 }}
                 transition={{ 
@@ -228,16 +309,16 @@ export default function DiwaliRocketUI({
                   times: [0, 0.25, 0.5, 0.8, 1],
                   ease: "easeOut" 
                 }}
-                className="absolute left-1/2 bottom-2 -translate-x-1/2 w-8 h-8 pointer-events-none"
+                className="absolute left-1/2 bottom-1 -translate-x-1/2 w-10 h-10 pointer-events-none"
               >
                 {/* Outer warm orange flame glow aura */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-t from-orange-600 via-amber-500 to-yellow-300 blur-sm shadow-[0_0_20px_#f97316]" />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-t from-orange-600 via-amber-500 to-yellow-300 blur-sm shadow-[0_0_24px_#f97316]" />
                 
                 {/* Core bright white-yellow fiery exhaust jet */}
                 <motion.div 
                   animate={{ scaleY: [1, 1.5, 1.2], scaleX: [1, 0.85, 1] }}
                   transition={{ repeat: Infinity, duration: 0.12 }}
-                  className="absolute left-1/2 top-1 -translate-x-1/2 w-4 h-6 rounded-full bg-gradient-to-t from-amber-400 via-yellow-200 to-white shadow-[0_0_12px_#ffffff]"
+                  className="absolute left-1/2 top-1 -translate-x-1/2 w-5 h-7 rounded-full bg-gradient-to-t from-amber-400 via-yellow-200 to-white shadow-[0_0_14px_#ffffff]"
                 />
               </motion.div>
 
