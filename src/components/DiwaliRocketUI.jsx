@@ -12,84 +12,125 @@ import { motion, AnimatePresence } from 'framer-motion';
  *    2. Blazing fiery base exhaust jet ignites
  *    3. Rocket blasts off to the top-right sky
  */
+// Dynamic positions for stars to teleport to each time they twinkle!
+const STAR_POSITIONS = [
+  // Ring 1 (Top-Left of rocket)
+  [
+    { x: -6, y: -4 },
+    { x: -12, y: 6 },
+    { x: -2, y: 12 },
+    { x: -10, y: -10 }
+  ],
+  // Ring 2 (Top-Right / Cone area)
+  [
+    { x: 10, y: -8 },
+    { x: 16, y: 0 },
+    { x: 6, y: -14 },
+    { x: 14, y: -12 }
+  ],
+  // Ring 3 (Bottom-Left / Stick & Fuse area)
+  [
+    { x: -8, y: 14 },
+    { x: -14, y: 22 },
+    { x: -2, y: 24 },
+    { x: -12, y: 16 }
+  ],
+  // Ring 4 (Bottom-Right / Side of cylinder)
+  [
+    { x: 12, y: 12 },
+    { x: 18, y: 20 },
+    { x: 8, y: 26 },
+    { x: 14, y: 6 }
+  ]
+];
+
+function WanderingStar({ index, size = 6, dur = 2.4, delay = 0, rotateDir = 1 }) {
+  const [posIdx, setPosIdx] = React.useState(0);
+  const positions = STAR_POSITIONS[index % STAR_POSITIONS.length];
+
+  return (
+    <motion.div
+      style={{
+        position: 'absolute',
+        width: `${size}px`,
+        height: `${size}px`,
+        left: '50%',
+        top: '50%',
+        marginLeft: `-${size / 2}px`,
+        marginTop: `-${size / 2}px`
+      }}
+      initial={{ opacity: 0, scale: 0.1, x: positions[0].x, y: positions[0].y }}
+      animate={{
+        opacity: [0, 1, 0.85, 1, 0],
+        scale: [0.1, 1.35, 1.0, 1.3, 0.1],
+        rotate: rotateDir === 1 ? [0, 180, 360] : [360, 180, 0],
+        x: positions[posIdx].x,
+        y: positions[posIdx].y
+      }}
+      transition={{
+        duration: dur,
+        repeat: Infinity,
+        delay: delay,
+        ease: "easeInOut"
+      }}
+      onAnimationIteration={() => {
+        // Teleport to a new random spot in its quadrant when it completely fades out!
+        setPosIdx((prev) => (prev + 1 + Math.floor(Math.random() * (positions.length - 1))) % positions.length);
+      }}
+      className="pointer-events-none flex items-center justify-center"
+    >
+      <svg viewBox="0 0 24 24" className="w-full h-full overflow-visible">
+        {/* Faceted 4-point Diamond Sparkle Star with rich glowing drop-shadow */}
+        <path 
+          d="M 12 0 Q 12 9 21 12 Q 12 15 12 24 Q 12 15 3 12 Q 12 9 12 0 Z" 
+          fill="#fef08a" 
+          style={{ 
+            filter: 'drop-shadow(0 0 5px #facc15) drop-shadow(0 0 10px #eab308) drop-shadow(0 0 16px #ca8a04)' 
+          }}
+        />
+        {/* Bright pure white core center */}
+        <circle cx="12" cy="12" r="2.4" fill="#ffffff" />
+      </svg>
+    </motion.div>
+  );
+}
+
 export default function DiwaliRocketUI({ 
   isFlying = false, 
   isAmbient = true 
 }) {
-  // Subtle, delicate twinkling stars closely orbiting right around the rocket body
-  const ambientStars = [
-    { id: 's1', top: '8px', left: '2px', size: 5.5, dur: 2.0, delay: 0.1, rotateDir: 1 },
-    { id: 's2', top: '2px', right: '8px', size: 6, dur: 2.5, delay: 0.8, rotateDir: -1 },
-    { id: 's3', bottom: '10px', left: '6px', size: 5, dur: 1.8, delay: 1.4, rotateDir: 1 },
-    { id: 's4', bottom: '6px', right: '4px', size: 5.5, dur: 2.3, delay: 0.5, rotateDir: -1 }
-  ];
-
   return (
     <div className="relative w-12 h-12 flex items-center justify-center pointer-events-none select-none">
       <AnimatePresence mode="wait">
         {!isFlying && isAmbient && (
           <div className="relative w-12 h-12 flex items-center justify-center">
             
-            {/* Ambient Soft Warm Halo Glow (Delicate & natural) */}
+            {/* Ambient Warm Golden/Pink Rocket Halo Glow (Enhanced visibility) */}
             <motion.div
               animate={{
-                scale: [0.95, 1.12, 0.95],
-                opacity: [0.15, 0.35, 0.15]
+                scale: [0.92, 1.25, 0.92],
+                opacity: [0.35, 0.65, 0.35]
               }}
               transition={{
-                duration: 3.2,
+                duration: 2.8,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="absolute -inset-1 rounded-full bg-gradient-to-tr from-rose-500/20 via-amber-400/25 to-yellow-300/15 blur-sm pointer-events-none"
+              className="absolute -inset-2 rounded-full bg-gradient-to-tr from-rose-500/30 via-amber-400/40 to-yellow-300/30 blur-md pointer-events-none shadow-[0_0_20px_rgba(251,191,36,0.4)]"
             />
 
-            {/* 1. Subtle Twinkling & Rotating Golden Stars around rocket */}
-            {ambientStars.map((star) => (
-              <motion.div
-                key={star.id}
-                style={{
-                  position: 'absolute',
-                  top: star.top,
-                  left: star.left,
-                  right: star.right,
-                  bottom: star.bottom,
-                  width: `${star.size}px`,
-                  height: `${star.size}px`
-                }}
-                initial={{ opacity: 0, scale: 0.1 }}
-                animate={{
-                  opacity: [0, 1, 0.8, 1, 0],
-                  scale: [0.1, 1.25, 0.95, 1.2, 0.1],
-                  rotate: star.rotateDir === 1 ? [0, 180, 360] : [360, 180, 0]
-                }}
-                transition={{
-                  duration: star.dur,
-                  repeat: Infinity,
-                  delay: star.delay,
-                  ease: "easeInOut"
-                }}
-                className="pointer-events-none flex items-center justify-center"
-              >
-                <svg viewBox="0 0 24 24" className="w-full h-full overflow-visible">
-                  {/* Faceted 4-point Diamond Sparkle Star */}
-                  <path 
-                    d="M 12 0 Q 12 9 21 12 Q 12 15 12 24 Q 12 15 3 12 Q 12 9 12 0 Z" 
-                    fill="#fef08a" 
-                    style={{ filter: 'drop-shadow(0 0 4px #facc15) drop-shadow(0 0 8px #eab308)' }}
-                  />
-                  {/* Pure white core center */}
-                  <circle cx="12" cy="12" r="2.2" fill="#ffffff" />
-                </svg>
-              </motion.div>
-            ))}
+            {/* 1. Wandering Twinkling Golden Stars that jump/teleport to different random spots */}
+            <WanderingStar index={0} size={6.5} dur={2.1} delay={0.1} rotateDir={1} />
+            <WanderingStar index={1} size={7} dur={2.6} delay={0.7} rotateDir={-1} />
+            <WanderingStar index={2} size={6} dur={1.9} delay={1.3} rotateDir={1} />
+            <WanderingStar index={3} size={6.5} dur={2.4} delay={0.4} rotateDir={-1} />
 
-            {/* 2. Main Rocket Body (Breathing with smooth gentle fade & float) */}
+            {/* 2. Main Rocket Body (Breathing with smooth gentle fade & float + rich glow) */}
             <motion.div
               key="ambient-diwali-rocket"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ 
-                opacity: [0.35, 1, 0.35],
+                opacity: [0.55, 1, 0.55],
                 scale: [0.96, 1.04, 0.96],
                 y: [2, -3, 2],
                 rotate: [-1, 2, -1]
@@ -105,7 +146,7 @@ export default function DiwaliRocketUI({
                 y: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
                 rotate: { duration: 3.2, repeat: Infinity, ease: "easeInOut" }
               }}
-              className="relative w-12 h-12 flex items-center justify-center filter drop-shadow-[0_4px_10px_rgba(244,63,94,0.35)]"
+              className="relative w-12 h-12 flex items-center justify-center filter drop-shadow-[0_0_10px_rgba(251,191,36,0.5)] drop-shadow-[0_5px_12px_rgba(244,63,94,0.5)]"
             >
               <svg 
                 viewBox="0 0 400 400" 
