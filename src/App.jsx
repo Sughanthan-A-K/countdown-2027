@@ -244,6 +244,11 @@ function App() {
         setPendingSharedDate(currentSharedDate);
         if (currentSharedType === 'diwali') {
           localStorage.setItem('diwaliEventDone_2026', 'true');
+          setDiwaliRevealed(true);
+          setDiwaliPhase(2);
+          setShowDiwaliEvent(false);
+          setIsDarkMode(true);
+          localStorage.setItem('isDarkMode', 'true');
         } else if (currentSharedType === 'ayudhapooja') {
           localStorage.setItem('ayudhaPoojaEventDone_2026', 'true');
         } else if (currentSharedType === 'vijayadashami') {
@@ -867,6 +872,15 @@ function App() {
         const today = normalizeDate(new Date());
         const targetDate = pendingSharedDate || today;
         setCalendarDate(targetDate);
+        if (pendingSharedDate && pendingSharedDate.getMonth() === 10 && pendingSharedDate.getDate() === 8) {
+          // If came from shared Diwali card: already witnessed wish celebration earlier
+          localStorage.setItem('diwaliEventDone_2026', 'true');
+          setDiwaliRevealed(true);
+          setDiwaliPhase(2);
+          setShowDiwaliEvent(false);
+          setIsDarkMode(true);
+          localStorage.setItem('isDarkMode', 'true');
+        }
         setPendingSharedDate(null);
         localStorage.setItem('lastTornDate', targetDate.getTime().toString());
         localStorage.setItem('onboardingDone', 'true');
@@ -1257,8 +1271,17 @@ function App() {
               if (tier === 'skip') {
                 // Dec 15 onwards: Language chosen -> direct to today countdown with 2-step SpeechBubble guidance
                 const today = normalizeDate(new Date());
-                const effectiveToday = isDevMode ? calendarDate : today;
+                const effectiveToday = pendingSharedDate || (isDevMode ? calendarDate : today);
                 setCalendarDate(effectiveToday);
+                if (pendingSharedDate && pendingSharedDate.getMonth() === 10 && pendingSharedDate.getDate() === 8) {
+                  localStorage.setItem('diwaliEventDone_2026', 'true');
+                  setDiwaliRevealed(true);
+                  setDiwaliPhase(2);
+                  setShowDiwaliEvent(false);
+                  setIsDarkMode(true);
+                  localStorage.setItem('isDarkMode', 'true');
+                }
+                setPendingSharedDate(null);
                 localStorage.setItem('lastTornDate', effectiveToday.getTime().toString());
                 localStorage.setItem('onboardingDone', 'true');
                 localStorage.setItem('onboardingDoneDate', effectiveToday.getTime().toString());
