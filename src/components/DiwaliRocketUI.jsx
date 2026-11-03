@@ -13,35 +13,51 @@ import { motion, AnimatePresence } from 'framer-motion';
  *    3. Rocket blasts off to the top-right sky
  */
 
-// Candidate organic spots tightly surrounding the rocket body
-const CANDIDATE_SPOTS = [
-  { top: '2px', left: '6px' },
-  { top: '8px', left: '0px' },
-  { top: '-2px', right: '10px' },
-  { top: '6px', right: '2px' },
-  { top: '14px', right: '-4px' },
-  { bottom: '12px', left: '4px' },
-  { bottom: '4px', left: '8px' },
-  { bottom: '-2px', left: '16px' },
-  { bottom: '8px', right: '2px' },
-  { bottom: '0px', right: '8px' },
-  { top: '18px', left: '-4px' },
-  { top: '26px', right: '-2px' }
+// 4 distinct quadrants around the rocket so stars NEVER crowd or touch each other:
+// Zone 0: Top-Left (near wick/nose)
+const ZONE_TOP_LEFT = [
+  { top: '4px', left: '2px' },
+  { top: '12px', left: '-2px' },
+  { top: '-2px', left: '8px' }
 ];
 
+// Zone 1: Top-Right (above the nosecone)
+const ZONE_TOP_RIGHT = [
+  { top: '-2px', right: '6px' },
+  { top: '6px', right: '0px' },
+  { top: '14px', right: '-4px' }
+];
+
+// Zone 2: Bottom-Right (flank of rocket body)
+const ZONE_BOTTOM_RIGHT = [
+  { bottom: '8px', right: '2px' },
+  { bottom: '0px', right: '8px' },
+  { bottom: '16px', right: '-2px' }
+];
+
+// Zone 3: Bottom-Left (near base of stick)
+const ZONE_BOTTOM_LEFT = [
+  { bottom: '12px', left: '2px' },
+  { bottom: '2px', left: '10px' },
+  { bottom: '18px', left: '-2px' }
+];
+
+const SEPARATED_ZONES = [ZONE_TOP_LEFT, ZONE_TOP_RIGHT, ZONE_BOTTOM_RIGHT, ZONE_BOTTOM_LEFT];
+
 function RandomTwinkleStar({ index }) {
+  const zone = SEPARATED_ZONES[index];
   const [starState, setStarState] = useState(() => ({
-    spot: CANDIDATE_SPOTS[index % CANDIDATE_SPOTS.length],
-    size: 5 + Math.random() * 2.5, // 5px - 7.5px
+    spot: zone[Math.floor(Math.random() * zone.length)],
+    size: 5 + Math.random() * 2, // 5px - 7px
     key: 0
   }));
 
-  const cycleDuration = 1.8 + (index * 0.4);
+  const cycleDuration = 2.0 + (index * 0.35);
 
   const handleAnimationComplete = () => {
-    // Pick a new random spot on each fade-in/fade-out cycle
-    const nextSpot = CANDIDATE_SPOTS[Math.floor(Math.random() * CANDIDATE_SPOTS.length)];
-    const nextSize = 5 + Math.random() * 2.5;
+    // Pick a new random spot strictly INSIDE this star's exclusive zone so stars never overlap!
+    const nextSpot = zone[Math.floor(Math.random() * zone.length)];
+    const nextSize = 5 + Math.random() * 2;
     setStarState(prev => ({
       spot: nextSpot,
       size: nextSize,
@@ -69,7 +85,7 @@ function RandomTwinkleStar({ index }) {
       }}
       transition={{
         duration: cycleDuration,
-        delay: index * 0.45,
+        delay: index * 0.55,
         ease: "easeInOut"
       }}
       onAnimationComplete={handleAnimationComplete}
