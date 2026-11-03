@@ -30,6 +30,20 @@ export default function DiwaliRocketUI({
         {!isFlying && isAmbient && (
           <div className="relative w-12 h-12 flex items-center justify-center">
             
+            {/* Ambient Soft Warm Halo Glow (Delicate & natural) */}
+            <motion.div
+              animate={{
+                scale: [0.95, 1.12, 0.95],
+                opacity: [0.15, 0.35, 0.15]
+              }}
+              transition={{
+                duration: 3.2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute -inset-1 rounded-full bg-gradient-to-tr from-rose-500/20 via-amber-400/25 to-yellow-300/15 blur-sm pointer-events-none"
+            />
+
             {/* 1. Subtle Twinkling & Rotating Golden Stars around rocket */}
             {ambientStars.map((star) => (
               <motion.div
@@ -90,7 +104,7 @@ export default function DiwaliRocketUI({
                 y: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
                 rotate: { duration: 3.2, repeat: Infinity, ease: "easeInOut" }
               }}
-              className="relative w-12 h-12 flex items-center justify-center filter drop-shadow-[0_5px_12px_rgba(244,63,94,0.45)]"
+              className="relative w-12 h-12 flex items-center justify-center filter drop-shadow-[0_4px_10px_rgba(244,63,94,0.35)]"
             >
               <svg 
                 viewBox="0 0 400 400" 
