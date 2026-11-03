@@ -1542,7 +1542,7 @@ function App() {
                 initial={{ opacity: 0 }} 
                 animate={{ opacity: 1 }} 
                 exit={{ opacity: 0 }} 
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-6 touch-auto"
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[2000] flex items-center justify-center p-6 touch-auto"
                 onClick={() => setShowInfo(false)}
               >
                 <motion.div 
@@ -1556,7 +1556,7 @@ function App() {
                 >
                   <button 
                     onClick={() => setShowInfo(false)}
-                    className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-full hover:bg-neutral-500/20 transition-colors z-[600]"
+                    className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-full hover:bg-neutral-500/20 transition-colors z-[2100]"
                   >
                     <X size={20} className="sm:w-6 sm:h-6" />
                   </button>

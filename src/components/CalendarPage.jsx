@@ -379,7 +379,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                           repeat: Infinity,
                           ease: "easeOut"
                         }}
-                        className={`absolute inset-0 rounded-full border-2 border-dashed ${
+                        className={`absolute w-10 h-10 rounded-full border-2 border-dashed ${
                           effectiveDarkMode ? 'border-amber-400' : 'border-amber-500'
                         }`}
                       />
