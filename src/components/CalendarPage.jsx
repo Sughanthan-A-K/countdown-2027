@@ -371,13 +371,13 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                       {/* Outer expanding ripple ring */}
                       <motion.div
                         animate={{ 
-                          scale: [0.8, 1.8],
-                          opacity: [0.9, 0]
+                          scale: [1, 1.45, 1],
+                          opacity: [0.9, 0.45, 0.9]
                         }}
                         transition={{ 
-                          duration: 1.8, 
+                          duration: 2.2, 
                           repeat: Infinity,
-                          ease: "easeOut"
+                          ease: "easeInOut"
                         }}
                         className={`absolute w-10 h-10 rounded-full border-2 border-dashed ${
                           effectiveDarkMode ? 'border-amber-400' : 'border-amber-500'
