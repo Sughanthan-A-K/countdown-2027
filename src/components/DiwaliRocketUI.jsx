@@ -122,32 +122,24 @@ export default function DiwaliRocketUI({
                   opacity="0.95" 
                 />
 
-                {/* 5. Layered Stars at Wick (Thiri) End Point: (16, 52) */}
+                {/* 5. Layered Stars at Wick (Thiri) End Point (16, 52) */}
                 {/* Pink Star (behind, slightly offset to top-left) */}
-                <g transform="translate(13.5, 49.5) scale(0.9)">
-                  <path 
-                    d="M 0 -5 L 1.5 -1.5 L 5.2 -1.5 L 2.2 0.8 L 3.4 4.5 L 0 2.2 L -3.4 4.5 L -2.2 0.8 L -5.2 -1.5 L -1.5 -1.5 Z" 
-                    fill="#f43f5e" 
-                    stroke="#be123c" 
-                    strokeWidth="0.5"
-                    className="filter drop-shadow-[0_0_3px_#fb7185]"
-                  />
-                </g>
+                <path 
+                  d="M 13.5 44.5 L 14.8 47.7 L 18.2 47.7 L 15.5 49.7 L 16.5 53 L 13.5 51 L 10.5 53 L 11.5 49.7 L 8.8 47.7 L 12.2 47.7 Z" 
+                  fill="#f43f5e" 
+                  stroke="#be123c" 
+                  strokeWidth="0.5"
+                  className="filter drop-shadow-[0_0_4px_#fb7185]"
+                />
 
-                {/* Yellow Star (on top, positioned right on wick tip) */}
-                <motion.g 
-                  transform="translate(16, 52)"
-                  animate={{ scale: [0.9, 1.15, 0.9] }}
-                  transition={{ repeat: Infinity, duration: 1.0, ease: "easeInOut" }}
-                >
-                  <path 
-                    d="M 0 -6 L 1.8 -1.8 L 6.2 -1.8 L 2.6 1 L 4 5.4 L 0 2.6 L -4 5.4 L -2.6 1 L -6.2 -1.8 L -1.8 -1.8 Z" 
-                    fill="#fde047" 
-                    stroke="#ca8a04" 
-                    strokeWidth="0.6"
-                    className="filter drop-shadow-[0_0_5px_#facc15]"
-                  />
-                </motion.g>
+                {/* Yellow Star (directly on top of the wick tip, right in front of pink star) */}
+                <path 
+                  d="M 16 46 L 17.6 49.6 L 21.6 49.6 L 18.3 52 L 19.6 55.8 L 16 53.4 L 12.4 55.8 L 13.7 52 L 10.4 49.6 L 14.4 49.6 Z" 
+                  fill="#fde047" 
+                  stroke="#ca8a04" 
+                  strokeWidth="0.6"
+                  className="filter drop-shadow-[0_0_6px_#facc15]"
+                />
               </g>
             </svg>
           </motion.div>
