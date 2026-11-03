@@ -4,20 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 /**
  * DiwaliRocketUI
  * 
- * Beautiful custom SVG & Canvas Vector Rocket inspired by traditional Diwali Rocket:
+ * Custom Vector Diwali Rocket strictly matching reference:
  * - Cylindrical rocket body with alternating hot-pink & yellow stripes
- * - Conical hot-pink cap (head) with white highlight rim
- * - Curved side wick (thiri) with spark on the tip
- * - Slim purple wooden stick extending downwards from bottom base
+ * - Conical hot-pink head with natural curved arc rim on bottom edge only (NO full transparent circle!)
+ * - Side curved wick (thiri) with layered stars on the end:
+ *     - Pink star in back, slightly offset
+ *     - Yellow star on top
+ * - Extended purple wooden stick downwards
+ * - Cleaned up: removed distracting floating yellow dots above rocket
  * - When tapped (isFlying):
- *    1. Wick sparks aggressively & burns down to rocket base (~0.4s)
- *    2. Blazing fiery exhaust flame ignites at base of rocket (NOT on stick)
+ *    1. Thiri burns down with sparks (~0.35s)
+ *    2. Blazing fiery exhaust flame ignites at rocket base
  *    3. Rocket blasts off upwards to the top-right sky with particle trail!
  */
 export default function DiwaliRocketUI({ 
   isFlying = false, 
-  isAmbient = true,
-  onLaunchComplete = null 
+  isAmbient = true 
 }) {
   return (
     <div className="relative w-12 h-12 flex items-center justify-center pointer-events-none select-none">
@@ -41,7 +43,7 @@ export default function DiwaliRocketUI({
             className="relative w-11 h-11 flex items-center justify-center"
           >
             {/* Ambient Outer Warm Glow */}
-            <div className="absolute inset-0 rounded-full bg-amber-400/20 blur-md pointer-events-none" />
+            <div className="absolute inset-0 rounded-full bg-amber-400/15 blur-md pointer-events-none" />
 
             <svg 
               viewBox="0 0 100 120" 
@@ -72,7 +74,7 @@ export default function DiwaliRocketUI({
                   <stop offset="100%" stopColor="#881337" />
                 </linearGradient>
 
-                {/* Wooden Stick Gradient (Purple/Wood hue) */}
+                {/* Wooden Stick Gradient (Purple hue) */}
                 <linearGradient id="stickGrad" x1="0" y1="0" x2="1" y2="0">
                   <stop offset="0%" stopColor="#7c3aed" />
                   <stop offset="50%" stopColor="#a78bfa" />
@@ -80,22 +82,22 @@ export default function DiwaliRocketUI({
                 </linearGradient>
               </defs>
 
-              {/* Group rotated pointing to top-right (standard launch angle ~42deg) */}
+              {/* Group rotated pointing to top-right (~42deg) */}
               <g transform="translate(42, 60) rotate(42) translate(-42, -60)">
-                {/* 1. Slim Extended Wooden Stick (extending downwards from center-bottom of rocket) */}
+                {/* 1. Slim Extended Wooden Stick */}
                 <line 
                   x1="42" 
                   y1="72" 
                   x2="42" 
-                  y2="118" 
+                  y2="120" 
                   stroke="url(#stickGrad)" 
                   strokeWidth="3.2" 
                   strokeLinecap="round" 
                 />
 
-                {/* 2. Side Curved Wick (Thiri) emerging from bottom-left corner of rocket */}
+                {/* 2. Side Curved Wick (Thiri) curving out from bottom-left corner and ending at (16, 52) */}
                 <path 
-                  d="M 33 72 C 22 75, 18 64, 22 55" 
+                  d="M 32 72 C 20 74, 12 62, 16 52" 
                   fill="none" 
                   stroke="#f1f5f9" 
                   strokeWidth="2.2" 
@@ -103,48 +105,51 @@ export default function DiwaliRocketUI({
                 />
 
                 {/* 3. Rocket Cylindrical Body (hot pink & yellow horizontal bands) */}
-                {/* Base pink container */}
-                <rect x="29" y="32" width="26" height="40" rx="4" fill="url(#bodyPinkGrad)" />
-                {/* Yellow Band 1 */}
+                <rect x="29" y="32" width="26" height="40" rx="3.5" fill="url(#bodyPinkGrad)" />
                 <rect x="29" y="42" width="26" height="8" fill="url(#bodyYellowGrad)" />
-                {/* Yellow Band 2 */}
                 <rect x="29" y="58" width="26" height="8" fill="url(#bodyYellowGrad)" />
 
                 {/* 4. Conical Hot-Pink Cap (Head) */}
-                {/* Subtle base shadow under rim */}
-                <ellipse cx="42" cy="33" rx="15" ry="3.5" fill="#4c0519" opacity="0.4" />
-                {/* White highlight rim */}
-                <path d="M 25 33 Q 42 36 59 33 L 42 10 Z" fill="url(#conePinkGrad)" />
-                <ellipse cx="42" cy="33" rx="14.5" ry="2.2" fill="none" stroke="#ffffff" strokeWidth="1.2" opacity="0.85" />
-              </g>
-
-              {/* Sparkle on the tip of the wick (Thiri) */}
-              <motion.g
-                animate={{ scale: [0.8, 1.3, 0.8], opacity: [0.7, 1, 0.7] }}
-                transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut" }}
-              >
-                {/* Golden star sparkle on wick tip */}
+                {/* Solid conical hat */}
+                <path d="M 26 33 Q 42 36.5 58 33 L 42 9 Z" fill="url(#conePinkGrad)" />
+                {/* Single bottom rim white curved highlight line (NO full loop/ellipse!) */}
                 <path 
-                  d="M 27 65 L 28.5 68 L 32 68.5 L 29.5 70.5 L 30.5 74 L 27 72 L 23.5 74 L 24.5 70.5 L 22 68.5 L 25.5 68 Z" 
-                  fill="#facc15" 
-                  stroke="#ca8a04" 
-                  strokeWidth="0.5"
-                  className="filter drop-shadow-[0_0_4px_#facc15]"
+                  d="M 26 33 Q 42 36.5 58 33" 
+                  fill="none" 
+                  stroke="#ffffff" 
+                  strokeWidth="1.6" 
+                  strokeLinecap="round"
+                  opacity="0.95" 
                 />
-              </motion.g>
-            </svg>
 
-            {/* Natural ambient floating sparkles around rocket */}
-            <motion.div 
-              animate={{ scale: [0, 1.2, 0], opacity: [0, 1, 0] }}
-              transition={{ repeat: Infinity, duration: 1.6, ease: "easeOut" }}
-              className="absolute -top-1 -right-0.5 w-1.5 h-1.5 bg-yellow-300 rounded-full shadow-[0_0_6px_#fde047]"
-            />
-            <motion.div 
-              animate={{ scale: [0, 1, 0], opacity: [0, 0.9, 0] }}
-              transition={{ repeat: Infinity, duration: 1.8, delay: 0.4, ease: "easeOut" }}
-              className="absolute top-2 -left-1 w-1 h-1 bg-amber-400 rounded-full shadow-[0_0_5px_#fbbf24]"
-            />
+                {/* 5. Layered Stars at Wick (Thiri) End Point: (16, 52) */}
+                {/* Pink Star (behind, slightly offset to top-left) */}
+                <g transform="translate(13.5, 49.5) scale(0.9)">
+                  <path 
+                    d="M 0 -5 L 1.5 -1.5 L 5.2 -1.5 L 2.2 0.8 L 3.4 4.5 L 0 2.2 L -3.4 4.5 L -2.2 0.8 L -5.2 -1.5 L -1.5 -1.5 Z" 
+                    fill="#f43f5e" 
+                    stroke="#be123c" 
+                    strokeWidth="0.5"
+                    className="filter drop-shadow-[0_0_3px_#fb7185]"
+                  />
+                </g>
+
+                {/* Yellow Star (on top, positioned right on wick tip) */}
+                <motion.g 
+                  transform="translate(16, 52)"
+                  animate={{ scale: [0.9, 1.15, 0.9] }}
+                  transition={{ repeat: Infinity, duration: 1.0, ease: "easeInOut" }}
+                >
+                  <path 
+                    d="M 0 -6 L 1.8 -1.8 L 6.2 -1.8 L 2.6 1 L 4 5.4 L 0 2.6 L -4 5.4 L -2.6 1 L -6.2 -1.8 L -1.8 -1.8 Z" 
+                    fill="#fde047" 
+                    stroke="#ca8a04" 
+                    strokeWidth="0.6"
+                    className="filter drop-shadow-[0_0_5px_#facc15]"
+                  />
+                </motion.g>
+              </g>
+            </svg>
           </motion.div>
         )}
 
@@ -159,7 +164,7 @@ export default function DiwaliRocketUI({
               rotate: 0 
             }}
             animate={{ 
-              // 1. Thiri burns & shakes slightly (0s -> 0.35s)
+              // 1. Thiri burns down (0s -> 0.35s)
               // 2. Powerful fiery blast-off to top-right sky (0.35s -> 1.3s)
               opacity: [1, 1, 1, 1, 0],
               scale: [1, 1.15, 1.35, 1.1, 0.4],
@@ -209,18 +214,17 @@ export default function DiwaliRocketUI({
                   <line x1="42" y1="72" x2="42" y2="124" stroke="url(#flyStick)" strokeWidth="3.2" strokeLinecap="round" />
 
                   {/* Cylindrical Body */}
-                  <rect x="29" y="32" width="26" height="40" rx="4" fill="url(#flyBodyPink)" />
+                  <rect x="29" y="32" width="26" height="40" rx="3.5" fill="url(#flyBodyPink)" />
                   <rect x="29" y="42" width="26" height="8" fill="url(#flyBodyYellow)" />
                   <rect x="29" y="58" width="26" height="8" fill="url(#flyBodyYellow)" />
 
                   {/* Conical Cap */}
-                  <ellipse cx="42" cy="33" rx="15" ry="3.5" fill="#4c0519" opacity="0.4" />
-                  <path d="M 25 33 Q 42 36 59 33 L 42 10 Z" fill="url(#flyConePink)" />
-                  <ellipse cx="42" cy="33" rx="14.5" ry="2.2" fill="none" stroke="#ffffff" strokeWidth="1.2" opacity="0.85" />
+                  <path d="M 26 33 Q 42 36.5 58 33 L 42 9 Z" fill="url(#flyConePink)" />
+                  <path d="M 26 33 Q 42 36.5 58 33" fill="none" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round" opacity="0.95" />
                 </g>
               </svg>
 
-              {/* BLAZING FIERY EXHAUST FLAME: Directly at the bottom base of the rocket cylinder! */}
+              {/* BLAZING FIERY EXHAUST FLAME: Directly at the bottom base of the rocket cylinder */}
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ 
