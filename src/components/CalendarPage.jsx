@@ -24,10 +24,7 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   // Special card share hint & sparkle indicator
   // For Diwali: User should see the intro tooltip/rocket guidance at least once for this new feature!
   const [hasDismissedShareHint, setHasDismissedShareHint] = useState(() => {
-    if (isDiwali || forceDiwaliMode) {
-      return localStorage.getItem('has_seen_diwali_rocket_share_hint') === 'true';
-    }
-    return localStorage.getItem('has_seen_special_share_hint') === 'true';
+    return localStorage.getItem('has_seen_diwali_rocket_share_hint') === 'true' || localStorage.getItem('has_seen_special_share_hint') === 'true';
   });
   const [showShareIntroHint, setShowShareIntroHint] = useState(false);
   const [showReturningShareTwinkle, setShowReturningShareTwinkle] = useState(false);
