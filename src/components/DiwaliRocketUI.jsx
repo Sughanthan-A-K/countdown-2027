@@ -515,31 +515,34 @@ export default function DiwaliRocketUI({
                     {/* Intense white root point at rocket base */}
                     <ellipse cx="0" cy="2" rx="22" ry="5.5" fill="#ffffff" />
 
-                    {/* Clay-style fiery exhaust bubbles connected right into the flame and thrust core */}
+                    {/* Real Cracker Golden Sparks Spray (Chiruporigal erupting and trailing behind rocket) */}
                     {[
-                      { id: 'b1', cx: -6, cy: 38, r: 8, delay: 0.04, animY: [38, 72], animX: [-6, -10], animScale: [1, 0.5] },
-                      { id: 'b2', cx: 7, cy: 45, r: 7.5, delay: 0.12, animY: [45, 80], animX: [7, 12], animScale: [1, 0.45] },
-                      { id: 'b3', cx: -1, cy: 56, r: 9, delay: 0.20, animY: [56, 92], animX: [-1, 2], animScale: [1, 0.4] },
-                      { id: 'b4', cx: -8, cy: 68, r: 7, delay: 0.28, animY: [68, 102], animX: [-8, -14], animScale: [1, 0.35] },
-                      { id: 'b5', cx: 6, cy: 75, r: 7.5, delay: 0.36, animY: [75, 110], animX: [6, 12], animScale: [1, 0.3] }
-                    ].map((bubble) => (
+                      { id: 'sp1', x: -6, y: 15, targetX: -26, targetY: 105, size: 3.5, color: '#fef08a', delay: 0.02 },
+                      { id: 'sp2', x: 8, y: 22, targetX: 28, targetY: 115, size: 4, color: '#ffffff', delay: 0.08 },
+                      { id: 'sp3', x: -2, y: 35, targetX: -14, targetY: 130, size: 3, color: '#facc15', delay: 0.14 },
+                      { id: 'sp4', x: 5, y: 45, targetX: 18, targetY: 140, size: 4.5, color: '#fbbf24', delay: 0.20 },
+                      { id: 'sp5', x: -10, y: 30, targetX: -34, targetY: 120, size: 2.8, color: '#fef08a', delay: 0.26 },
+                      { id: 'sp6', x: 0, y: 60, targetX: 2, targetY: 155, size: 3.5, color: '#ffffff', delay: 0.32 },
+                      { id: 'sp7', x: 12, y: 40, targetX: 32, targetY: 135, size: 3, color: '#f59e0b', delay: 0.38 },
+                      { id: 'sp8', x: -5, y: 70, targetX: -18, targetY: 165, size: 2.5, color: '#facc15', delay: 0.44 }
+                    ].map((spark) => (
                       <motion.circle
-                        key={bubble.id}
-                        cx={bubble.cx}
-                        cy={bubble.cy}
-                        r={bubble.r}
-                        fill="url(#flyExhaustInner)"
-                        style={{ filter: 'drop-shadow(0 0 8px #f59e0b)' }}
+                        key={spark.id}
+                        cx={spark.x}
+                        cy={spark.y}
+                        r={spark.size}
+                        fill={spark.color}
+                        style={{ filter: 'drop-shadow(0 0 6px #facc15)' }}
                         animate={{
-                          cy: bubble.animY,
-                          cx: bubble.animX,
-                          scale: bubble.animScale,
-                          opacity: [1, 0.85, 0]
+                          cx: [spark.x, spark.targetX],
+                          cy: [spark.y, spark.targetY],
+                          scale: [1.2, 0.2],
+                          opacity: [1, 0.9, 0]
                         }}
                         transition={{
-                          duration: 0.45,
+                          duration: 0.35,
                           repeat: Infinity,
-                          delay: bubble.delay,
+                          delay: spark.delay,
                           ease: "easeOut"
                         }}
                       />
