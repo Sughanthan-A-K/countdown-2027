@@ -56,6 +56,10 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   // - In normal calendar view: exactly when 5 Outs burst (or triggered dynamically by Ayudha Pooja / Vijayadashami)
   useEffect(() => {
     if (isSpecialRevealed && onShareSpecialCard && !hasDismissedShareHint) {
+      if (isDiwaliActive) {
+        // Handled strictly by ConfettiBurst onFifthBurst, never re-triggered if already seen
+        return;
+      }
       if (isSharedCardView) {
         if (forceShowShareHint) {
           setShowShareIntroHint(true);
@@ -64,8 +68,6 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         }
       } else if (isVijayadashami) {
         // For Vijayadashami: Tooltip is strictly triggered by onTriggerShareStar after wish video completely finishes + 1s delay
-      } else if (isDiwaliActive) {
-        // For Diwali: strictly triggered after 5 Outs burst callback
       } else if (!isAyudhaPooja) {
         const t1 = setTimeout(() => {
           setShowShareIntroHint(true);
@@ -721,7 +723,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
                     onFifthBurst={() => {
                       if (onCtaReady) onCtaReady();
                       // Only show guidance tooltip and rocket for FIRST TIME users who haven't dismissed it yet!
-                      if (!hasDismissedShareHint || isSharedCardView) {
+                      const alreadySeen = localStorage.getItem('has_seen_diwali_rocket_share_hint') === 'true';
+                      if (!alreadySeen && !hasDismissedShareHint) {
                         setShowShareIntroHint(true);
                       }
                     }} 
