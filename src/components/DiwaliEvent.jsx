@@ -36,17 +36,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
   }, []);
 
   const [isStriking, setIsStriking] = useState(false);
-  const matchAudioRef = useRef(null);
-
-  useEffect(() => {
-    // Preload match stick sound
-    try {
-      matchAudioRef.current = new Audio(encodeURI('/Diwali Audios/Match stick sound.mp3'));
-      matchAudioRef.current.preload = 'auto';
-    } catch (e) {
-      console.warn('Audio preload error:', e);
-    }
-  }, []);
 
   const handlePointerMove = (e) => {
     if (phase === 'match') {
@@ -86,17 +75,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       
       setMatchPos({ x: flameX, y: flameY });
       setPhase('match');
-
-      // Play match strike sound
-      try {
-        if (matchAudioRef.current) {
-          matchAudioRef.current.currentTime = 0;
-          matchAudioRef.current.play().catch((err) => console.warn('Audio play error:', err));
-        }
-      } catch (e) {
-        console.warn('Match sound play error:', e);
-      }
-
+      
       // Trigger a rapid match-strike spark animation
       setIsStriking(true);
       setTimeout(() => setIsStriking(false), 400);
