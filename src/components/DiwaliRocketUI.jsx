@@ -515,13 +515,13 @@ export default function DiwaliRocketUI({
                     {/* Intense white root point at rocket base */}
                     <ellipse cx="0" cy="2" rx="22" ry="5.5" fill="#ffffff" />
 
-                    {/* Medium clay-style fiery exhaust bubbles popping right at thrust core & flame tip */}
+                    {/* Clay-style fiery exhaust bubbles connected right into the flame and thrust core */}
                     {[
-                      { id: 'b1', cx: -10, cy: 75, r: 10, delay: 0.04, animY: [75, 115], animX: [-10, -18], animScale: [1, 0.5] },
-                      { id: 'b2', cx: 12, cy: 82, r: 9, delay: 0.12, animY: [82, 125], animX: [12, 22], animScale: [1, 0.45] },
-                      { id: 'b3', cx: -2, cy: 96, r: 12, delay: 0.20, animY: [96, 142], animX: [-2, 2], animScale: [1, 0.4] },
-                      { id: 'b4', cx: -14, cy: 110, r: 8.5, delay: 0.28, animY: [110, 155], animX: [-14, -24], animScale: [1, 0.35] },
-                      { id: 'b5', cx: 10, cy: 118, r: 9.5, delay: 0.36, animY: [118, 168], animX: [10, 18], animScale: [1, 0.3] }
+                      { id: 'b1', cx: -6, cy: 38, r: 8, delay: 0.04, animY: [38, 72], animX: [-6, -10], animScale: [1, 0.5] },
+                      { id: 'b2', cx: 7, cy: 45, r: 7.5, delay: 0.12, animY: [45, 80], animX: [7, 12], animScale: [1, 0.45] },
+                      { id: 'b3', cx: -1, cy: 56, r: 9, delay: 0.20, animY: [56, 92], animX: [-1, 2], animScale: [1, 0.4] },
+                      { id: 'b4', cx: -8, cy: 68, r: 7, delay: 0.28, animY: [68, 102], animX: [-8, -14], animScale: [1, 0.35] },
+                      { id: 'b5', cx: 6, cy: 75, r: 7.5, delay: 0.36, animY: [75, 110], animX: [6, 12], animScale: [1, 0.3] }
                     ].map((bubble) => (
                       <motion.circle
                         key={bubble.id}
