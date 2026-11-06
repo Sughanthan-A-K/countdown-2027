@@ -240,6 +240,10 @@ function App() {
     if (!isDone) {
       // NEW USER: Strictly go through Onboarding Tutorial first!
       // NEVER reveal Diwali or any special cards during onboarding swipe!
+      // Reset Diwali states completely so nothing leaks into the onboarding swipe cards
+      setDiwaliPhase(0);
+      setDiwaliRevealed(false);
+      setShowDiwaliEvent(false);
       // Only keep the pending date in memory to activate AFTER double-tap refill completes
       if (currentSharedDate) {
         setPendingSharedDate(currentSharedDate);
@@ -1759,7 +1763,7 @@ function App() {
                   />
                 ) : (
                   pages.slice().reverse().map((page) => (
-                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
+                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={tutorialState === -1 && diwaliPhase > 0 && page.isDiwaliDay}
                       key={page.id}
                       dateText={page.dateText}
                       daysRemaining={page.daysRemaining}
@@ -1847,7 +1851,7 @@ function App() {
                     className="absolute flex items-center justify-center inset-0 pointer-events-none"
                     style={{ zIndex: 1200 + i }}
                   >
-                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={diwaliPhase > 0 && page.isDiwaliDay}
+                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={tutorialState === -1 && diwaliPhase > 0 && page.isDiwaliDay}
                       dateText={page.dateText}
                       daysRemaining={page.daysRemaining}
                       index={0}
