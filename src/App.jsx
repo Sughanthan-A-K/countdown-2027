@@ -1010,6 +1010,7 @@ function App() {
     if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
     setShowBubble(false);
 
+    const today = normalizeDate(new Date());
     const isComingFromSharedDiwali = pendingSharedDate && pendingSharedDate.getMonth() === 10 && pendingSharedDate.getDate() === 8;
     const baseTargetDate = pendingSharedDate || today;
     // Since calendarDate goes to the future when tearing, calendarDate - baseTargetDate will be positive.
@@ -1173,9 +1174,11 @@ function App() {
 
     const isTutorialActive = tutorialState !== -1 || !isSpecialEventsUnlocked;
     const isDec16Active = isDec16Card;
+    const isSharedDiwaliInTutorial = (tutorialState === 3 || tutorialState === 4) && pendingSharedDate && pendingSharedDate.getMonth() === 10 && pendingSharedDate.getDate() === 8;
     const pages = [0, 1, 2].map((i) => {
     const pageDate = addDays(calendarDate, i);
     const isHiddenBehindDec16 = isDec16Active && i > 0;
+    const isDiwaliDate = pageDate.getMonth() === 10 && pageDate.getDate() === 8;
     return {
       id: `${pageDate.getTime()}-${resetCount}`, 
       dateText: isHiddenBehindDec16 ? "" : formatDate(pageDate),
@@ -1185,8 +1188,8 @@ function App() {
       isBirthday: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 14,
       isAyudhaPooja: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 19,
       isVijayadashami: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 20,
-      isDiwaliDay: !isTutorialActive && pageDate.getMonth() === 10 && pageDate.getDate() === 8,
-      isDiwali: !isTutorialActive && (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
+      isDiwaliDay: isDiwaliDate && (!isTutorialActive || isSharedDiwaliInTutorial),
+      isDiwali: isDiwaliDate && (diwaliRevealed || isSharedDiwaliInTutorial),
       isDec16UnderlyingHidden: isHiddenBehindDec16
     };
   });
