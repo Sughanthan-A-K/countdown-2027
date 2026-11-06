@@ -246,12 +246,12 @@ export default function DiwaliRocketUI({
                     className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
                   />
 
-                  {/* 2. White Curved Fuse (Thiri) emerging from left base (166,255), curving to tip (110,182) */}
+                  {/* 2. White Curved Fuse (Thiri) emerging from left base (176,255), curving to tip (124,192) */}
                   <motion.path 
-                    d="M 166 255 C 118 263, 95 208, 110 182" 
+                    d="M 176 255 C 132 262, 112 214, 124 192" 
                     fill="none" 
                     stroke="url(#fuseTube)" 
-                    strokeWidth="10" 
+                    strokeWidth="9" 
                     strokeLinecap="round" 
                     className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
                     animate={launchStage === 'burning' ? {
@@ -265,8 +265,8 @@ export default function DiwaliRocketUI({
                     } : undefined}
                   />
 
-                  {/* Scaled-down Rocket Head & Cylindrical Body (Stick remains full original size/weight) */}
-                  <g transform="translate(200, 255) scale(0.82) translate(-200, -255)">
+                  {/* Scaled-down Rocket Head & Cylindrical Body (Width reduced strongly, height reduced gently, stick untouched) */}
+                  <g transform="translate(200, 255) scale(0.56, 0.74) translate(-200, -255)">
                     {/* 3. Rocket Cylindrical Body (Pill capsule shape with rounded base) */}
                     <g>
                       {/* Clip path for crisp striped body */}
@@ -489,8 +489,8 @@ export default function DiwaliRocketUI({
                   {/* Stick slightly offset to the side */}
                   <rect x="208" y="255" width="20" height="120" rx="10" fill="url(#flyStick)" />
 
-                  {/* Flying Rocket: Scaled-down Head & Body (Stick remains full original size/weight) */}
-                  <g transform="translate(200, 255) scale(0.82) translate(-200, -255)">
+                  {/* Flying Rocket: Scaled-down Head & Body (Width reduced strongly, height reduced gently, stick untouched) */}
+                  <g transform="translate(200, 255) scale(0.56, 0.74) translate(-200, -255)">
                     {/* Body */}
                     <g clipPath="url(#flyBodyClip)">
                       <rect x="145" y="115" width="110" height="155" fill="url(#flyPink)" />
