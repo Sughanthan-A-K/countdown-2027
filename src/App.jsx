@@ -239,21 +239,10 @@ function App() {
 
     if (!isDone) {
       // NEW USER: Strictly go through Onboarding Tutorial first!
-      // Save the shared date and mark Diwali event witnessed so it continues after onboarding
+      // NEVER reveal Diwali or any special cards during onboarding swipe!
+      // Only keep the pending date in memory to activate AFTER double-tap refill completes
       if (currentSharedDate) {
         setPendingSharedDate(currentSharedDate);
-        if (currentSharedType === 'diwali') {
-          localStorage.setItem('diwaliEventDone_2026', 'true');
-          setDiwaliRevealed(true);
-          setDiwaliPhase(2);
-          setShowDiwaliEvent(false);
-          setIsDarkMode(true);
-          localStorage.setItem('isDarkMode', 'true');
-        } else if (currentSharedType === 'ayudhapooja') {
-          localStorage.setItem('ayudhaPoojaEventDone_2026', 'true');
-        } else if (currentSharedType === 'vijayadashami') {
-          localStorage.setItem('vijayadashamiEventDone_2026', 'true');
-        }
       }
       setTutorialState(0);
     } else {
@@ -1184,11 +1173,9 @@ function App() {
 
     const isTutorialActive = tutorialState !== -1 || !isSpecialEventsUnlocked;
     const isDec16Active = isDec16Card;
-    const isSharedDiwaliWaitingEpilogue = pendingSharedDate && pendingSharedDate.getMonth() === 10 && pendingSharedDate.getDate() === 8;
     const pages = [0, 1, 2].map((i) => {
     const pageDate = addDays(calendarDate, i);
     const isHiddenBehindDec16 = isDec16Active && i > 0;
-    const isDiwaliDate = pageDate.getMonth() === 10 && pageDate.getDate() === 8;
     return {
       id: `${pageDate.getTime()}-${resetCount}`, 
       dateText: isHiddenBehindDec16 ? "" : formatDate(pageDate),
@@ -1198,8 +1185,8 @@ function App() {
       isBirthday: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 14,
       isAyudhaPooja: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 19,
       isVijayadashami: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 20,
-      isDiwaliDay: isDiwaliDate && (!isTutorialActive || isSharedDiwaliWaitingEpilogue),
-      isDiwali: isDiwaliDate && (diwaliRevealed || isSharedDiwaliWaitingEpilogue),
+      isDiwaliDay: !isTutorialActive && pageDate.getMonth() === 10 && pageDate.getDate() === 8,
+      isDiwali: !isTutorialActive && (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
       isDec16UnderlyingHidden: isHiddenBehindDec16
     };
   });
@@ -1264,9 +1251,9 @@ function App() {
             setTimeout(() => {
               setIsRevealing(true);
               
-              // Restore original Popper Confetti logic
+              // Restore original Popper Confetti logic in front of all cards
               const count = 250;
-              const defaults = { origin: { y: 0.6 }, zIndex: 300 };
+              const defaults = { origin: { y: 0.6 }, zIndex: 3000 };
               
               function fire(particleRatio, opts) {
                 confetti(Object.assign({}, defaults, opts, {
