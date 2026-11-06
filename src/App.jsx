@@ -1763,7 +1763,7 @@ function App() {
                   />
                 ) : (
                   pages.slice().reverse().map((page) => (
-                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={tutorialState === -1 && diwaliPhase > 0 && page.isDiwaliDay}
+                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={page.isDiwaliDay && (isSharedDiwaliInTutorial || (tutorialState === -1 && diwaliPhase > 0))}
                       key={page.id}
                       dateText={page.dateText}
                       daysRemaining={page.daysRemaining}
@@ -1851,7 +1851,7 @@ function App() {
                     className="absolute flex items-center justify-center inset-0 pointer-events-none"
                     style={{ zIndex: 1200 + i }}
                   >
-                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={tutorialState === -1 && diwaliPhase > 0 && page.isDiwaliDay}
+                    <CalendarPage onCalendarReveal={() => { setDiwaliPhase(2); setTimeout(() => setDiwaliRevealed(true), 1200); }} diwaliRevealed={diwaliRevealed} diwaliPhase={diwaliPhase} forceDiwaliMode={page.isDiwaliDay && (isSharedDiwaliInTutorial || (tutorialState === -1 && diwaliPhase > 0))}
                       dateText={page.dateText}
                       daysRemaining={page.daysRemaining}
                       index={0}
