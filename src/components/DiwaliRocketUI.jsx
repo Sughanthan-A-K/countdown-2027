@@ -246,12 +246,12 @@ export default function DiwaliRocketUI({
                     className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
                   />
 
-                  {/* 2. White Curved Fuse (Thiri) emerging from left base (160,255), curving to tip (98,175) */}
+                  {/* 2. White Curved Fuse (Thiri) emerging from left base (166,255), curving to tip (110,182) */}
                   <motion.path 
-                    d="M 160 255 C 105 265, 80 205, 98 175" 
+                    d="M 166 255 C 118 263, 95 208, 110 182" 
                     fill="none" 
                     stroke="url(#fuseTube)" 
-                    strokeWidth="11" 
+                    strokeWidth="10" 
                     strokeLinecap="round" 
                     className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
                     animate={launchStage === 'burning' ? {
@@ -265,55 +265,58 @@ export default function DiwaliRocketUI({
                     } : undefined}
                   />
 
-                  {/* 3. Rocket Cylindrical Body (Pill capsule shape with rounded base) */}
-                  <g>
-                    {/* Clip path for crisp striped body */}
-                    <clipPath id="rocketBodyClip">
-                      <path d="M 148 120 L 252 120 L 252 245 C 252 268, 148 268, 148 245 Z" />
-                    </clipPath>
+                  {/* Scaled-down Rocket Head & Cylindrical Body (Stick remains full original size/weight) */}
+                  <g transform="translate(200, 255) scale(0.82) translate(-200, -255)">
+                    {/* 3. Rocket Cylindrical Body (Pill capsule shape with rounded base) */}
+                    <g>
+                      {/* Clip path for crisp striped body */}
+                      <clipPath id="rocketBodyClip">
+                        <path d="M 148 120 L 252 120 L 252 245 C 252 268, 148 268, 148 245 Z" />
+                      </clipPath>
 
-                    <g clipPath="url(#rocketBodyClip)">
-                      {/* Full Pink Base Capsule */}
-                      <rect x="145" y="115" width="110" height="155" fill="url(#bodyPinkGloss)" />
+                      <g clipPath="url(#rocketBodyClip)">
+                        {/* Full Pink Base Capsule */}
+                        <rect x="145" y="115" width="110" height="155" fill="url(#bodyPinkGloss)" />
 
-                      {/* Band 1: Golden-Yellow Upper Stripe */}
-                      <rect x="145" y="130" width="110" height="34" fill="url(#yellowBandGloss)" />
+                        {/* Band 1: Golden-Yellow Upper Stripe */}
+                        <rect x="145" y="130" width="110" height="34" fill="url(#yellowBandGloss)" />
 
-                      {/* Band 2: Golden-Yellow Lower Stripe */}
-                      <rect x="145" y="196" width="110" height="34" fill="url(#yellowBandGloss)" />
+                        {/* Band 2: Golden-Yellow Lower Stripe */}
+                        <rect x="145" y="196" width="110" height="34" fill="url(#yellowBandGloss)" />
 
-                      {/* Left edge 3D gloss specular highlight across cylinder */}
-                      <path d="M 152 120 L 160 120 L 160 255 L 152 250 Z" fill="#ffffff" opacity="0.35" />
-                      {/* Right edge shadow tone */}
-                      <path d="M 244 120 L 252 120 L 252 250 L 244 255 Z" fill="#000000" opacity="0.18" />
+                        {/* Left edge 3D gloss specular highlight across cylinder */}
+                        <path d="M 152 120 L 160 120 L 160 255 L 152 250 Z" fill="#ffffff" opacity="0.35" />
+                        {/* Right edge shadow tone */}
+                        <path d="M 244 120 L 252 120 L 252 250 L 244 255 Z" fill="#000000" opacity="0.18" />
+                      </g>
                     </g>
-                  </g>
 
-                  {/* 4. Conical Nosecone Cap (Realistic overlapping 3D flared cone) */}
-                  <g>
-                    {/* Flared conical body */}
-                    <path 
-                      d="M 140 128 Q 200 148 260 128 L 200 52 Z" 
-                      fill="url(#coneHeadGloss)" 
-                      className="filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]"
-                    />
+                    {/* 4. Conical Nosecone Cap (Realistic overlapping 3D flared cone) */}
+                    <g>
+                      {/* Flared conical body */}
+                      <path 
+                        d="M 140 128 Q 200 148 260 128 L 200 52 Z" 
+                        fill="url(#coneHeadGloss)" 
+                        className="filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]"
+                      />
 
-                    {/* Convex curved bottom lip (Solid thick 3D rim) */}
-                    <path 
-                      d="M 140 128 Q 200 148 260 128" 
-                      fill="none" 
-                      stroke="#ffffff" 
-                      strokeWidth="3.5" 
-                      strokeLinecap="round" 
-                      opacity="0.6" 
-                    />
+                      {/* Convex curved bottom lip (Solid thick 3D rim) */}
+                      <path 
+                        d="M 140 128 Q 200 148 260 128" 
+                        fill="none" 
+                        stroke="#ffffff" 
+                        strokeWidth="3.5" 
+                        strokeLinecap="round" 
+                        opacity="0.6" 
+                      />
 
-                    {/* Gloss sheen on top face of cone */}
-                    <path 
-                      d="M 148 124 L 200 58 L 200 138 Q 174 135 148 124 Z" 
-                      fill="#ffffff" 
-                      opacity="0.22" 
-                    />
+                      {/* Gloss sheen on top face of cone */}
+                      <path 
+                        d="M 148 124 L 200 58 L 200 138 Q 174 135 148 124 Z" 
+                        fill="#ffffff" 
+                        opacity="0.22" 
+                      />
+                    </g>
                   </g>
 
                   {/* 5. Layered Stars & Flame at Tip of Fuse */}
@@ -486,16 +489,19 @@ export default function DiwaliRocketUI({
                   {/* Stick slightly offset to the side */}
                   <rect x="208" y="255" width="20" height="120" rx="10" fill="url(#flyStick)" />
 
-                  {/* Body */}
-                  <g clipPath="url(#flyBodyClip)">
-                    <rect x="145" y="115" width="110" height="155" fill="url(#flyPink)" />
-                    <rect x="145" y="130" width="110" height="34" fill="url(#flyYellow)" />
-                    <rect x="145" y="196" width="110" height="34" fill="url(#flyYellow)" />
-                  </g>
+                  {/* Flying Rocket: Scaled-down Head & Body (Stick remains full original size/weight) */}
+                  <g transform="translate(200, 255) scale(0.82) translate(-200, -255)">
+                    {/* Body */}
+                    <g clipPath="url(#flyBodyClip)">
+                      <rect x="145" y="115" width="110" height="155" fill="url(#flyPink)" />
+                      <rect x="145" y="130" width="110" height="34" fill="url(#flyYellow)" />
+                      <rect x="145" y="196" width="110" height="34" fill="url(#flyYellow)" />
+                    </g>
 
-                  {/* Nosecone */}
-                  <path d="M 140 128 Q 200 148 260 128 L 200 52 Z" fill="url(#flyCone)" />
-                  <path d="M 140 128 Q 200 148 260 128" fill="none" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" opacity="0.6" />
+                    {/* Nosecone */}
+                    <path d="M 140 128 Q 200 148 260 128 L 200 52 Z" fill="url(#flyCone)" />
+                    <path d="M 140 128 Q 200 148 260 128" fill="none" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" opacity="0.6" />
+                  </g>
 
                   {/* BLAZING FIERY EXHAUST FLAME: Rendered INSIDE the exact same rotated rocket coordinate space! */}
                   {/* Cylinder base is centered at x=195, y=252. Flame shoots straight DOWNWARDS with increased width matching rocket base */}
