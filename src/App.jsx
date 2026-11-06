@@ -244,9 +244,13 @@ function App() {
       setDiwaliPhase(0);
       setDiwaliRevealed(false);
       setShowDiwaliEvent(false);
-      // Only keep the pending date in memory to activate AFTER double-tap refill completes
+      // Only keep the pending date in memory AND persist across unexpected browser refreshes
       if (currentSharedDate) {
         setPendingSharedDate(currentSharedDate);
+        try {
+          localStorage.setItem('pendingSharedDate_time', currentSharedDate.getTime().toString());
+          if (currentSharedType) localStorage.setItem('pendingSharedType', currentSharedType);
+        } catch (_) {}
       }
       setTutorialState(0);
     } else {
@@ -273,8 +277,17 @@ function App() {
     setSharedCardData(null);
   };
 
-  // Saved shared card date for new user completing onboarding
-  const [pendingSharedDate, setPendingSharedDate] = useState(null);
+  // Saved shared card date for new user completing onboarding (persisted across accidental refreshes)
+  const [pendingSharedDate, setPendingSharedDate] = useState(() => {
+    try {
+      const isDone = localStorage.getItem('onboardingDone') === 'true';
+      if (!isDone) {
+        const storedTime = localStorage.getItem('pendingSharedDate_time');
+        if (storedTime) return new Date(parseInt(storedTime, 10));
+      }
+    } catch (_) {}
+    return null;
+  });
 
   // Tutorial State: -1 (Done), 0 (Onboarding), 1 (Learn), 2 (Tearing), 3 (Double Tap), 4 (Epilogue)
   const [tutorialState, setTutorialState] = useState(() => {
@@ -875,6 +888,10 @@ function App() {
           localStorage.setItem('isDarkMode', 'true');
         }
         setPendingSharedDate(null);
+        try {
+          localStorage.removeItem('pendingSharedDate_time');
+          localStorage.removeItem('pendingSharedType');
+        } catch (_) {}
         localStorage.setItem('lastTornDate', targetDate.getTime().toString());
         localStorage.setItem('onboardingDone', 'true');
         localStorage.setItem('onboardingDoneDate', targetDate.getTime().toString());
@@ -1033,7 +1050,7 @@ function App() {
           daysRemaining: getDaysRemaining(d),
           isGandhiJayanti: d.getMonth() === 9 && d.getDate() === 2, 
           isDiwaliDay: isDiwaliDate, 
-          isDiwali: isDiwaliDate && (diwaliRevealed || isComingFromSharedDiwali),
+          isDiwali: false, // Refill flying cards remain plain paper until final destination card lands
           isBirthday: tutorialState === -1 && d.getMonth() === 9 && d.getDate() === 14,
         });
       }
@@ -1056,12 +1073,9 @@ function App() {
           dateInputRef.current.value = `${baseTargetDate.getFullYear()}-${String(baseTargetDate.getMonth() + 1).padStart(2, '0')}-${String(baseTargetDate.getDate()).padStart(2, '0')}`;
         }
         setResetCount(c => c + 1);
+        setRefillingPages([]);
         if (tutorialState === 3) setTutorialState(4);
-        // Seamless cross-fade handoff: Keep the top landed refill card for 120ms so underlying stack mounts smoothly underneath with zero jump/flicker
-        setTimeout(() => {
-          setRefillingPages([]);
-        }, 120);
-      }, animationDelay + 100); 
+      }, animationDelay); 
     } else {
       setCalendarDate(baseTargetDate);
       if (isComingFromSharedDiwali) {
