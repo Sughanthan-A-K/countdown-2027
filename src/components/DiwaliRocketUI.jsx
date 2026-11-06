@@ -443,11 +443,11 @@ export default function DiwaliRocketUI({
               times: [0, 0.15, 0.35, 0.75, 1],
               ease: [0.25, 0.1, 0.25, 1]
             }}
-            className="fixed z-[9999] pointer-events-none w-16 h-16"
+            className="fixed z-[9999] pointer-events-none w-12 h-12"
             style={{ filter: "drop-shadow(0 0 16px rgba(251,191,36,0.95))" }}
           >
-            <div className="relative w-16 h-16">
-              <svg viewBox="0 0 400 400" className="w-full h-full overflow-visible">
+            <div className="relative w-12 h-12">
+              <svg viewBox="0 0 400 400" className="w-12 h-12 overflow-visible">
                 <defs>
                   <linearGradient id="flyPink" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#ff4d82" />
@@ -504,9 +504,9 @@ export default function DiwaliRocketUI({
                   </g>
 
                   {/* BLAZING FIERY EXHAUST FLAME: Rendered INSIDE the exact same rotated rocket coordinate space! */}
-                  {/* Cylinder base is centered at x=195, y=252. Flame shoots straight DOWNWARDS with increased width matching rocket base */}
-                  <g transform="translate(195, 252)">
-                    {/* Outer warm orange flame glow - wider and perfectly proportioned to rocket cylinder base */}
+                  {/* Cylinder base is centered at x=200, y=255. Flame scaled to match the slim rocket base */}
+                  <g transform="translate(200, 255) scale(0.56, 0.74)">
+                    {/* Outer warm orange flame glow */}
                     <path 
                       d="M -32 0 Q -42 45 0 92 Q 42 45 32 0 Z" 
                       fill="url(#flyExhaustOuter)" 
