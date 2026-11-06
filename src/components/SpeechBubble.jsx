@@ -22,7 +22,7 @@ export default function SpeechBubble({ text, show, isDarkMode, onNext, btnText, 
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: (position === 'top' || position === 'top-main' || position === 'relative-top') ? -20 : 20 }}
           transition={{ type: 'spring', bounce: 0.5 }}
-          className={`absolute ${positionClasses} left-1/2 -translate-x-1/2 z-[400] pointer-events-none ${sizeClasses} rounded-3xl shadow-2xl text-center font-bold border-2 ${
+          className={`absolute ${positionClasses} left-1/2 -translate-x-1/2 z-[1500] pointer-events-none ${sizeClasses} rounded-3xl shadow-2xl text-center font-bold border-2 ${
             isDarkMode ? 'bg-white text-black border-neutral-200' : 'bg-neutral-900 text-white border-neutral-800'
           }`}
         >
