@@ -1021,23 +1021,25 @@ function App() {
     if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
     setShowBubble(false);
 
-    const today = normalizeDate(new Date());
-    // Since calendarDate goes to the future when tearing, calendarDate - today will be positive.
-    const diff = Math.abs(getDiffDays(calendarDate, today));
+    const isComingFromSharedDiwali = pendingSharedDate && pendingSharedDate.getMonth() === 10 && pendingSharedDate.getDate() === 8;
+    const baseTargetDate = pendingSharedDate || today;
+    // Since calendarDate goes to the future when tearing, calendarDate - baseTargetDate will be positive.
+    const diff = Math.abs(getDiffDays(calendarDate, baseTargetDate));
 
     if (diff > 0) {
       // Trigger cinematic refill animation with actual torn dates
       const burstCount = diff; // No maximum cap, refill all torn pages
       const missingPages = [];
       for (let i = 1; i <= burstCount; i++) {
-        const d = addDays(today, diff - i);
+        const d = addDays(baseTargetDate, diff - i);
+        const isDiwaliDate = d.getMonth() === 10 && d.getDate() === 8;
         missingPages.push({
           id: `refill-${d.getTime()}`,
           dateText: formatDate(d),
           daysRemaining: getDaysRemaining(d),
           isGandhiJayanti: d.getMonth() === 9 && d.getDate() === 2, 
-          isDiwaliDay: d.getMonth() === 10 && d.getDate() === 8, 
-          isDiwali: (d.getMonth() === 10 && d.getDate() === 8) && diwaliRevealed,
+          isDiwaliDay: isDiwaliDate, 
+          isDiwali: isDiwaliDate && (diwaliRevealed || isComingFromSharedDiwali),
           isBirthday: tutorialState === -1 && d.getMonth() === 9 && d.getDate() === 14,
         });
       }
@@ -1047,18 +1049,34 @@ function App() {
       
       // Delay the actual state reset so they watch the cards fly in
       setTimeout(() => {
-        setCalendarDate(today);
+        setCalendarDate(baseTargetDate);
+        if (isComingFromSharedDiwali) {
+          localStorage.setItem('diwaliEventDone_2026', 'true');
+          setDiwaliRevealed(true);
+          setDiwaliPhase(2);
+          setShowDiwaliEvent(false);
+          setIsDarkMode(true);
+          localStorage.setItem('isDarkMode', 'true');
+        }
         if (dateInputRef.current) {
-          dateInputRef.current.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+          dateInputRef.current.value = `${baseTargetDate.getFullYear()}-${String(baseTargetDate.getMonth() + 1).padStart(2, '0')}-${String(baseTargetDate.getDate()).padStart(2, '0')}`;
         }
         setResetCount(c => c + 1);
         setRefillingPages([]);
         if (tutorialState === 3) setTutorialState(4);
       }, animationDelay + 100); 
     } else {
-      setCalendarDate(today);
+      setCalendarDate(baseTargetDate);
+      if (isComingFromSharedDiwali) {
+        localStorage.setItem('diwaliEventDone_2026', 'true');
+        setDiwaliRevealed(true);
+        setDiwaliPhase(2);
+        setShowDiwaliEvent(false);
+        setIsDarkMode(true);
+        localStorage.setItem('isDarkMode', 'true');
+      }
       if (dateInputRef.current) {
-        dateInputRef.current.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        dateInputRef.current.value = `${baseTargetDate.getFullYear()}-${String(baseTargetDate.getMonth() + 1).padStart(2, '0')}-${String(baseTargetDate.getDate()).padStart(2, '0')}`;
       }
       setResetCount(c => c + 1);
       if (tutorialState === 3) setTutorialState(4);
@@ -1166,9 +1184,11 @@ function App() {
 
     const isTutorialActive = tutorialState !== -1 || !isSpecialEventsUnlocked;
     const isDec16Active = isDec16Card;
+    const isSharedDiwaliWaitingEpilogue = pendingSharedDate && pendingSharedDate.getMonth() === 10 && pendingSharedDate.getDate() === 8;
     const pages = [0, 1, 2].map((i) => {
     const pageDate = addDays(calendarDate, i);
     const isHiddenBehindDec16 = isDec16Active && i > 0;
+    const isDiwaliDate = pageDate.getMonth() === 10 && pageDate.getDate() === 8;
     return {
       id: `${pageDate.getTime()}-${resetCount}`, 
       dateText: isHiddenBehindDec16 ? "" : formatDate(pageDate),
@@ -1178,8 +1198,8 @@ function App() {
       isBirthday: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 14,
       isAyudhaPooja: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 19,
       isVijayadashami: !isTutorialActive && pageDate.getMonth() === 9 && pageDate.getDate() === 20,
-      isDiwaliDay: !isTutorialActive && pageDate.getMonth() === 10 && pageDate.getDate() === 8,
-      isDiwali: !isTutorialActive && (pageDate.getMonth() === 10 && pageDate.getDate() === 8) && diwaliRevealed,
+      isDiwaliDay: isDiwaliDate && (!isTutorialActive || isSharedDiwaliWaitingEpilogue),
+      isDiwali: isDiwaliDate && (diwaliRevealed || isSharedDiwaliWaitingEpilogue),
       isDec16UnderlyingHidden: isHiddenBehindDec16
     };
   });
