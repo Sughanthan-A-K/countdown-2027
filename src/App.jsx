@@ -1056,8 +1056,11 @@ function App() {
           dateInputRef.current.value = `${baseTargetDate.getFullYear()}-${String(baseTargetDate.getMonth() + 1).padStart(2, '0')}-${String(baseTargetDate.getDate()).padStart(2, '0')}`;
         }
         setResetCount(c => c + 1);
-        setRefillingPages([]);
         if (tutorialState === 3) setTutorialState(4);
+        // Seamless cross-fade handoff: Keep the top landed refill card for 120ms so underlying stack mounts smoothly underneath with zero jump/flicker
+        setTimeout(() => {
+          setRefillingPages([]);
+        }, 120);
       }, animationDelay + 100); 
     } else {
       setCalendarDate(baseTargetDate);
