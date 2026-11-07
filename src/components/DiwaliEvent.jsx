@@ -40,26 +40,34 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   const [isExtinguishing, setIsExtinguishing] = useState(false); // Smooth scale down/fizzle transition for flame
 
   // 1st Tap handler: triggers flicker audio + neon die animation -> full dark
-  const handleFirstTapToDim = () => {
+  const handleFirstTapToDim = (e) => {
     if (phase === 'init') {
+      if (e && e.cancelable && e.type === 'touchstart') {
+        // Prevent synthetic delayed click
+        e.preventDefault();
+      }
       setPhase('dimming');
 
-      // Play flicker audio directly via new Audio with user gesture for guaranteed iOS/WhatsApp webview playback
+      // Play flicker audio directly synchronously during user gesture (Required by iOS/WhatsApp Webview)
       try {
-        const audio = flickerAudioRef.current || new Audio(encodeURI('/Diwali Audios/Flicker.mp3'));
-        audio.playbackRate = 1.1;
-        audio.currentTime = 0;
-        audio.volume = 1.0;
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((err) => {
-            console.warn('Flicker sound play error on gesture:', err);
-            // Fallback retry using secondary direct audio instance
-            const fallback = new Audio(encodeURI('/Diwali Audios/Flicker.mp3'));
-            fallback.playbackRate = 1.1;
-            fallback.play().catch(() => {});
-          });
+        let played = false;
+        if (flickerAudioRef.current) {
+          flickerAudioRef.current.playbackRate = 1.1;
+          flickerAudioRef.current.currentTime = 0;
+          flickerAudioRef.current.volume = 1.0;
+          const p = flickerAudioRef.current.play();
+          if (p !== undefined) {
+            p.then(() => { played = true; }).catch(() => {});
+          } else {
+            played = true;
+          }
         }
+        
+        // Also spawn a direct Audio object immediately as rock-solid redundancy
+        const directAudio = new Audio(encodeURI('/Diwali Audios/Flicker.mp3'));
+        directAudio.playbackRate = 1.1;
+        directAudio.volume = 1.0;
+        directAudio.play().catch(() => {});
       } catch (e) {
         console.warn('Flicker sound play catch:', e);
       }
@@ -415,6 +423,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         onPointerMove={handlePointerMove}
         onTouchMove={handlePointerMove}
         onPointerDown={handleDarkTap}
+        onTouchStart={phase === 'init' ? handleDarkTap : undefined}
       >
         {/* Blackout overlay (Remains ON until explode to simulate dark night sky) */}
         {(phase !== 'init' && phase !== 'done' && phase !== 'freeze' && phase !== 'explode' && phase !== 'fadeout_bg' && phase !== 'fadeout_shower') && (

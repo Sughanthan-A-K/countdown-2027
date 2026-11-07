@@ -109,7 +109,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         audio.preload = 'auto';
         cardAudiosRef.current[randIdx] = audio;
       }
-      playWithNaturalFade(audio, 0.75, 100, 300);
+      playWithNaturalFade(audio, 0.95, 60, 300);
     } catch (e) {}
   };
 
@@ -129,7 +129,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         audio.preload = 'auto';
         goingTopAudiosRef.current[randIdx] = audio;
       }
-      playWithNaturalFade(audio, 0.25, 80, 250);
+      playWithNaturalFade(audio, 0.55, 60, 250);
     } catch (e) {}
   };
 
@@ -149,7 +149,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         audio.preload = 'auto';
         crackAudiosRef.current[randIdx] = audio;
       }
-      playWithNaturalFade(audio, 0.35, 60, 200);
+      playWithNaturalFade(audio, 0.65, 40, 200);
     } catch (e) {}
   };
 
