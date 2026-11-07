@@ -31,6 +31,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
   const [isDiwaliRocketFlying, setIsDiwaliRocketFlying] = useState(false);
   const [diwaliRocketLaunchStage, setDiwaliRocketLaunchStage] = useState('idle'); // 'idle' | 'burning' | 'launching'
   const [showDiwaliRocketAmbient, setShowDiwaliRocketAmbient] = useState(false);
+  const diwaliFuseAudioRef = useRef(null);
+  const diwaliRocketBlastAudioRef = useRef(null);
   const [ayudhaPoojaPhase, setAyudhaPoojaPhase] = useState(() => {
     const isDev = localStorage.getItem('isDevMode') === 'true';
     return (!isDev && localStorage.getItem('ayudhaPoojaEventDone_2026') === 'true') ? 4 : 0;
@@ -77,6 +79,30 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
     }
   }, [isSpecialRevealed, onShareSpecialCard, hasDismissedShareHint, isDiwaliActive, isAyudhaPooja, isVijayadashami, vijayadashamiPhase, isSharedCardView, forceShowShareHint]);
 
+  const playRocketFuseAudio = () => {
+    try {
+      if (!diwaliFuseAudioRef.current) {
+        diwaliFuseAudioRef.current = new Audio(encodeURI('/Diwali Audios/Fuse or Thiri.mp3'));
+        diwaliFuseAudioRef.current.preload = 'auto';
+      }
+      diwaliFuseAudioRef.current.currentTime = 0;
+      diwaliFuseAudioRef.current.volume = 0.8;
+      diwaliFuseAudioRef.current.play().catch(() => {});
+    } catch (e) {}
+  };
+
+  const playRocketBlastAudio = () => {
+    try {
+      if (!diwaliRocketBlastAudioRef.current) {
+        diwaliRocketBlastAudioRef.current = new Audio(encodeURI('/Diwali Audios/Firework/Others Fireworks/rocket blast (share).mp3'));
+        diwaliRocketBlastAudioRef.current.preload = 'auto';
+      }
+      diwaliRocketBlastAudioRef.current.currentTime = 0;
+      diwaliRocketBlastAudioRef.current.volume = 0.85;
+      diwaliRocketBlastAudioRef.current.play().catch(() => {});
+    } catch (e) {}
+  };
+
   const handleShareTap = () => {
     if (isDiwaliActive) {
       if (diwaliRocketLaunchStage !== 'idle' || isDiwaliRocketFlying) return; // Prevent double trigger
@@ -89,9 +115,16 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
         setHasDismissedShareHint(true);
         setShowShareIntroHint(false);
         setDiwaliRocketLaunchStage('burning');
+        playRocketFuseAudio();
 
         // After 1s burn, fire erupts from rocket base and blasts off to sky
         setTimeout(() => {
+          if (diwaliFuseAudioRef.current) {
+            try {
+              diwaliFuseAudioRef.current.pause();
+            } catch (e) {}
+          }
+          playRocketBlastAudio();
           setDiwaliRocketLaunchStage('launching');
           setIsDiwaliRocketFlying(true);
 
@@ -104,7 +137,8 @@ export default function CalendarPage({ dateText, daysRemaining, index, onTear, o
           }, 1300);
         }, 1000);
       } else {
-        // SUBSEQUENT TAPS: Instant blast-off! No need to wait for 1s thiri burn again
+        // SUBSEQUENT TAPS: Instant blast-off!
+        playRocketBlastAudio();
         setDiwaliRocketLaunchStage('launching');
         setIsDiwaliRocketFlying(true);
 

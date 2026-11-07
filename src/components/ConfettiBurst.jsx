@@ -20,6 +20,11 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
   const crackAudiosRef = useRef([]);
   const lastCrackIndexRef = useRef(-1);
   const ambienceAudioRef = useRef(null);
+  const pusvanamAudioRef = useRef(null);
+  const sanguchakramAudioRef = useRef(null);
+  const kambiMathapuAudioRef = useRef(null);
+  const atomBombAudioRef = useRef(null);
+  const saravediAudioRef = useRef(null);
 
   // Tracking state for sequential crackers
   // We want 10 Outs first, then random cracker selection where only ONE cracker runs at a time
@@ -100,7 +105,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
       let audio = cardAudiosRef.current[randIdx];
       if (!audio) {
-        audio = new Audio(encodeURI(`/Diwali Audios/Firework/Firework sound (${randIdx}).wav`));
+        audio = new Audio(encodeURI(`/Diwali Audios/Firework/Going Top/Firework sky blast (${randIdx}).wav`));
         audio.preload = 'auto';
         cardAudiosRef.current[randIdx] = audio;
       }
@@ -130,11 +135,11 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
   const playRandomCrackAudio = () => {
     try {
-      // Pick Crack 1 to 3 randomly without immediate repeats
+      // Pick Crack 1 to 4 randomly without immediate repeats
       let randIdx;
       do {
-        randIdx = Math.floor(Math.random() * 3) + 1; // 1 to 3
-      } while (randIdx === lastCrackIndexRef.current && 3 > 1);
+        randIdx = Math.floor(Math.random() * 4) + 1; // 1 to 4
+      } while (randIdx === lastCrackIndexRef.current && 4 > 1);
 
       lastCrackIndexRef.current = randIdx;
 
@@ -144,7 +149,58 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         audio.preload = 'auto';
         crackAudiosRef.current[randIdx] = audio;
       }
-      playWithNaturalFade(audio, 0.3, 60, 200);
+      playWithNaturalFade(audio, 0.35, 60, 200);
+    } catch (e) {}
+  };
+
+  // Special cracker audios from Others Fireworks
+  const playPusvanamAudio = () => {
+    try {
+      if (!pusvanamAudioRef.current) {
+        pusvanamAudioRef.current = new Audio(encodeURI('/Diwali Audios/Firework/Others Fireworks/Pusvanam or flower pot.mp3'));
+        pusvanamAudioRef.current.preload = 'auto';
+      }
+      playWithNaturalFade(pusvanamAudioRef.current, 0.8, 200, 400);
+    } catch (e) {}
+  };
+
+  const playSanguChakramAudio = () => {
+    try {
+      if (!sanguchakramAudioRef.current) {
+        sanguchakramAudioRef.current = new Audio(encodeURI('/Diwali Audios/Firework/Others Fireworks/sanguchakram or Ground Spinner.mp3'));
+        sanguchakramAudioRef.current.preload = 'auto';
+      }
+      playWithNaturalFade(sanguchakramAudioRef.current, 0.75, 200, 500);
+    } catch (e) {}
+  };
+
+  const playKambiMathapuAudio = () => {
+    try {
+      if (!kambiMathapuAudioRef.current) {
+        kambiMathapuAudioRef.current = new Audio(encodeURI('/Diwali Audios/Firework/Others Fireworks/Kammbi mathapu or Sparkler ??.mp3'));
+        kambiMathapuAudioRef.current.preload = 'auto';
+      }
+      playWithNaturalFade(kambiMathapuAudioRef.current, 0.7, 200, 500);
+    } catch (e) {}
+  };
+
+  const playAtomBombAudio = () => {
+    try {
+      if (!atomBombAudioRef.current) {
+        atomBombAudioRef.current = new Audio(encodeURI('/Diwali Audios/Firework/Others Fireworks/atom bomb.mp3'));
+        atomBombAudioRef.current.preload = 'auto';
+      }
+      playWithNaturalFade(atomBombAudioRef.current, 0.95, 30, 200);
+    } catch (e) {}
+  };
+
+  const playSaravediAudio = () => {
+    try {
+      if (!saravediAudioRef.current) {
+        saravediAudioRef.current = new Audio(encodeURI('/Diwali Audios/Firework/Others Fireworks/Saravedi or Firecracker Garland.mp3'));
+        saravediAudioRef.current.preload = 'auto';
+      }
+      playWithNaturalFade(saravediAudioRef.current, 0.85, 100, 400);
     } catch (e) {}
   };
 
@@ -303,9 +359,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         navigator.vibrate([100, 50, 150]);
       }
 
-      // 9.0 seconds long glorious eruption as requested (9-10s)
-      const duration = 9000;
+      // Audio is 5.66s: synced duration to ~5.7s
+      const duration = 5700;
       const startTime = Date.now();
+      playPusvanamAudio();
       
       activeCrackersRef.current.push({
         type: 'pusvanam',
@@ -417,9 +474,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         navigator.vibrate([40, 80, 40]);
       }
 
-      // 7.5 seconds smooth roving spin as requested (7-8s)
-      const duration = 7500;
+      // Audio trimmed to 6.8s: synced duration to 6.8s with smooth fade
+      const duration = 6800;
       const startTime = Date.now();
+      playSanguChakramAudio();
       let angle = 0;
       let spinSpeed = 0.5;
 
@@ -566,9 +624,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         navigator.vibrate([25, 60, 25]);
       }
 
-      // Around 7.5 seconds slow, smooth burn
-      const duration = 7500;
+      // Audio trimmed to 6.5s: synced duration to 6.5s with smooth fade
+      const duration = 6500;
       const startTime = Date.now();
+      playKambiMathapuAudio();
 
       // Shared coordinates between update and draw to eliminate any frame lag
       let curX = baseX;
@@ -702,11 +761,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const stringBottomY = height * 0.78;
 
       let currentPairIdx = 0;
-      // 8.0 seconds total rhythmic explosion as requested
-      const duration = 8000;
+      // 8.02 seconds rhythmic garland burst (synced with Saravedi audio)
+      const duration = 8020;
       const intervalDelay = duration / totalPairs;
       const startTime = Date.now();
       let nextBurstTime = startTime;
+      playSaravediAudio();
 
       // Stray cracker pops off very rarely (randomly 2 to 3 times across all 40 pairs)
       const strayIndices = new Set();
@@ -959,6 +1019,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
           if (!hasDetonated) {
             hasDetonated = true;
+            playAtomBombAudio();
             // Heavy single blast!
             flashAlphaRef.current = 0.95;
             screenShakeRef.current = 15;
@@ -1133,18 +1194,18 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       switch (nextChoice) {
         case 'pusvanam':
           firePusvanam();
-          // 9.0s duration + 2.0s peaceful gap = 11.0s
-          delayAfterThis = 11000;
+          // 5.7s duration + 2.0s peaceful gap = 7.7s
+          delayAfterThis = 7700;
           break;
         case 'sanguSakkaram':
           fireSanguSakkaram();
-          // 7.5s spin + 2.0s peaceful gap = 9.5s
-          delayAfterThis = 9500;
+          // 6.8s spin + 2.0s peaceful gap = 8.8s
+          delayAfterThis = 8800;
           break;
         case 'kambiMathaapu':
           fireKambiMathaapu();
-          // 7.5s burn + 2.0s peaceful gap = 9.5s
-          delayAfterThis = 9500;
+          // 6.5s burn + 2.0s peaceful gap = 8.5s
+          delayAfterThis = 8500;
           break;
         case 'lakshmiVedi':
           fireLakshmiVedi();
@@ -1466,6 +1527,14 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           ambienceAudioRef.current.currentTime = 0;
         } catch (e) {}
       }
+      [pusvanamAudioRef, sanguchakramAudioRef, kambiMathapuAudioRef, atomBombAudioRef, saravediAudioRef].forEach(ref => {
+        if (ref.current) {
+          try {
+            ref.current.pause();
+            ref.current.currentTime = 0;
+          } catch (e) {}
+        }
+      });
       if (loopTimerRef.current) {
         clearTimeout(loopTimerRef.current);
         loopTimerRef.current = null;
