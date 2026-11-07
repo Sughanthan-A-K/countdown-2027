@@ -26,16 +26,43 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
   const touchOrigin = useRef({ x: -500, y: -500 });
   const hasIgnited = useRef(false); // Where user is touching (bottom of stick)
   
+  const [isStriking, setIsStriking] = useState(false);
+  const [isFlameLit, setIsFlameLit] = useState(false);
+  const matchAudioRef = useRef(null);
+  const flickerAudioRef = useRef(null);
 
   useEffect(() => {
-    // Sequence starts
-    const t1 = setTimeout(() => setPhase('dimming'), 1500);
-    // Dimming takes 2s to pop to dark
+    // Preload audios
+    try {
+      matchAudioRef.current = new Audio(encodeURI('/Diwali Audios/Match stick.mp3'));
+      matchAudioRef.current.preload = 'auto';
+
+      flickerAudioRef.current = new Audio(encodeURI('/Diwali Audios/Flicker.mp3'));
+      flickerAudioRef.current.preload = 'auto';
+    } catch (e) {
+      console.warn('Audio preload error:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Sequence starts: at 1.5s screen starts dimming & flickering (neon-die animation 2s)
+    const t1 = setTimeout(() => {
+      setPhase('dimming');
+      // Play flicker sound exactly when screen flickers/dims
+      try {
+        if (flickerAudioRef.current) {
+          flickerAudioRef.current.currentTime = 0;
+          flickerAudioRef.current.play().catch((err) => console.warn('Flicker sound play error:', err));
+        }
+      } catch (e) {
+        console.warn('Flicker sound play error:', e);
+      }
+    }, 1500);
+
+    // Dimming takes 2s to pop to complete dark (at 3.5s)
     const t2 = setTimeout(() => setPhase('dark'), 3500);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
-
-  const [isStriking, setIsStriking] = useState(false);
 
   const handlePointerMove = (e) => {
     if (phase === 'match') {
@@ -75,10 +102,24 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       
       setMatchPos({ x: flameX, y: flameY });
       setPhase('match');
-      
-      // Trigger a rapid match-strike spark animation
-      setIsStriking(true);
-      setTimeout(() => setIsStriking(false), 400);
+
+      // Play match strike audio on tap
+      try {
+        if (matchAudioRef.current) {
+          matchAudioRef.current.currentTime = 0;
+          matchAudioRef.current.play().catch((err) => console.warn('Audio play error:', err));
+        }
+      } catch (e) {
+        console.warn('Match sound play error:', e);
+      }
+
+      // Delay flame/fire appearance by 0.25s after the strike sound starts
+      setIsFlameLit(false);
+      setTimeout(() => {
+        setIsFlameLit(true);
+        setIsStriking(true);
+        setTimeout(() => setIsStriking(false), 400);
+      }, 250);
     }
   };
 
@@ -87,7 +128,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
   const ignitionStartTime = React.useRef(0);
 
   useEffect(() => {
-    if (phase !== 'match') return;
+    if (phase !== 'match' || !isFlameLit) return;
 
     const checkCollision = () => {
       const hitbox = document.getElementById('fuse-hitbox');
@@ -116,13 +157,13 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           return; // Prevent multiple triggers
         }
       }
-      if (phase === 'match') {
+      if (phase === 'match' && isFlameLit) {
         requestAnimationFrame(checkCollision);
       }
     };
     const animId = requestAnimationFrame(checkCollision);
     return () => cancelAnimationFrame(animId);
-  }, [phase, matchPos, onReveal, onComplete, onExplode]);
+  }, [phase, isFlameLit, matchPos, onReveal, onComplete, onExplode]);
 
   const handleRocketExplode = () => {
     setPhase('explode'); // Trigger flashes and background fade
@@ -146,13 +187,14 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
   };
 
   // Mask styling for match light (hole is precisely at the flame)
-  const torchMask = phase === 'match' 
-    ? `radial-gradient(circle 120px at ${matchPos.x}px ${matchPos.y}px, transparent 20px, rgba(0,0,0,0.85) 90px, black 120px)` 
+  // Light radius is focused closely around the flame (65px) so only the flame area and stick are lit, no giant background bleed
+  const torchMask = (phase === 'match' && isFlameLit)
+    ? `radial-gradient(circle 65px at ${matchPos.x}px ${matchPos.y}px, transparent 15px, rgba(0,0,0,0.85) 45px, black 65px)` 
     : 'none';
     
   // Mask for objects that are ONLY visible in the dark light
-  const wireRevealMask = phase === 'match'
-    ? `radial-gradient(circle 120px at ${matchPos.x}px ${matchPos.y}px, black 20px, rgba(0,0,0,0.6) 90px, transparent 120px)`
+  const wireRevealMask = (phase === 'match' && isFlameLit)
+    ? `radial-gradient(circle 65px at ${matchPos.x}px ${matchPos.y}px, black 15px, rgba(0,0,0,0.6) 45px, transparent 65px)`
     : 'none';
 
   return (
@@ -202,6 +244,12 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
            0% { transform: scale(3); opacity: 1; }
            100% { transform: scale(1); opacity: 0; }
         }
+        @keyframes flame-grow {
+           0% { transform: scale(0.35); opacity: 0.6; }
+           30% { transform: scale(0.55); opacity: 0.85; }
+           60% { transform: scale(0.8); opacity: 0.95; }
+           100% { transform: scale(1); opacity: 1; }
+        }
         @keyframes float-up {
            0% { transform: translateY(0) scale(1); opacity: 1; }
            100% { transform: translateY(-30px) scale(0.5); opacity: 0; }
@@ -237,12 +285,12 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
           <div 
             className="absolute inset-0 z-[950] pointer-events-none transition-opacity duration-75"
             style={{
-              WebkitMaskImage: (phase === 'lit' || phase === 'launching') ? 'none' : wireRevealMask,
-              maskImage: (phase === 'lit' || phase === 'launching') ? 'none' : wireRevealMask,
+              WebkitMaskImage: (phase === 'lit' || phase === 'launching') ? 'none' : (isFlameLit ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
+              maskImage: (phase === 'lit' || phase === 'launching') ? 'none' : (isFlameLit ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
             }}
           >
             {/* The Matchstick (Drawn from touch point to flame) */}
-            {(phase === 'match' || phase === 'lit') && (
+            {(phase === 'match' || phase === 'lit') && isFlameLit && (
               <div>
                 <svg className={`absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-xl z-40 transition-all duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-32 delay-[800ms]' : 'opacity-100'}`}>
                   {/* Stick */}
@@ -253,22 +301,24 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
 
                 {/* Animated Flame at the tip of the match */}
                 <div 
-                  className={`absolute z-50 pointer-events-none transition duration-[800ms] ${phase === 'lit' ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} 
+                  className={`absolute z-50 pointer-events-none transition duration-[800ms] ${phase === 'lit' || !isFlameLit ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} 
                   style={{ left: matchPos.x, top: matchPos.y - 12, transform: 'translate(-50%, -50%)', transformOrigin: 'center bottom' }}
                 >
-                   {isStriking && (
+                   {isStriking && isFlameLit && (
                      <div className="absolute -inset-10 bg-yellow-100 rounded-full md:blur-xl blur-sm animate-[match-strike_0.3s_ease-out]" />
                    )}
                    
-                   {/* Crisp Sharp Fire SVG */}
-                   <svg viewBox="0 0 30 50" className="w-6 h-10 animate-[fire-flicker_0.15s_infinite_alternate] origin-bottom md:drop-shadow-[0_0_10px_rgba(255,165,0,0.8)] drop-shadow-[0_0_4px_rgba(255,165,0,0.5)]">
-                     <path d="M15 0 C 25 15, 30 25, 25 40 C 20 50, 10 50, 5 40 C 0 25, 5 15, 15 0 Z" fill="#ff4500" />
-                     <path d="M15 15 C 22 25, 23 35, 15 45 C 7 35, 8 25, 15 15 Z" fill="#ffd700" />
-                     <path d="M15 28 C 18 35, 17 40, 15 42 C 13 40, 12 35, 15 28 Z" fill="#ffffff" />
-                   </svg>
+                   {/* Crisp Sharp Fire SVG with 1s initial growth from small to full */}
+                   <div className="origin-bottom animate-[flame-grow_1s_cubic-bezier(0.25,1,0.5,1)_forwards]">
+                     <svg viewBox="0 0 30 50" className="w-6 h-10 animate-[fire-flicker_0.15s_infinite_alternate] origin-bottom md:drop-shadow-[0_0_10px_rgba(255,165,0,0.8)] drop-shadow-[0_0_4px_rgba(255,165,0,0.5)]">
+                       <path d="M15 0 C 25 15, 30 25, 25 40 C 20 50, 10 50, 5 40 C 0 25, 5 15, 15 0 Z" fill="#ff4500" />
+                       <path d="M15 15 C 22 25, 23 35, 15 45 C 7 35, 8 25, 15 15 Z" fill="#ffd700" />
+                       <path d="M15 28 C 18 35, 17 40, 15 42 C 13 40, 12 35, 15 28 Z" fill="#ffffff" />
+                     </svg>
+                   </div>
                    
                    {/* Continuous floating sparks */}
-                   {phase === 'match' && (
+                   {phase === 'match' && isFlameLit && (
                      <>
                        <div className="absolute top-0 left-1 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-[float-up_0.6s_infinite]" />
                        <div className="absolute top-2 right-1 w-1 h-1 bg-orange-300 rounded-full animate-[float-up_0.8s_infinite_0.2s]" />
