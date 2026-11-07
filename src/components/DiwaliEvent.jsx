@@ -30,6 +30,11 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   const [isFlameLit, setIsFlameLit] = useState(false);
   const matchAudioRef = useRef(null);
   const flickerAudioRef = useRef(null);
+  const flameAudioRef = useRef(null);
+  const cylinderBlastAudioRef = useRef(null);
+  const matchTimeoutRef = useRef(null);
+  const burnProgressTimerRef = useRef(null);
+  const [burnProgress, setBurnProgress] = useState(0); // 0 (tip/start) to 1 (burned down to thumb)
 
   // 1st Tap handler: triggers flicker audio + neon die animation -> full dark
   const handleFirstTapToDim = () => {
@@ -37,6 +42,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
       setPhase('dimming');
       try {
         if (flickerAudioRef.current) {
+          flickerAudioRef.current.playbackRate = 1.1; // Speed up flicker audio by 0.1
           flickerAudioRef.current.currentTime = 0;
           flickerAudioRef.current.play().catch((err) => console.warn('Flicker sound play error:', err));
         }
@@ -44,19 +50,33 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         console.warn('Flicker sound play error:', e);
       }
 
-      // Also prime/unlock the match stick audio on this first user gesture (critical for iOS Safari)
+      // Also prime/unlock all other audios on this first user gesture (critical for iOS/Android)
       try {
-        if (matchAudioRef.current) {
-          matchAudioRef.current.load();
-        }
+        if (matchAudioRef.current) matchAudioRef.current.load();
+        if (flameAudioRef.current) flameAudioRef.current.load();
+        if (cylinderBlastAudioRef.current) cylinderBlastAudioRef.current.load();
       } catch (e) {}
 
-      // After 2s neon-die flicker animation, transition to dark and flip background to dark mode
+      // After 1.8s neon-die flicker animation (matching 1.1x speed), transition to dark and flip background to dark mode
       setTimeout(() => {
         setPhase('dark');
         if (onBlackout) onBlackout();
-      }, 2000);
+      }, 1800);
     }
+  };
+
+  const stopFlameAudio = () => {
+    if (flameAudioRef.current) {
+      try {
+        flameAudioRef.current.pause();
+        flameAudioRef.current.currentTime = 0;
+      } catch (e) {}
+    }
+  };
+
+  const clearBurnTimers = () => {
+    if (matchTimeoutRef.current) clearTimeout(matchTimeoutRef.current);
+    if (burnProgressTimerRef.current) cancelAnimationFrame(burnProgressTimerRef.current);
   };
 
   const handlePointerMove = (e) => {
@@ -115,10 +135,44 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
 
       // Delay flame/fire appearance by 0.25s after the strike sound starts
       setIsFlameLit(false);
+      setBurnProgress(0);
+      clearBurnTimers();
+
       setTimeout(() => {
         setIsFlameLit(true);
         setIsStriking(true);
         setTimeout(() => setIsStriking(false), 400);
+
+        // Play gentle mild burning flame audio for 8s (soft volume ~0.15)
+        try {
+          if (flameAudioRef.current) {
+            flameAudioRef.current.currentTime = 0;
+            flameAudioRef.current.volume = 0.15; // Extra mild & gentle as requested
+            flameAudioRef.current.play().catch((err) => console.warn('Flame sound error:', err));
+          }
+        } catch (e) {}
+
+        // Match burns down naturally over 8 seconds. Flame travels down the stick toward the hand, leaving burnt black ash behind!
+        const burnStartTime = performance.now();
+        const burnDuration = 8000;
+
+        const trackBurn = (now) => {
+          const elapsed = now - burnStartTime;
+          const progress = Math.min(1, elapsed / burnDuration);
+          setBurnProgress(progress);
+
+          if (progress < 1) {
+            burnProgressTimerRef.current = requestAnimationFrame(trackBurn);
+          } else {
+            // Burned out completely at hand: extinguish and return to dark
+            stopFlameAudio();
+            setIsFlameLit(false);
+            setBurnProgress(0);
+            setPhase('dark');
+          }
+        };
+        burnProgressTimerRef.current = requestAnimationFrame(trackBurn);
+
       }, 250);
     }
   };
@@ -138,15 +192,27 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         const sparkY = rect.top + rect.height / 2;
         
         // Very forgiving 45px radius to account for visual offset and thumb sizes on mobile. Instant ignition!
-        const dist = Math.hypot(matchPos.x - sparkX, matchPos.y - sparkY);
+        const dist = Math.hypot(activeFlameX - sparkX, activeFlameY - sparkY);
         if (dist < 45 && !hasIgnited.current) {
           hasIgnited.current = true;
+          clearBurnTimers();
+          stopFlameAudio();
+
           if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
           setPhase('lit');
           
           // Fuse burns for 3.0 seconds
           setTimeout(() => {
             setPhase('launching');
+
+            // Play Cylinder Out Blast audio right at launch!
+            try {
+              if (cylinderBlastAudioRef.current) {
+                cylinderBlastAudioRef.current.currentTime = 0;
+                cylinderBlastAudioRef.current.play().catch((err) => console.warn('Cylinder blast sound error:', err));
+              }
+            } catch (e) {}
+
             // Sharp pop vibration when the cylinder launches from the ground
             if (typeof window !== 'undefined' && navigator.vibrate) {
               navigator.vibrate([150]); 
@@ -186,15 +252,20 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
     }, 9000);
   };
 
-  // Mask styling for match light (hole is precisely at the flame)
+  // Burning flame coordinates traveling down the stick toward the user's touch (origin)
+  // At burnProgress 0: flame is at matchPos. At 1: flame reaches touchOrigin.
+  const activeFlameX = matchPos.x + (touchOrigin.current.x - matchPos.x) * (burnProgress * 0.85);
+  const activeFlameY = matchPos.y + (touchOrigin.current.y - matchPos.y) * (burnProgress * 0.85);
+
+  // Mask styling for match light (hole tracks the moving flame)
   // Light radius is focused closely around the flame (65px) so only the flame area and stick are lit, no giant background bleed
   const torchMask = (phase === 'match' && isFlameLit)
-    ? `radial-gradient(circle 65px at ${matchPos.x}px ${matchPos.y}px, transparent 15px, rgba(0,0,0,0.85) 45px, black 65px)` 
+    ? `radial-gradient(circle 65px at ${activeFlameX}px ${activeFlameY}px, transparent 15px, rgba(0,0,0,0.85) 45px, black 65px)` 
     : 'none';
     
   // Mask for objects that are ONLY visible in the dark light
   const wireRevealMask = (phase === 'match' && isFlameLit)
-    ? `radial-gradient(circle 65px at ${matchPos.x}px ${matchPos.y}px, black 15px, rgba(0,0,0,0.6) 45px, transparent 65px)`
+    ? `radial-gradient(circle 65px at ${activeFlameX}px ${activeFlameY}px, black 15px, rgba(0,0,0,0.6) 45px, transparent 65px)`
     : 'none';
 
   return (
@@ -245,11 +316,10 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
            100% { transform: scale(1); opacity: 0; }
         }
         @keyframes flame-grow {
-           0% { transform: scale(0.25); opacity: 0.4; }
-           20% { transform: scale(0.38); opacity: 0.65; }
-           45% { transform: scale(0.55); opacity: 0.8; }
-           70% { transform: scale(0.78); opacity: 0.92; }
-           100% { transform: scale(1); opacity: 1; }
+           0% { transform: scale(0.25); opacity: 0.35; }
+           30% { transform: scale(0.45); opacity: 0.65; }
+           60% { transform: scale(0.68); opacity: 0.85; }
+           100% { transform: scale(0.85); opacity: 1; }
         }
         @keyframes float-up {
            0% { transform: translateY(0) scale(1); opacity: 1; }
@@ -294,16 +364,42 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
             {(phase === 'match' || phase === 'lit') && isFlameLit && (
               <div>
                 <svg className={`absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-xl z-40 transition-all duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-32 delay-[800ms]' : 'opacity-100'}`}>
-                  {/* Stick */}
-                  <line x1={touchOrigin.current.x} y1={touchOrigin.current.y} x2={matchPos.x} y2={matchPos.y} stroke="#d2b48c" strokeWidth="6" strokeLinecap="round" />
+                  {/* Unburnt Wood Stick (from touch origin to flame tip) */}
+                  <line 
+                    x1={touchOrigin.current.x} 
+                    y1={touchOrigin.current.y} 
+                    x2={activeFlameX} 
+                    y2={activeFlameY} 
+                    stroke="#d2b48c" 
+                    strokeWidth="6" 
+                    strokeLinecap="round" 
+                  />
+
+                  {/* Burnt Charred Black Ash (behind the moving flame, where it has already burned through) */}
+                  {burnProgress > 0.05 && (
+                    <line 
+                      x1={matchPos.x} 
+                      y1={matchPos.y} 
+                      x2={activeFlameX} 
+                      y2={activeFlameY} 
+                      stroke="#1a1a1a" 
+                      strokeWidth="4.5" 
+                      strokeLinecap="round" 
+                      opacity="0.8"
+                    />
+                  )}
+
                   {/* Burnt Head */}
-                  <circle cx={matchPos.x} cy={matchPos.y} r="5" fill="#222" />
+                  <circle cx={matchPos.x} cy={matchPos.y} r="4.5" fill="#111" />
+                  
+                  {/* Glowing red ember directly underneath the flame */}
+                  <circle cx={activeFlameX} cy={activeFlameY} r="3" fill="#ff4500" />
                 </svg>
 
-                {/* Animated Flame at the tip of the match */}
+                {/* Animated Flame at the tip of the match (moves down the stick over 8s) */}
                 <div 
                   className={`absolute z-50 pointer-events-none transition duration-[800ms] ${phase === 'lit' || !isFlameLit ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} 
-                  style={{ left: matchPos.x, top: matchPos.y - 12, transform: 'translate(-50%, -50%)', transformOrigin: 'center bottom' }}
+                  style={{ left: activeFlameX, top: activeFlameY - 12, transform: 'translate(-50%, -50%)', transformOrigin: 'center bottom' }}
                 >
                    {isStriking && isFlameLit && (
                      <div className="absolute -inset-10 bg-yellow-100 rounded-full md:blur-xl blur-sm animate-[match-strike_0.3s_ease-out]" />
@@ -465,6 +561,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
       {/* Hidden audio elements for robust mobile browser streaming */}
       <audio ref={flickerAudioRef} src={encodeURI('/Diwali Audios/Flicker.mp3')} preload="auto" playsInline />
       <audio ref={matchAudioRef} src={encodeURI('/Diwali Audios/Match stick.mp3')} preload="auto" playsInline />
+      <audio ref={flameAudioRef} src={encodeURI('/Diwali Audios/Flame sound.mp3')} preload="auto" playsInline />
+      <audio ref={cylinderBlastAudioRef} src={encodeURI('/Diwali Audios/Cylender out blast.mp3')} preload="auto" playsInline />
     </>
   );
 }
