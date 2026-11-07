@@ -19,6 +19,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
   const lastGoingTopIndexRef = useRef(-1);
   const crackAudiosRef = useRef([]);
   const lastCrackIndexRef = useRef(-1);
+  const ambienceAudioRef = useRef(null);
 
   // Tracking state for sequential crackers
   // We want 10 Outs first, then random cracker selection where only ONE cracker runs at a time
@@ -29,6 +30,53 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
   const screenShakeRef = useRef(0); // Screen shake offset for atom bomb / saravedi
   const flashAlphaRef = useRef(0); // Blinding flash for Lakshmi vedi / bombs
 
+  // Smooth volume envelope helper (fade-in & fade-out)
+  const playWithNaturalFade = (audio, targetVolume = 0.8, fadeInMs = 120, fadeOutMs = 350) => {
+    if (!audio) return;
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = 0;
+      
+      const playPromise = audio.play();
+      if (!playPromise) return;
+
+      playPromise.then(() => {
+        const start = performance.now();
+        // Fade in
+        const fadeIn = () => {
+          const now = performance.now();
+          const p = Math.min(1, (now - start) / fadeInMs);
+          audio.volume = p * targetVolume;
+          if (p < 1 && !audio.paused) {
+            requestAnimationFrame(fadeIn);
+          }
+        };
+        requestAnimationFrame(fadeIn);
+
+        // Schedule fade out toward the tail of the audio
+        const duration = (audio.duration && !isNaN(audio.duration) && audio.duration > 0.5) 
+          ? audio.duration * 1000 
+          : 2500;
+        const fadeOutStartTime = Math.max(fadeInMs + 50, duration - fadeOutMs);
+
+        setTimeout(() => {
+          if (audio.paused) return;
+          const fadeStart = performance.now();
+          const fadeOut = () => {
+            const now = performance.now();
+            const p = Math.max(0, 1 - (now - fadeStart) / fadeOutMs);
+            audio.volume = p * targetVolume;
+            if (p > 0 && !audio.paused) {
+              requestAnimationFrame(fadeOut);
+            }
+          };
+          requestAnimationFrame(fadeOut);
+        }, fadeOutStartTime);
+      }).catch(() => {});
+    } catch (e) {}
+  };
+
   // Sound players
   const playShowerAudio = () => {
     try {
@@ -36,8 +84,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         showerAudioRef.current = new Audio(encodeURI('/Diwali Audios/Firework/Firework shower.wav'));
         showerAudioRef.current.preload = 'auto';
       }
-      showerAudioRef.current.currentTime = 0;
-      showerAudioRef.current.play().catch(() => {});
+      playWithNaturalFade(showerAudioRef.current, 0.85, 150, 450);
     } catch (e) {}
   };
 
@@ -57,8 +104,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         audio.preload = 'auto';
         cardAudiosRef.current[randIdx] = audio;
       }
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
+      playWithNaturalFade(audio, 0.75, 100, 300);
     } catch (e) {}
   };
 
@@ -78,9 +124,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         audio.preload = 'auto';
         goingTopAudiosRef.current[randIdx] = audio;
       }
-      audio.volume = 0.25; // Gentle & mild whoosh volume
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
+      playWithNaturalFade(audio, 0.25, 80, 250);
     } catch (e) {}
   };
 
@@ -100,14 +144,25 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         audio.preload = 'auto';
         crackAudiosRef.current[randIdx] = audio;
       }
-      audio.volume = 0.3; // Lower volume as requested
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
+      playWithNaturalFade(audio, 0.3, 60, 200);
     } catch (e) {}
   };
 
   useEffect(() => {
     if (!active) return;
+
+    // Start very gentle, super-low volume background celebration ambience loop
+    try {
+      if (!ambienceAudioRef.current) {
+        ambienceAudioRef.current = new Audio(encodeURI('/Diwali Audios/Ambience.mp3'));
+        ambienceAudioRef.current.loop = true;
+        ambienceAudioRef.current.volume = 0.08; // Super mild & very subtle background level
+        ambienceAudioRef.current.preload = 'auto';
+      }
+      ambienceAudioRef.current.currentTime = 0;
+      ambienceAudioRef.current.play().catch(() => {});
+    } catch (e) {}
+
     const canvas = canvasRef.current;
     if (!canvas || !canvas.parentElement) return;
     const ctx = canvas.getContext('2d');
@@ -1403,6 +1458,12 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      if (ambienceAudioRef.current) {
+        try {
+          ambienceAudioRef.current.pause();
+          ambienceAudioRef.current.currentTime = 0;
+        } catch (e) {}
+      }
       if (loopTimerRef.current) {
         clearTimeout(loopTimerRef.current);
         loopTimerRef.current = null;
