@@ -68,7 +68,7 @@ function LokiLifePowerSpread({
     if (distance <= 5) return null;
     return (
       <g key={key}>
-        {/* 1. Behind the venom wave: Awakened living body */}
+        {/* 1. Behind the venom wave: Awakened living body - INNUM DEEP DARK ALMOST BLACK (#01170d / #022013) */}
         <motion.path
           d={pathD}
           fill="none"
@@ -79,6 +79,7 @@ function LokiLifePowerSpread({
           animate={{ pathLength: 1 }}
           transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
           opacity={0.8}
+          style={{ filter: "blur(2.5px)" }}
         />
         <motion.path
           d={pathD}
@@ -115,7 +116,7 @@ function LokiLifePowerSpread({
           opacity={0.65}
         />
 
-        {/* 2. Crawling Living Venom Head (Compact PL: 100px - 140px) */}
+        {/* 2. Crawling Living Venom Head (Compact PL: 100px - 140px) - Organic fluid creeping along the branch */}
         <g style={{ willChange: "transform, opacity" }}>
           <motion.path
             d={pathD}
@@ -127,7 +128,7 @@ function LokiLifePowerSpread({
             initial={{ strokeDashoffset: headLen }}
             animate={{ strokeDashoffset: -(distance + 80) }}
             transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
-            style={{ opacity: 0.9 }}
+            style={{ filter: "blur(2px)", opacity: 0.9 }}
           />
           <motion.path
             d={pathD}
@@ -155,7 +156,7 @@ function LokiLifePowerSpread({
             initial={{ strokeDashoffset: headLen * 0.65 }}
             animate={{ strokeDashoffset: -(distance + 80) }}
             transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
-            style={{ opacity: 1 }}
+            style={{ filter: "drop-shadow(0 0 4px #39ff14)", opacity: 1 }}
           />
           <motion.path
             d={pathD}
@@ -167,7 +168,7 @@ function LokiLifePowerSpread({
             initial={{ strokeDashoffset: headLen * 0.4 }}
             animate={{ strokeDashoffset: -(distance + 80) }}
             transition={{ duration, ease: [0.18, 0.8, 0.25, 1] }}
-            style={{ opacity: 1 }}
+            style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.9))", opacity: 1 }}
           />
         </g>
       </g>
@@ -433,9 +434,12 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
       if (tappedCount >= 3) {
         setLastTappedBranchId(id);
 
-        // Streamlined organic clusters across the 8 curated multiverse filaments + remaining main branches
+        // User requested:
+        // "gap eduthu varathu ok but apdiye onu rendu nu ore nerathula random timing la konjam neraiya varatom... paaka nalla irukum... la"
+        // Natural organic clusters: Sila neram 1 branch, sila neram 2 branches ore nerathula start aagum!
+        // Natural organic clusters across the optimized multiverse filaments + remaining main branches
         const untapptMainBranches = allMainBranchIds.filter(bId => !updated[bId]?.active);
-        const filamentOrder = [4, 1, 6, 2, 0, 5, 3, 7];
+        const filamentOrder = [22, 4, 9, 15, 3, 5, 2, 14, 0, 24, 21, 16, 17, 18, 23, 7, 12, 25, 1, 10, 19, 13, 20, 11, 8, 26, 6];
         
         // Group branches into organic waves (pairs and singles)
         const allRemaining = [...untapptMainBranches, ...filamentOrder.map(idx => `filament-${idx}`)];
@@ -802,11 +806,28 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
         </motion.div>
       )}
 
-      {/* SVG Lightweight Gradients & Visual Helpers (All heavy feTurbulence removed for GPU 60fps stability) */}
+      {/* SVG Organic Distortion Filters for the irregular jagged portal border & venom tendrils */}
       <svg className="absolute w-0 h-0 pointer-events-none">
         <defs>
+          <filter id="lokiOrganicRiftEdge" x="-30%" y="-30%" width="160%" height="160%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="4" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+
           <filter id="smoothBranchGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#010f0b" floodOpacity="0.8" />
+            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#010f0b" floodOpacity="0.9" />
+          </filter>
+
+          {/* Dynamic Living Venom Fluid filter: creeping fluid tendrils that grasp and flow with true life */}
+          <filter id="livingVenomFluidDistort" x="-25%" y="-50%" width="150%" height="200%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.02 0.09" numOctaves="3" result="venomNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="8.5" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+
+          {/* Organic Venom filter for inner core: 40% organic fluid wave ripple */}
+          <filter id="venomInnerCoreDistort" x="-20%" y="-40%" width="140%" height="180%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.035 0.12" numOctaves="3" result="venomNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="venomNoise" scale="5.5" xChannelSelector="R" yChannelSelector="G" />
           </filter>
 
           <radialGradient id="venomGripPulseGlow" cx="50%" cy="50%" r="50%">
@@ -937,7 +958,8 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
             borderRight: '2.5px solid #7CFFB2',
             borderTop: '2px solid #00FF66',
             borderBottom: '2px solid #00C853',
-            boxShadow: '0 0 20px #7CFFB2, 0 0 45px #00FF66, 0 0 70px #00C853, inset 0 0 20px rgba(0,0,0,0.95)'
+            boxShadow: '0 0 20px #7CFFB2, 0 0 45px #00FF66, 0 0 70px #00C853, inset 0 0 20px rgba(0,0,0,0.95)',
+            filter: 'url(#lokiOrganicRiftEdge)'
           }}
         />
 
@@ -980,7 +1002,8 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
           className="absolute h-[270px] sm:h-[330px] pointer-events-none rounded-[50%]"
           style={{
             background: 'linear-gradient(180deg, transparent 0%, rgba(185,255,208,0.85) 15%, rgba(255,255,255,0.95) 50%, rgba(124,255,178,0.85) 85%, transparent 100%)',
-            boxShadow: '0 0 15px rgba(255,255,255,0.8), 0 0 30px #B9FFD0, 0 0 50px #00FF66'
+            boxShadow: '0 0 15px rgba(255,255,255,0.8), 0 0 30px #B9FFD0, 0 0 50px #00FF66',
+            filter: 'url(#lokiOrganicRiftEdge) blur(0.8px)'
           }}
         />
       </motion.div>
@@ -1199,7 +1222,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         initial={{ strokeDashoffset: 110 }}
                         animate={{ strokeDashoffset: -2200 }}
                         transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
-                        style={{ opacity: 0.95 }}
+                        style={{ filter: "blur(1.5px)", opacity: 0.95 }}
                       />
                     </g>
 
@@ -1215,7 +1238,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         initial={{ strokeDashoffset: 70 }}
                         animate={{ strokeDashoffset: -2200 }}
                         transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
-                        style={{ opacity: 1 }}
+                        style={{ filter: "drop-shadow(0 0 3px #39FF14)", opacity: 1 }}
                       />
                       <motion.path
                         d={filamentD}
@@ -1227,7 +1250,7 @@ export default function LokiTimelinePortal({ crackStage = 5 }) {
                         initial={{ strokeDashoffset: 35 }}
                         animate={{ strokeDashoffset: -2200 }}
                         transition={{ duration: 16.0, ease: [0.18, 0.8, 0.25, 1] }}
-                        style={{ opacity: 1 }}
+                        style={{ filter: "drop-shadow(0 0 3px #ffffff)", opacity: 1 }}
                       />
                     </g>
                   </g>
