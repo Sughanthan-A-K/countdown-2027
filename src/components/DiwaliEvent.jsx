@@ -31,19 +31,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   const matchAudioRef = useRef(null);
   const flickerAudioRef = useRef(null);
 
-  useEffect(() => {
-    // Preload audios
-    try {
-      matchAudioRef.current = new Audio(encodeURI('/Diwali Audios/Match stick.mp3'));
-      matchAudioRef.current.preload = 'auto';
-
-      flickerAudioRef.current = new Audio(encodeURI('/Diwali Audios/Flicker.mp3'));
-      flickerAudioRef.current.preload = 'auto';
-    } catch (e) {
-      console.warn('Audio preload error:', e);
-    }
-  }, []);
-
   // 1st Tap handler: triggers flicker audio + neon die animation -> full dark
   const handleFirstTapToDim = () => {
     if (phase === 'init') {
@@ -56,6 +43,13 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
       } catch (e) {
         console.warn('Flicker sound play error:', e);
       }
+
+      // Also prime/unlock the match stick audio on this first user gesture (critical for iOS Safari)
+      try {
+        if (matchAudioRef.current) {
+          matchAudioRef.current.load();
+        }
+      } catch (e) {}
 
       // After 2s neon-die flicker animation, transition to dark and flip background to dark mode
       setTimeout(() => {
@@ -466,8 +460,11 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         )}
       </AnimatePresence>
 
-
       </div>
+
+      {/* Hidden audio elements for robust mobile browser streaming */}
+      <audio ref={flickerAudioRef} src={encodeURI('/Diwali Audios/Flicker.mp3')} preload="auto" playsInline />
+      <audio ref={matchAudioRef} src={encodeURI('/Diwali Audios/Match stick.mp3')} preload="auto" playsInline />
     </>
   );
 }
