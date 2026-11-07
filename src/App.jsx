@@ -506,11 +506,6 @@ function App() {
           setDiwaliPhase(0);
           setDiwaliRevealed(false);
           setShowDiwaliEvent(true);
-          // Force Dark Mode during the blackout flicker (safely fully black at 3.3s)
-          setTimeout(() => {
-            setIsDarkMode(true);
-            localStorage.setItem('isDarkMode', 'true');
-          }, 3300);
         } else {
           setDiwaliRevealed(true);
         }
@@ -536,15 +531,11 @@ function App() {
         setDiwaliRevealed(true);
         setShowDiwaliEvent(false);
       } else {
-        // First-time viewer: show blackout, match stick & lighting event
+        // First-time viewer: starts in Light Mode, awaits 1st tap to start flicker & dark
         setIsDarkMode(false);
         setDiwaliPhase(0);
         setDiwaliRevealed(false);
         setShowDiwaliEvent(true);
-        const timer = setTimeout(() => {
-          setIsDarkMode(true);
-        }, 3300);
-        return () => clearTimeout(timer);
       }
     }
   }, [isSharedCardView, sharedCardData, isDevMode]);
@@ -1951,11 +1942,19 @@ function App() {
         isDarkMode={effectiveDarkMode} 
       />
       {showDiwaliEvent && (
-        <DiwaliEvent isDarkMode={effectiveDarkMode} onExplode={() => setDiwaliPhase(1)} onComplete={() => {
-          setDiwaliRevealed(true);
-          setShowDiwaliEvent(false);
-          if (!isDevMode && !isSharedCardView) localStorage.setItem('diwaliEventDone_2026', 'true');
-        }} />
+        <DiwaliEvent 
+          isDarkMode={effectiveDarkMode} 
+          onBlackout={() => {
+            setIsDarkMode(true);
+            localStorage.setItem('isDarkMode', 'true');
+          }}
+          onExplode={() => setDiwaliPhase(1)} 
+          onComplete={() => {
+            setDiwaliRevealed(true);
+            setShowDiwaliEvent(false);
+            if (!isDevMode && !isSharedCardView) localStorage.setItem('diwaliEventDone_2026', 'true');
+          }} 
+        />
       )}
 
       {/* SINGLE UNIFIED MASTER LIGHT TOOLBOX (Shortcut: Shift + T) */}

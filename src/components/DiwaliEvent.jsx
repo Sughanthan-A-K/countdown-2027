@@ -19,8 +19,8 @@ const sparkVariants = {
   }
 };
 
-export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMode }) {
-  const [phase, setPhase] = useState('init'); // init, dimming, dark, match, lit, launching, done, freeze
+export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackout, isDarkMode }) {
+  const [phase, setPhase] = useState('init'); // init (waiting for 1st tap), dimming, dark, match, lit, launching, done, freeze
   const [matchPos, setMatchPos] = useState({ x: -500, y: -500 }); // The FLAME position
   
   const touchOrigin = useRef({ x: -500, y: -500 });
@@ -44,11 +44,10 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
     }
   }, []);
 
-  useEffect(() => {
-    // Sequence starts: at 1.5s screen starts dimming & flickering (neon-die animation 2s)
-    const t1 = setTimeout(() => {
+  // 1st Tap handler: triggers flicker audio + neon die animation -> full dark
+  const handleFirstTapToDim = () => {
+    if (phase === 'init') {
       setPhase('dimming');
-      // Play flicker sound exactly when screen flickers/dims
       try {
         if (flickerAudioRef.current) {
           flickerAudioRef.current.currentTime = 0;
@@ -57,12 +56,14 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
       } catch (e) {
         console.warn('Flicker sound play error:', e);
       }
-    }, 1500);
 
-    // Dimming takes 2s to pop to complete dark (at 3.5s)
-    const t2 = setTimeout(() => setPhase('dark'), 3500);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, []);
+      // After 2s neon-die flicker animation, transition to dark and flip background to dark mode
+      setTimeout(() => {
+        setPhase('dark');
+        if (onBlackout) onBlackout();
+      }, 2000);
+    }
+  };
 
   const handlePointerMove = (e) => {
     if (phase === 'match') {
@@ -85,6 +86,11 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
   };
 
   const handleDarkTap = (e) => {
+    if (phase === 'init') {
+      handleFirstTapToDim();
+      return;
+    }
+
     if (phase === 'dark') {
       if (navigator.vibrate) navigator.vibrate([50, 50]);
       const isTouch = e.touches && e.touches.length > 0;
@@ -245,9 +251,10 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
            100% { transform: scale(1); opacity: 0; }
         }
         @keyframes flame-grow {
-           0% { transform: scale(0.35); opacity: 0.6; }
-           30% { transform: scale(0.55); opacity: 0.85; }
-           60% { transform: scale(0.8); opacity: 0.95; }
+           0% { transform: scale(0.25); opacity: 0.4; }
+           20% { transform: scale(0.38); opacity: 0.65; }
+           45% { transform: scale(0.55); opacity: 0.8; }
+           70% { transform: scale(0.78); opacity: 0.92; }
            100% { transform: scale(1); opacity: 1; }
         }
         @keyframes float-up {
@@ -308,8 +315,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, isDarkMod
                      <div className="absolute -inset-10 bg-yellow-100 rounded-full md:blur-xl blur-sm animate-[match-strike_0.3s_ease-out]" />
                    )}
                    
-                   {/* Crisp Sharp Fire SVG with 1s initial growth from small to full */}
-                   <div className="origin-bottom animate-[flame-grow_1s_cubic-bezier(0.25,1,0.5,1)_forwards]">
+                   {/* Crisp Sharp Fire SVG with 2.6s smooth gradual growth matching entire audio */}
+                   <div className="origin-bottom animate-[flame-grow_2.6s_cubic-bezier(0.2,0.8,0.3,1)_forwards]">
                      <svg viewBox="0 0 30 50" className="w-6 h-10 animate-[fire-flicker_0.15s_infinite_alternate] origin-bottom md:drop-shadow-[0_0_10px_rgba(255,165,0,0.8)] drop-shadow-[0_0_4px_rgba(255,165,0,0.5)]">
                        <path d="M15 0 C 25 15, 30 25, 25 40 C 20 50, 10 50, 5 40 C 0 25, 5 15, 15 0 Z" fill="#ff4500" />
                        <path d="M15 15 C 22 25, 23 35, 15 45 C 7 35, 8 25, 15 15 Z" fill="#ffd700" />
