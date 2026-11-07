@@ -126,7 +126,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
 
   const handleDarkTap = (e) => {
     if (phase === 'init') {
-      handleFirstTapToDim();
+      handleFirstTapToDim(e);
       return;
     }
 

@@ -109,7 +109,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         audio.preload = 'auto';
         cardAudiosRef.current[randIdx] = audio;
       }
-      playWithNaturalFade(audio, 0.95, 60, 300);
+      playWithNaturalFade(audio, 1.0, 30, 300);
     } catch (e) {}
   };
 
@@ -180,7 +180,7 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         kambiMathapuAudioRef.current = new Audio(encodeURI('/Diwali Audios/Firework/Others Fireworks/Kammbi mathapu or Sparkler ??.mp3'));
         kambiMathapuAudioRef.current.preload = 'auto';
       }
-      playWithNaturalFade(kambiMathapuAudioRef.current, 0.7, 200, 500);
+      playWithNaturalFade(kambiMathapuAudioRef.current, 1.0, 150, 400);
     } catch (e) {}
   };
 
@@ -273,10 +273,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         playRandomCardFireworkAudio();
       }
 
-      // Play Crack 1 to 3 audio immediately following the burst, overlapping naturally
+      // Play Crack 1 to 4 audio with a natural 0.6s - 0.8s realistic echo delay after sky blast
       setTimeout(() => {
         playRandomCrackAudio();
-      }, 120);
+      }, 700);
 
       // Restored original cinematic density
       const particleCount = loop ? 120 : 450;
@@ -761,8 +761,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
       const stringBottomY = height * 0.78;
 
       let currentPairIdx = 0;
-      // 8.02 seconds rhythmic garland burst (synced with Saravedi audio)
-      const duration = 8020;
+      // 7.6 seconds rhythmic garland burst (perfect match: sound lasts up to 7.7s)
+      const duration = 7600;
       const intervalDelay = duration / totalPairs;
       const startTime = Date.now();
       let nextBurstTime = startTime;
@@ -1214,8 +1214,8 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
           break;
         case 'saraVedi':
           fireSaraVedi();
-          // 8.0s duration + 2.0s peaceful gap = 10.0s
-          delayAfterThis = 10000;
+          // 7.6s duration + 2.0s peaceful gap = 9.6s
+          delayAfterThis = 9600;
           break;
         case 'out':
         default:
