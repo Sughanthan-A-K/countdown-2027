@@ -11,6 +11,15 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
   const hasFiredFirstBurstCallback = useRef(false);
   const hasFiredFifthBurstCallback = useRef(false);
 
+  // Audio references for fireworks
+  const showerAudioRef = useRef(null);
+  const cardAudiosRef = useRef([]);
+  const lastCardAudioIndexRef = useRef(-1);
+  const goingTopAudiosRef = useRef([]);
+  const lastGoingTopIndexRef = useRef(-1);
+  const crackAudiosRef = useRef([]);
+  const lastCrackIndexRef = useRef(-1);
+
   // Tracking state for sequential crackers
   // We want 10 Outs first, then random cracker selection where only ONE cracker runs at a time
   const burstCountRef = useRef(0);
@@ -19,6 +28,83 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
   const activeCrackersRef = useRef([]); // Active generator objects (pusvanam, sangu sakkaram, etc.)
   const screenShakeRef = useRef(0); // Screen shake offset for atom bomb / saravedi
   const flashAlphaRef = useRef(0); // Blinding flash for Lakshmi vedi / bombs
+
+  // Sound players
+  const playShowerAudio = () => {
+    try {
+      if (!showerAudioRef.current) {
+        showerAudioRef.current = new Audio(encodeURI('/Diwali Audios/Firework/Firework shower.wav'));
+        showerAudioRef.current.preload = 'auto';
+      }
+      showerAudioRef.current.currentTime = 0;
+      showerAudioRef.current.play().catch(() => {});
+    } catch (e) {}
+  };
+
+  const playRandomCardFireworkAudio = () => {
+    try {
+      // Pick 1 to 10 randomly without immediate repeats
+      let randIdx;
+      do {
+        randIdx = Math.floor(Math.random() * 10) + 1; // 1 to 10
+      } while (randIdx === lastCardAudioIndexRef.current && 10 > 1);
+      
+      lastCardAudioIndexRef.current = randIdx;
+
+      let audio = cardAudiosRef.current[randIdx];
+      if (!audio) {
+        audio = new Audio(encodeURI(`/Diwali Audios/Firework/Firework sound (${randIdx}).wav`));
+        audio.preload = 'auto';
+        cardAudiosRef.current[randIdx] = audio;
+      }
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } catch (e) {}
+  };
+
+  const playRandomGoingTopAudio = () => {
+    try {
+      // Pick 1 to 3 randomly without immediate repeats
+      let randIdx;
+      do {
+        randIdx = Math.floor(Math.random() * 3) + 1; // 1 to 3
+      } while (randIdx === lastGoingTopIndexRef.current && 3 > 1);
+
+      lastGoingTopIndexRef.current = randIdx;
+
+      let audio = goingTopAudiosRef.current[randIdx];
+      if (!audio) {
+        audio = new Audio(encodeURI(`/Diwali Audios/Firework/Going Top/Firework going top ${randIdx}.mp3`));
+        audio.preload = 'auto';
+        goingTopAudiosRef.current[randIdx] = audio;
+      }
+      audio.volume = 0.25; // Gentle & mild whoosh volume
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } catch (e) {}
+  };
+
+  const playRandomCrackAudio = () => {
+    try {
+      // Pick Crack 1 to 3 randomly without immediate repeats
+      let randIdx;
+      do {
+        randIdx = Math.floor(Math.random() * 3) + 1; // 1 to 3
+      } while (randIdx === lastCrackIndexRef.current && 3 > 1);
+
+      lastCrackIndexRef.current = randIdx;
+
+      let audio = crackAudiosRef.current[randIdx];
+      if (!audio) {
+        audio = new Audio(encodeURI(`/Diwali Audios/Firework/Going Top/Crack ${randIdx}.mp3`));
+        audio.preload = 'auto';
+        crackAudiosRef.current[randIdx] = audio;
+      }
+      audio.volume = 0.3; // Lower volume as requested
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } catch (e) {}
+  };
 
   useEffect(() => {
     if (!active) return;
@@ -66,6 +152,18 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         // Massive boom [400ms] + small echo [150ms] for Golden Shower, quick double-tap for calendar outs
         navigator.vibrate(loop ? [80, 50, 80] : [400, 50, 150]);
       }
+
+      // Play audio:
+      // First out (Golden Shower outside loop): play "Firework shower.wav"
+      // Calendar cards inside loop: play random firework sound from 1 to 10 without repeat
+      if (!loop) {
+        playShowerAudio();
+      } else {
+        playRandomCardFireworkAudio();
+      }
+
+      // Play Crack 1 to 3 audio once it explodes at the top!
+      playRandomCrackAudio();
 
       // Restored original cinematic density
       const particleCount = loop ? 120 : 450;
@@ -116,6 +214,9 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         const distanceY = startY - targetY;
         const gravity = launchOrigin ? 0.04 : 0.15;
         const initialVy = -Math.sqrt(2 * gravity * Math.max(10, distanceY));
+
+        // Play random Going Top rocket sound as it shoots up toward the sky
+        playRandomGoingTopAudio();
         
         particlesRef.current.push({
           type: 'rocket',

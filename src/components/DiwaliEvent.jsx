@@ -31,10 +31,13 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   const matchAudioRef = useRef(null);
   const flickerAudioRef = useRef(null);
   const flameAudioRef = useRef(null);
+  const fuseAudioRef = useRef(null);
   const cylinderBlastAudioRef = useRef(null);
   const matchTimeoutRef = useRef(null);
   const burnProgressTimerRef = useRef(null);
   const [burnProgress, setBurnProgress] = useState(0); // 0 (tip/start) to 1 (burned down to thumb)
+  const [isSmoking, setIsSmoking] = useState(false); // Whisps of light smoke right as flame extinguishes
+  const [isExtinguishing, setIsExtinguishing] = useState(false); // Smooth scale down/fizzle transition for flame
 
   // 1st Tap handler: triggers flicker audio + neon die animation -> full dark
   const handleFirstTapToDim = () => {
@@ -54,6 +57,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
       try {
         if (matchAudioRef.current) matchAudioRef.current.load();
         if (flameAudioRef.current) flameAudioRef.current.load();
+        if (fuseAudioRef.current) fuseAudioRef.current.load();
         if (cylinderBlastAudioRef.current) cylinderBlastAudioRef.current.load();
       } catch (e) {}
 
@@ -77,6 +81,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   const clearBurnTimers = () => {
     if (matchTimeoutRef.current) clearTimeout(matchTimeoutRef.current);
     if (burnProgressTimerRef.current) cancelAnimationFrame(burnProgressTimerRef.current);
+    setIsSmoking(false);
+    setIsExtinguishing(false);
   };
 
   const handlePointerMove = (e) => {
@@ -164,11 +170,22 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
           if (progress < 1) {
             burnProgressTimerRef.current = requestAnimationFrame(trackBurn);
           } else {
-            // Burned out completely at hand: extinguish and return to dark
+            // Natural ending: flame smooth fizzle, embers glow, and light smoke rises before full dark
             stopFlameAudio();
-            setIsFlameLit(false);
-            setBurnProgress(0);
-            setPhase('dark');
+            setIsExtinguishing(true); // Smoothly shrink flame to 0 over 300ms
+            setIsSmoking(true); // Release rising smoke whisps from the red ember
+
+            setTimeout(() => {
+              setIsFlameLit(false);
+              setIsExtinguishing(false);
+            }, 300);
+
+            // Smoke lingers for 0.5s and then cleanly fades to dark
+            setTimeout(() => {
+              setIsSmoking(false);
+              setBurnProgress(0);
+              setPhase('dark');
+            }, 800);
           }
         };
         burnProgressTimerRef.current = requestAnimationFrame(trackBurn);
@@ -201,8 +218,24 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
           if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
           setPhase('lit');
           
+          // Play Fuse burning audio right when thiri lights up!
+          try {
+            if (fuseAudioRef.current) {
+              fuseAudioRef.current.currentTime = 0;
+              fuseAudioRef.current.play().catch((err) => console.warn('Fuse sound error:', err));
+            }
+          } catch (e) {}
+
           // Fuse burns for 3.0 seconds
           setTimeout(() => {
+            // Stop fuse audio as it finishes burning into cylinder
+            try {
+              if (fuseAudioRef.current) {
+                fuseAudioRef.current.pause();
+                fuseAudioRef.current.currentTime = 0;
+              }
+            } catch (e) {}
+
             setPhase('launching');
 
             // Play Cylinder Out Blast audio right at launch!
@@ -259,12 +292,12 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
 
   // Mask styling for match light (hole tracks the moving flame)
   // Light radius is focused closely around the flame (65px) so only the flame area and stick are lit, no giant background bleed
-  const torchMask = (phase === 'match' && isFlameLit)
+  const torchMask = (phase === 'match' && (isFlameLit || isSmoking))
     ? `radial-gradient(circle 65px at ${activeFlameX}px ${activeFlameY}px, transparent 15px, rgba(0,0,0,0.85) 45px, black 65px)` 
     : 'none';
     
   // Mask for objects that are ONLY visible in the dark light
-  const wireRevealMask = (phase === 'match' && isFlameLit)
+  const wireRevealMask = (phase === 'match' && (isFlameLit || isSmoking))
     ? `radial-gradient(circle 65px at ${activeFlameX}px ${activeFlameY}px, black 15px, rgba(0,0,0,0.6) 45px, transparent 65px)`
     : 'none';
 
@@ -325,6 +358,25 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
            0% { transform: translateY(0) scale(1); opacity: 1; }
            100% { transform: translateY(-30px) scale(0.5); opacity: 0; }
         }
+        @keyframes smoke-rise-1 {
+           0% { transform: translate(0, 0) scale(0.6); opacity: 0.7; }
+           50% { transform: translate(-6px, -22px) scale(1.4); opacity: 0.45; }
+           100% { transform: translate(-12px, -45px) scale(2.2); opacity: 0; }
+        }
+        @keyframes smoke-rise-2 {
+           0% { transform: translate(0, 0) scale(0.7); opacity: 0.65; }
+           50% { transform: translate(7px, -24px) scale(1.5); opacity: 0.4; }
+           100% { transform: translate(14px, -48px) scale(2.4); opacity: 0; }
+        }
+        @keyframes smoke-rise-3 {
+           0% { transform: translate(0, 0) scale(0.5); opacity: 0.8; }
+           50% { transform: translate(2px, -26px) scale(1.3); opacity: 0.5; }
+           100% { transform: translate(5px, -52px) scale(2.1); opacity: 0; }
+        }
+        @keyframes ember-flicker {
+           0%, 100% { opacity: 0.9; transform: scale(1); }
+           50% { opacity: 0.5; transform: scale(0.85); }
+        }
         .dimming-layer {
           animation: neon-die 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
@@ -356,12 +408,12 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
           <div 
             className="absolute inset-0 z-[950] pointer-events-none transition-opacity duration-75"
             style={{
-              WebkitMaskImage: (phase === 'lit' || phase === 'launching') ? 'none' : (isFlameLit ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
-              maskImage: (phase === 'lit' || phase === 'launching') ? 'none' : (isFlameLit ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
+              WebkitMaskImage: (phase === 'lit' || phase === 'launching') ? 'none' : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
+              maskImage: (phase === 'lit' || phase === 'launching') ? 'none' : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
             }}
           >
             {/* The Matchstick (Drawn from touch point to flame) */}
-            {(phase === 'match' || phase === 'lit') && isFlameLit && (
+            {(phase === 'match' || phase === 'lit') && (isFlameLit || isSmoking) && (
               <div>
                 <svg className={`absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-xl z-40 transition-all duration-1000 ${phase === 'lit' ? 'opacity-0 translate-y-32 delay-[800ms]' : 'opacity-100'}`}>
                   {/* Unburnt Wood Stick (from touch origin to flame tip) */}
@@ -393,12 +445,19 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
                   <circle cx={matchPos.x} cy={matchPos.y} r="4.5" fill="#111" />
                   
                   {/* Glowing red ember directly underneath the flame */}
-                  <circle cx={activeFlameX} cy={activeFlameY} r="3" fill="#ff4500" />
+                  <circle 
+                    cx={activeFlameX} 
+                    cy={activeFlameY} 
+                    r={isSmoking ? 3.5 : 3} 
+                    fill="#ff4500" 
+                    className={isSmoking ? "animate-[ember-flicker_0.4s_infinite]" : ""}
+                    style={{ filter: isSmoking ? 'drop-shadow(0 0 5px #ff2200)' : 'none' }}
+                  />
                 </svg>
 
                 {/* Animated Flame at the tip of the match (moves down the stick over 8s) */}
                 <div 
-                  className={`absolute z-50 pointer-events-none transition duration-[800ms] ${phase === 'lit' || !isFlameLit ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} 
+                  className={`absolute z-50 pointer-events-none transition duration-[300ms] ${phase === 'lit' || !isFlameLit || isExtinguishing ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} 
                   style={{ left: activeFlameX, top: activeFlameY - 12, transform: 'translate(-50%, -50%)', transformOrigin: 'center bottom' }}
                 >
                    {isStriking && isFlameLit && (
@@ -422,6 +481,19 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
                      </>
                    )}
                 </div>
+
+                {/* Natural Light Smoke rising from the glowing red ember when flame extinguishes */}
+                {isSmoking && (
+                  <div 
+                    className="absolute z-50 pointer-events-none" 
+                    style={{ left: activeFlameX, top: activeFlameY, transform: 'translate(-50%, -50%)' }}
+                  >
+                    {/* Soft light grey smoke wisps */}
+                    <div className="absolute -top-1 left-0 w-2.5 h-2.5 bg-neutral-300/40 rounded-full blur-[2px] animate-[smoke-rise-1_0.75s_ease-out_forwards]" />
+                    <div className="absolute -top-2 left-1 w-3 h-3 bg-neutral-400/35 rounded-full blur-[2.5px] animate-[smoke-rise-2_0.85s_ease-out_0.1s_forwards]" />
+                    <div className="absolute -top-1 -left-1 w-2 h-2 bg-neutral-200/45 rounded-full blur-[1.5px] animate-[smoke-rise-3_0.65s_ease-out_0.15s_forwards]" />
+                  </div>
+                )}
               </div>
             )}
 
@@ -562,6 +634,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
       <audio ref={flickerAudioRef} src={encodeURI('/Diwali Audios/Flicker.mp3')} preload="auto" playsInline />
       <audio ref={matchAudioRef} src={encodeURI('/Diwali Audios/Match stick.mp3')} preload="auto" playsInline />
       <audio ref={flameAudioRef} src={encodeURI('/Diwali Audios/Flame sound.mp3')} preload="auto" playsInline />
+      <audio ref={fuseAudioRef} src={encodeURI('/Diwali Audios/Fuse or Thiri.mp3')} preload="auto" playsInline />
       <audio ref={cylinderBlastAudioRef} src={encodeURI('/Diwali Audios/Cylender out blast.mp3')} preload="auto" playsInline />
     </>
   );
