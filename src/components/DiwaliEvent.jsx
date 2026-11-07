@@ -43,14 +43,25 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   const handleFirstTapToDim = () => {
     if (phase === 'init') {
       setPhase('dimming');
+
+      // Play flicker audio directly via new Audio with user gesture for guaranteed iOS/WhatsApp webview playback
       try {
-        if (flickerAudioRef.current) {
-          flickerAudioRef.current.playbackRate = 1.1; // Speed up flicker audio by 0.1
-          flickerAudioRef.current.currentTime = 0;
-          flickerAudioRef.current.play().catch((err) => console.warn('Flicker sound play error:', err));
+        const audio = flickerAudioRef.current || new Audio(encodeURI('/Diwali Audios/Flicker.mp3'));
+        audio.playbackRate = 1.1;
+        audio.currentTime = 0;
+        audio.volume = 1.0;
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.warn('Flicker sound play error on gesture:', err);
+            // Fallback retry using secondary direct audio instance
+            const fallback = new Audio(encodeURI('/Diwali Audios/Flicker.mp3'));
+            fallback.playbackRate = 1.1;
+            fallback.play().catch(() => {});
+          });
         }
       } catch (e) {
-        console.warn('Flicker sound play error:', e);
+        console.warn('Flicker sound play catch:', e);
       }
 
       // Also prime/unlock all other audios on this first user gesture (critical for iOS/Android)
@@ -194,6 +205,15 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
     }
   };
 
+  // Distance from a point (px, py) to a line segment between (x1, y1) and (x2, y2)
+  const distToSegment = (px, py, x1, y1, x2, y2) => {
+    const l2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+    if (l2 === 0) return Math.hypot(px - x1, py - y1);
+    let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
+    t = Math.max(0, Math.min(1, t));
+    return Math.hypot(px - (x1 + t * (x2 - x1)), py - (y1 + t * (y2 - y1)));
+  };
+
   // Check collision between match flame and the fuse spark in animation frame
   // Ref for ignition delay
   const ignitionStartTime = React.useRef(0);
@@ -208,9 +228,16 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         const sparkX = rect.left + rect.width / 2;
         const sparkY = rect.top + rect.height / 2;
         
-        // Very forgiving 45px radius to account for visual offset and thumb sizes on mobile. Instant ignition!
-        const dist = Math.hypot(activeFlameX - sparkX, activeFlameY - sparkY);
-        if (dist < 45 && !hasIgnited.current) {
+        // Check 1: Distance from moving flame directly to fuse tip
+        const distToFlame = Math.hypot(activeFlameX - sparkX, activeFlameY - sparkY);
+
+        // Check 2: Distance from stick's entire active flame & burning zone (from match head to active flame)
+        const distToBurningStick = distToSegment(sparkX, sparkY, matchPos.x, matchPos.y, activeFlameX, activeFlameY);
+
+        // Instant ignition if active flame OR burning stick touches the fuse tip!
+        const isTouchingFuse = distToFlame < 55 || distToBurningStick < 40;
+
+        if (isTouchingFuse && !hasIgnited.current) {
           hasIgnited.current = true;
           clearBurnTimers();
           stopFlameAudio();

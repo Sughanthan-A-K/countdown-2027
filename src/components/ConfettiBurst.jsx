@@ -217,8 +217,10 @@ export default function ConfettiBurst({ active = true, origin = { y: 0.25, x: 0.
         playRandomCardFireworkAudio();
       }
 
-      // Play Crack 1 to 3 audio once it explodes at the top!
-      playRandomCrackAudio();
+      // Play Crack 1 to 3 audio immediately following the burst, overlapping naturally
+      setTimeout(() => {
+        playRandomCrackAudio();
+      }, 120);
 
       // Restored original cinematic density
       const particleCount = loop ? 120 : 450;
