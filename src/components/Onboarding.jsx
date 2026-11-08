@@ -10,20 +10,20 @@ export default function Onboarding({ onComplete, globalLang, setGlobalLang, tier
 
   const pages = globalLang === 'english' ? [
     { isLangSelect: true },
-    <>Hi Bro,<br/><br/>I created this...<br/><br/>It's me,<br/><span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent font-black drop-shadow-md text-4xl sm:text-5xl">Sughanthan!</span></>,
-    <>But wondering why?<br/>Just a small piece of information...</>,
+    <>Hello,<br/><br/>I created this...<br/><br/>It's me,<br/><span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent font-black drop-shadow-md text-4xl sm:text-5xl">Sughanthan!</span></>,
+    <>Wondering why?<br/>Just a small piece of information...</>,
     <>There are only <span className="text-yellow-400">{daysLeft} days</span> left until this year ends...<br/><span className="text-xl sm:text-2xl text-neutral-400">(including today!)</span></>,
-    <>I hope you did something productive today...</>,
-    <>Didn't you?<br/>Let it go, there are still <span className="text-blue-400">{daysLeft - 1} days</span> left!</>,
+    <>I hope you had a meaningful day today...</>,
+    <>If not, no worries, there are still <span className="text-blue-400">{daysLeft - 1} days</span> left!</>,
     <>And I've made a calendar in this....<br/>Check it out...</>
   ] : [
     { isLangSelect: true },
-    <>Hi Bro,<br/><br/>Itha naan thaan create pannen...<br/><br/>It's me,<br/><span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent font-black drop-shadow-md text-4xl sm:text-5xl">Sughanthan!</span></>,
-    <>But ethukku nu yosikkiriya?<br/>Just oru chinna information...</>,
+    <>Vanakkam,<br/><br/>Itha naan thaan create pannen...<br/><br/>It's me,<br/><span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent font-black drop-shadow-md text-4xl sm:text-5xl">Sughanthan!</span></>,
+    <>Ethukku nu yosikkireengala?<br/>Just oru chinna information...</>,
     <>Intha varusham mudiya innum <span className="text-yellow-400">{daysLeft} days</span> thaan irukku...<br/><span className="text-xl sm:text-2xl text-neutral-400">(innaiku sethu thaan solren!)</span></>,
-    <>I hope innaiku nee ethavathu urupidiya panni iruppa nu nenaikkiren...</>,
-    <>Apdi illaya?<br/>Free ah vidu, innum <span className="text-blue-400">{daysLeft - 1} days</span> irukku!</>,
-    <>And ithula naan oru calendar panni irukken....<br/>check panni paaren...</>
+    <>Innaiku ungalukku oru nalla naala irundhurukkum nu namburen...</>,
+    <>Apdi illanaalum paravaayilla, innum <span className="text-blue-400">{daysLeft - 1} days</span> irukku!</>,
+    <>And ithula naan oru calendar panni irukken....<br/>check panni paarunga...</>
   ];
 
   const handleDragEnd = (e, info) => {
