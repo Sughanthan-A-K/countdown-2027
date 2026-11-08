@@ -19,15 +19,12 @@ const sparkVariants = {
   }
 };
 
-export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackout, isDarkMode, onTvModeChange }) {
+export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackout, isDarkMode }) {
   const [phase, setPhase] = useState('init'); // init (waiting for 1st tap), dimming, dark, match, lit, launching, done, freeze
   const [matchPos, setMatchPos] = useState({ x: -500, y: -500 }); // The FLAME position
   
   const touchOrigin = useRef({ x: -500, y: -500 });
   const hasIgnited = useRef(false); // Where user is touching (bottom of stick)
-  const isTvAutoMode = useRef(false);
-  const tvHoldTimer = useRef(null);
-  const autoGlideRaf = useRef(null);
   
   const [isStriking, setIsStriking] = useState(false);
   const [isFlameLit, setIsFlameLit] = useState(false);
@@ -90,115 +87,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
       }, 1800);
     }
   };
-
-  // TV Remote 5-Second Hold to Autoplay Sequence
-  const triggerTvAutoPlay = () => {
-    isTvAutoMode.current = true;
-    if (onTvModeChange) onTvModeChange(true);
-
-    // 1. Trigger initial dimming & flicker sound
-    handleFirstTapToDim();
-
-    // 2. Once dark phase is reached (~1800ms) + 1 second natural pause to look around
-    setTimeout(() => {
-      const width = typeof window !== 'undefined' ? window.innerWidth : 800;
-      const height = typeof window !== 'undefined' ? window.innerHeight : 800;
-
-      // Strike match at center-ish screen
-      const startX = width * 0.5;
-      const startY = height * 0.45;
-      handleDarkTap({ clientX: startX, clientY: startY });
-
-      // 3. Wait for match to strike and flame to ignite (~450ms), then pause 1s to view flame
-      setTimeout(() => {
-        // Glide smoothly down towards the fuse at bottom-left cylinder over 1.8 seconds
-        const startTime = performance.now();
-        const duration = 1800;
-
-        const animateGlide = (now) => {
-          const elapsed = now - startTime;
-          const p = Math.min(1, elapsed / duration);
-          // Smooth easeInOutQuad easing
-          const ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
-
-          // Target fuse location (fuse hitbox is located at cylinder: left ~15% + cylinder width ~32px + 65px)
-          const targetHitbox = document.getElementById('fuse-hitbox');
-          let targetX = width * 0.15 + 32 + 65;
-          let targetY = height - 24 - 112 + 88 + 5;
-
-          if (targetHitbox) {
-            const rect = targetHitbox.getBoundingClientRect();
-            targetX = rect.left + rect.width / 2;
-            targetY = rect.top + rect.height / 2;
-          }
-
-          // Interpolate touch origin and flame
-          const currentTouchX = startX + (targetX - startX) * ease;
-          const currentTouchY = startY + (targetY - startY) * ease;
-          touchOrigin.current = { x: currentTouchX, y: currentTouchY };
-
-          const ratio = currentTouchY / height;
-          const tilt = Math.min(1, Math.max(0, (ratio - 0.3) / 0.5));
-          const flameX = currentTouchX + (-15 - tilt * 45);
-          const flameY = currentTouchY + (-80 + tilt * 130);
-          setMatchPos({ x: flameX, y: flameY });
-
-          if (p < 1 && !hasIgnited.current) {
-            autoGlideRaf.current = requestAnimationFrame(animateGlide);
-          }
-        };
-
-        autoGlideRaf.current = requestAnimationFrame(animateGlide);
-      }, 1450);
-    }, 2800);
-  };
-
-  const handleHoldStart = (e) => {
-    if (phase !== 'init') return;
-    if (tvHoldTimer.current) clearTimeout(tvHoldTimer.current);
-
-    tvHoldTimer.current = setTimeout(() => {
-      tvHoldTimer.current = null;
-      triggerTvAutoPlay();
-    }, 5000); // 5 seconds hold
-  };
-
-  const handleHoldEnd = (e) => {
-    if (tvHoldTimer.current) {
-      clearTimeout(tvHoldTimer.current);
-      tvHoldTimer.current = null;
-      // If released before 5 seconds and not already in TV mode, execute standard tap
-      if (!isTvAutoMode.current && phase === 'init') {
-        handleDarkTap(e);
-      }
-    }
-  };
-
-  useEffect(() => {
-    // Listen for TV remote buttons (Enter, Space, Select)
-    const handleKeyDown = (e) => {
-      if (phase === 'init' && (e.key === 'Enter' || e.key === ' ' || e.key === 'Select')) {
-        if (!tvHoldTimer.current && !isTvAutoMode.current) {
-          handleHoldStart(e);
-        }
-      }
-    };
-
-    const handleKeyUp = (e) => {
-      if (phase === 'init' && (e.key === 'Enter' || e.key === ' ' || e.key === 'Select')) {
-        handleHoldEnd(e);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-      if (tvHoldTimer.current) clearTimeout(tvHoldTimer.current);
-      if (autoGlideRaf.current) cancelAnimationFrame(autoGlideRaf.current);
-    };
-  }, [phase]);
 
   const stopFlameAudio = () => {
     if (flameAudioRef.current) {
@@ -534,10 +422,8 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         className={`fixed inset-0 z-[900] touch-none ${phase === 'done' || phase === 'lit' || phase === 'launching' ? 'pointer-events-none' : 'pointer-events-auto'}`}
         onPointerMove={handlePointerMove}
         onTouchMove={handlePointerMove}
-        onPointerDown={phase === 'init' ? handleHoldStart : handleDarkTap}
-        onPointerUp={phase === 'init' ? handleHoldEnd : undefined}
-        onTouchStart={phase === 'init' ? handleHoldStart : undefined}
-        onTouchEnd={phase === 'init' ? handleHoldEnd : undefined}
+        onPointerDown={handleDarkTap}
+        onTouchStart={phase === 'init' ? handleDarkTap : undefined}
       >
         {/* Blackout overlay (Remains ON until explode to simulate dark night sky) */}
         {(phase !== 'init' && phase !== 'done' && phase !== 'freeze' && phase !== 'explode' && phase !== 'fadeout_bg' && phase !== 'fadeout_shower') && (

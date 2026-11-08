@@ -475,7 +475,6 @@ function App() {
   // Diwali Frame states
   const [diwaliRevealed, setDiwaliRevealed] = useState(() => localStorage.getItem('diwaliEventDone_2026') === 'true');
   const [sharedCtaReady, setSharedCtaReady] = useState(false);
-  const [isTvMode, setIsTvMode] = useState(false);
 
   // Sync Start Countdown button, tooltip, and beacon for festival cards
   useEffect(() => {
@@ -649,13 +648,13 @@ function App() {
     <>Ok, after this you won't be able to tear calendar pages this fast...<br/>You can only tear {highlight('one date')} per day.</>,
     <>You'll get a notification every morning at {highlight('6 AM')}....</>,
     <>So hereafter it'll serve as a daily reminder and alert that there are only {highlight(`${getDaysRemaining(actualToday)} days`)} left until this year ends...</>,
-    <>So use this and make every day {highlight('meaningful!')}</>,
+    <>So use this and do something {highlight('productive')} man!</>,
     <>So now, I hand over this calendar to you. {highlight('Make it count!')}</>
   ] : [
     <>Ok, ithukku apparam unnala calendar pages-a ivlo fast-a kizhikkave mudiyathu...<br/>Daily {highlight('oru date')} thaan kizhikka mudiyum.</>,
-    <>Daily morning {highlight('6 AM')}-ku ungalukku notification um vanthudum....</>,
-    <>So hereafter daily ungalukku oru reminder and alert ah irukkum like innum intha year mudiya {highlight(`${getDaysRemaining(actualToday)} days`)} thaan irukku nu...</>,
-    <>So itha use panni ovvoru naalayum {highlight('meaningful-ah aakkunga!')}</>,
+    <>Daily morning {highlight('6 AM')}-ku unakku notification um vanthudum....</>,
+    <>So hereafter daily unakku oru reminder and alert ah irukkum like innum intha year mudiya {highlight(`${getDaysRemaining(actualToday)} days`)} thaan irukku nu...</>,
+    <>So itha use panni ethavathu {highlight('urupidiya sei')} man!</>,
     <>So now, I hand over this calendar to you. {highlight('Make it count!')}</>
   ];
 
@@ -823,7 +822,7 @@ function App() {
           showMsg(
             globalLang === 'english' 
               ? <>You can tear this calendar...<br/>as much as you want...<br/>{highlight('Swipe')} to tear...</> 
-              : <>Neenga evlo venalum...<br/>intha calendar-a kizhichi podalam...<br/>{highlight('Swipe panni')} tear pannunga...</>,
+              : <>Nee evlo venalum...<br/>intha calendar-a kizhichi podalam...<br/>{highlight('Swipe panni')} tear pannu...</>,
             0
           );
           timeout2 = setTimeout(() => {
@@ -848,20 +847,20 @@ function App() {
         timeout1 = showMsg(
           globalLang === 'english' 
             ? <>Yes exactly!<br/>Tear off {highlight('as many as you can')}</> 
-            : <>Yes apdithaan!<br/>Ungalala {highlight('evlo kizhichi poda mudiyumo')} kizhichi podunga</>, 
+            : <>Yes apdithaan!<br/>Unnala {highlight('evlo kizhichi poda mudiyumo')} kizhichi podu</>, 
           0
         );
         setTutorialState(2);
       }
     } else if (tutorialState === 2) {
       if (tutorialTears >= 10) {
-        timeout1 = showMsg(globalLang === 'english' ? <>That's enough {highlight('tearing for now!')}</> : <>Pothum, {highlight('tear panniyachu!')}</>, 3000);
+        timeout1 = showMsg(globalLang === 'english' ? <>That's enough {highlight('tearing!')}</> : <>Pothum da nee {highlight('kizhichathu!')}</>, 3000);
         timeout2 = setTimeout(() => {
           setTutorialState(3);
         }, 3500);
       }
     } else if (tutorialState === 3) {
-      showMsg(globalLang === 'english' ? <>Did it feel great to tear it...<br/>Okay, now {highlight('Double Tap')} the Calendar....</> : <>Kizhikkumbothu semmaya irunthucha...<br/>Seri, ippo Calendar-a {highlight('Double Tap')} pannunga....</>, 0); 
+      showMsg(globalLang === 'english' ? <>Did it feel great to tear it...<br/>Okay, now {highlight('Double Tap')} the Calendar....</> : <>Kizhikkumbothu semmaya irunthucha...<br/>Seri, ippo Calendar-a {highlight('Double Tap')} pannu....</>, 0); 
     } else if (tutorialState === 4) {
       if (epilogueStep < epilogueMessages.length) {
         showMsg(epilogueMessages[epilogueStep], 0); 
@@ -1769,7 +1768,6 @@ function App() {
                     isSharedCardView={true}
                     forceShowShareHint={sharedCtaReady}
                     onCtaReady={() => setSharedCtaReady(true)}
-                    isTvMode={isTvMode}
                   />
                 ) : (
                   pages.slice().reverse().map((page) => (
@@ -1817,7 +1815,6 @@ function App() {
                       circleRadius={circleRadius}
                       previewAllBeams={page.index === 0 && showLightToolbox && isPreviewAllMode}
                       isDec16UnderlyingHidden={page.isDec16UnderlyingHidden}
-                      isTvMode={isTvMode}
                       onLokiCardTap={() => {
                         if (navigator.vibrate) navigator.vibrate(30);
                         setLokiCrackStage(prev => {
@@ -1947,7 +1944,6 @@ function App() {
       {showDiwaliEvent && (
         <DiwaliEvent 
           isDarkMode={effectiveDarkMode} 
-          onTvModeChange={(val) => setIsTvMode(val)}
           onBlackout={() => {
             setIsDarkMode(true);
             localStorage.setItem('isDarkMode', 'true');
