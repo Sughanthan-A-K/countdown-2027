@@ -42,7 +42,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   const [isSmoking, setIsSmoking] = useState(false); // Whisps of light smoke right as flame extinguishes
   const [isExtinguishing, setIsExtinguishing] = useState(false); // Smooth scale down/fizzle transition for flame
 
-  // 1st Tap handler: triggers flicker audio + neon die animation + electrical transformer falling sparks -> full dark
+  // 1st Tap handler: triggers flicker audio + neon die animation -> full dark
   const handleFirstTapToDim = (e) => {
     if (phase === 'init') {
       if (e && e.cancelable && e.type === 'touchstart') {
@@ -50,7 +50,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         e.preventDefault();
       }
       setPhase('dimming');
-      setShowSparks(true);
 
       // Play flicker audio directly synchronously during user gesture (Required by iOS/WhatsApp Webview)
       try {
@@ -84,11 +83,17 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         if (cylinderBlastAudioRef.current) cylinderBlastAudioRef.current.load();
       } catch (e) {}
 
-      // After 1.8s neon-die flicker animation (matching 1.1x speed), transition to dark and flip background to dark mode
+      // After 1.8s neon-die flicker animation: screen goes full dark.
+      // NOW in the dark, the transformer falling sparks trigger to illuminate the ground cylinder & fuse!
       setTimeout(() => {
         setPhase('dark');
-        setShowSparks(false);
+        setShowSparks(true);
         if (onBlackout) onBlackout();
+
+        // Sparks cascade down for 2.4s and then stop
+        setTimeout(() => {
+          setShowSparks(false);
+        }, 2400);
       }, 1800);
     }
   };
@@ -569,32 +574,21 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
           </div>
         )}
 
-        {/* Tap to strike match hint when screen is dark */}
-        {phase === 'dark' && (
-          <div className="absolute inset-0 z-[970] flex flex-col items-center justify-center pointer-events-none select-none">
-            <div className="flex flex-col items-center gap-2.5 animate-[tap-hint-pulse_2s_infinite]">
-              {/* Pulsing Match Icon */}
-              <div className="w-11 h-11 rounded-full border border-amber-400/60 bg-amber-400/10 backdrop-blur-sm flex items-center justify-center shadow-[0_0_18px_rgba(251,191,36,0.5)]">
-                <svg viewBox="0 0 24 24" className="w-6 h-6 text-amber-300 drop-shadow-[0_0_8px_#ffaa00]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 4l-4 4" />
-                  <path d="M10 8l-6 6" />
-                  <circle cx="16" cy="4" r="2" fill="#ff4500" stroke="#ff8800" />
-                </svg>
-              </div>
-              <span className="text-amber-200/90 text-xs sm:text-sm font-semibold tracking-wider uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                Tap anywhere to strike
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* Objects hidden in dark (revealed by match light) */}
-        {(phase === 'match' || phase === 'lit' || phase === 'launching') && (
+        {/* Objects hidden in dark (revealed by match light or falling sparks illumination) */}
+        {(phase === 'dark' || phase === 'match' || phase === 'lit' || phase === 'launching') && (
           <div 
-            className="absolute inset-0 z-[950] pointer-events-none transition-opacity duration-75"
+            className="absolute inset-0 z-[950] pointer-events-none transition-opacity duration-300"
             style={{
-              WebkitMaskImage: (phase === 'lit' || phase === 'launching') ? 'none' : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
-              maskImage: (phase === 'lit' || phase === 'launching') ? 'none' : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
+              WebkitMaskImage: (phase === 'lit' || phase === 'launching') 
+                ? 'none' 
+                : showSparks 
+                  ? 'radial-gradient(circle 180px at 20% 90%, black 40%, rgba(0,0,0,0.5) 75%, transparent 100%)'
+                  : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
+              maskImage: (phase === 'lit' || phase === 'launching') 
+                ? 'none' 
+                : showSparks 
+                  ? 'radial-gradient(circle 180px at 20% 90%, black 40%, rgba(0,0,0,0.5) 75%, transparent 100%)'
+                  : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
             }}
           >
             {/* The Matchstick (Drawn from touch point to flame) */}
