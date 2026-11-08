@@ -425,38 +425,70 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         }
         @keyframes spark-fall-1 {
           0% { transform: translate(0, 0) scale(1.2); opacity: 1; }
-          40% { transform: translate(-30px, 45vh) scale(1.1); opacity: 1; }
-          75% { transform: translate(-55px, 80vh) scale(0.9); opacity: 0.95; }
-          88% { transform: translate(-65px, 92vh) scale(0.7); opacity: 0.8; }
-          100% { transform: translate(-80px, 93vh) scale(0); opacity: 0; }
+          40% { transform: translate(-25px, 45vh) scale(1.1); opacity: 1; }
+          75% { transform: translate(-45px, 80vh) scale(0.9); opacity: 0.95; }
+          88% { transform: translate(-55px, 92vh) scale(0.7); opacity: 0.8; }
+          100% { transform: translate(-65px, 95vh) scale(0); opacity: 0; }
         }
         @keyframes spark-fall-2 {
           0% { transform: translate(0, 0) scale(1.4); opacity: 1; }
-          35% { transform: translate(-10px, 40vh) scale(1.2); opacity: 1; }
-          70% { transform: translate(-25px, 78vh) scale(1.0); opacity: 0.9; }
-          85% { transform: translate(-32px, 91vh) scale(0.6); opacity: 0.75; }
-          100% { transform: translate(-40px, 92vh) scale(0); opacity: 0; }
+          35% { transform: translate(30px, 40vh) scale(1.2); opacity: 1; }
+          70% { transform: translate(45px, 78vh) scale(1.0); opacity: 0.9; }
+          85% { transform: translate(55px, 91vh) scale(0.6); opacity: 0.75; }
+          100% { transform: translate(60px, 95vh) scale(0); opacity: 0; }
         }
         @keyframes spark-fall-3 {
           0% { transform: translate(0, 0) scale(1.3); opacity: 1; }
-          45% { transform: translate(25px, 50vh) scale(1.15); opacity: 1; }
-          75% { transform: translate(15px, 82vh) scale(0.95); opacity: 0.95; }
-          90% { transform: translate(8px, 93vh) scale(0.7); opacity: 0.8; }
-          100% { transform: translate(0px, 94vh) scale(0); opacity: 0; }
+          45% { transform: translate(-35px, 50vh) scale(1.15); opacity: 1; }
+          75% { transform: translate(-50px, 82vh) scale(0.95); opacity: 0.95; }
+          90% { transform: translate(-60px, 93vh) scale(0.7); opacity: 0.8; }
+          100% { transform: translate(-70px, 96vh) scale(0); opacity: 0; }
         }
         @keyframes spark-fall-4 {
           0% { transform: translate(0, 0) scale(1.1); opacity: 1; }
-          30% { transform: translate(-45px, 35vh) scale(1.0); opacity: 1; }
-          65% { transform: translate(-80px, 75vh) scale(0.85); opacity: 0.9; }
-          85% { transform: translate(-95px, 90vh) scale(0.6); opacity: 0.7; }
-          100% { transform: translate(-110px, 92vh) scale(0); opacity: 0; }
+          30% { transform: translate(25px, 35vh) scale(1.0); opacity: 1; }
+          65% { transform: translate(40px, 75vh) scale(0.85); opacity: 0.9; }
+          85% { transform: translate(50px, 90vh) scale(0.6); opacity: 0.7; }
+          100% { transform: translate(55px, 95vh) scale(0); opacity: 0; }
         }
         @keyframes spark-fall-5 {
           0% { transform: translate(0, 0) scale(1.5); opacity: 1; }
-          40% { transform: translate(10px, 48vh) scale(1.3); opacity: 1; }
-          75% { transform: translate(-15px, 81vh) scale(1.0); opacity: 0.95; }
+          40% { transform: translate(-10px, 48vh) scale(1.3); opacity: 1; }
+          75% { transform: translate(-20px, 81vh) scale(1.0); opacity: 0.95; }
           90% { transform: translate(-25px, 92vh) scale(0.8); opacity: 0.8; }
-          100% { transform: translate(-35px, 94vh) scale(0); opacity: 0; }
+          100% { transform: translate(-30px, 95vh) scale(0); opacity: 0; }
+        }
+        @keyframes spark-fall-6 {
+          0% { transform: translate(0, 0) scale(1.3); opacity: 1; }
+          40% { transform: translate(35px, 45vh) scale(1.1); opacity: 1; }
+          75% { transform: translate(50px, 80vh) scale(0.9); opacity: 0.95; }
+          100% { transform: translate(60px, 95vh) scale(0); opacity: 0; }
+        }
+        @keyframes spark-fall-7 {
+          0% { transform: translate(0, 0) scale(1.2); opacity: 1; }
+          40% { transform: translate(-15px, 42vh) scale(1.1); opacity: 1; }
+          75% { transform: translate(-30px, 79vh) scale(0.9); opacity: 0.95; }
+          100% { transform: translate(-40px, 95vh) scale(0); opacity: 0; }
+        }
+        @keyframes spark-fall-8 {
+          0% { transform: translate(0, 0) scale(1.4); opacity: 1; }
+          40% { transform: translate(20px, 46vh) scale(1.2); opacity: 1; }
+          75% { transform: translate(35px, 83vh) scale(0.95); opacity: 0.95; }
+          100% { transform: translate(45px, 95vh) scale(0); opacity: 0; }
+        }
+        @keyframes spark-fall-hero {
+          0% { transform: translate(0, 0) scale(1.35); opacity: 1; }
+          35% { transform: translate(-5px, 40vh) scale(1.25); opacity: 1; }
+          65% { transform: translate(-10px, 72vh) scale(1.1); opacity: 1; }
+          85% { transform: translate(-14px, 88vh) scale(1.0); opacity: 1; }
+          100% { transform: translate(-18px, 94vh) scale(0); opacity: 0; }
+        }
+        @keyframes spark-hero-reveal {
+          0% { opacity: 0; }
+          65% { opacity: 0; }
+          78% { opacity: 0.85; }
+          90% { opacity: 0.7; }
+          100% { opacity: 0; }
         }
         @keyframes ground-impact-scatter {
           0% { transform: scale(0.5); opacity: 0.9; }
@@ -502,60 +534,119 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         {/* Electrical Transformer Falling Sparks Effect during Dark phase */}
         {showSparks && (
           <div className="absolute inset-0 pointer-events-none z-[960] overflow-hidden">
-            {/* Spark 1 */}
+            {/* Left side spark (near bottom left cylinder) - HERO SPARK that illuminates the cylinder as it passes */}
             <div 
-              className="absolute top-0 left-[22%] w-2 h-2.5 rounded-full bg-amber-100"
+              className="absolute top-0 left-[21%] w-2.5 h-3 rounded-full bg-white"
+              style={{
+                boxShadow: '0 0 16px 5px #ffaa00, 0 0 32px 10px #ff5500',
+                animation: 'spark-fall-hero 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.1s forwards'
+              }}
+            />
+
+            {/* Left side ambient spark */}
+            <div 
+              className="absolute top-0 left-[12%] w-2 h-2.5 rounded-full bg-amber-100"
               style={{
                 boxShadow: '0 0 12px 3px #ff7700, 0 0 24px 6px #ff4400',
-                animation: 'spark-fall-1 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards'
+                animation: 'spark-fall-1 1.7s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s forwards'
               }}
             />
 
-            {/* Spark 2 */}
+            {/* Center-Left spark */}
             <div 
-              className="absolute top-0 left-[20%] w-2.5 h-3 rounded-full bg-yellow-100"
+              className="absolute top-0 left-[38%] w-2.5 h-3 rounded-full bg-yellow-100"
               style={{
                 boxShadow: '0 0 14px 4px #ff9900, 0 0 28px 8px #ff5500',
-                animation: 'spark-fall-2 1.55s cubic-bezier(0.2, 0.1, 0.25, 1) 0.08s forwards'
+                animation: 'spark-fall-2 1.65s cubic-bezier(0.2, 0.1, 0.25, 1) 0.15s forwards'
               }}
             />
 
-            {/* Spark 3 */}
+            {/* Center spark */}
             <div 
-              className="absolute top-0 left-[18%] w-2 h-2 rounded-full bg-orange-100"
+              className="absolute top-0 left-[52%] w-2 h-2 rounded-full bg-orange-100"
               style={{
                 boxShadow: '0 0 10px 3px #ff8800, 0 0 20px 5px #ff3300',
-                animation: 'spark-fall-3 1.65s cubic-bezier(0.25, 0.1, 0.3, 1) 0.15s forwards'
+                animation: 'spark-fall-3 1.8s cubic-bezier(0.25, 0.1, 0.3, 1) 0.08s forwards'
               }}
             />
 
-            {/* Spark 4 */}
+            {/* Center-Right spark */}
             <div 
-              className="absolute top-0 left-[24%] w-1.5 h-2 rounded-full bg-amber-50"
+              className="absolute top-0 left-[68%] w-2 h-2.5 rounded-full bg-amber-50"
               style={{
-                boxShadow: '0 0 8px 2px #ffaa00, 0 0 18px 4px #ff4400',
-                animation: 'spark-fall-4 1.5s cubic-bezier(0.22, 0.1, 0.25, 1) 0.05s forwards'
+                boxShadow: '0 0 12px 3px #ffaa00, 0 0 22px 5px #ff4400',
+                animation: 'spark-fall-6 1.75s cubic-bezier(0.22, 0.1, 0.25, 1) 0.18s forwards'
               }}
             />
 
-            {/* Spark 5 */}
+            {/* Far Right spark */}
             <div 
-              className="absolute top-0 left-[19%] w-3 h-3.5 rounded-full bg-white"
+              className="absolute top-0 left-[85%] w-2.5 h-3.5 rounded-full bg-yellow-200"
               style={{
-                boxShadow: '0 0 16px 5px #ffaa00, 0 0 32px 10px #ff6600',
-                animation: 'spark-fall-5 1.7s cubic-bezier(0.2, 0.1, 0.28, 1) 0.12s forwards'
+                boxShadow: '0 0 15px 4px #ff9900, 0 0 30px 8px #ff6600',
+                animation: 'spark-fall-4 1.7s cubic-bezier(0.2, 0.1, 0.28, 1) 0.12s forwards'
               }}
             />
 
-            {/* Ground impact scatter flash when sparks land near the bottom left firework */}
+            {/* Additional random spark on right side */}
             <div 
-              className="absolute bottom-6 left-[16%] w-12 h-12 rounded-full bg-orange-500/80 pointer-events-none"
+              className="absolute top-0 left-[76%] w-1.5 h-2 rounded-full bg-orange-200"
+              style={{
+                boxShadow: '0 0 8px 2px #ff7700, 0 0 18px 4px #ff3300',
+                animation: 'spark-fall-8 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.25s forwards'
+              }}
+            />
+
+            {/* Additional random spark on center-left */}
+            <div 
+              className="absolute top-0 left-[29%] w-2 h-2 rounded-full bg-amber-100"
+              style={{
+                boxShadow: '0 0 10px 3px #ff8800, 0 0 20px 4px #ff4400',
+                animation: 'spark-fall-7 1.68s cubic-bezier(0.25, 0.1, 0.25, 1) 0.22s forwards'
+              }}
+            />
+
+            {/* Ground impact scatter flash when sparks hit ground */}
+            <div 
+              className="absolute bottom-6 left-[18%] w-12 h-12 rounded-full bg-orange-500/80 pointer-events-none"
               style={{
                 filter: 'blur(8px)',
-                animation: 'ground-impact-scatter 0.6s ease-out 1.25s forwards',
+                animation: 'ground-impact-scatter 0.6s ease-out 1.35s forwards',
                 opacity: 0
               }}
             />
+          </div>
+        )}
+
+        {/* Transient illumination on the ground out only when the spark overlaps/passes it */}
+        {showSparks && (
+          <div 
+            className="absolute inset-0 z-[955] pointer-events-none"
+            style={{
+              animation: 'spark-hero-reveal 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.1s forwards',
+              opacity: 0,
+              WebkitMaskImage: 'radial-gradient(circle 100px at 20% 90%, black 30%, rgba(0,0,0,0.4) 65%, transparent 100%)',
+              maskImage: 'radial-gradient(circle 100px at 20% 90%, black 30%, rgba(0,0,0,0.4) 65%, transparent 100%)',
+            }}
+          >
+            {/* Duplicate rendering of the cylinder & fuse inside this momentary spark light mask */}
+            <div className="absolute bottom-6 left-[15%] h-32 flex flex-col justify-end items-center pointer-events-none">
+              <div className="relative w-8 h-28 z-20">
+                <div className="absolute inset-0 rounded-t-sm border-b-0 border-2 border-purple-900 bg-purple-700 shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col justify-between">
+                  <div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #facc15 4px, #facc15 8px)' }} />
+                  <div className="w-full h-2 bg-yellow-400 border-y border-red-500 mt-2 z-10" />
+                  <div className="w-full h-4 bg-red-500 border-y-2 border-yellow-300 z-10 flex items-center justify-center">
+                    <div className="w-full h-[1px] bg-yellow-100 opacity-50" />
+                  </div>
+                  <div className="w-full h-2 bg-yellow-400 border-y border-red-500 mb-4 z-10" />
+                </div>
+                <div className="absolute w-20 h-20 z-30 pointer-events-none" style={{ top: '88px', left: '100%' }}>
+                  <svg width="100%" height="100%" viewBox="0 0 80 80" className="overflow-visible">
+                    <path d="M 0 4 C 15 4, 15 -25, 35 -25 C 50 -25, 55 5, 65 5" fill="none" stroke="#808080" strokeWidth="3.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
