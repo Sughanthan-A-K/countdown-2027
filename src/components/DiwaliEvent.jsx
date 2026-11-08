@@ -28,6 +28,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   
   const [isStriking, setIsStriking] = useState(false);
   const [isFlameLit, setIsFlameLit] = useState(false);
+  const [showSparks, setShowSparks] = useState(false);
+  const [showFuseHint, setShowFuseHint] = useState(false);
+  const [hasMovedMatch, setHasMovedMatch] = useState(false);
   const matchAudioRef = useRef(null);
   const flickerAudioRef = useRef(null);
   const flameAudioRef = useRef(null);
@@ -39,7 +42,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   const [isSmoking, setIsSmoking] = useState(false); // Whisps of light smoke right as flame extinguishes
   const [isExtinguishing, setIsExtinguishing] = useState(false); // Smooth scale down/fizzle transition for flame
 
-  // 1st Tap handler: triggers flicker audio + neon die animation -> full dark
+  // 1st Tap handler: triggers flicker audio + neon die animation + electrical transformer falling sparks -> full dark
   const handleFirstTapToDim = (e) => {
     if (phase === 'init') {
       if (e && e.cancelable && e.type === 'touchstart') {
@@ -47,6 +50,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         e.preventDefault();
       }
       setPhase('dimming');
+      setShowSparks(true);
 
       // Play flicker audio directly synchronously during user gesture (Required by iOS/WhatsApp Webview)
       try {
@@ -83,6 +87,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
       // After 1.8s neon-die flicker animation (matching 1.1x speed), transition to dark and flip background to dark mode
       setTimeout(() => {
         setPhase('dark');
+        setShowSparks(false);
         if (onBlackout) onBlackout();
       }, 1800);
     }
@@ -111,6 +116,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
       const clientY = isTouch ? e.touches[0].clientY : e.clientY;
       
       touchOrigin.current = { x: clientX, y: clientY };
+      if (!hasMovedMatch) setHasMovedMatch(true);
       
       // Dynamic tilt: points UP when at top, smoothly tilts DOWN-LEFT when dragged to the bottom
       const height = window.innerHeight || 800;
@@ -161,12 +167,17 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
       // Delay flame/fire appearance by 0.25s after the strike sound starts
       setIsFlameLit(false);
       setBurnProgress(0);
+      setHasMovedMatch(false);
       clearBurnTimers();
 
       setTimeout(() => {
         setIsFlameLit(true);
         setIsStriking(true);
         setTimeout(() => setIsStriking(false), 400);
+
+        // Guide the user's eye to the fuse on the ground: pulse glow on fuse for first 3.5s
+        setShowFuseHint(true);
+        setTimeout(() => setShowFuseHint(false), 3500);
 
         // Play gentle mild burning flame audio for 8s (soft volume ~0.15)
         try {
@@ -412,6 +423,55 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
            0%, 100% { opacity: 0.9; transform: scale(1); }
            50% { opacity: 0.5; transform: scale(0.85); }
         }
+        @keyframes spark-fall-1 {
+          0% { transform: translate(0, 0) scale(1.2); opacity: 1; }
+          40% { transform: translate(-30px, 45vh) scale(1.1); opacity: 1; }
+          75% { transform: translate(-55px, 80vh) scale(0.9); opacity: 0.95; }
+          88% { transform: translate(-65px, 92vh) scale(0.7); opacity: 0.8; }
+          100% { transform: translate(-80px, 93vh) scale(0); opacity: 0; }
+        }
+        @keyframes spark-fall-2 {
+          0% { transform: translate(0, 0) scale(1.4); opacity: 1; }
+          35% { transform: translate(-10px, 40vh) scale(1.2); opacity: 1; }
+          70% { transform: translate(-25px, 78vh) scale(1.0); opacity: 0.9; }
+          85% { transform: translate(-32px, 91vh) scale(0.6); opacity: 0.75; }
+          100% { transform: translate(-40px, 92vh) scale(0); opacity: 0; }
+        }
+        @keyframes spark-fall-3 {
+          0% { transform: translate(0, 0) scale(1.3); opacity: 1; }
+          45% { transform: translate(25px, 50vh) scale(1.15); opacity: 1; }
+          75% { transform: translate(15px, 82vh) scale(0.95); opacity: 0.95; }
+          90% { transform: translate(8px, 93vh) scale(0.7); opacity: 0.8; }
+          100% { transform: translate(0px, 94vh) scale(0); opacity: 0; }
+        }
+        @keyframes spark-fall-4 {
+          0% { transform: translate(0, 0) scale(1.1); opacity: 1; }
+          30% { transform: translate(-45px, 35vh) scale(1.0); opacity: 1; }
+          65% { transform: translate(-80px, 75vh) scale(0.85); opacity: 0.9; }
+          85% { transform: translate(-95px, 90vh) scale(0.6); opacity: 0.7; }
+          100% { transform: translate(-110px, 92vh) scale(0); opacity: 0; }
+        }
+        @keyframes spark-fall-5 {
+          0% { transform: translate(0, 0) scale(1.5); opacity: 1; }
+          40% { transform: translate(10px, 48vh) scale(1.3); opacity: 1; }
+          75% { transform: translate(-15px, 81vh) scale(1.0); opacity: 0.95; }
+          90% { transform: translate(-25px, 92vh) scale(0.8); opacity: 0.8; }
+          100% { transform: translate(-35px, 94vh) scale(0); opacity: 0; }
+        }
+        @keyframes ground-impact-scatter {
+          0% { transform: scale(0.5); opacity: 0.9; }
+          50% { transform: scale(1.6); opacity: 0.7; }
+          100% { transform: scale(2.2); opacity: 0; }
+        }
+        @keyframes drag-guide-pulse {
+          0% { opacity: 0.2; transform: translateY(-4px); }
+          50% { opacity: 0.85; transform: translateY(4px); }
+          100% { opacity: 0.2; transform: translateY(-4px); }
+        }
+        @keyframes tap-hint-pulse {
+          0%, 100% { transform: scale(1); opacity: 0.75; }
+          50% { transform: scale(1.15); opacity: 1; }
+        }
         .dimming-layer {
           animation: neon-die 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
@@ -437,6 +497,95 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
               opacity: phase === 'dark' || phase === 'match' || phase === 'lit' || phase === 'launching' ? 1 : undefined
             }}
           />
+        )}
+
+        {/* Electrical Transformer Falling Sparks Effect during Dimming/Screen-off */}
+        {showSparks && (
+          <div className="absolute inset-0 pointer-events-none z-[960] overflow-hidden">
+            {/* Ambient orange illumination cast by the transformer sparks onto the scene */}
+            <div 
+              className="absolute bottom-4 left-[12%] w-64 h-64 rounded-full pointer-events-none"
+              style={{
+                background: 'radial-gradient(circle, rgba(255, 140, 0, 0.45) 0%, rgba(255, 90, 0, 0.2) 50%, transparent 75%)',
+                filter: 'blur(16px)',
+                animation: 'ember-flicker 0.25s infinite alternate'
+              }}
+            />
+
+            {/* Spark 1 */}
+            <div 
+              className="absolute top-0 left-[22%] w-2 h-2.5 rounded-full bg-amber-100"
+              style={{
+                boxShadow: '0 0 12px 3px #ff7700, 0 0 24px 6px #ff4400',
+                animation: 'spark-fall-1 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards'
+              }}
+            />
+
+            {/* Spark 2 */}
+            <div 
+              className="absolute top-0 left-[20%] w-2.5 h-3 rounded-full bg-yellow-100"
+              style={{
+                boxShadow: '0 0 14px 4px #ff9900, 0 0 28px 8px #ff5500',
+                animation: 'spark-fall-2 1.55s cubic-bezier(0.2, 0.1, 0.25, 1) 0.08s forwards'
+              }}
+            />
+
+            {/* Spark 3 */}
+            <div 
+              className="absolute top-0 left-[18%] w-2 h-2 rounded-full bg-orange-100"
+              style={{
+                boxShadow: '0 0 10px 3px #ff8800, 0 0 20px 5px #ff3300',
+                animation: 'spark-fall-3 1.65s cubic-bezier(0.25, 0.1, 0.3, 1) 0.15s forwards'
+              }}
+            />
+
+            {/* Spark 4 */}
+            <div 
+              className="absolute top-0 left-[24%] w-1.5 h-2 rounded-full bg-amber-50"
+              style={{
+                boxShadow: '0 0 8px 2px #ffaa00, 0 0 18px 4px #ff4400',
+                animation: 'spark-fall-4 1.5s cubic-bezier(0.22, 0.1, 0.25, 1) 0.05s forwards'
+              }}
+            />
+
+            {/* Spark 5 */}
+            <div 
+              className="absolute top-0 left-[19%] w-3 h-3.5 rounded-full bg-white"
+              style={{
+                boxShadow: '0 0 16px 5px #ffaa00, 0 0 32px 10px #ff6600',
+                animation: 'spark-fall-5 1.7s cubic-bezier(0.2, 0.1, 0.28, 1) 0.12s forwards'
+              }}
+            />
+
+            {/* Ground impact scatter flash when sparks land near the bottom left firework */}
+            <div 
+              className="absolute bottom-6 left-[16%] w-12 h-12 rounded-full bg-orange-500/80 pointer-events-none"
+              style={{
+                filter: 'blur(8px)',
+                animation: 'ground-impact-scatter 0.6s ease-out 1.25s forwards',
+                opacity: 0
+              }}
+            />
+          </div>
+        )}
+
+        {/* Tap to strike match hint when screen is dark */}
+        {phase === 'dark' && (
+          <div className="absolute inset-0 z-[970] flex flex-col items-center justify-center pointer-events-none select-none">
+            <div className="flex flex-col items-center gap-2.5 animate-[tap-hint-pulse_2s_infinite]">
+              {/* Pulsing Match Icon */}
+              <div className="w-11 h-11 rounded-full border border-amber-400/60 bg-amber-400/10 backdrop-blur-sm flex items-center justify-center shadow-[0_0_18px_rgba(251,191,36,0.5)]">
+                <svg viewBox="0 0 24 24" className="w-6 h-6 text-amber-300 drop-shadow-[0_0_8px_#ffaa00]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 4l-4 4" />
+                  <path d="M10 8l-6 6" />
+                  <circle cx="16" cy="4" r="2" fill="#ff4500" stroke="#ff8800" />
+                </svg>
+              </div>
+              <span className="text-amber-200/90 text-xs sm:text-sm font-semibold tracking-wider uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                Tap anywhere to strike
+              </span>
+            </div>
+          </div>
         )}
 
         {/* Objects hidden in dark (revealed by match light) */}
@@ -518,7 +667,7 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
                    )}
                 </div>
 
-                {/* Natural Light Smoke rising from the glowing red ember when flame extinguishes */}
+                 {/* Natural Light Smoke rising from the glowing red ember when flame extinguishes */}
                 {isSmoking && (
                   <div 
                     className="absolute z-50 pointer-events-none" 
@@ -528,6 +677,28 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
                     <div className="absolute -top-1 left-0 w-2.5 h-2.5 bg-neutral-300/40 rounded-full blur-[2px] animate-[smoke-rise-1_0.75s_ease-out_forwards]" />
                     <div className="absolute -top-2 left-1 w-3 h-3 bg-neutral-400/35 rounded-full blur-[2.5px] animate-[smoke-rise-2_0.85s_ease-out_0.1s_forwards]" />
                     <div className="absolute -top-1 -left-1 w-2 h-2 bg-neutral-200/45 rounded-full blur-[1.5px] animate-[smoke-rise-3_0.65s_ease-out_0.15s_forwards]" />
+                  </div>
+                )}
+
+                {/* Intuitive visual drag hint: animated subtle dashed arrow pointing towards fuse when match is lit */}
+                {phase === 'match' && isFlameLit && !hasMovedMatch && (
+                  <div 
+                    className="absolute pointer-events-none z-50 select-none flex flex-col items-center"
+                    style={{ 
+                      left: activeFlameX - 18, 
+                      top: activeFlameY + 28, 
+                      transform: 'translate(-50%, 0)' 
+                    }}
+                  >
+                    <div className="flex flex-col items-center animate-[drag-guide-pulse_1.5s_infinite] opacity-80">
+                      <span className="text-[10px] font-bold tracking-wider uppercase text-amber-200/90 whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-xs">
+                        Drag to fuse ⤦
+                      </span>
+                      <svg viewBox="0 0 24 24" className="w-5 h-5 text-amber-300 drop-shadow-[0_0_6px_#ff9900]" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="17" y1="7" x2="7" y2="17" strokeDasharray="3 2" />
+                        <polyline points="17 17 7 17 7 7" />
+                      </svg>
+                    </div>
                   </div>
                 )}
               </div>
@@ -573,6 +744,17 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
 
                   {/* Dedicated invisible hitbox exactly at the tip of the fuse (65, 5) for flawless collision detection */}
                   <div id="fuse-hitbox" className="absolute w-12 h-12 rounded-full" style={{ left: '65px', top: '5px', transform: 'translate(-50%, -50%)' }} />
+
+                  {/* Pulsing guidance beacon at the fuse when match is lit until user drags to light */}
+                  {showFuseHint && phase === 'match' && (
+                    <div 
+                      className="absolute pointer-events-none z-50 flex items-center justify-center"
+                      style={{ left: '65px', top: '5px', transform: 'translate(-50%, -50%)' }}
+                    >
+                      <div className="w-8 h-8 rounded-full border-2 border-dashed border-amber-400 animate-ping opacity-75" />
+                      <div className="absolute w-5 h-5 rounded-full bg-amber-400/30 blur-[2px] animate-pulse" />
+                    </div>
+                  )}
 
                   {/* The Spark that follows the shrinking fuse path using highly reliable coordinate keyframes */}
                   {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
