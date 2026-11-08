@@ -559,21 +559,13 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
           </div>
         )}
 
-        {/* Objects hidden in dark (revealed by match light or falling sparks illumination) */}
-        {(phase === 'dark' || phase === 'match' || phase === 'lit' || phase === 'launching') && (
+        {/* Objects hidden in dark (revealed only by match light) */}
+        {(phase === 'match' || phase === 'lit' || phase === 'launching') && (
           <div 
-            className="absolute inset-0 z-[950] pointer-events-none transition-opacity duration-300"
+            className="absolute inset-0 z-[950] pointer-events-none transition-opacity duration-75"
             style={{
-              WebkitMaskImage: (phase === 'lit' || phase === 'launching') 
-                ? 'none' 
-                : showSparks 
-                  ? 'radial-gradient(circle 180px at 20% 90%, black 40%, rgba(0,0,0,0.5) 75%, transparent 100%)'
-                  : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
-              maskImage: (phase === 'lit' || phase === 'launching') 
-                ? 'none' 
-                : showSparks 
-                  ? 'radial-gradient(circle 180px at 20% 90%, black 40%, rgba(0,0,0,0.5) 75%, transparent 100%)'
-                  : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
+              WebkitMaskImage: (phase === 'lit' || phase === 'launching') ? 'none' : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
+              maskImage: (phase === 'lit' || phase === 'launching') ? 'none' : ((isFlameLit || isSmoking) ? wireRevealMask : 'radial-gradient(circle 0px, transparent, transparent)'),
             }}
           >
             {/* The Matchstick (Drawn from touch point to flame) */}
