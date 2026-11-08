@@ -29,7 +29,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
   const [isStriking, setIsStriking] = useState(false);
   const [isFlameLit, setIsFlameLit] = useState(false);
   const [showSparks, setShowSparks] = useState(false);
-  const [showFuseHint, setShowFuseHint] = useState(false);
   const [hasMovedMatch, setHasMovedMatch] = useState(false);
   const matchAudioRef = useRef(null);
   const flickerAudioRef = useRef(null);
@@ -179,10 +178,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
         setIsFlameLit(true);
         setIsStriking(true);
         setTimeout(() => setIsStriking(false), 400);
-
-        // Guide the user's eye to the fuse on the ground: pulse glow on fuse for first 3.5s
-        setShowFuseHint(true);
-        setTimeout(() => setShowFuseHint(false), 3500);
 
         // Play gentle mild burning flame audio for 8s (soft volume ~0.15)
         try {
@@ -504,19 +499,9 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
           />
         )}
 
-        {/* Electrical Transformer Falling Sparks Effect during Dimming/Screen-off */}
+        {/* Electrical Transformer Falling Sparks Effect during Dark phase */}
         {showSparks && (
           <div className="absolute inset-0 pointer-events-none z-[960] overflow-hidden">
-            {/* Ambient orange illumination cast by the transformer sparks onto the scene */}
-            <div 
-              className="absolute bottom-4 left-[12%] w-64 h-64 rounded-full pointer-events-none"
-              style={{
-                background: 'radial-gradient(circle, rgba(255, 140, 0, 0.45) 0%, rgba(255, 90, 0, 0.2) 50%, transparent 75%)',
-                filter: 'blur(16px)',
-                animation: 'ember-flicker 0.25s infinite alternate'
-              }}
-            />
-
             {/* Spark 1 */}
             <div 
               className="absolute top-0 left-[22%] w-2 h-2.5 rounded-full bg-amber-100"
@@ -738,17 +723,6 @@ export default function DiwaliEvent({ onComplete, onReveal, onExplode, onBlackou
 
                   {/* Dedicated invisible hitbox exactly at the tip of the fuse (65, 5) for flawless collision detection */}
                   <div id="fuse-hitbox" className="absolute w-12 h-12 rounded-full" style={{ left: '65px', top: '5px', transform: 'translate(-50%, -50%)' }} />
-
-                  {/* Pulsing guidance beacon at the fuse when match is lit until user drags to light */}
-                  {showFuseHint && phase === 'match' && (
-                    <div 
-                      className="absolute pointer-events-none z-50 flex items-center justify-center"
-                      style={{ left: '65px', top: '5px', transform: 'translate(-50%, -50%)' }}
-                    >
-                      <div className="w-8 h-8 rounded-full border-2 border-dashed border-amber-400 animate-ping opacity-75" />
-                      <div className="absolute w-5 h-5 rounded-full bg-amber-400/30 blur-[2px] animate-pulse" />
-                    </div>
-                  )}
 
                   {/* The Spark that follows the shrinking fuse path using highly reliable coordinate keyframes */}
                   {(phase === 'init' || phase === 'dimming' || phase === 'dark' || phase === 'match' || phase === 'lit') && (
